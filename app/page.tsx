@@ -3,18 +3,23 @@
 import { useMemo, useState } from 'react';
 import {
   ArrowRight,
+  ArrowLeft,
   Bell,
   BookOpen,
+  Bookmark,
   BrainCircuit,
   Check,
   ChevronRight,
   CircleHelp,
   Clock3,
   Flame,
+  ListChecks,
+  LockKeyhole,
   Map,
   Menu,
   MessageCircle,
   PenLine,
+  Play,
   Search,
   Sparkles,
   Target,
@@ -68,6 +73,7 @@ export default function Home() {
   const [done, setDone] = useState<number[]>([]);
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [journeyStarted, setJourneyStarted] = useState(false);
+  const [studyOverview, setStudyOverview] = useState(false);
 
   const completedMinutes = useMemo(
     () => done.reduce((sum, id) => sum + Number(tasks.find((task) => task.id === id)?.meta.split(' ')[0] ?? 0), 0),
@@ -114,7 +120,10 @@ export default function Home() {
               <button
                 key={item}
                 className={active === item ? 'active' : ''}
-                onClick={() => setActive(item)}
+                onClick={() => {
+                  setActive(item);
+                  if (item === 'Estudar') setStudyOverview(false);
+                }}
               >
                 {item}
               </button>
@@ -133,6 +142,7 @@ export default function Home() {
       </header>
 
       <section className="page-wrap">
+        {active === 'Hoje' && <>
         <div className="page-heading">
           <div>
             <p className="eyebrow">QUINTA-FEIRA, 3 DE SETEMBRO</p>
@@ -141,13 +151,6 @@ export default function Home() {
           </div>
           <div className="streak-pill"><Flame size={17} /> 7 dias de consistência</div>
         </div>
-
-        {active !== 'Hoje' && (
-          <div className="preview-notice" role="status">
-            <span><Sparkles size={16} /> Prévia de <strong>{active}</strong></span>
-            <button onClick={() => setActive('Hoje')}>Voltar para Hoje</button>
-          </div>
-        )}
 
         <div className="hero-grid">
           <article className="continue-card">
@@ -233,6 +236,100 @@ export default function Home() {
           </div>
           <button>Ver roadmap completo <ChevronRight size={17} /></button>
         </section>
+        </>}
+
+        {active === 'Estudar' && (
+          studyOverview ? (
+            <section className="study-view study-overview">
+              <button className="study-back" onClick={() => setStudyOverview(false)}>
+                <ArrowLeft size={16} /> Voltar ao estudo
+              </button>
+              <div className="study-heading">
+                <div>
+                  <p className="eyebrow">CONTEÚDO COMPLETO</p>
+                  <h1>Contabilidade Geral</h1>
+                  <p>Consulte a sequência, os pré-requisitos e retome qualquer conteúdo já liberado.</p>
+                </div>
+                <div className="course-progress-badge"><strong>42%</strong><span>concluído</span></div>
+              </div>
+
+              <div className="module-list">
+                <article className="module-card complete">
+                  <div className="module-number"><Check size={18} /></div>
+                  <div className="module-copy"><span>MÓDULO 1 · CONCLUÍDO</span><h2>Fundamentos contábeis</h2><p>Patrimônio, equação patrimonial, contas, débito e crédito.</p></div>
+                  <strong>100%</strong>
+                </article>
+                <article className="module-card current">
+                  <div className="module-number">02</div>
+                  <div className="module-copy"><span>MÓDULO 2 · EM ANDAMENTO</span><h2>Regimes e reconhecimento</h2><p>Regime de caixa, regime de competência e ajustes.</p>
+                    <div className="lesson-list">
+                      <button><Check size={15} /><span><strong>Regime de caixa</strong><small>Concluído</small></span></button>
+                      <button className="active" onClick={() => setStudyOverview(false)}><Play size={15} /><span><strong>Regime de competência</strong><small>Continuar de onde parou</small></span><ChevronRight size={16} /></button>
+                      <button><span className="lesson-dot" /><span><strong>Ajustes de competência</strong><small>Próximo conteúdo</small></span></button>
+                    </div>
+                  </div>
+                  <strong>42%</strong>
+                </article>
+                <article className="module-card locked">
+                  <div className="module-number"><LockKeyhole size={17} /></div>
+                  <div className="module-copy"><span>MÓDULO 3 · BLOQUEADO</span><h2>Fechamento e demonstrações</h2><p>Liberado após a conclusão dos regimes e reconhecimento.</p></div>
+                  <span className="prerequisite">Pré-requisito</span>
+                </article>
+              </div>
+            </section>
+          ) : (
+            <section className="study-view">
+              <button className="study-back" onClick={() => setStudyOverview(true)}>
+                <ListChecks size={16} /> Ver conteúdo completo
+              </button>
+
+              <div className="study-heading compact">
+                <div>
+                  <p className="eyebrow">CONTABILIDADE GERAL · MÓDULO 2</p>
+                  <h1>Regime de competência</h1>
+                  <p>Você parou em reconhecimento de receitas e despesas.</p>
+                </div>
+                <div className="course-progress-badge"><strong>42%</strong><span>do conteúdo</span></div>
+              </div>
+
+              <div className="study-workspace">
+                <article className="lesson-card">
+                  <div className="lesson-cover">
+                    <span className="lesson-status"><Bookmark size={15} /> ÚLTIMO PONTO ESTUDADO</span>
+                    <div className="lesson-visual">
+                      <div className="balance-symbol"><span>Receita</span><i /><span>Despesa</span></div>
+                    </div>
+                  </div>
+                  <div className="lesson-content">
+                    <div><span>AULA 4 DE 9</span><span><Clock3 size={14} /> 35 min</span></div>
+                    <h2>Reconhecimento de receitas e despesas</h2>
+                    <p>Retome diretamente o conceito que conecta o fato gerador ao período contábil correto.</p>
+                    <Button className="primary-button study-start" onClick={() => setJourneyStarted(true)}>
+                      <Play size={17} fill="currentColor" /> Retomar estudo
+                    </Button>
+                  </div>
+                </article>
+
+                <aside className="study-side-card">
+                  <p className="eyebrow">SEU PONTO ATUAL</p>
+                  <h2>Uma sessão objetiva.</h2>
+                  <div className="session-step done"><span><Check size={15} /></span><div><strong>Leitura inicial</strong><small>Concluída</small></div></div>
+                  <div className="session-step active"><span>2</span><div><strong>Reconhecimento contábil</strong><small>Retomar agora</small></div></div>
+                  <div className="session-step"><span>3</span><div><strong>Nota de síntese</strong><small>Após o conteúdo</small></div></div>
+                  <div className="session-step"><span>4</span><div><strong>Fixação</strong><small>2 questões</small></div></div>
+                  <div className="session-note"><Sparkles size={16} /><p>O Atlas salvou seu progresso. Você não precisa procurar a aula nem reorganizar a sessão.</p></div>
+                </aside>
+              </div>
+            </section>
+          )
+        )}
+
+        {active !== 'Hoje' && active !== 'Estudar' && (
+          <div className="preview-notice" role="status">
+            <span><Sparkles size={16} /> A página <strong>{active}</strong> será desenhada na próxima etapa.</span>
+            <button onClick={() => setActive('Hoje')}>Voltar para Hoje</button>
+          </div>
+        )}
       </section>
 
       <button className="ask-atlas" onClick={() => setAssistantOpen(true)}>
