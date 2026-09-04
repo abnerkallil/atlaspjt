@@ -3,6 +3,9 @@
 **Atualizado em:** 4 de setembro de 2026  
 **Objetivo atual:** concluir a experiência visual do Atlas Pessoal antes de implementar o núcleo funcional.
 
+**Quadro oficial:** https://trello.com/b/g5FqnOUs/atlas-project  
+**Sincronização inicial:** 69 cartões criados; 15 cartões históricos marcados como concluídos.
+
 ## Estrutura recomendada do quadro
 
 Crie estas listas no Trello, nesta ordem:
