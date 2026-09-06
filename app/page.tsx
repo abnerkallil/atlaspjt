@@ -26,6 +26,7 @@ import {
   X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { NotesWorkspace } from '@/components/notes-workspace';
 
 const navItems = ['Hoje', 'Estudar', 'Roadmap', 'Notas', 'Quizzes', 'Progresso'];
 
@@ -324,7 +325,9 @@ export default function Home() {
           )
         )}
 
-        {active !== 'Hoje' && active !== 'Estudar' && (
+        {active === 'Notas' && <NotesWorkspace />}
+
+        {active !== 'Hoje' && active !== 'Estudar' && active !== 'Notas' && (
           <div className="preview-notice" role="status">
             <span><Sparkles size={16} /> A página <strong>{active}</strong> será desenhada na próxima etapa.</span>
             <button onClick={() => setActive('Hoje')}>Voltar para Hoje</button>

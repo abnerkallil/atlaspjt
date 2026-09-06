@@ -1,7 +1,7 @@
 # Atlas Pessoal — estado atual do site
 
-**Data de corte:** 3 de setembro de 2026  
-**Estágio:** protótipo visual navegável, sem cérebro pedagógico e sem persistência.
+**Data de corte:** 6 de setembro de 2026
+**Estágio:** protótipo funcional com persistência do Atlas Notes; motor pedagógico ainda não implementado.
 
 ## Ambientes
 
@@ -109,18 +109,29 @@ Limitação: o conteúdo, percentuais e bloqueios ainda são exemplos fixos.
 - botões, cartões, barras de progresso e indicadores de estado;
 - imagem social e metadados do site.
 
+## Atlas Notes — primeira versão funcional
+
+- criação, edição, listagem e pesquisa de notas;
+- texto integral persistido no D1 do próprio Atlas;
+- catálogo local rastreável com os IDs oficiais de Contabilidade Geral e Contabilidade Tributária lidos da planilha em 6 de setembro de 2026;
+- análise lexical de título e texto para sugerir conteúdos relacionados;
+- confirmação e remoção manual de vínculos antes de salvar;
+- vínculo registrado sempre como **Anotado — ainda não trabalhado**;
+- operações de sincronização gravadas em fila com chave idempotente e payload restrito a metadados;
+- nenhuma escrita na planilha durante esta implementação.
+
+Limitação atual: a fila está pronta para retentativa, mas o executor que grava os metadados na planilha ainda depende de credencial Google segura no ambiente hospedado. Até essa integração existir, os pedidos permanecem em `queued` e nenhuma via alternativa é usada.
+
 ## O que ainda não existe
 
 - cadastro, login e perfis reais;
-- banco de dados;
-- persistência de progresso;
-- editor Atlas Notes;
+- persistência de progresso acadêmico;
 - anexos e PDFs;
 - motor de roadmap;
 - agenda interna;
 - quizzes reais;
 - cálculo de notas, domínio ou retenção;
-- integrações com planilha, Obsidian, Google Agenda ou IA;
+- executor autenticado da fila de metadados para planilha, integrações com Obsidian, Google Agenda ou IA;
 - Atlas/Hades/Themis executáveis;
 - detecção de fraude;
 - acessibilidade e testes completos;
