@@ -241,6 +241,58 @@ Codex should not advocate for an option unless Hermes explicitly requests an imp
 
 ---
 
+## Hermes Invocation Protocol
+
+When a genuine Architecture Gate requires Hermes:
+
+1. Invoke Hermes from the current Atlas repository working directory.
+2. Use the existing Hermes CLI directly. Do not invent wrappers, bridge processes, coordination files or custom logging mechanisms.
+3. Preferred invocation:
+   - provider: `opencode-free`
+   - model: `muse-spark-1.3-contributor-free`
+   - reasoning: `none`
+4. The contributor model requires explicit user consent for each invocation.
+5. When Hermes displays:
+
+   `Use this model for this invocation? [y/N]`
+
+   Codex must pause and request user authorization.
+
+6. Codex must never answer this consent prompt automatically.
+7. If the user authorizes, send `y` to the same running Hermes process and continue that invocation.
+8. Do not switch models, bypass consent, alter persistent Hermes configuration or retry automatically unless explicitly instructed.
+9. Use one Hermes invocation per Gate by default.
+
+### Traceability
+
+Hermes already records sessions automatically.
+
+Do not create repository coordination logs or new logging infrastructure solely to record Codex ↔ Hermes communication.
+
+When traceability is useful, include a unique correlation identifier in the Hermes request, for example:
+
+`ATLAS-HERMES-GATE-YYYYMMDD-NNN`
+
+The same identifier can later be matched between:
+
+- the Codex transcript;
+- the Hermes automatic session history.
+
+Hermes automatic session data is stored locally by Hermes. It is not a GitHub source of truth and must not be copied into the repository merely for auditing.
+
+### Neutrality
+
+Codex is responsible only for transmitting a neutral architectural Decision Request.
+
+Codex must not:
+
+- preselect Hermes's answer;
+- ask Hermes to approve Codex's preferred implementation;
+- add persuasive framing;
+- fabricate architectural alternatives merely to justify escalation.
+
+The correlation ID and invocation mechanism are transport metadata only. They must not influence the architectural decision.
+
 # DOCUMENT ROUTING
 
 Use progressive disclosure.
