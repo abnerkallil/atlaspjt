@@ -247,6 +247,22 @@ Use progressive disclosure.
 
 Do not read every Atlas document for every task.
 
+## Read `docs/ATLAS_FAILURE_MODES.md` When
+
+- a SMALL task begins becoming disproportionately complex;
+- an Architecture Gate is being considered;
+- planning, documentation or agent coordination begins expanding unusually;
+- scope begins growing beyond the active Task Contract;
+- implementation effort becomes disproportionate to the requirement;
+- completion is being considered without clear behavioral validation;
+- a known process failure pattern may be recurring.
+
+Do not read `docs/ATLAS_FAILURE_MODES.md` for every routine task.
+
+When a likely FM-* pattern is detected, reassess whether the complexity is justified and self-correct according to the document.
+
+Do not create additional process documentation merely to record that a Failure Mode was detected.
+
 ## Always Read
 
 Before meaningful development work:
