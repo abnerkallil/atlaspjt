@@ -2,9 +2,9 @@
 
 ## Estado
 
-**PASS técnico do Codex** no branch isolado `codex/atlas-notes-tiptap-spike`.
+**PASS técnico do Codex**, posteriormente integrado à branch `main` com autorização do usuário.
 
-O Gate 2 integra o editor formatado validado no Atlas Notes real. Ele não autoriza merge na `main`, backfill de notas, implantação ou recursos P1.
+O Gate 2 integra o editor formatado validado no Atlas Notes real. Backfill de notas, implantação e recursos P1 permanecem fora desta entrega.
 
 ## Escopo
 
@@ -64,4 +64,4 @@ O parecer final independente do Muse Spark confirma as evidências determinísti
 
 ## Situação de entrega
 
-O Gate 2 está pronto para revisão do usuário. A integração permanece somente no branch isolado; promover para a `main` e aplicar a migração fora do banco descartável exigem uma autorização separada.
+O Gate 2 foi aprovado pelo usuário e integrado à `main`. A migração fora do banco descartável, o backfill e a publicação continuam dependendo de autorização operacional separada.
