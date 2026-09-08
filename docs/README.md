@@ -1,23 +1,268 @@
-# Documentação do Atlas
+# \# Atlas Project — Development Documentation
 
-Atualizada em **3 de setembro de 2026**.
+# 
 
-Este diretório é a referência oficial para retomar o projeto sem depender do histórico de uma conversa.
+# This directory contains the operational development documentation for the Atlas Project.
 
-## Documentos
+# 
 
-- [Fundação do Atlas Pessoal](./atlas-pessoal-fundacao.md): propósito, princípios, experiência pedagógica e limites do produto.
-- [Estado atual do site](./status-site.md): o que está publicado, o que existe localmente e quais interações já funcionam.
-- [Roadmap de desenvolvimento](./roadmap-produto.md): entregas concluídas, próximas etapas e decisões pendentes.
-- [Quadro Kanban](./kanban-atlas-pessoal.md): cartões prontos para organizar o desenvolvimento no Trello.
-- [Visão do Atlas Business](./atlas-business.md): oportunidade futura para instituições, separada do produto pessoal.
+# \## Sources of Truth
 
-## Regra de atualização
+# 
 
-Ao concluir uma rodada relevante de decisões ou desenvolvimento:
+# Atlas uses separate sources of truth according to responsibility.
 
-1. atualizar a data e o estado do site;
-2. mover itens concluídos no roadmap;
-3. registrar novas decisões como **definidas**, **provisórias** ou **pendentes**;
-4. nunca descrever como implementada uma função que exista apenas conceitualmente;
-5. manter Atlas Pessoal e Atlas Business separados.
+# 
+
+# \### Google Drive — Product and Governance
+
+# 
+
+# Google Drive is the source of truth for:
+
+# 
+
+# \- product vision;
+
+# \- product requirements;
+
+# \- product principles;
+
+# \- UX intent;
+
+# \- governance of the Atlas / Hermes / Codex authority model;
+
+# \- future product concepts such as Atlas Business.
+
+# 
+
+# Primary governance documents:
+
+# 
+
+# \- `ATLAS — Product \& Specification Authority`
+
+# \- `ATLAS — Quest Handoff Protocol`
+
+# 
+
+# Product knowledge should not be duplicated here unless a technical contract requires it.
+
+# 
+
+# \### GitHub — Development and Operational State
+
+# 
+
+# This repository is the source of truth for:
+
+# 
+
+# \- source code;
+
+# \- implementation state;
+
+# \- agent operating instructions;
+
+# \- technical decisions;
+
+# \- development quests;
+
+# \- architecture gates;
+
+# \- technical contracts.
+
+# 
+
+# \---
+
+# 
+
+# \## Operational Documents
+
+# 
+
+# \### `ATLAS\_CAMPAIGN.md`
+
+# 
+
+# Development campaign and roadmap.
+
+# 
+
+# Read when roadmap context, quest dependencies or priorities are relevant.
+
+# 
+
+# \### `ATLAS\_STATUS.md`
+
+# 
+
+# Current development state of the project.
+
+# 
+
+# Use for concise operational status.
+
+# 
+
+# \### `ATLAS\_DECISIONS.md`
+
+# 
+
+# Accepted durable technical and architectural decisions.
+
+# 
+
+# Consult only when a task depends on an existing `DEC-\*` decision or may conflict with one.
+
+# 
+
+# \### `ATLAS\_FAILURE\_MODES.md`
+
+# 
+
+# Known process failure modes and self-correction guardrails.
+
+# 
+
+# Do not load for every routine task.
+
+# 
+
+# Consult when development begins becoming disproportionately complex, scope expands, excessive coordination appears, or completion lacks behavioral validation.
+
+# 
+
+# \### `atlas-notes.md`
+
+# 
+
+# Current technical contract for Atlas Notes.
+
+# 
+
+# Contains persistence, canonical content, compatibility, synchronization and editor constraints.
+
+# 
+
+# \---
+
+# 
+
+# \## Quests
+
+# 
+
+# `docs/quests/` contains the operational quest interface.
+
+# 
+
+# \### `quests/ACTIVE.md`
+
+# 
+
+# The current development quest.
+
+# 
+
+# This is the primary source for active implementation scope.
+
+# 
+
+# \### `quests/TEMPLATE.md`
+
+# 
+
+# Template for a new Task Contract.
+
+# 
+
+# \### `quests/ARCHITECTURE\_GATE.md`
+
+# 
+
+# Interface used when a genuine architectural decision requires Hermes.
+
+# 
+
+# Hermes is not a routine approval step.
+
+# 
+
+# \---
+
+# 
+
+# \## Archive
+
+# 
+
+# `docs/archive/` contains historical development records that are no longer operational sources of truth.
+
+# 
+
+# Archived documents may explain previous implementation decisions, experiments or process history, but must not override:
+
+# 
+
+# 1\. the current product specification in Google Drive;
+
+# 2\. accepted `DEC-\*` decisions;
+
+# 3\. the active quest;
+
+# 4\. the current codebase.
+
+# 
+
+# Archive content should only be consulted when historical context is genuinely required.
+
+# 
+
+# \---
+
+# 
+
+# \## Authority Model
+
+# 
+
+# \- \*\*Atlas\*\* — Product \& Specification Authority
+
+# \- \*\*Hermes\*\* — Architecture Authority
+
+# \- \*\*Codex\*\* — Implementation Authority
+
+# 
+
+# Atlas defines \*\*WHAT\*\*.
+
+# 
+
+# Hermes decides architecture only when a genuine Architecture Gate exists.
+
+# 
+
+# Codex decides \*\*HOW\*\* to implement within established product and architectural constraints.
+
+# 
+
+# \---
+
+# 
+
+# \## Context Principle
+
+# 
+
+# Use progressive disclosure.
+
+# 
+
+# Load only the documents required for the current decision or task.
+
+# 
+
+# Documentation supports development; it must not become development.
+
