@@ -43,16 +43,19 @@ O lint global não foi repetido porque o Gate 1 já registrou seu baseline preex
 ## Revisão Hermes
 
 - Preflight: `GATE_2_PREFLIGHT: PASS`.
-- Revisão final: sem parecer; o provedor retornou limite HTTP 429.
-- Teste posterior do modelo alterado: sem resposta; o perfil `atlas-agent` ainda apontava para um modelo LM Studio indisponível.
+- Primeira revisão final Muse: sem parecer; o provedor retornou limite HTTP 429.
+- Teste posterior do Bonsai/LM Studio: respondeu com atraso, mas foi excluído da avaliação após o usuário determinar que apenas Muse Spark deveria ser usado.
+- Tentativa de revisão pelo Bonsai: interrompida imediatamente após a correção do usuário e sem resposta.
+- Revisão final no Muse Spark: `ACCEPT_IMPLEMENTATION`; `GATE_2_VERDICT: PASS`.
 
-A ausência do parecer final independente está registrada como limitação de coordenação, não como validação aprovada. As evidências determinísticas locais permanecem aprovadas.
+O parecer final independente do Muse Spark confirma as evidências determinísticas locais e não identificou contradição ou teste bloqueador.
 
 ## Métricas de eficiência
 
 - guias visíveis abertas: **zero**;
-- sessões Hermes concluídas com resposta: **uma**, no preflight;
-- sessões Hermes sem resposta: **duas**, uma por limite do provedor e outra por modelo indisponível;
+- sessões Hermes concluídas com resposta: **três** — preflight Muse, teste de conectividade Bonsai e veredito final Muse;
+- sessões Hermes sem resposta: **duas** — uma por limite do provedor e uma chamada Bonsai interrompida;
+- uso medido nas três sessões concluídas: 24.478 tokens no total e três chamadas, com custo estimado informado como US$ 0,00;
 - chamadas canceladas antes da inferência pela confirmação Contributor: não contabilizadas como conversa;
 - build completo: duas execuções, sendo a segunda necessária após o refinamento final do guard e da verificação de projeção;
 - banco D1 de integração: temporário, validado e removido;
