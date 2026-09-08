@@ -1,87 +1,140 @@
-# Atlas Project — Campaign
+# ATLAS PROJECT — STRATEGIC CAMPAIGN
 
-Este documento representa a campanha de desenvolvimento do Atlas Project.
+## Purpose
 
-## Regras da campanha
+This document is the strategic roadmap of the Atlas Project.
 
-### Prioridades
+It defines:
 
-`P0 > P1 > P2`
+- long-term project direction;
+- quest sequencing;
+- quest dependencies;
+- milestones;
+- priority relationships;
+- MVP boundaries;
+- FUT-* items;
+- strategic constraints.
 
-- **P0** — Essencial para o MVP ou bloqueia outras funcionalidades.
-- **P1** — Importante, mas não bloqueia o núcleo do projeto.
-- **P2** — Melhoria secundária ou refinamento.
+This document is NOT the operational specification for the task currently being implemented.
 
-### Tipos de item
+The authoritative current Task Contract is:
 
-- `QUEST-*` — tarefas concretas de desenvolvimento.
-- `DEC-*` — decisões que devem ser resolvidas antes da implementação dependente.
-- `FUT-*` — funcionalidades futuras fora do foco atual do MVP.
+`docs/quests/ACTIVE.md`
 
-## Fase 0 — Fundação
+The current operational state of the project is:
 
-### QUEST-001 — Assimilar e documentar a arquitetura atual
+`docs/ATLAS_STATUS.md`
 
-**Prioridade:** P0
+Architectural decisions belong to the project's DEC-* records.
 
-**Objetivo:** mapear a implementação existente do Atlas e identificar seus principais módulos, fluxos e dependências.
+---
 
-**Dependências:** nenhuma.
+# DOCUMENT ROUTING
 
-**Critérios de conclusão:**
+This document should be read only when strategic context is relevant.
 
-- arquitetura principal identificada;
-- módulos relevantes conhecidos;
-- inconsistências importantes registradas;
-- estado documentado em `ATLAS_STATUS.md`.
+Codex should consult `ATLAS_CAMPAIGN.md` when:
 
-## Fase 1 — Núcleo do produto
+- quest dependencies must be resolved;
+- roadmap sequencing matters;
+- priority is unclear;
+- MVP versus FUT-* scope matters;
+- the active quest explicitly depends on campaign context.
 
-### QUEST-002 — Integrar o editor formatado P0 do Atlas Notes
+Hermes should consult `ATLAS_CAMPAIGN.md` only when strategic sequencing materially affects an architectural decision.
 
-**Prioridade:** P0
+Do not require this document to be read for routine implementation work.
 
-**Objetivo:** substituir a edição em texto puro por um editor estruturado, mantendo compatibilidade com notas legadas, pesquisa, prévia, vínculos, fila de sincronização e persistência D1.
+---
 
-**Dependências:** QUEST-001 e DEC-NOTES-01 a DEC-NOTES-11.
+# CAMPAIGN AUTHORITY
 
-**Critérios de conclusão:**
+The campaign owns strategic sequencing.
 
-- editor formatado P0 integrado ao workspace real;
-- documento estruturado versionado e validado no cliente e no servidor;
-- projeção textual determinística preservada em `body`;
-- migração aditiva de banco gerada e validada;
-- compatibilidade legada e proteção contra downgrade testadas;
-- testes, análise estática, tipos, build e API validados;
-- revisão técnica independente aprovada.
+It does NOT own:
 
-## Decisões resolvidas — Atlas Notes
+- low-level implementation details;
+- current Task Contract acceptance criteria;
+- routine code decisions;
+- detailed development history;
+- commit logs;
+- implementation diaries;
+- temporary debugging information.
 
-- **DEC-NOTES-01:** JSON Atlas/Tiptap restrito e versionado como formato canônico.
-- **DEC-NOTES-02:** limite de 100 mil unidades UTF-16 visíveis, acompanhado de limites de requisição, documento, profundidade e nós; nunca truncar silenciosamente.
-- **DEC-NOTES-03:** notas legadas mantêm `content_json` nulo até salvamento explícito.
-- **DEC-NOTES-04:** `body` permanece como projeção textual determinística com LF.
-- **DEC-NOTES-05:** colagem P0 em texto simples; conteúdo inválido é rejeitado, não sanitizado silenciosamente.
-- **DEC-NOTES-06:** paleta de cores adiada para P1.
-- **DEC-NOTES-07:** barra de ferramentas mínima e acessível no P0.
-- **DEC-NOTES-08:** Tiptap 3.31.3 aprovado após spike técnico.
-- **DEC-NOTES-09:** contrato aditivo com `content_json` e proteção contra downgrade.
-- **DEC-NOTES-10:** pnpm 11.19.0 e versões exatas das dependências do editor.
-- **DEC-NOTES-11:** implantação em dois gates; ambos concluídos e aprovados.
+---
 
-## Funcionalidades futuras
+# PRIORITY MODEL
 
-### P1 — Evolução do editor
+Project priorities follow:
 
-- links;
-- títulos H4–H6;
-- listas de tarefas e aninhamento;
-- tachado, destaque e cores de texto/destaque;
-- menu de contexto;
-- colagem externa formatada.
+P0 > P1 > P2
 
-### P2 — Recursos avançados
+Higher-priority work should take precedence unless a dependency prevents execution.
 
-- tabelas, mídia e blocos de código;
-- fórmulas, diagramas e callouts;
-- colaboração e histórico avançado.
+---
+
+# QUEST DEPENDENCIES
+
+Quest dependencies must be respected.
+
+A dependent quest must not be treated as ready when a required predecessor is unresolved.
+
+Dependencies should describe real execution constraints, not speculative relationships.
+
+---
+
+# DECISION DEPENDENCIES
+
+DEC-* decisions must be resolved before implementation that materially depends on them.
+
+Do not create DEC-* requirements for routine implementation details.
+
+---
+
+# MVP PROTECTION
+
+FUT-* items represent future capabilities.
+
+FUT-* work must not divert implementation effort from the MVP unless explicitly promoted into active scope.
+
+Do not introduce architecture for FUT-* capabilities prematurely.
+
+---
+
+# DETERMINISTIC CORE
+
+Advanced AI capabilities must not replace the deterministic core before that core has been validated.
+
+AI-related future work should integrate with a stable deterministic foundation rather than substitute for unfinished core behavior.
+
+---
+
+# CAMPAIGN MAINTENANCE
+
+Keep this document strategic.
+
+When updating it:
+
+- preserve quest dependencies;
+- preserve priority relationships;
+- preserve relevant milestones;
+- preserve MVP versus FUT-* boundaries;
+- remove obsolete strategic information when confirmed obsolete.
+
+Do not add:
+
+- detailed implementation logs;
+- daily progress notes;
+- acceptance criteria for the current task;
+- test results;
+- debugging notes;
+- commit-by-commit history;
+- low-level implementation instructions.
+
+Detailed current work belongs in:
+
+`docs/quests/ACTIVE.md`
+
+Current operational state belongs in:
+
+`docs/ATLAS_STATUS.md`

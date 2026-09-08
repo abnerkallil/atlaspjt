@@ -1,59 +1,120 @@
-# Atlas Project — Status
+# ATLAS PROJECT — CURRENT STATUS
 
-Este documento representa o estado real do Atlas Project no repositório.
+## Purpose
 
-## Estado geral
+This document represents the current operational state of the Atlas Project.
 
-**Fase atual:** Fase 1 — Núcleo do produto
+It is not a development diary.
 
-**Estado:** Atlas Notes P0 integrado à `main`, validado e publicado no site oficial privado.
+It should remain short and contain only information that may affect current or near-term work.
 
-## Quest ativa
+Historical information belongs elsewhere.
 
-Nenhuma quest em execução neste momento.
+---
 
-## Quests concluídas
+## Project Phase
 
-### QUEST-001 — Assimilar e documentar a arquitetura atual
+MVP
 
-**Status:** Concluída
+---
 
-O inventário confirmou a aplicação React/vinext, o runtime Cloudflare Workers, a persistência D1, os módulos do Atlas Notes e o fluxo entre editor, API, store e banco.
+## Active Quest
 
-### QUEST-002 — Integrar o editor formatado P0 do Atlas Notes
+NONE
 
-**Status:** Concluída
+The authoritative current Task Contract is:
 
-O editor Tiptap P0, o contrato estruturado versionado, a projeção textual, a compatibilidade legada, a proteção contra downgrade e a migração aditiva de `content_json` estão implementados na `main`.
+`docs/quests/ACTIVE.md`
 
-## Decisões
+---
 
-As decisões DEC-NOTES-01 a DEC-NOTES-11 estão resolvidas e registradas em `ATLAS_CAMPAIGN.md`.
+## Current Priority
 
-Não existe decisão arquitetural pendente para o escopo P0 entregue.
+NONE
 
-## Validações registradas
+Project priority order:
 
-- 18 testes focados do documento e do contrato de entrada;
-- lint direcionado sem erros;
-- verificação completa de tipos sem erros;
-- build vinext completo;
-- migrações validadas em banco D1 local descartável;
-- API exercitada contra D1 descartável, incluindo idempotência, busca, legado e proteção contra downgrade;
-- revisão final Muse Spark: `GATE_2_VERDICT: PASS`.
-- versão oficial 5 publicada com sucesso;
-- pacote oficial incluiu as migrações D1 e o ambiente reconheceu as tabelas `atlas_notes`, `atlas_note_links` e `atlas_sync_operations`.
+P0 > P1 > P2
 
-## Bloqueadores
+---
 
-Nenhum bloqueador para o editor formatado P0.
+## Current Blockers
 
-A sincronização externa permanece em fila até existir credencial restrita e uma decisão explícita sobre o destino na planilha. Isso não bloqueia a edição e persistência das notas no Atlas.
+None.
 
-## Próximo passo recomendado
+---
 
-Realizar uma verificação visual manual quando conveniente ou iniciar uma nova quest P1 do editor. A verificação visual não foi aberta automaticamente para preservar o consumo de recursos.
+## Open Architectural Decisions
 
-## Última atualização
+None.
 
-08 de setembro de 2026 — Atlas Notes P0 integrado à `main` e publicado no site oficial privado.
+Only list unresolved DEC-* items that currently block or materially affect development.
+
+---
+
+## Current Relevant Risks
+
+None identified.
+
+Only include risks that may affect current implementation decisions.
+
+---
+
+## Stable Capabilities
+
+Update this section only with capabilities that are already implemented and considered stable.
+
+Do not describe implementation details.
+
+- To be reviewed.
+
+---
+
+## Known Incomplete Capabilities
+
+Update this section only when an incomplete capability may affect upcoming work.
+
+- To be reviewed.
+
+---
+
+## Next Planned Work
+
+No next quest defined here.
+
+Quest sequencing and roadmap belong to:
+
+`docs/ATLAS_CAMPAIGN.md`
+
+The current implementation task belongs to:
+
+`docs/quests/ACTIVE.md`
+
+---
+
+# UPDATE POLICY
+
+Keep this document concise.
+
+Update it only when one of the following changes:
+
+- project phase;
+- active blocker;
+- relevant risk;
+- unresolved architectural decision;
+- stable capability;
+- incomplete capability that affects current work.
+
+Do not add:
+
+- detailed implementation history;
+- commit logs;
+- completed quest narratives;
+- daily development notes;
+- large architectural explanations;
+- future feature descriptions;
+- information already defined in ACTIVE.md or ATLAS_CAMPAIGN.md.
+
+The purpose of this file is to answer:
+
+"What is the relevant state of Atlas right now?"
