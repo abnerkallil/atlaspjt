@@ -1,0 +1,222 @@
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.75fr);
+  gap: 20px;
+}
+
+.editorCard,
+.evidence {
+  border: 1px solid #dfe4ec;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 18px 50px rgb(20 35 60 / 7%);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px;
+  border-bottom: 1px solid #e8ebf0;
+  background: #f8fafc;
+  border-radius: 18px 18px 0 0;
+}
+
+.toolbarGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.toolbar button {
+  min-height: 34px;
+}
+
+.editorSurface {
+  min-height: 440px;
+}
+
+.proseMirror {
+  min-height: 440px;
+  padding: 34px 38px;
+  color: #192235;
+  font-size: 1rem;
+  line-height: 1.72;
+  outline: none;
+}
+
+.proseMirror:focus-visible {
+  box-shadow: inset 0 0 0 3px rgb(36 78 160 / 22%);
+}
+
+.proseMirror h1,
+.proseMirror h2,
+.proseMirror h3 {
+  color: #111c32;
+  font-weight: 750;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.proseMirror h1 {
+  margin: 0 0 1.15rem;
+  font-size: 2rem;
+}
+
+.proseMirror h2 {
+  margin: 1.55rem 0 0.8rem;
+  font-size: 1.55rem;
+}
+
+.proseMirror h3 {
+  margin: 1.35rem 0 0.7rem;
+  font-size: 1.25rem;
+}
+
+.proseMirror p {
+  margin: 0.55rem 0;
+}
+
+.proseMirror ul,
+.proseMirror ol {
+  margin: 0.8rem 0;
+  padding-left: 1.55rem;
+}
+
+.proseMirror li {
+  margin: 0.3rem 0;
+}
+
+.proseMirror blockquote {
+  margin: 1.15rem 0;
+  padding: 0.2rem 0 0.2rem 1rem;
+  border-left: 3px solid #315ca8;
+  color: #4a5870;
+}
+
+.editorFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 18px;
+  border-top: 1px solid #e8ebf0;
+  color: #667085;
+  font-size: 0.875rem;
+}
+
+.valid,
+.invalid {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 650;
+}
+
+.valid {
+  color: #176b4b;
+}
+
+.invalid {
+  color: #a83d35;
+}
+
+.valid svg,
+.invalid svg {
+  width: 16px;
+  height: 16px;
+}
+
+.evidence {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.evidence > div {
+  min-width: 0;
+  padding: 20px;
+}
+
+.evidence > div + div {
+  border-top: 1px solid #e8ebf0;
+}
+
+.evidence span {
+  color: #7a6330;
+  font-size: 0.75rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+}
+
+.evidence p {
+  margin: 12px 0 0;
+  white-space: pre-wrap;
+  color: #33415b;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.evidence pre {
+  max-height: 470px;
+  margin: 12px 0 0;
+  overflow: auto;
+  color: #26334a;
+  font-size: 0.76rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.loading {
+  padding: 40px;
+  border: 1px solid #dfe4ec;
+  border-radius: 18px;
+  background: #fff;
+}
+
+@media (max-width: 980px) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .toolbar {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .toolbar button span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .proseMirror {
+    min-height: 360px;
+    padding: 24px 20px;
+  }
+
+  .editorFooter {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
