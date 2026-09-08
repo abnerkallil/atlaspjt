@@ -64,4 +64,4 @@ O parecer final independente do Muse Spark confirma as evidências determinísti
 
 ## Situação de entrega
 
-O Gate 2 foi aprovado pelo usuário e integrado à `main`. A migração fora do banco descartável, o backfill e a publicação continuam dependendo de autorização operacional separada.
+O Gate 2 foi aprovado pelo usuário, integrado à `main` e publicado como versão oficial 5 no site privado. O pacote incluiu a migração D1 aditiva; o backfill permanece fora do escopo.

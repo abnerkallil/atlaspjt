@@ -6,7 +6,7 @@ Este documento representa o estado real do Atlas Project no repositório.
 
 **Fase atual:** Fase 1 — Núcleo do produto
 
-**Estado:** Atlas Notes P0 integrado à `main` e validado localmente.
+**Estado:** Atlas Notes P0 integrado à `main`, validado e publicado no site oficial privado.
 
 ## Quest ativa
 
@@ -41,6 +41,8 @@ Não existe decisão arquitetural pendente para o escopo P0 entregue.
 - migrações validadas em banco D1 local descartável;
 - API exercitada contra D1 descartável, incluindo idempotência, busca, legado e proteção contra downgrade;
 - revisão final Muse Spark: `GATE_2_VERDICT: PASS`.
+- versão oficial 5 publicada com sucesso;
+- pacote oficial incluiu as migrações D1 e o ambiente reconheceu as tabelas `atlas_notes`, `atlas_note_links` e `atlas_sync_operations`.
 
 ## Bloqueadores
 
@@ -50,8 +52,8 @@ A sincronização externa permanece em fila até existir credencial restrita e u
 
 ## Próximo passo recomendado
 
-Escolher o próximo marco operacional: aplicar a migração no ambiente de destino e publicar, ou iniciar uma nova quest P1 do editor. Nenhuma dessas ações foi executada automaticamente.
+Realizar uma verificação visual manual quando conveniente ou iniciar uma nova quest P1 do editor. A verificação visual não foi aberta automaticamente para preservar o consumo de recursos.
 
 ## Última atualização
 
-08 de setembro de 2026 — integração do Atlas Notes P0 na `main`.
+08 de setembro de 2026 — Atlas Notes P0 integrado à `main` e publicado no site oficial privado.
