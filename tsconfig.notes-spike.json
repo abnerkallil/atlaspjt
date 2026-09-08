@@ -14,7 +14,9 @@
   },
   "include": [
     "lib/atlas-notes-document.ts",
-    "tests/atlas-notes-document.test.ts"
+    "lib/atlas-notes-input.ts",
+    "tests/atlas-notes-document.test.ts",
+    "tests/atlas-notes-input.test.ts"
   ],
   "exclude": ["node_modules"]
 }

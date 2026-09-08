@@ -13,6 +13,7 @@ export const atlasNotes = sqliteTable(
     id: text('id').primaryKey(),
     title: text('title').notNull(),
     body: text('body').notNull(),
+    contentJson: text('content_json'),
     createdAt: text('created_at').notNull(),
     updatedAt: text('updated_at').notNull(),
   },

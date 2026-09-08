@@ -1,0 +1,1 @@
+ALTER TABLE `atlas_notes` ADD `content_json` text;

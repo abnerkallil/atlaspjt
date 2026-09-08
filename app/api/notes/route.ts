@@ -1,4 +1,6 @@
 import { listNotes, saveNote } from '@/lib/notes-store';
+import { parseAtlasNotesSaveRequest } from '@/lib/atlas-notes-input';
+import { AtlasNotesValidationError } from '@/lib/atlas-notes-document';
 
 export const runtime = 'edge';
 
@@ -7,7 +9,15 @@ function errorResponse(error: unknown, status = 500) {
     error instanceof Error
       ? error.message
       : 'Não foi possível concluir a operação.';
-  return Response.json({ error: message }, { status });
+  const validation =
+    error instanceof AtlasNotesValidationError ? error : undefined;
+  return Response.json(
+    {
+      error: message,
+      ...(validation ? { code: validation.code, path: validation.path } : {}),
+    },
+    { status: validation?.status ?? status },
+  );
 }
 
 export async function GET(request: Request) {
@@ -20,32 +30,8 @@ export async function GET(request: Request) {
 }
 
 async function readInput(request: Request, mode: 'create' | 'update') {
-  const input = (await request.json()) as Record<string, unknown>;
-  if (
-    typeof input.id !== 'string' ||
-    typeof input.operationId !== 'string' ||
-    typeof input.title !== 'string' ||
-    typeof input.body !== 'string' ||
-    !Array.isArray(input.contentIds)
-  ) {
-    throw new Error('Dados da nota inválidos.');
-  }
-  if (!input.title.trim()) throw new Error('Dê um título à nota.');
-  if (!input.body.trim()) throw new Error('Escreva o conteúdo da nota.');
-  if (input.title.length > 180)
-    throw new Error('O título deve ter no máximo 180 caracteres.');
-  if (input.body.length > 100_000)
-    throw new Error('A nota excede o limite de 100 mil caracteres.');
-  if (!input.contentIds.every((id) => typeof id === 'string'))
-    throw new Error('Vínculos inválidos.');
-  return saveNote({
-    id: input.id,
-    operationId: input.operationId,
-    title: input.title,
-    body: input.body,
-    contentIds: input.contentIds as string[],
-    mode,
-  });
+  const input = parseAtlasNotesSaveRequest(await request.text(), mode);
+  return saveNote(input);
 }
 
 export async function POST(request: Request) {

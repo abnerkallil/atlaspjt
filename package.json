@@ -15,7 +15,8 @@
     "lint": "oxlint",
     "format": "oxfmt",
     "typecheck": "tsc --noEmit",
-    "test:notes-spike": "tsc -p tsconfig.notes-spike.json && node --test .notes-spike-dist/tests/atlas-notes-document.test.js"
+    "test:notes": "tsc -p tsconfig.notes-spike.json && node --test .notes-spike-dist/tests/*.test.js",
+    "test:notes-spike": "pnpm run test:notes"
   },
   "dependencies": {
     "@base-ui/react": "1.7.0",

@@ -1,5 +1,15 @@
 import { env } from 'cloudflare:workers';
 import { contentCatalog } from '@/lib/content-catalog';
+import {
+  canonicalizeAtlasNotesContent,
+  projectAtlasNotesBody,
+  type AtlasNotesEnvelope,
+} from '@/lib/atlas-notes-document';
+import {
+  assertAtlasNotesOperationTarget,
+  assertAtlasNotesStructuredWrite,
+  type AtlasNotesSaveInput,
+} from '@/lib/atlas-notes-input';
 
 export const NOTE_LINK_STATUS = 'Anotado — ainda não trabalhado' as const;
 
@@ -14,6 +24,7 @@ export type AtlasNote = {
   id: string;
   title: string;
   body: string;
+  content: AtlasNotesEnvelope | null;
   createdAt: string;
   updatedAt: string;
   links: NoteLink[];
@@ -24,6 +35,7 @@ type NoteRow = {
   id: string;
   title: string;
   body: string;
+  content_json: string | null;
   created_at: string;
   updated_at: string;
   sync_status: AtlasNote['syncStatus'] | null;
@@ -55,6 +67,25 @@ function mapLink(row: LinkRow): NoteLink {
   };
 }
 
+function parseStoredContent(value: string | null) {
+  if (value === null) return null;
+  try {
+    return canonicalizeAtlasNotesContent(JSON.parse(value) as unknown);
+  } catch {
+    throw new Error('O conteúdo estruturado armazenado da nota é inválido.');
+  }
+}
+
+function hydrateContent(row: NoteRow) {
+  const content = parseStoredContent(row.content_json);
+  if (content && projectAtlasNotesBody(content) !== row.body) {
+    throw new Error(
+      'A projeção textual armazenada da nota não corresponde ao conteúdo estruturado.',
+    );
+  }
+  return content;
+}
+
 async function hydrate(rows: NoteRow[]) {
   if (!rows.length) return [];
   const links = await database()
@@ -74,6 +105,7 @@ async function hydrate(rows: NoteRow[]) {
     id: row.id,
     title: row.title,
     body: row.body,
+    content: hydrateContent(row),
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     links: byNote.get(row.id) ?? [],
@@ -85,7 +117,7 @@ export async function listNotes(query = '') {
   const search = `%${query.trim().replace(/[\\%_]/g, '\\$&')}%`;
   const result = await database()
     .prepare(
-      `SELECT n.id, n.title, n.body, n.created_at, n.updated_at,
+      `SELECT n.id, n.title, n.body, n.content_json, n.created_at, n.updated_at,
         (SELECT s.status FROM atlas_sync_operations s
          WHERE s.note_id = n.id ORDER BY s.created_at DESC LIMIT 1) AS sync_status
        FROM atlas_notes n
@@ -100,7 +132,7 @@ export async function listNotes(query = '') {
 export async function getNote(id: string) {
   const result = await database()
     .prepare(
-      `SELECT n.id, n.title, n.body, n.created_at, n.updated_at,
+      `SELECT n.id, n.title, n.body, n.content_json, n.created_at, n.updated_at,
         (SELECT s.status FROM atlas_sync_operations s
          WHERE s.note_id = n.id ORDER BY s.created_at DESC LIMIT 1) AS sync_status
        FROM atlas_notes n WHERE n.id = ?1`,
@@ -110,28 +142,28 @@ export async function getNote(id: string) {
   return (await hydrate(result.results))[0] ?? null;
 }
 
-export async function saveNote(input: {
-  id: string;
-  operationId: string;
-  title: string;
-  body: string;
-  contentIds: string[];
-  mode: 'create' | 'update';
-}) {
+export async function saveNote(input: AtlasNotesSaveInput) {
   const db = database();
   const idempotencyKey = `atlas-notes:${input.operationId}`;
   const previous = await db
-    .prepare('SELECT id FROM atlas_sync_operations WHERE idempotency_key = ?1')
+    .prepare(
+      'SELECT note_id FROM atlas_sync_operations WHERE idempotency_key = ?1',
+    )
     .bind(idempotencyKey)
-    .first<{ id: string }>();
-  if (previous) return { note: await getNote(input.id), deduplicated: true };
+    .first<{ note_id: string }>();
+  if (previous) {
+    assertAtlasNotesOperationTarget(previous.note_id, input.id);
+    return { note: await getNote(previous.note_id), deduplicated: true };
+  }
 
   const existing = await db
-    .prepare('SELECT created_at FROM atlas_notes WHERE id = ?1')
+    .prepare('SELECT created_at, content_json FROM atlas_notes WHERE id = ?1')
     .bind(input.id)
-    .first<{ created_at: string }>();
+    .first<{ created_at: string; content_json: string | null }>();
   if (input.mode === 'update' && !existing)
     throw new Error('Nota não encontrada.');
+  if (existing)
+    assertAtlasNotesStructuredWrite(existing.content_json, input.contentJson);
 
   const now = new Date().toISOString();
   const createdAt = existing?.created_at ?? now;
@@ -147,11 +179,19 @@ export async function saveNote(input: {
   const statements = [
     db
       .prepare(
-        `INSERT INTO atlas_notes (id, title, body, created_at, updated_at)
-       VALUES (?1, ?2, ?3, ?4, ?5)
-       ON CONFLICT(id) DO UPDATE SET title = excluded.title, body = excluded.body, updated_at = excluded.updated_at`,
+        `INSERT INTO atlas_notes (id, title, body, content_json, created_at, updated_at)
+       VALUES (?1, ?2, ?3, ?4, ?5, ?6)
+       ON CONFLICT(id) DO UPDATE SET title = excluded.title, body = excluded.body,
+         content_json = excluded.content_json, updated_at = excluded.updated_at`,
       )
-      .bind(input.id, input.title.trim(), input.body.trim(), createdAt, now),
+      .bind(
+        input.id,
+        input.title,
+        input.body,
+        input.contentJson,
+        createdAt,
+        now,
+      ),
     db
       .prepare('DELETE FROM atlas_note_links WHERE note_id = ?1')
       .bind(input.id),
@@ -184,8 +224,8 @@ export async function saveNote(input: {
         input.mode === 'create' ? 'NOTE_CREATED' : 'NOTE_UPDATED',
         JSON.stringify({
           noteId: input.id,
-          title: input.title.trim(),
-          characterCount: input.body.trim().length,
+          title: input.title,
+          characterCount: input.body.length,
           links: references.map((reference) => ({
             contentId: reference.id,
             status: NOTE_LINK_STATUS,

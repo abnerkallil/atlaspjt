@@ -17,6 +17,14 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
+  NotesEditor,
+  type NotesEditorSnapshot,
+} from '@/components/notes-editor';
+import {
+  legacyTextToAtlasNotesContent,
+  type AtlasNotesEnvelope,
+} from '@/lib/atlas-notes-document';
+import {
   CONTENT_CATALOG_SNAPSHOT_DATE,
   ContentReference,
   OFFICIAL_SPREADSHEET_URL,
@@ -30,6 +38,7 @@ type AtlasNote = {
   id: string;
   title: string;
   body: string;
+  content: AtlasNotesEnvelope | null;
   createdAt: string;
   updatedAt: string;
   links: Array<{
@@ -43,6 +52,10 @@ type AtlasNote = {
 
 function newId() {
   return crypto.randomUUID();
+}
+
+function emptyNoteContent() {
+  return legacyTextToAtlasNotesContent('');
 }
 
 function formatDate(value: string) {
@@ -60,6 +73,8 @@ export function NotesWorkspace() {
   const [draftId, setDraftId] = useState(newId);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
+  const [content, setContent] = useState<AtlasNotesEnvelope>(emptyNoteContent);
+  const [editorError, setEditorError] = useState('');
   const [confirmedIds, setConfirmedIds] = useState<string[]>([]);
   const [search, setSearch] = useState('');
   const [catalogSearch, setCatalogSearch] = useState('');
@@ -117,6 +132,8 @@ export function NotesWorkspace() {
     setDraftId(note.id);
     setTitle(note.title);
     setBody(note.body);
+    setContent(note.content ?? legacyTextToAtlasNotesContent(note.body));
+    setEditorError('');
     setConfirmedIds(note.links.map((link) => link.contentId));
     setCatalogSearch('');
     setError('');
@@ -129,6 +146,8 @@ export function NotesWorkspace() {
     setDraftId(newId());
     setTitle('');
     setBody('');
+    setContent(emptyNoteContent());
+    setEditorError('');
     setConfirmedIds([]);
     setCatalogSearch('');
     setError('');
@@ -141,6 +160,17 @@ export function NotesWorkspace() {
     setCatalogSearch('');
     setSavedMessage('');
   }
+
+  const updateEditor = useCallback((snapshot: NotesEditorSnapshot) => {
+    setContent(snapshot.content);
+    setBody(snapshot.body);
+    setSavedMessage('');
+  }, []);
+
+  const updateEditorValidation = useCallback((message: string) => {
+    setEditorError(message);
+    if (message) setSavedMessage('');
+  }, []);
 
   async function save() {
     setSaving(true);
@@ -155,6 +185,7 @@ export function NotesWorkspace() {
           operationId: operationId.current,
           title,
           body,
+          content,
           contentIds: confirmedIds,
         }),
       });
@@ -165,6 +196,11 @@ export function NotesWorkspace() {
       if (!response.ok || !data.note)
         throw new Error(data.error ?? 'Não foi possível salvar a nota.');
       setSelectedId(data.note.id);
+      setBody(data.note.body);
+      setContent(
+        data.note.content ?? legacyTextToAtlasNotesContent(data.note.body),
+      );
+      setEditorError('');
       setNotes((current) => [
         data.note!,
         ...current.filter((note) => note.id !== data.note!.id),
@@ -308,16 +344,11 @@ export function NotesWorkspace() {
               setSavedMessage('');
             }}
           />
-          <textarea
-            className="note-body-input"
-            aria-label="Texto da nota"
-            placeholder="Escreva sua síntese, dúvida, exemplo ou raciocínio…"
-            maxLength={100000}
-            value={body}
-            onChange={(event) => {
-              setBody(event.target.value);
-              setSavedMessage('');
-            }}
+          <NotesEditor
+            key={draftId}
+            initialContent={content}
+            onChange={updateEditor}
+            onValidationChange={updateEditorValidation}
           />
           <div className="note-editor-footer">
             <div>
@@ -329,7 +360,9 @@ export function NotesWorkspace() {
             <Button
               className="primary-button"
               onClick={() => void save()}
-              disabled={saving || !title.trim() || !body.trim()}
+              disabled={
+                saving || !title.trim() || !body.trim() || Boolean(editorError)
+              }
             >
               {saving ? (
                 <LoaderCircle size={16} className="spin" />
