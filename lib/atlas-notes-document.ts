@@ -1,5 +1,5 @@
 export const ATLAS_NOTES_FORMAT = 'atlas-notes' as const;
-export const ATLAS_NOTES_VERSION = 1 as const;
+export const ATLAS_NOTES_VERSION = 2 as const;
 
 export const ATLAS_NOTES_LIMITS = {
   requestBytes: 1_310_720,
@@ -39,23 +39,45 @@ export class AtlasNotesValidationError extends Error {
   }
 }
 
-export type AtlasNotesMark = { type: 'bold' | 'italic' };
+export type AtlasNotesVersion = 1 | 2;
+export type AtlasNotesMark =
+  | {
+      type: 'bold' | 'italic' | 'strike' | 'code' | 'highlight' | 'comment';
+    }
+  | { type: 'link'; attrs: { href: string } };
 export type AtlasNotesText = {
   type: 'text';
   text: string;
   marks?: AtlasNotesMark[];
 };
+export type AtlasNotesMathInline = {
+  type: 'mathInline';
+  attrs: { latex: string };
+};
+export type AtlasNotesFootnoteRef = {
+  type: 'footnoteRef';
+  attrs: { id: string };
+};
+export type AtlasNotesInline =
+  | AtlasNotesText
+  | AtlasNotesMathInline
+  | AtlasNotesFootnoteRef;
 export type AtlasNotesParagraph = {
   type: 'paragraph';
-  content?: AtlasNotesText[];
+  content?: AtlasNotesInline[];
 };
 export type AtlasNotesHeading = {
   type: 'heading';
-  attrs: { level: 1 | 2 | 3 };
-  content?: AtlasNotesText[];
+  attrs: { level: 1 | 2 | 3 | 4 | 5 | 6 };
+  content?: AtlasNotesInline[];
 };
 export type AtlasNotesListItem = {
   type: 'listItem';
+  content: [AtlasNotesParagraph];
+};
+export type AtlasNotesTaskItem = {
+  type: 'taskItem';
+  attrs: { checked: boolean };
   content: [AtlasNotesParagraph];
 };
 export type AtlasNotesBulletList = {
@@ -67,8 +89,47 @@ export type AtlasNotesOrderedList = {
   attrs: { start: 1; type: null };
   content: AtlasNotesListItem[];
 };
+export type AtlasNotesTaskList = {
+  type: 'taskList';
+  content: AtlasNotesTaskItem[];
+};
 export type AtlasNotesBlockquote = {
   type: 'blockquote';
+  content: AtlasNotesParagraph[];
+};
+export type AtlasNotesHorizontalRule = { type: 'horizontalRule' };
+export type AtlasNotesCodeText = {
+  type: 'text';
+  text: string;
+};
+export type AtlasNotesCodeBlock = {
+  type: 'codeBlock';
+  attrs: { language: string | null };
+  content?: AtlasNotesCodeText[];
+};
+export type AtlasNotesMathBlock = {
+  type: 'mathBlock';
+  attrs: { latex: string };
+};
+export type AtlasNotesTableCell = {
+  type: 'tableCell' | 'tableHeader';
+  content: AtlasNotesParagraph[];
+};
+export type AtlasNotesTableRow = {
+  type: 'tableRow';
+  content: AtlasNotesTableCell[];
+};
+export type AtlasNotesTable = {
+  type: 'table';
+  content: AtlasNotesTableRow[];
+};
+export type AtlasNotesFootnote = {
+  type: 'footnote';
+  attrs: { id: string };
+  content: AtlasNotesParagraph[];
+};
+export type AtlasNotesCallout = {
+  type: 'callout';
   content: AtlasNotesParagraph[];
 };
 export type AtlasNotesBlock =
@@ -76,21 +137,43 @@ export type AtlasNotesBlock =
   | AtlasNotesHeading
   | AtlasNotesBulletList
   | AtlasNotesOrderedList
-  | AtlasNotesBlockquote;
+  | AtlasNotesTaskList
+  | AtlasNotesBlockquote
+  | AtlasNotesHorizontalRule
+  | AtlasNotesCodeBlock
+  | AtlasNotesMathBlock
+  | AtlasNotesTable
+  | AtlasNotesFootnote
+  | AtlasNotesCallout;
 export type AtlasNotesDocument = {
   type: 'doc';
   content: AtlasNotesBlock[];
 };
 export type AtlasNotesEnvelope = {
   format: typeof ATLAS_NOTES_FORMAT;
-  version: typeof ATLAS_NOTES_VERSION;
+  version: AtlasNotesVersion;
   doc: AtlasNotesDocument;
 };
+export type AtlasNotesEnvelopeV2 = AtlasNotesEnvelope & { version: 2 };
 
 type UnknownRecord = Record<string, unknown>;
+type FootnoteContext = {
+  definitions: Map<string, string>;
+  references: Array<{ id: string; path: string }>;
+};
 
 const encoder = new TextEncoder();
-const markRank = { bold: 0, italic: 1 } as const;
+const markRank: Record<AtlasNotesMark['type'], number> = {
+  bold: 0,
+  italic: 1,
+  strike: 2,
+  code: 3,
+  highlight: 4,
+  comment: 5,
+  link: 6,
+};
+const footnoteIdPattern = /^[A-Za-z0-9_-]{1,64}$/;
+const codeLanguagePattern = /^[a-z0-9._+#-]{1,32}$/i;
 
 function fail(
   code: AtlasNotesErrorCode,
@@ -104,6 +187,13 @@ function fail(
 function asRecord(value: unknown, path: string): UnknownRecord {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
     fail('INVALID_NODE', 'Estrutura de nota inválida.', path);
+  }
+  return value as UnknownRecord;
+}
+
+function asEnvelope(value: unknown): UnknownRecord {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    fail('INVALID_ENVELOPE', 'Envelope de nota inválido.', 'content');
   }
   return value as UnknownRecord;
 }
@@ -171,31 +261,66 @@ function inspectStructure(
   }
 }
 
+function canonicalizeLinkMark(mark: UnknownRecord, path: string) {
+  assertKeys(mark, ['type', 'attrs'], path);
+  const attrs = asRecord(mark.attrs, `${path}.attrs`);
+  assertKeys(attrs, ['href'], `${path}.attrs`);
+  if (typeof attrs.href !== 'string') {
+    fail('INVALID_MARK', 'Link inválido.', `${path}.attrs.href`);
+  }
+  const href = attrs.href.trim();
+  if (!href || href.length > 2_048) {
+    fail('INVALID_MARK', 'Link inválido.', `${path}.attrs.href`);
+  }
+  let protocol: string;
+  try {
+    protocol = new URL(href).protocol;
+  } catch {
+    fail('INVALID_MARK', 'Link inválido.', `${path}.attrs.href`);
+  }
+  if (protocol !== 'http:' && protocol !== 'https:' && protocol !== 'mailto:') {
+    fail(
+      'INVALID_MARK',
+      'Protocolo de link não permitido.',
+      `${path}.attrs.href`,
+    );
+  }
+  return { type: 'link', attrs: { href } } as const;
+}
+
 function canonicalizeMarks(
   value: unknown,
   path: string,
+  version: AtlasNotesVersion,
 ): AtlasNotesMark[] | undefined {
   if (value === undefined) return undefined;
   if (!Array.isArray(value)) {
     fail('INVALID_MARK', 'Marcas de texto inválidas.', path);
   }
   const seen = new Set<AtlasNotesMark['type']>();
-  const marks = value.map((candidate, index) => {
+  const marks = value.map<AtlasNotesMark>((candidate, index) => {
     const markPath = `${path}[${index}]`;
     const mark = asRecord(candidate, markPath);
-    assertKeys(mark, ['type'], markPath);
-    if (mark.type !== 'bold' && mark.type !== 'italic') {
+    const allowedTypes: readonly string[] =
+      version === 1
+        ? ['bold', 'italic']
+        : ['bold', 'italic', 'strike', 'code', 'highlight', 'comment', 'link'];
+    if (typeof mark.type !== 'string' || !allowedTypes.includes(mark.type)) {
       fail('INVALID_MARK', 'Marca de texto não permitida.', markPath);
     }
-    const type: AtlasNotesMark['type'] = mark.type;
+    const type = mark.type as AtlasNotesMark['type'];
     if (seen.has(type)) {
       fail('INVALID_MARK', 'Marca de texto duplicada.', markPath);
     }
     seen.add(type);
+    if (type === 'link') return canonicalizeLinkMark(mark, markPath);
+    assertKeys(mark, ['type'], markPath);
     return { type };
   });
   if (!marks.length) return undefined;
-  return marks.sort((a, b) => markRank[a.type] - markRank[b.type]);
+  return marks.sort(
+    (left, right) => markRank[left.type] - markRank[right.type],
+  );
 }
 
 function sameMarks(
@@ -205,35 +330,120 @@ function sameMarks(
   if (left === undefined || right === undefined) return left === right;
   return (
     left.length === right.length &&
-    left.every((mark, index) => mark.type === right[index]?.type)
+    left.every((mark, index) => {
+      const other = right[index];
+      if (!other || mark.type !== other.type) return false;
+      if (mark.type !== 'link' || other.type !== 'link') return true;
+      return mark.attrs.href === other.attrs.href;
+    })
   );
 }
 
-function canonicalizeText(value: unknown, path: string): AtlasNotesText {
+function canonicalizeText(
+  value: unknown,
+  path: string,
+  version: AtlasNotesVersion,
+  allowMarks = true,
+): AtlasNotesText {
   const node = asRecord(value, path);
   assertKeys(node, ['type', 'text', 'marks'], path);
   if (node.type !== 'text' || typeof node.text !== 'string' || !node.text) {
     fail('INVALID_NODE', 'Nó de texto inválido.', path);
   }
-  const marks = canonicalizeMarks(node.marks, `${path}.marks`);
+  if (!allowMarks && node.marks !== undefined) {
+    fail(
+      'INVALID_MARK',
+      'Blocos de código não aceitam marcas.',
+      `${path}.marks`,
+    );
+  }
+  const marks = allowMarks
+    ? canonicalizeMarks(node.marks, `${path}.marks`, version)
+    : undefined;
   return marks
     ? { type: 'text', text: node.text, marks }
     : { type: 'text', text: node.text };
 }
 
+function canonicalizeLatex(
+  value: unknown,
+  path: string,
+  maximumLength: number,
+) {
+  if (
+    typeof value !== 'string' ||
+    !value.trim() ||
+    value.length > maximumLength
+  ) {
+    fail('INVALID_NODE', 'Expressão matemática inválida.', path);
+  }
+  return value;
+}
+
+function canonicalizeFootnoteId(value: unknown, path: string) {
+  if (typeof value !== 'string' || !footnoteIdPattern.test(value)) {
+    fail('INVALID_NODE', 'Identificador de nota de rodapé inválido.', path);
+  }
+  return value;
+}
+
 function canonicalizeInlineContent(
   value: unknown,
   path: string,
-): AtlasNotesText[] | undefined {
+  version: AtlasNotesVersion,
+  footnotes: FootnoteContext,
+): AtlasNotesInline[] | undefined {
   if (value === undefined) return undefined;
   if (!Array.isArray(value)) {
     fail('INVALID_NODE', 'Conteúdo textual inválido.', path);
   }
-  const result: AtlasNotesText[] = [];
+  const result: AtlasNotesInline[] = [];
   value.forEach((candidate, index) => {
-    const next = canonicalizeText(candidate, `${path}[${index}]`);
+    const inlinePath = `${path}[${index}]`;
+    const inline = asRecord(candidate, inlinePath);
+    let next: AtlasNotesInline;
+    if (inline.type === 'text') {
+      next = canonicalizeText(inline, inlinePath, version);
+    } else if (version === 2 && inline.type === 'mathInline') {
+      assertKeys(inline, ['type', 'attrs'], inlinePath);
+      const attrs = asRecord(inline.attrs, `${inlinePath}.attrs`);
+      assertKeys(attrs, ['latex'], `${inlinePath}.attrs`);
+      next = {
+        type: 'mathInline',
+        attrs: {
+          latex: canonicalizeLatex(
+            attrs.latex,
+            `${inlinePath}.attrs.latex`,
+            5_000,
+          ),
+        },
+      };
+    } else if (version === 2 && inline.type === 'footnoteRef') {
+      assertKeys(inline, ['type', 'attrs'], inlinePath);
+      const attrs = asRecord(inline.attrs, `${inlinePath}.attrs`);
+      assertKeys(attrs, ['id'], `${inlinePath}.attrs`);
+      const id = canonicalizeFootnoteId(attrs.id, `${inlinePath}.attrs.id`);
+      footnotes.references.push({ id, path: `${inlinePath}.attrs.id` });
+      next = { type: 'footnoteRef', attrs: { id } };
+    } else {
+      fail('INVALID_NODE', 'Nó inline não permitido.', inlinePath);
+    }
     const previous = result.at(-1);
-    if (previous && sameMarks(previous.marks, next.marks)) {
+    if (
+      previous?.type === 'text' &&
+      next.type === 'text' &&
+      sameMarks(previous.marks, next.marks)
+    ) {
+      if (
+        previous.text.length + next.text.length >
+        ATLAS_NOTES_LIMITS.textNodeLength
+      ) {
+        fail(
+          'TEXT_NODE_TOO_LONG',
+          'Um trecho de texto excede o limite permitido.',
+          `${inlinePath}.text`,
+        );
+      }
       previous.text += next.text;
     } else {
       result.push(next);
@@ -245,19 +455,42 @@ function canonicalizeInlineContent(
 function canonicalizeParagraph(
   value: unknown,
   path: string,
+  version: AtlasNotesVersion,
+  footnotes: FootnoteContext,
 ): AtlasNotesParagraph {
   const node = asRecord(value, path);
   assertKeys(node, ['type', 'content'], path);
   if (node.type !== 'paragraph') {
     fail('INVALID_NODE', 'Era esperado um parágrafo.', path);
   }
-  const content = canonicalizeInlineContent(node.content, `${path}.content`);
+  const content = canonicalizeInlineContent(
+    node.content,
+    `${path}.content`,
+    version,
+    footnotes,
+  );
   return content ? { type: 'paragraph', content } : { type: 'paragraph' };
+}
+
+function canonicalizeParagraphs(
+  value: unknown,
+  path: string,
+  version: AtlasNotesVersion,
+  footnotes: FootnoteContext,
+) {
+  if (!Array.isArray(value) || !value.length) {
+    fail('INVALID_NODE', 'O bloco precisa ter ao menos um parágrafo.', path);
+  }
+  return value.map((paragraph, index) =>
+    canonicalizeParagraph(paragraph, `${path}[${index}]`, version, footnotes),
+  );
 }
 
 function canonicalizeListItem(
   value: unknown,
   path: string,
+  version: AtlasNotesVersion,
+  footnotes: FootnoteContext,
 ): AtlasNotesListItem {
   const node = asRecord(value, path);
   assertKeys(node, ['type', 'content'], path);
@@ -274,29 +507,185 @@ function canonicalizeListItem(
   }
   return {
     type: 'listItem',
-    content: [canonicalizeParagraph(node.content[0], `${path}.content[0]`)],
+    content: [
+      canonicalizeParagraph(
+        node.content[0],
+        `${path}.content[0]`,
+        version,
+        footnotes,
+      ),
+    ],
   };
 }
 
-function canonicalizeBlock(value: unknown, path: string): AtlasNotesBlock {
+function canonicalizeTaskItem(
+  value: unknown,
+  path: string,
+  footnotes: FootnoteContext,
+): AtlasNotesTaskItem {
   const node = asRecord(value, path);
-  if (node.type === 'paragraph') return canonicalizeParagraph(node, path);
+  assertKeys(node, ['type', 'attrs', 'content'], path);
+  const attrs = asRecord(node.attrs, `${path}.attrs`);
+  assertKeys(attrs, ['checked'], `${path}.attrs`);
+  if (
+    node.type !== 'taskItem' ||
+    typeof attrs.checked !== 'boolean' ||
+    !Array.isArray(node.content) ||
+    node.content.length !== 1
+  ) {
+    fail(
+      'INVALID_NODE',
+      'Cada tarefa deve conter estado e exatamente um parágrafo.',
+      path,
+    );
+  }
+  return {
+    type: 'taskItem',
+    attrs: { checked: attrs.checked },
+    content: [
+      canonicalizeParagraph(
+        node.content[0],
+        `${path}.content[0]`,
+        2,
+        footnotes,
+      ),
+    ],
+  };
+}
+
+function canonicalizeTableCell(
+  value: unknown,
+  path: string,
+  footnotes: FootnoteContext,
+): AtlasNotesTableCell {
+  const node = asRecord(value, path);
+  assertKeys(node, ['type', 'content'], path);
+  if (node.type !== 'tableCell' && node.type !== 'tableHeader') {
+    fail('INVALID_NODE', 'Célula de tabela inválida.', path);
+  }
+  return {
+    type: node.type,
+    content: canonicalizeParagraphs(
+      node.content,
+      `${path}.content`,
+      2,
+      footnotes,
+    ),
+  };
+}
+
+function canonicalizeTableRow(
+  value: unknown,
+  path: string,
+  footnotes: FootnoteContext,
+): AtlasNotesTableRow {
+  const node = asRecord(value, path);
+  assertKeys(node, ['type', 'content'], path);
+  if (
+    node.type !== 'tableRow' ||
+    !Array.isArray(node.content) ||
+    !node.content.length
+  ) {
+    fail('INVALID_NODE', 'Linha de tabela inválida.', path);
+  }
+  return {
+    type: 'tableRow',
+    content: node.content.map((cell, index) =>
+      canonicalizeTableCell(cell, `${path}.content[${index}]`, footnotes),
+    ),
+  };
+}
+
+function canonicalizeCodeBlock(
+  node: UnknownRecord,
+  path: string,
+): AtlasNotesCodeBlock {
+  assertKeys(node, ['type', 'attrs', 'content'], path);
+  const attrs = asRecord(node.attrs, `${path}.attrs`);
+  assertKeys(attrs, ['language'], `${path}.attrs`);
+  if (attrs.language !== null && typeof attrs.language !== 'string') {
+    fail(
+      'INVALID_NODE',
+      'Linguagem de código inválida.',
+      `${path}.attrs.language`,
+    );
+  }
+  const trimmedLanguage =
+    typeof attrs.language === 'string' ? attrs.language.trim() : null;
+  const language = trimmedLanguage || null;
+  if (language !== null && !codeLanguagePattern.test(language)) {
+    fail(
+      'INVALID_NODE',
+      'Linguagem de código inválida.',
+      `${path}.attrs.language`,
+    );
+  }
+  if (node.content !== undefined && !Array.isArray(node.content)) {
+    fail('INVALID_NODE', 'Conteúdo de código inválido.', `${path}.content`);
+  }
+  const content: AtlasNotesCodeText[] = [];
+  (node.content as unknown[] | undefined)?.forEach((candidate, index) => {
+    const next = canonicalizeText(
+      candidate,
+      `${path}.content[${index}]`,
+      2,
+      false,
+    );
+    const previous = content.at(-1);
+    if (previous) {
+      if (
+        previous.text.length + next.text.length >
+        ATLAS_NOTES_LIMITS.textNodeLength
+      ) {
+        fail(
+          'TEXT_NODE_TOO_LONG',
+          'Um trecho de texto excede o limite permitido.',
+          `${path}.content[${index}].text`,
+        );
+      }
+      previous.text += next.text;
+    } else {
+      content.push(next);
+    }
+  });
+  return content.length
+    ? { type: 'codeBlock', attrs: { language }, content }
+    : { type: 'codeBlock', attrs: { language } };
+}
+
+function canonicalizeBlock(
+  value: unknown,
+  path: string,
+  version: AtlasNotesVersion,
+  footnotes: FootnoteContext,
+): AtlasNotesBlock {
+  const node = asRecord(value, path);
+  if (node.type === 'paragraph') {
+    return canonicalizeParagraph(node, path, version, footnotes);
+  }
 
   if (node.type === 'heading') {
     assertKeys(node, ['type', 'attrs', 'content'], path);
     const attrs = asRecord(node.attrs, `${path}.attrs`);
     assertKeys(attrs, ['level'], `${path}.attrs`);
-    if (attrs.level !== 1 && attrs.level !== 2 && attrs.level !== 3) {
+    const allowedLevels = version === 1 ? [1, 2, 3] : [1, 2, 3, 4, 5, 6];
+    if (!allowedLevels.includes(attrs.level as number)) {
       fail(
         'INVALID_NODE',
         'Nível de título não permitido.',
         `${path}.attrs.level`,
       );
     }
-    const content = canonicalizeInlineContent(node.content, `${path}.content`);
+    const level = attrs.level as AtlasNotesHeading['attrs']['level'];
+    const content = canonicalizeInlineContent(
+      node.content,
+      `${path}.content`,
+      version,
+      footnotes,
+    );
     return content
-      ? { type: 'heading', attrs: { level: attrs.level }, content }
-      : { type: 'heading', attrs: { level: attrs.level } };
+      ? { type: 'heading', attrs: { level }, content }
+      : { type: 'heading', attrs: { level } };
   }
 
   if (node.type === 'bulletList' || node.type === 'orderedList') {
@@ -310,10 +699,14 @@ function canonicalizeBlock(value: unknown, path: string): AtlasNotesBlock {
       fail('INVALID_NODE', 'Uma lista precisa ter ao menos um item.', path);
     }
     const content = node.content.map((item, index) =>
-      canonicalizeListItem(item, `${path}.content[${index}]`),
+      canonicalizeListItem(
+        item,
+        `${path}.content[${index}]`,
+        version,
+        footnotes,
+      ),
     );
     if (!ordered) return { type: 'bulletList', content };
-
     const attrs = asRecord(node.attrs, `${path}.attrs`);
     assertKeys(attrs, ['start', 'type'], `${path}.attrs`);
     if (attrs.start !== 1 || attrs.type !== null) {
@@ -323,26 +716,101 @@ function canonicalizeBlock(value: unknown, path: string): AtlasNotesBlock {
         `${path}.attrs`,
       );
     }
-    return {
-      type: 'orderedList',
-      attrs: { start: 1, type: null },
-      content,
-    };
+    return { type: 'orderedList', attrs: { start: 1, type: null }, content };
   }
 
   if (node.type === 'blockquote') {
     assertKeys(node, ['type', 'content'], path);
-    if (!Array.isArray(node.content) || !node.content.length) {
-      fail(
-        'INVALID_NODE',
-        'Uma citação precisa ter ao menos um parágrafo.',
-        path,
-      );
-    }
     return {
       type: 'blockquote',
-      content: node.content.map((paragraph, index) =>
-        canonicalizeParagraph(paragraph, `${path}.content[${index}]`),
+      content: canonicalizeParagraphs(
+        node.content,
+        `${path}.content`,
+        version,
+        footnotes,
+      ),
+    };
+  }
+
+  if (version === 1) {
+    fail('INVALID_NODE', 'Tipo de bloco não permitido.', path);
+  }
+
+  if (node.type === 'taskList') {
+    assertKeys(node, ['type', 'content'], path);
+    if (!Array.isArray(node.content) || !node.content.length) {
+      fail('INVALID_NODE', 'Uma lista de tarefas precisa ter itens.', path);
+    }
+    return {
+      type: 'taskList',
+      content: node.content.map((item, index) =>
+        canonicalizeTaskItem(item, `${path}.content[${index}]`, footnotes),
+      ),
+    };
+  }
+
+  if (node.type === 'horizontalRule') {
+    assertKeys(node, ['type'], path);
+    return { type: 'horizontalRule' };
+  }
+
+  if (node.type === 'codeBlock') return canonicalizeCodeBlock(node, path);
+
+  if (node.type === 'mathBlock') {
+    assertKeys(node, ['type', 'attrs'], path);
+    const attrs = asRecord(node.attrs, `${path}.attrs`);
+    assertKeys(attrs, ['latex'], `${path}.attrs`);
+    return {
+      type: 'mathBlock',
+      attrs: {
+        latex: canonicalizeLatex(attrs.latex, `${path}.attrs.latex`, 10_000),
+      },
+    };
+  }
+
+  if (node.type === 'table') {
+    assertKeys(node, ['type', 'content'], path);
+    if (!Array.isArray(node.content) || !node.content.length) {
+      fail('INVALID_NODE', 'Tabela inválida.', path);
+    }
+    return {
+      type: 'table',
+      content: node.content.map((row, index) =>
+        canonicalizeTableRow(row, `${path}.content[${index}]`, footnotes),
+      ),
+    };
+  }
+
+  if (node.type === 'footnote') {
+    assertKeys(node, ['type', 'attrs', 'content'], path);
+    const attrs = asRecord(node.attrs, `${path}.attrs`);
+    assertKeys(attrs, ['id'], `${path}.attrs`);
+    const id = canonicalizeFootnoteId(attrs.id, `${path}.attrs.id`);
+    if (footnotes.definitions.has(id)) {
+      fail('INVALID_NODE', 'Nota de rodapé duplicada.', `${path}.attrs.id`);
+    }
+    footnotes.definitions.set(id, `${path}.attrs.id`);
+    return {
+      type: 'footnote',
+      attrs: { id },
+      content: canonicalizeParagraphs(
+        node.content,
+        `${path}.content`,
+        2,
+        footnotes,
+      ),
+    };
+  }
+
+  if (node.type === 'callout') {
+    assertKeys(node, ['type', 'content'], path);
+    return {
+      type: 'callout',
+      content: canonicalizeParagraphs(
+        node.content,
+        `${path}.content`,
+        2,
+        footnotes,
       ),
     };
   }
@@ -350,29 +818,12 @@ function canonicalizeBlock(value: unknown, path: string): AtlasNotesBlock {
   fail('INVALID_NODE', 'Tipo de bloco não permitido.', path);
 }
 
-export function assertAtlasNotesRequestSize(requestBody: string | Uint8Array) {
-  const size =
-    typeof requestBody === 'string'
-      ? encoder.encode(requestBody).byteLength
-      : requestBody.byteLength;
-  if (size > ATLAS_NOTES_LIMITS.requestBytes) {
-    fail(
-      'REQUEST_TOO_LARGE',
-      'A requisição excede o limite permitido.',
-      undefined,
-      413,
-    );
-  }
-}
-
-export function canonicalizeAtlasNotesContent(
-  value: unknown,
-): AtlasNotesEnvelope {
-  const envelope = asRecord(value, 'content');
+function inspectEnvelope(value: unknown) {
+  const envelope = asEnvelope(value);
   assertKeys(envelope, ['format', 'version', 'doc'], 'content');
   if (
     envelope.format !== ATLAS_NOTES_FORMAT ||
-    envelope.version !== ATLAS_NOTES_VERSION
+    (envelope.version !== 1 && envelope.version !== 2)
   ) {
     fail(
       'INVALID_ENVELOPE',
@@ -390,8 +841,13 @@ export function canonicalizeAtlasNotesContent(
       413,
     );
   }
-
   inspectStructure(envelope.doc, 'content.doc', 1, { nodes: 0 });
+  return envelope as UnknownRecord & { version: AtlasNotesVersion };
+}
+
+function canonicalizeEnvelope(
+  envelope: UnknownRecord & { version: AtlasNotesVersion },
+): AtlasNotesEnvelope {
   const doc = asRecord(envelope.doc, 'content.doc');
   assertKeys(doc, ['type', 'content'], 'content.doc');
   if (
@@ -401,45 +857,171 @@ export function canonicalizeAtlasNotesContent(
   ) {
     fail('INVALID_NODE', 'Documento de nota inválido.', 'content.doc');
   }
-
+  const footnotes: FootnoteContext = {
+    definitions: new Map(),
+    references: [],
+  };
+  const content = doc.content.map((block, index) =>
+    canonicalizeBlock(
+      block,
+      `content.doc.content[${index}]`,
+      envelope.version,
+      footnotes,
+    ),
+  );
+  const unresolved = footnotes.references.find(
+    ({ id }) => !footnotes.definitions.has(id),
+  );
+  if (unresolved) {
+    fail(
+      'INVALID_NODE',
+      'Referência de nota de rodapé sem definição.',
+      unresolved.path,
+    );
+  }
   return {
     format: ATLAS_NOTES_FORMAT,
-    version: ATLAS_NOTES_VERSION,
-    doc: {
-      type: 'doc',
-      content: doc.content.map((block, index) =>
-        canonicalizeBlock(block, `content.doc.content[${index}]`),
-      ),
-    },
+    version: envelope.version,
+    doc: { type: 'doc', content },
   };
 }
 
-function projectInline(content: AtlasNotesText[] | undefined) {
-  return content?.map((node) => node.text).join('') ?? '';
+export function assertAtlasNotesRequestSize(requestBody: string | Uint8Array) {
+  const size =
+    typeof requestBody === 'string'
+      ? encoder.encode(requestBody).byteLength
+      : requestBody.byteLength;
+  if (size > ATLAS_NOTES_LIMITS.requestBytes) {
+    fail(
+      'REQUEST_TOO_LARGE',
+      'A requisição excede o limite permitido.',
+      undefined,
+      413,
+    );
+  }
 }
 
-function projectBlock(block: AtlasNotesBlock): string {
-  if (block.type === 'paragraph' || block.type === 'heading') {
-    return projectInline(block.content);
+export function canonicalizeAtlasNotesContentV1(
+  value: unknown,
+): AtlasNotesEnvelope & { version: 1 } {
+  const envelope = inspectEnvelope(value);
+  if (envelope.version !== 1) {
+    fail(
+      'INVALID_ENVELOPE',
+      'Era esperado um documento versão 1.',
+      'content.version',
+    );
   }
-  if (block.type === 'bulletList' || block.type === 'orderedList') {
-    return block.content
-      .map((item) => projectInline(item.content[0].content))
-      .join('\n');
+  return canonicalizeEnvelope(envelope) as AtlasNotesEnvelope & { version: 1 };
+}
+
+export function canonicalizeAtlasNotesContentV2(
+  value: unknown,
+): AtlasNotesEnvelopeV2 {
+  const envelope = inspectEnvelope(value);
+  if (envelope.version !== 2) {
+    fail(
+      'INVALID_ENVELOPE',
+      'Era esperado um documento versão 2.',
+      'content.version',
+    );
   }
-  return block.content
-    .map((paragraph) => projectInline(paragraph.content))
+  return canonicalizeEnvelope(envelope) as AtlasNotesEnvelopeV2;
+}
+
+export function canonicalizeAtlasNotesContent(
+  value: unknown,
+): AtlasNotesEnvelope {
+  return canonicalizeEnvelope(inspectEnvelope(value));
+}
+
+function projectInline(
+  content: AtlasNotesInline[] | undefined,
+  version: AtlasNotesVersion,
+) {
+  return (
+    content
+      ?.map((node) => {
+        if (node.type === 'text') return node.text;
+        if (version === 2 && node.type === 'mathInline')
+          return node.attrs.latex;
+        return '';
+      })
+      .join('') ?? ''
+  );
+}
+
+function projectParagraphs(
+  content: AtlasNotesParagraph[],
+  version: AtlasNotesVersion,
+) {
+  return content
+    .map((paragraph) => projectInline(paragraph.content, version))
     .join('\n');
 }
 
-export function projectAtlasNotesBody(value: unknown) {
-  const content = canonicalizeAtlasNotesContent(value);
+function projectBlockV1(block: AtlasNotesBlock): string {
+  if (block.type === 'paragraph' || block.type === 'heading') {
+    return projectInline(block.content, 1);
+  }
+  if (block.type === 'bulletList' || block.type === 'orderedList') {
+    return block.content
+      .map((item) => projectInline(item.content[0].content, 1))
+      .join('\n');
+  }
+  if (block.type === 'blockquote') return projectParagraphs(block.content, 1);
+  fail('INVALID_NODE', 'Tipo de bloco v1 não permitido.', 'content.doc');
+}
+
+function projectBlockV2(block: AtlasNotesBlock): string {
+  if (block.type === 'paragraph' || block.type === 'heading') {
+    return projectInline(block.content, 2);
+  }
+  if (
+    block.type === 'bulletList' ||
+    block.type === 'orderedList' ||
+    block.type === 'taskList'
+  ) {
+    return block.content
+      .map((item) => projectInline(item.content[0].content, 2))
+      .join('\n');
+  }
+  if (
+    block.type === 'blockquote' ||
+    block.type === 'callout' ||
+    block.type === 'footnote'
+  ) {
+    return projectParagraphs(block.content, 2);
+  }
+  if (block.type === 'horizontalRule') return '';
+  if (block.type === 'codeBlock') {
+    return block.content?.map((node) => node.text).join('') ?? '';
+  }
+  if (block.type === 'mathBlock') return block.attrs.latex;
+  return block.content
+    .map((row) =>
+      row.content.map((cell) => projectParagraphs(cell.content, 2)).join('\t'),
+    )
+    .join('\n');
+}
+
+function projectCanonicalContent(content: AtlasNotesEnvelope) {
+  const projectBlock = content.version === 1 ? projectBlockV1 : projectBlockV2;
   return content.doc.content.map(projectBlock).join('\n').trim();
 }
 
+export function projectAtlasNotesBody(value: unknown) {
+  return projectCanonicalContent(canonicalizeAtlasNotesContent(value));
+}
+
 export function prepareAtlasNotesForSave(value: unknown) {
-  const content = canonicalizeAtlasNotesContent(value);
-  const body = content.doc.content.map(projectBlock).join('\n').trim();
+  const source = canonicalizeAtlasNotesContent(value);
+  const content = canonicalizeAtlasNotesContentV2({
+    format: ATLAS_NOTES_FORMAT,
+    version: ATLAS_NOTES_VERSION,
+    doc: source.doc,
+  });
+  const body = projectCanonicalContent(content);
   if (!body) {
     fail('EMPTY_CONTENT', 'Escreva o conteúdo da nota.', 'content.doc');
   }
@@ -473,20 +1055,17 @@ export function plainTextToAtlasNotesBlocks(
 
 export function legacyTextToAtlasNotesContent(
   body: string,
-): AtlasNotesEnvelope {
+): AtlasNotesEnvelopeV2 {
   return {
     format: ATLAS_NOTES_FORMAT,
     version: ATLAS_NOTES_VERSION,
-    doc: {
-      type: 'doc',
-      content: plainTextToAtlasNotesBlocks(body),
-    },
+    doc: { type: 'doc', content: plainTextToAtlasNotesBlocks(body) },
   };
 }
 
 export function isAtlasNotesDocument(value: unknown) {
   try {
-    canonicalizeAtlasNotesContent({
+    canonicalizeAtlasNotesContentV2({
       format: ATLAS_NOTES_FORMAT,
       version: ATLAS_NOTES_VERSION,
       doc: value,
