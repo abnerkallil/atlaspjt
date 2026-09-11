@@ -265,3 +265,63 @@ Quest: QUEST 1 — Atlas Notes Canonical Document Evolution (ATLAS-HERMES-GATE-2
 Supersedes: NONE
 
 Superseded by: NONE
+
+---
+
+## DEC-002 — Atlas Notes Nested Lists
+
+Status: ACCEPTED
+
+Date: 2026-09-11
+
+### Context
+
+DEC-001 definiu o Canonical Document v2 com listas flat: listItem/taskItem com exatamente um parágrafo e sem listas-filhas, rejeitando nesting. Quest 3 exige hierarquia real de listas para bullet, ordered e task lists via Tab (filho do anterior, níveis adicionais, sem limite artificial, estrutural real sobrevivendo a save→reload). Implementar nesting exige evolução da estrutura canônica v2 sem quebrar determinismo, projeção LF-only, compatibilidade v1/v2, limites depth/nodes, leitura sem mutation e servidor DOM-free.
+
+### Decision
+
+Suplementar DEC-001 dentro do envelope version 2, sem nova versão e sem migration, para permitir listas hierárquicas reais:
+
+- Envelope continua `format:"atlas-notes", version:2` (writers persistem 2; readers aceitam 1 e 2 per DEC-001); nenhum envelope version 3.
+- `listItem` = `{ type:"listItem", content:[ Paragraph, ...List[] ] }` — exatamente 1 parágrafo obrigatório como primeiro elemento + 0..N listas-filhas.
+- `taskItem` = `{ type:"taskItem", attrs:{checked:boolean}, content:[ Paragraph, ...List[] ] }` — attrs.checked obrigatório + mesmo modelo de conteúdo.
+- `List` = `bulletList | orderedList | taskList` — válidas como blocos em `doc.content` e como filhas dentro de `listItem/taskItem`.
+- Listas-filhas podem ser `bulletList, orderedList ou taskList`; misturas entre tipos são permitidas (bullet⊂bullet, ordered⊂bullet, task⊂bullet, bullet⊂task e todas as combinações).
+- Ordem estrita: parágrafo primeiro, apenas listas após; qualquer outro filho ou ordem → rejeitar `INVALID_NODE`/`UNKNOWN_FIELD`.
+- Projeção textual recursiva LF-only, sem marcadores/indentação inventados: `projectItem = projectInline(paragraph) + (\n + nested lists recursivas)`; `projectList = items.map(projectItem).join("\n")`; `task checked` projeta nada; doc final `blocks.map(projectBlock).join("\n").trim()`.
+- Limites existentes permanecem inalterados: `depth:8, nodes:20_000, textNode:100_000, structured:1_048_576, request:1_310_720, visible:100_000`; depth/nodes aplicados recursivamente (cada nesting incrementa depth; `STRUCTURE_TOO_DEEP` se >8).
+- Documentos v1/v2 flat existentes continuam compatíveis (flat é subset válido); nenhuma migration necessária; leitura nunca muta `content_json`.
+- Servidor continua DOM/Tiptap-free; Tiptap traduzido via editor-boundary adapter client-side.
+
+DEC-001 permanece como decisão base do Canonical Document v2; esta DEC suplementa apenas o comportamento de listas aninhadas.
+
+### Rationale
+
+1. `paragraph + 0..N nested lists` é a menor evolução que converte indentação visual em hierarquia estrutural real persistente, preservando determinismo e compatibilidade.
+2. Mixing heterogêneo total com regra única evita limite artificial de tipo sem custo adicional e cobre todos os casos do Gate.
+3. Reuso do limite `depth:8` como teto técnico satisfaz "sem limite artificial além dos limites técnicos" sem inflação especulativa.
+
+### Constraints for Codex
+
+- Não criar envelope version 3; não alterar `ATLAS_NOTES_VERSION`; não redefinir DEC-001 fora de nesting.
+- Canonicalizer deve validar `content[0]=paragraph` + `content[1..]=bulletList|orderedList|taskList` canônicos com `assertKeys` estrito; rejeitar qualquer outro filho ou lista vazia; manter sort de marks e merge de texto de DEC-001.
+- Projeção deve ser recursiva LF-only; não inventar `-`, `*`, números, `[x]` ou indentação; tarefa `checked` projeta apenas texto visível.
+- Aplicar `depth`/`nodes` recursivamente via `inspectStructure`; não aumentar limites numéricos.
+- `prepareAtlasNotesForSave` e `canonicalizeAtlasNotesContentV2` aceitam flat e nested; flat persiste idêntico; nested persiste como v2.
+- Servidor permanece pure TypeScript DOM-free; adapter Tiptap↔canonical apenas client-side.
+- Não implementar UI/CSS/handlers como decisão arquitetural; não expandir para outros recursos da Quest 3.
+
+### Consequences
+
+- Aninhamento real persiste canonicamente e sobrevive a save→reload→reopen; Tab no editor deve produzir este shape.
+- Projeção de documentos flat permanece byte-identical; aninhados projetam todos os textos em ordem depth-first com LF.
+- Nesting muito profundo falha deterministicamente com `STRUCTURE_TOO_DEEP` dentro do limite técnico existente, sem necessidade de limite artificial por tipo.
+- Nenhuma migration D1; version vive em JSON; compatibilidade v1/v2 preservada.
+
+### Related
+
+Quest: Quest 3 — Atlas Notes: Inserir, links e blocos avançados — Nested Lists (ATLAS-HERMES-GATE-20260911-NESTED-LISTS)
+
+Supersedes: NONE
+
+Superseded by: NONE
