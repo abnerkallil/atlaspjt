@@ -325,3 +325,55 @@ Quest: Quest 3 — Atlas Notes: Inserir, links e blocos avançados — Nested Li
 Supersedes: NONE
 
 Superseded by: NONE
+
+---
+
+## DEC-003 — Atlas Notes Nested Lists Depth Correction
+
+Status: ACCEPTED
+
+Date: 2026-09-11
+
+### Context
+
+DEC-002 suplementou DEC-001 para permitir hierarquia real `listItem/taskItem = paragraph + 0..N nested lists` com mixing heterogêneo e projeção recursiva LF-only, mantendo `depth:8`. Validação manual demonstrou que cada nível visual consome 2 depth (list + listItem) + paragraph/text, de modo que `depth:8` permite apenas 2 níveis funcionais com texto; o 3º nível (`paragraph8/text9`) já excede o limite e falha com `STRUCTURE_TOO_DEEP` antes de digitar. A alternativa aprovada pelo Gate foi elevar o limite global preservando a semântica de contagem; Product Authority escolheu `depth:16` para garantir ~6 níveis funcionais e evitar reincidência imediata.
+
+### Decision
+
+Suplementar DEC-002 somente quanto ao limite estrutural de profundidade, sem alterar forma canônica, mixing, projeção ou envelope:
+
+- Limite global `depth: 8 → 16`.
+- Semântica de contagem permanece inalterada: `inspectStructure` continua usando `depth + 1` recursivamente para cada `content[]` aninhado (envelope 0 → doc 1 → block 2 → listItem/taskItem 3 → paragraph 4 → text 5 → nested list 4 → ...).
+- `STRUCTURE_TOO_DEEP` continua quando `depth > limit` (agora >16).
+- Aproximadamente 6 níveis de nested list com texto tornam-se representáveis (`text15` em N=6; vazios até `paragraph16` em N=7).
+- `nodes:20_000` permanece inalterado; todos os demais limites permanecem inalterados (`request:1_310_720, structured:1_048_576, textNode:100_000, visible:100_000`).
+- Envelope continua `format:"atlas-notes", version:2`; nenhuma migration; nenhuma alteração em canonicalização/projeção de nested lists além do limite.
+- DEC-001 continua base do Canonical Document v2; DEC-002 continua válida para forma estrutural e mixing; DEC-003 suplementa somente `depth`.
+
+### Rationale
+
+1. `depth:16` dobra o limite anterior preservando a mesma semântica `depth+1`, permitindo `N=6` funcional com margem sem reincidência imediata do caso `N=3` validado.
+2. Manter `depth` como único limite global é a menor mudança (1 constante) vs redefinir contagem ou criar limite separado para listas.
+3. `nodes:20_000` e limites de bytes continuam como proteção primária contra documentos patologicamente grandes; `depth:16` permanece ordens de magnitude abaixo do stack JS, preservando segurança determinística e compatibilidade retroativa.
+
+### Constraints for Codex
+
+- Alterar apenas `ATLAS_NOTES_LIMITS.depth` de 8 para 16; não alterar `nodes`, `textNodeLength`, `structuredBytes`, `requestBytes`, `visibleLength`.
+- Preservar semântica `inspectStructure` (`depth+1` recursivo) e erro `STRUCTURE_TOO_DEEP` quando `depth > 16`.
+- Não redefinir contagem de depth, não criar `listDepth` separado, não introduzir cap artificial de níveis visuais.
+- Não alterar envelope version, canonicalização ou projeção de nested lists de DEC-002 além do limite.
+- Implementação do novo limite é separada deste commit arquitetural (não incluir `lib/atlas-notes-document.ts` neste commit).
+
+### Consequences
+
+- Hierarquias `pai→filho→neto` e até ~6 níveis passam a ser plenamente editáveis e persistentes via `save→reload→reopen`.
+- Documentos `depth 9-16` antes rejeitados tornam-se válidos como `version:2`; documentos `depth ≤8` permanecem idênticos; `depth >16` ainda falha deterministicamente.
+- Nenhuma migration D1; compatibilidade v1/v2 preservada; servidor continua DOM/Tiptap-free.
+
+### Related
+
+Quest: Quest 3 — Atlas Notes: Inserir, links e blocos avançados — Nested Lists Practical Depth (ATLAS-HERMES-GATE-20260911-NESTED-LISTS-DEPTH)
+
+Supersedes: NONE
+
+Superseded by: NONE

@@ -23,98 +23,78 @@ Status: RESOLVED
 
 # QUEST
 
-Quest 3 — Atlas Notes: Inserir, links e blocos avançados — Nested Lists (Correlation: ATLAS-HERMES-GATE-20260911-NESTED-LISTS)
+Quest 3 — Atlas Notes: Inserir, links e blocos avançados — Nested Lists Practical Depth (Correlation: ATLAS-HERMES-GATE-20260911-NESTED-LISTS-DEPTH)
 
 ---
 
 # ARCHITECTURAL QUESTION
 
-Qual é a menor evolução correta do Atlas Notes Canonical Document v2 (DEC-001) que permita listas hierárquicas reais em bulletList/listItem, orderedList/listItem e taskList/taskItem, preservando determinismo do canonicalizer, projeção textual, compatibilidade com documentos v1/v2 existentes, limites de profundidade e nós, comportamento de leitura sem mutation, escrita estruturada v2 e servidor DOM/Tiptap-free?
+Qual é a menor correção arquitetural correta para preservar proteção contra estruturas patologicamente profundas sem tornar hierarquias normais de lista praticamente inutilizáveis, dado que DEC-002 com depth:8 permite apenas 2 níveis funcionais com texto e falha no 3º nível vazio/text9?
 
 ---
 
 # GATE TRIGGER
 
-persistent data model change; conflict with accepted DEC-001 (flat lists only); product requirement incompatible with current allowlist; difficult-to-reverse structural decision
+persistent data model limit ineffective; conflict with DEC-002 depth:8 assumption; product requirement (pai→filho→neto editável) incompatible with current structural limit; difficult-to-reverse limit decision; manual validation demonstrated depth consumption 2 per visual level
 
 ---
 
 # ORIGINAL REQUIREMENT
 
-O Atlas Notes deve suportar hierarquia real de listas para bullet, ordered e task lists:
-- Tab em um item transforma o item atual em filho do item imediatamente anterior;
-- um item filho pode receber Tab novamente para criar níveis adicionais;
-- não deve haver limite artificial de níveis além dos limites técnicos do documento;
-- a hierarquia deve ser estrutural real, não apenas indentação visual;
-- ela deve sobreviver a save → reload → reopen.
-
-Exemplo:
-• Item 1
-    ◦ Filho do Item 1
-        ▪ Neto do Item 1
-    ◦ Segundo filho
-• Item 2
-Mesmo princípio vale para task lists.
+Nested lists devem possuir hierarquia estrutural real, permitir Tab repetidamente para níveis adicionais, não possuir limite artificial além de técnico de segurança razoável, e sobreviver a save→reload→reopen. Hierarquia pai→filho→neto é uso normal e deve ser plenamente editável. Caso mínimo validado: • Olá → Tab → • Olá → Tab → • [cursor] já falha com "A estrutura da nota excede a profundidade permitida." com depth:8.
 
 ---
 
 # RELEVANT REPOSITORY FACTS
 
-1. DEC-001 (ACCEPTED 2026-09-08) define Canonical Document v2: envelope { format: "atlas-notes", version:1|2, doc:{type:"doc", content:Block[]} }, readers aceitam 1 e 2, writers persistem 2, sem mutação em leitura.
-2. v2 allowlist atual: listItem {type:"listItem", content:[Paragraph]} exatamente 1 parágrafo, taskItem {type:"taskItem", attrs:{checked:boolean}, content:[Paragraph]} exatamente 1 parágrafo, ambos sem listas-filhas; canonicalizer rejeita nested lists (lib/atlas-notes-document.ts:489-554,691-719).
-3. Canonicalizer é pure TypeScript, DOM-free, determinístico (markRank sort + sameMarks merge), rejeita UNKNOWN_FIELD/INVALID_NODE/INVALID_MARK.
-4. Projeção é LF-only: bullet/ordered/task lists → items join "\n" sem marcadores, doc → blocks join "\n" then trim(); stored body deve igualar projeção version-specific.
-5. Limites inalterados por DEC-001: request 1_310_720, structured 1_048_576, depth 8, nodes 20_000, textNode 100_000, visible 100_000; depth contado de envelope 0 → doc 1 → block 2 → listItem/taskItem 3 → paragraph 4 → text 6.
-6. Tiptap 3.31.3 usado no editor; servidor nunca depende de DOM/Tiptap; editor-boundary adapter traduz Tiptap runtime para canonical JSON.
-7. Docs v1/v2 flat existentes e NULL legacy rows devem permanecer compatíveis; nenhuma migration D1 (content_json TEXT, sem coluna version).
+1. DEC-001 (ACCEPTED 2026-09-08): Canonical Document v2, envelope version 2, depth:8, nodes:20_000.
+2. DEC-002 (ACCEPTED 2026-09-11): listItem/taskItem = paragraph + 0..N (bulletList|orderedList|taskList), mixing heterogêneo, projeção recursiva LF-only, manteve depth:8 e nodes:20_000.
+3. lib/atlas-notes-document.ts: inspectStructure(doc depth1 → block depth2 → listItem3 → paragraph4 → text5 → nested list4→ listItem5→ paragraph6→ text7→ nested list6→ listItem7→ paragraph8→ text9) — cada nível visual consome 2 depth; text9 >8 falha.
+4. Validação manual no navegador: N=3 vazio já projeta paragraph8 e N=3 com texto exige text9 → STRUCTURE_TOO_DEEP.
+5. Limites atuais: depth:8, nodes:20_000, textNode:100_000, structured:1_048_576, request:1_310_720, visible:100_000.
+6. Servidor é pure TypeScript DOM-free; determinístico; sem migration D1.
 
 ---
 
 # EXISTING ARCHITECTURAL CONSTRAINTS
 
-DEC-001 — Atlas Notes Canonical Document v2 (ACCEPTED) — base durável do Canonical Document v2. Esta Gate suplementa DEC-001 apenas em nesting de listas; restante de DEC-001 permanece integralmente vigente.
+DEC-001 — base Canonical v2 (ACCEPTED); DEC-002 — Nested Lists forma estrutural e mixing (ACCEPTED). Esta Gate suplementa apenas o limite depth; restante de DEC-001/002 permanece integralmente vigente.
 
 ---
 
 # OPTION A
 
-Indentação visual via attrs.indent / indentLevel.
+Aumentar limite global depth (aprovada).
 
 ## Description
 
-Adicionar atributo numérico de indentação ao listItem/taskItem, sem estrutura aninhada.
+Elevar ATLAS_NOTES_LIMITS.depth de 8 para valor maior preservando semântica depth+1.
 
 ## Architectural Advantages
 
-Mudança mínima de tipos; projeção poderia ignorar atributo.
+Menor mudança (1 constante), determinística, retrocompatível, sem nova semântica; nodes permanece proteção primária contra DoS; 12-16 ainda << stack JS.
 
 ## Architectural Costs / Risks
 
-Viola requisito "hierarquia estrutural real, não apenas indentação visual"; não persiste árvore real; quebra determinismo de validação e sobrevive a save/reload apenas como flat + atributo visual; incompatível com modelo ProseMirror de nested lists.
+Ligeiramente mais permissivo para todas as estruturas, mas ainda tecnicamente seguro.
 
 ---
 
 # OPTION B
 
-listItem/taskItem com paragraph + nested lists heterogêneas (escolhida).
-
-## Description
-
-Estender listItem para content:[Paragraph, ...List[]] e taskItem para content:[Paragraph, ...List[]] onde List = bulletList|orderedList|taskList, com ordem estrita parágrafo primeiro.
-
-## Architectural Advantages
-
-Menor evolução estrutural real; reusa tipos existentes; sem novo nó wrapper; permite mixing heterogêneo com regra única determinística; compatível com Tiptap sem torná-lo source of truth.
-
-## Architectural Costs / Risks
-
-Aumenta profundidade teórica (2 níveis por nesting); rejeição STRUCTURE_TOO_DEEP para nesting muito profundo (comportamento esperado dentro do limite técnico 8); canonicalizer e projeção precisam de extensão recursiva.
+Preservar depth global mas redefinir semântica de contagem — rejeitada (muda significado para tabelas/callouts, exige revalidação ampla).
 
 ---
 
-# ADDITIONAL OPTION
+# OPTION C
 
-Wrapper novo (listGroup/nestedList) — rejeitado por introduzir tipo especulativo desnecessário e divergir do shape ProseMirror sem ganho.
+Separar depth geral de depth específico de listas — rejeitada (introduz 2 limites e complexidade sem ganho vs A).
+
+---
+
+# OPTION D
+
+Cap visual fixo artificial — rejeitada (viola requisito sem limite artificial).
 
 ---
 
@@ -126,7 +106,7 @@ NOT REQUESTED
 
 # DECISION REQUIRED
 
-Resolver: estrutura canônica mínima para nesting, combinações permitidas, mixing, projeção recursiva, limites de profundidade, necessidade de DEC e constraints.
+Determinar semântica preservada, limite técnico, níveis representáveis, necessidade de DEC e constraints; Product Authority escolheu depth:16 dentro das alternativas aprovadas.
 
 ---
 
@@ -134,49 +114,39 @@ Resolver: estrutura canônica mínima para nesting, combinações permitidas, mi
 
 ## Decision
 
-Suplementar o Atlas Notes Canonical Document v2 (DEC-001) dentro do envelope version 2 para permitir hierarquia real de listas, sem nova versão de envelope e sem migration.
+Suplementar DEC-002 elevando o limite técnico global de profundidade estrutural:
 
-- Envelope continua `format:"atlas-notes", version:2` (writers persistem 2; readers aceitam 1 e 2 — DEC-001 inalterado).
-- `listItem` = `{ type:"listItem", content:[ Paragraph, ...List[] ] }` — exatamente 1 parágrafo obrigatório como primeiro elemento, seguido de 0..N listas-filhas.
-- `taskItem` = `{ type:"taskItem", attrs:{checked:boolean}, content:[ Paragraph, ...List[] ] }` — attrs.checked obrigatório, mesmo modelo de conteúdo.
-- `List` = `bulletList | orderedList | taskList` — válidas tanto como blocos em `doc.content` quanto como filhas dentro de `listItem/taskItem`.
-- Listas-filhas podem ser `bulletList, orderedList ou taskList` em qualquer combinação; misturas entre tipos são permitidas (bullet⊂bullet, ordered⊂bullet, task⊂bullet, bullet⊂task e recíprocas) — regra única heterogênea.
-- Ordem estrita: parágrafo primeiro; apenas listas após; qualquer outro bloco/texto direto → rejeitar.
-- Projeção textual recursiva LF-only, sem marcadores/indentação inventados: cada `listItem/taskItem` projeta `projectInline(paragraph)` + (`\n` + listas-filhas projetadas recursivamente); listas projetam `items.map(projectItem).join("\n")`; `task checked` projeta nada; doc final `blocks.map(projectBlock).join("\n").trim()`.
-- Limites existentes permanecem inalterados (`depth:8, nodes:20_000, textNode:100_000, structured:1_048_576, request:1_310_720, visible:100_000`); `depth` e `nodes` aplicados recursivamente (cada nesting adiciona depth; `STRUCTURE_TOO_DEEP` / `TOO_MANY_NODES` se exceder).
-- Documentos v1/v2 flat existentes continuam compatíveis (flat é subset válido do novo shape); nenhuma migration necessária; leitura nunca muta `content_json` ou `body`.
-- Servidor continua DOM/Tiptap-free; Tiptap é traduzido via editor-boundary adapter antes de `prepareAtlasNotesForSave`.
-
-Esta Gate não expande para outros recursos da Quest 3 (links, inserção, outros blocos, UI, CSS, handlers).
+- **depth global: 8 → 16** (escolha Product Authority dentro da alternativa A aprovada; 12 permitiria ~4 níveis com texto, 16 permite ~6 níveis e reduz reincidência).
+- Semântica de contagem permanece **inalterada**: `inspectStructure` continua usando `depth + 1` recursivamente para cada `content[]` aninhado (envelope 0 → doc 1 → block 2 → listItem/taskItem 3 → paragraph 4 → text 5 → nested list 4 → ...).
+- `STRUCTURE_TOO_DEEP` continua quando `depth > limit` (agora >16).
+- Aproximadamente **6 níveis de nested list com texto** tornam-se representáveis (`text15` em N=6; vazios até `paragraph16` em N=7); `depth:12` permitiria ~4 níveis.
+- `nodes:20_000` permanece inalterado; todos os demais limites permanecem inalterados (`request:1_310_720, structured:1_048_576, textNode:100_000, visible:100_000`).
+- Envelope continua `format:"atlas-notes", version:2`; nenhuma migration; nenhuma alteração em canonicalização/projeção de nested lists além do limite.
+- DEC-001 continua base; DEC-002 continua válida para forma e mixing; DEC-003 suplementa somente `depth`.
 
 ## Rationale
 
-1. `paragraph + 0..N nested lists` é a menor evolução que converte indentação visual em hierarquia estrutural real persistente, preservando determinismo e compatibilidade de DEC-001.
-2. Permitir mixing heterogêneo total evita limite artificial de tipo com regra única e determinística; proibir mixing criaria especialização sem benefício e bloquearia conversão legítima de tipo do filho.
-3. Reusar `depth:8` como teto técnico satisfaz "sem limite artificial além dos limites técnicos" sem inflação especulativa de limites.
+1. `depth:16` dobra `8` preservando `depth+1`, permitindo `N=6` funcional com margem sem reincidência do caso `N=3` validado.
+2. Manter `depth` único é a menor mudança (1 constante) vs redefinir contagem ou criar limite separado.
+3. `nodes:20_000` e limites de bytes continuam proteção primária; `depth:16` permanece ordens abaixo do stack, preservando segurança e compatibilidade retroativa (docs `depth≤8` idênticos).
 
 ## Constraints for Codex
 
-- Não criar envelope version 3; não alterar `ATLAS_NOTES_VERSION`; não marcar DEC-001 inteira como SUPERSEDED.
-- Canonicalizer (`canonicalizeListItem`, `canonicalizeTaskItem`, `inspectStructure`) deve aceitar `content[0]=paragraph` + `content[1..]=bulletList|orderedList|taskList` canônicos; validar `assertKeys` estrito, rejeitar qualquer outro filho, ordem incorreta ou lista vazia; manter sort de marks e merge de texto idênticos a DEC-001.
-- Projeção (`projectBlockV2`, `projectList`, `projectItem`) deve ser recursiva LF-only; não inventar `-`, `*`, números, `[x]`, espaços ou indentação; tarefa `checked` projeta apenas texto.
-- Limites: aplicar `depth` e `nodes` recursivamente via `inspectStructure`; não aumentar valores numéricos; `STRUCTURE_TOO_DEEP` para nesting que exceda 8.
-- Compatibilidade: `canonicalizeAtlasNotesContentV2` e `prepareAtlasNotesForSave` devem aceitar flat e nested; flat persiste idêntico; nested persiste como version 2; sem read-time rewrite.
-- Servidor permanece pure TypeScript DOM-free; adapter Tiptap↔canonical roda apenas client-side antes do save.
-- Não implementar UI, CSS, Tab handler como decisão arquitetural; handler é detalhe de implementação que deve produzir o shape canônico acima.
-- Não expandir para outros recursos da Quest 3 (links/inserção/outros blocos) nesta Gate.
+- Alterar apenas `ATLAS_NOTES_LIMITS.depth` de 8 para 16 em implementação futura — **não neste commit arquitetural**.
+- Preservar semântica `inspectStructure` (`depth+1` recursivo) e erro `STRUCTURE_TOO_DEEP` quando `depth > 16`.
+- Não redefinir contagem, não criar `listDepth`, não introduzir cap artificial visual.
+- Não alterar envelope version, canonicalização ou projeção de DEC-002 além do limite.
+- Não incluir `lib/atlas-notes-document.ts` ou arquivos da Quest 3 neste commit.
 
 ## DEC Required
 
-YES
-
-D Durável deve ser registrada como DEC-002 — Atlas Notes Nested Lists (suplemento a DEC-001) em docs/ATLAS_DECISIONS.md
+YES — DEC-003 — Atlas Notes Nested Lists Depth Correction (suplemento a DEC-002) em docs/ATLAS_DECISIONS.md
 
 ---
 
 ## Resolution Rule
 
-This Gate is RESOLVED. Codex may resume implementation respecting the constraints above.
+This Gate is RESOLVED. Codex may resume implementation respecting the constraints above; implementação do novo limite depth:16 é tarefa Codex separada.
 
 ---
 
