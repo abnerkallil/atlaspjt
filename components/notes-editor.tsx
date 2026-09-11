@@ -1,7 +1,6 @@
-// oxlint-disable react(react-compiler)
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { EditorContent, Extension, Mark, useEditor } from '@tiptap/react';
 import { Plugin } from '@tiptap/pm/state';
 import StarterKit from '@tiptap/starter-kit';
@@ -22,14 +21,6 @@ import {
   Heading,
   Paintbrush,
   Check,
-  Link2,
-  Minus,
-  Code2,
-  Sigma,
-  Table2,
-  Footprints,
-  Megaphone,
-  Plus,
 } from 'lucide-react';
 import {
   ContextMenu,
@@ -50,9 +41,6 @@ import {
   projectAtlasNotesBody,
   type AtlasNotesEnvelope,
 } from '@/lib/atlas-notes-document';
-import {
-  AtlasAdvancedNodes,
-} from './notes-editor-extensions';
 import styles from './notes-editor.module.css';
 
 export type NotesEditorSnapshot = {
@@ -80,53 +68,11 @@ function createP0Guard(onRejected: (message: string) => void) {
     name: 'atlasP0Guard',
     priority: 1_000,
     addKeyboardShortcuts() {
-      const moveTableCell = (backward: boolean) => {
-        const { doc, selection } = this.editor.state;
-        const cells: number[] = [];
-        doc.descendants((node, position) => {
-          if (node.type.name === 'tableCell' || node.type.name === 'tableHeader') {
-            cells.push(position);
-          }
-        });
-        if (!cells.length) return false;
-        let currentPosition = -1;
-        for (let depth = selection.$from.depth; depth > 0; depth -= 1) {
-          const node = selection.$from.node(depth);
-          if (node.type.name === 'tableCell' || node.type.name === 'tableHeader') {
-            currentPosition = selection.$from.before(depth);
-            break;
-          }
-        }
-        const currentIndex = Math.max(0, cells.indexOf(currentPosition));
-        const offset = backward ? -1 : 1;
-        const targetIndex = (currentIndex + offset + cells.length) % cells.length;
-        const targetPosition = cells[targetIndex] + 2;
-        this.editor.commands.setTextSelection({
-          from: targetPosition,
-          to: targetPosition,
-        });
-        this.editor.commands.focus();
-        return true;
-      };
       return {
-        Tab: () => {
-          if (this.editor.isActive('listItem') || this.editor.isActive('taskItem')) {
-            return true;
-          }
-          if (this.editor.isActive('tableCell') || this.editor.isActive('tableHeader')) {
-            return moveTableCell(false);
-          }
-          return false;
-        },
-        'Shift-Tab': () => {
-          if (this.editor.isActive('listItem') || this.editor.isActive('taskItem')) {
-            return true;
-          }
-          if (this.editor.isActive('tableCell') || this.editor.isActive('tableHeader')) {
-            return moveTableCell(true);
-          }
-          return false;
-        },
+        Tab: () =>
+          this.editor.isActive('listItem') || this.editor.isActive('taskItem'),
+        'Shift-Tab': () =>
+          this.editor.isActive('listItem') || this.editor.isActive('taskItem'),
         'Shift-Enter': () => this.editor.commands.splitBlock(),
       };
     },
@@ -195,44 +141,6 @@ const inlineMark = (name: string, tag: string) =>
     ],
   });
 
-const AtlasLink = Mark.create({
-  name: 'link',
-  inclusive: false,
-  addAttributes() {
-    return { href: { default: null } };
-  },
-  parseHTML() {
-    return [{ tag: 'a[data-atlas-link]' }, { tag: 'a[href]' }];
-  },
-  renderHTML({ HTMLAttributes }) {
-    return [
-      'a',
-      {
-        ...HTMLAttributes,
-        'data-atlas-link': '',
-        rel: 'noreferrer',
-      },
-      0,
-    ];
-  },
-});
-
-function isAllowedHref(value: string) {
-  try {
-    const protocol = new URL(value.trim()).protocol;
-    return protocol === 'http:' || protocol === 'https:' || protocol === 'mailto:';
-  } catch {
-    return false;
-  }
-}
-
-function newInlineId(existing: Set<string>) {
-  let id = `fn-${Date.now().toString(36)}`;
-  let suffix = 1;
-  while (existing.has(id)) id = `fn-${Date.now().toString(36)}-${suffix++}`;
-  return id;
-}
-
 export function NotesEditor({
   initialContent,
   onChange,
@@ -240,17 +148,7 @@ export function NotesEditor({
 }: NotesEditorProps) {
   const [validationError, setValidationError] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
-  const [savedSelection, setSavedSelection] = useState<{
-    from: number;
-    to: number;
-  } | null>(null);
-  const [inputDialog, setInputDialog] = useState<{
-    kind: 'link' | 'mathInline' | 'mathBlock';
-    currentHref?: string;
-    position?: number;
-  } | null>(null);
-  const [inputValue, setInputValue] = useState('');
-  const [inputError, setInputError] = useState('');
+  const savedSelection = useRef<{ from: number; to: number } | null>(null);
   const guard = useMemo(
     () => createP0Guard((message) => setValidationError(message)),
     [],
@@ -259,10 +157,10 @@ export function NotesEditor({
     () => [
       StarterKit.configure({
         code: false,
-        codeBlock: {},
+        codeBlock: false,
         hardBreak: false,
         heading: { levels: [1, 2, 3, 4, 5, 6] },
-        horizontalRule: {},
+        horizontalRule: false,
         link: false,
         listKeymap: false,
         strike: {},
@@ -272,10 +170,8 @@ export function NotesEditor({
       inlineMark('highlight', 'mark'),
       inlineMark('comment', 'span'),
       inlineMark('code', 'code'),
-      AtlasLink,
       TaskList,
       TaskItem.configure({ nested: false }),
-      ...AtlasAdvancedNodes,
       guard,
       PlainTextPaste,
     ],
@@ -293,14 +189,6 @@ export function NotesEditor({
         'data-placeholder':
           'Escreva sua síntese, dúvida, exemplo ou raciocínio…',
         spellcheck: 'true',
-      },
-      handleDOMEvents: {
-        click: (_view, event) => {
-          const target = event.target as HTMLElement | null;
-          if (!target?.closest('a[data-atlas-link]')) return false;
-          event.preventDefault();
-          return true;
-        },
       },
     },
     onUpdate: ({ editor: currentEditor }) => {
@@ -339,129 +227,16 @@ export function NotesEditor({
     return () => document.removeEventListener('keydown', closeOnEscape, true);
   }, [editor, menuOpen]);
 
-  useEffect(() => {
-    if (!inputDialog) return;
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return;
-      event.preventDefault();
-      setInputDialog(null);
-      setInputError('');
-      editor?.commands.focus();
-    };
-    const closeOnOutsidePointer = (event: PointerEvent) => {
-      const popover = document.querySelector('[data-atlas-input-popover]');
-      if (popover?.contains(event.target as Node)) return;
-      setInputDialog(null);
-      setInputError('');
-      editor?.commands.focus();
-    };
-    document.addEventListener('keydown', closeOnEscape, true);
-    document.addEventListener('pointerdown', closeOnOutsidePointer, true);
-    return () => {
-      document.removeEventListener('keydown', closeOnEscape, true);
-      document.removeEventListener('pointerdown', closeOnOutsidePointer, true);
-    };
-  }, [editor, inputDialog]);
-
   if (!editor) {
     return <div className={styles.loading}>Preparando editor…</div>;
   }
 
   const run = (action: () => void) => {
-    if (savedSelection) editor.commands.setTextSelection(savedSelection);
+    if (savedSelection.current)
+      editor.commands.setTextSelection(savedSelection.current);
     editor.commands.focus();
     action();
     setMenuOpen(false);
-  };
-  const insertLatex = (type: 'mathInline' | 'mathBlock') => {
-    setMenuOpen(false);
-    setInputError('');
-    setInputValue('x^2');
-    setInputDialog({ kind: type });
-  };
-  const insertTable = () => {
-    run(() => {
-      editor.commands.insertContent({
-        type: 'table',
-        content: Array.from({ length: 3 }, () => ({
-          type: 'tableRow',
-          content: Array.from({ length: 3 }, () => ({
-            type: 'tableCell',
-            content: [{ type: 'paragraph' }],
-          })),
-        })),
-      });
-    });
-  };
-  const insertFootnote = () => {
-    const ids = new Set<string>();
-    editor.state.doc.descendants((node) => {
-      if (node.type.name === 'footnote' || node.type.name === 'footnoteRef') {
-        if (typeof node.attrs.id === 'string') ids.add(node.attrs.id);
-      }
-    });
-    const id = newInlineId(ids);
-    run(() => {
-      editor.commands.insertContent({
-        type: 'footnoteRef',
-        attrs: { id },
-      });
-      editor.commands.insertContentAt(editor.state.doc.content.size, {
-        type: 'footnote',
-        attrs: { id },
-        content: [{ type: 'paragraph' }],
-      });
-    });
-  };
-  const editLink = () => {
-    const current = editor.getAttributes('link').href as string | undefined;
-    setMenuOpen(false);
-    setInputError('');
-    setInputValue(current ?? 'https://');
-    setInputDialog({ kind: 'link', currentHref: current });
-  };
-  const applyInputDialog = () => {
-    if (!inputDialog) return;
-    const value = inputValue.trim();
-    if (inputDialog.kind === 'link') {
-      const current = inputDialog.currentHref;
-      const href = value;
-      if (!href) {
-        if (!current) {
-          setInputDialog(null);
-          return;
-        }
-        run(() => editor.commands.unsetMark('link'));
-        setInputDialog(null);
-        return;
-      }
-      if (!isAllowedHref(href)) {
-        setInputError('Use um link http, https ou mailto válido.');
-        return;
-      }
-      run(() => editor.commands.setMark('link', { href }));
-      setInputDialog(null);
-      return;
-    }
-    if (!value) {
-      setInputError('Informe uma expressão LaTeX.');
-      return;
-    }
-    run(() => {
-      if (inputDialog.position !== undefined) {
-        editor.view.dispatch(
-          editor.state.tr.setNodeMarkup(inputDialog.position, undefined, {
-            latex: value,
-          }),
-        );
-      } else {
-        editor.commands.insertContent({
-          type: inputDialog.kind,
-          attrs: { latex: value },
-        });
-      }
-    });
-    setInputDialog(null);
   };
   const marks = [
     { label: 'Negrito', name: 'bold', icon: Bold },
@@ -484,52 +259,18 @@ export function NotesEditor({
     { label: 'Texto', name: 'paragraph', icon: Pilcrow },
     { label: 'Citação', name: 'blockquote', icon: Quote },
   ];
-  const inserts = [
-    { label: 'Link', icon: Link2, action: editLink },
-    { label: 'Linha horizontal', icon: Minus, action: () => run(() => editor.commands.setHorizontalRule()) },
-    { label: 'Bloco de código', icon: Code2, action: () => run(() => editor.commands.toggleCodeBlock()) },
-    { label: 'Equação inline', icon: Sigma, action: () => insertLatex('mathInline') },
-    { label: 'Bloco de equação', icon: Sigma, action: () => insertLatex('mathBlock') },
-    { label: 'Tabela', icon: Table2, action: insertTable },
-    { label: 'Nota de rodapé', icon: Footprints, action: insertFootnote },
-    { label: 'Callout', icon: Megaphone, action: () => run(() => editor.commands.insertContent({ type: 'callout', content: [{ type: 'paragraph' }] })) },
-  ];
   return (
     <div className={styles.editorShell}>
       <ContextMenu open={menuOpen} onOpenChange={setMenuOpen}>
         <ContextMenuTrigger
           className={styles.contextTrigger}
-          onDoubleClick={(event) => {
-            const target = event.target as HTMLElement | null;
-            const nodeElement = target?.closest(
-              '[data-atlas-math-inline], [data-atlas-math-block]',
-            );
-            if (!nodeElement) return;
-            const domPosition = editor.view.posAtDOM(nodeElement, 0);
-            const directNode = editor.state.doc.nodeAt(domPosition);
-            const nodePosition =
-              directNode?.type.name === 'mathInline' ||
-              directNode?.type.name === 'mathBlock'
-                ? domPosition
-                : Math.max(0, domPosition - 1);
-            const node = editor.state.doc.nodeAt(nodePosition);
-            if (!node || (node.type.name !== 'mathInline' && node.type.name !== 'mathBlock'))
-              return;
-            event.preventDefault();
-            setInputError('');
-            setInputValue(node.attrs.latex);
-            setInputDialog({
-              kind: node.type.name,
-              position: nodePosition,
-            });
-          }}
           onContextMenuCapture={(event) => {
             const selection = editor.state.selection;
             if (!selection.empty) {
-              setSavedSelection({
+              savedSelection.current = {
                 from: selection.from,
                 to: selection.to,
-              });
+              };
               return;
             }
 
@@ -538,8 +279,8 @@ export function NotesEditor({
               top: event.clientY,
             });
             const position = point?.pos ?? selection.from;
-            setSavedSelection({ from: position, to: position });
-            editor.commands.setTextSelection({ from: position, to: position });
+            savedSelection.current = { from: position, to: position };
+            editor.commands.setTextSelection(savedSelection.current);
           }}
         >
           <EditorContent editor={editor} className={styles.editorSurface} />
@@ -667,83 +408,8 @@ export function NotesEditor({
               })}
             </ContextMenuSubContent>
           </ContextMenuSub>
-          <ContextMenuSub>
-            <ContextMenuSubTrigger className={styles.menuItem}>
-              <Plus />
-              Inserir
-            </ContextMenuSubTrigger>
-            <ContextMenuSubContent className={styles.menu}>
-              {/* oxlint-disable-next-line react(react-compiler) */}
-              {inserts.map(({ label, icon: Icon, action }, index) => (
-                <div key={label}>
-                  {(index === 2 || index === 5) && <ContextMenuSeparator />}
-                  <ContextMenuItem
-                    className={styles.menuItem}
-                    onClick={action}
-                  >
-                    <Icon />
-                    <span>{label}</span>
-                  </ContextMenuItem>
-                </div>
-              ))}
-            </ContextMenuSubContent>
-          </ContextMenuSub>
         </ContextMenuContent>
       </ContextMenu>
-      {inputDialog && (
-        <dialog open
-          className={styles.inputPopover}
-          data-atlas-input-popover
-          aria-label={inputDialog.kind === 'link' ? 'Inserir link' : 'Inserir equação'}
-        >
-          <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            applyInputDialog();
-          }}
-          >
-          <label htmlFor="atlas-editor-input">
-            {inputDialog.kind === 'link' ? 'URL do link' : 'Expressão LaTeX'}
-          </label>
-          <input
-            id="atlas-editor-input"
-            value={inputValue}
-            autoFocus
-            onChange={(event) => {
-              setInputValue(event.target.value);
-              setInputError('');
-            }}
-          />
-          {inputError && <span className={styles.inputError}>{inputError}</span>}
-          <div className={styles.inputActions}>
-            <button
-              type="button"
-              onClick={() => {
-                setInputDialog(null);
-                setInputError('');
-                editor.commands.focus();
-              }}
-            >
-              Cancelar
-            </button>
-            {inputDialog.kind === 'link' && inputDialog.currentHref && (
-              <button
-                type="button"
-                onClick={() => {
-                  run(() => editor.commands.unsetMark('link'));
-                  setInputDialog(null);
-                }}
-              >
-                Remover
-              </button>
-            )}
-            <button type="submit" className={styles.primaryAction}>
-              Aplicar
-            </button>
-          </div>
-          </form>
-        </dialog>
-      )}
       {validationError && (
         <p className={styles.validationError} role="alert">
           {validationError}
