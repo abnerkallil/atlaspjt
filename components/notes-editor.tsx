@@ -1,23 +1,37 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { EditorContent, Extension, useEditor } from '@tiptap/react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { EditorContent, Extension, Mark, useEditor } from '@tiptap/react';
 import { Plugin } from '@tiptap/pm/state';
 import StarterKit from '@tiptap/starter-kit';
+import { TaskList, TaskItem } from '@tiptap/extension-list';
 import {
   Bold,
-  Heading1,
-  Heading2,
-  Heading3,
   Italic,
+  Strikethrough,
+  Highlighter,
+  Code,
+  MessageSquare,
+  Eraser,
   List,
   ListOrdered,
+  ListTodo,
   Pilcrow,
   Quote,
-  Redo2,
-  Undo2,
+  Heading,
+  Paintbrush,
+  Check,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+  ContextMenuSub,
+  ContextMenuSubTrigger,
+  ContextMenuSubContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+} from '@/components/ui/context-menu';
 import {
   ATLAS_NOTES_FORMAT,
   ATLAS_NOTES_LIMITS,
@@ -55,8 +69,10 @@ function createP0Guard(onRejected: (message: string) => void) {
     priority: 1_000,
     addKeyboardShortcuts() {
       return {
-        Tab: () => this.editor.isActive('listItem'),
-        'Shift-Tab': () => this.editor.isActive('listItem'),
+        Tab: () =>
+          this.editor.isActive('listItem') || this.editor.isActive('taskItem'),
+        'Shift-Tab': () =>
+          this.editor.isActive('listItem') || this.editor.isActive('taskItem'),
         'Shift-Enter': () => this.editor.commands.splitBlock(),
       };
     },
@@ -111,12 +127,28 @@ const PlainTextPaste = Extension.create({
   },
 });
 
+const inlineMark = (name: string, tag: string) =>
+  Mark.create({
+    name,
+    excludes: '',
+    parseHTML: () => [
+      { tag: name === 'comment' ? 'span[data-atlas-comment]' : tag },
+    ],
+    renderHTML: () => [
+      tag,
+      name === 'comment' ? { 'data-atlas-comment': '' } : {},
+      0,
+    ],
+  });
+
 export function NotesEditor({
   initialContent,
   onChange,
   onValidationChange,
 }: NotesEditorProps) {
   const [validationError, setValidationError] = useState('');
+  const [menuOpen, setMenuOpen] = useState(false);
+  const savedSelection = useRef<{ from: number; to: number } | null>(null);
   const guard = useMemo(
     () => createP0Guard((message) => setValidationError(message)),
     [],
@@ -127,14 +159,19 @@ export function NotesEditor({
         code: false,
         codeBlock: false,
         hardBreak: false,
-        heading: { levels: [1, 2, 3] },
+        heading: { levels: [1, 2, 3, 4, 5, 6] },
         horizontalRule: false,
         link: false,
         listKeymap: false,
-        strike: false,
+        strike: {},
         trailingNode: false,
         underline: false,
       }),
+      inlineMark('highlight', 'mark'),
+      inlineMark('comment', 'span'),
+      inlineMark('code', 'code'),
+      TaskList,
+      TaskItem.configure({ nested: false }),
       guard,
       PlainTextPaste,
     ],
@@ -175,131 +212,204 @@ export function NotesEditor({
     },
   });
 
+  useEffect(() => {
+    if (!editor || !menuOpen) return;
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      event.preventDefault();
+      event.stopPropagation();
+      setMenuOpen(false);
+      editor.commands.focus();
+    };
+
+    document.addEventListener('keydown', closeOnEscape, true);
+    return () => document.removeEventListener('keydown', closeOnEscape, true);
+  }, [editor, menuOpen]);
+
   if (!editor) {
     return <div className={styles.loading}>Preparando editor…</div>;
   }
 
-  const blockControls = [
-    {
-      label: 'Parágrafo',
-      icon: Pilcrow,
-      active: editor.isActive('paragraph'),
-      action: () => editor.chain().focus().setParagraph().run(),
-    },
-    ...([1, 2, 3] as const).map((level) => ({
-      label: `Título ${level}`,
-      icon: level === 1 ? Heading1 : level === 2 ? Heading2 : Heading3,
-      active: editor.isActive('heading', { level }),
-      action: () => editor.chain().focus().toggleHeading({ level }).run(),
-    })),
-    {
-      label: 'Lista com marcadores',
-      icon: List,
-      active: editor.isActive('bulletList'),
-      action: () => editor.chain().focus().toggleBulletList().run(),
-    },
-    {
-      label: 'Lista numerada',
-      icon: ListOrdered,
-      active: editor.isActive('orderedList'),
-      action: () => editor.chain().focus().toggleOrderedList().run(),
-    },
-    {
-      label: 'Citação',
-      icon: Quote,
-      active: editor.isActive('blockquote'),
-      action: () => editor.chain().focus().toggleBlockquote().run(),
-    },
+  const run = (action: () => void) => {
+    if (savedSelection.current)
+      editor.commands.setTextSelection(savedSelection.current);
+    editor.commands.focus();
+    action();
+    setMenuOpen(false);
+  };
+  const marks = [
+    { label: 'Negrito', name: 'bold', icon: Bold },
+    { label: 'Itálico', name: 'italic', icon: Italic },
+    { label: 'Riscado', name: 'strike', icon: Strikethrough },
+    { label: 'Realce', name: 'highlight', icon: Highlighter },
+    { label: 'Código inline', name: 'code', icon: Code },
+    { label: 'Comentário inline', name: 'comment', icon: MessageSquare },
   ];
-
+  const blocks = [
+    { label: 'Lista de marcadores', name: 'bulletList', icon: List },
+    { label: 'Lista numerada', name: 'orderedList', icon: ListOrdered },
+    { label: 'Lista de tarefas', name: 'taskList', icon: ListTodo },
+    ...([1, 2, 3, 4, 5, 6] as const).map((level) => ({
+      label: `H${level}`,
+      name: 'heading',
+      level,
+      icon: Heading,
+    })),
+    { label: 'Texto', name: 'paragraph', icon: Pilcrow },
+    { label: 'Citação', name: 'blockquote', icon: Quote },
+  ];
   return (
     <div className={styles.editorShell}>
-      <div
-        className={styles.toolbar}
-        role="toolbar"
-        aria-label="Formatação do texto"
-        tabIndex={-1}
-        onKeyDown={(event) => {
-          if (event.key === 'Escape') {
-            event.preventDefault();
-            editor.commands.focus();
-          }
-        }}
-      >
-        <fieldset className={styles.toolbarGroup}>
-          <legend className={styles.srOnly}>Blocos de texto</legend>
-          {blockControls.map(({ label, icon: Icon, active, action }) => (
-            <Button
-              key={label}
-              type="button"
-              size="sm"
-              variant={active ? 'default' : 'outline'}
-              aria-label={label}
-              aria-pressed={active}
-              title={label}
-              onClick={action}
+      <ContextMenu open={menuOpen} onOpenChange={setMenuOpen}>
+        <ContextMenuTrigger
+          className={styles.contextTrigger}
+          onContextMenuCapture={(event) => {
+            const selection = editor.state.selection;
+            if (!selection.empty) {
+              savedSelection.current = {
+                from: selection.from,
+                to: selection.to,
+              };
+              return;
+            }
+
+            const point = editor.view.posAtCoords({
+              left: event.clientX,
+              top: event.clientY,
+            });
+            const position = point?.pos ?? selection.from;
+            savedSelection.current = { from: position, to: position };
+            editor.commands.setTextSelection(savedSelection.current);
+          }}
+        >
+          <EditorContent editor={editor} className={styles.editorSurface} />
+        </ContextMenuTrigger>
+        <ContextMenuContent
+          className={styles.menu}
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') {
+              setMenuOpen(false);
+              editor.commands.focus();
+            }
+          }}
+          finalFocus={false}
+        >
+          <ContextMenuSub>
+            <ContextMenuSubTrigger className={styles.menuItem}>
+              <Paintbrush />
+              Formatar
+            </ContextMenuSubTrigger>
+            <ContextMenuSubContent
+              className={styles.menu}
+              onKeyDown={(event) => {
+                if (event.key === 'Escape') {
+                  setMenuOpen(false);
+                  editor.commands.focus();
+                }
+              }}
             >
-              <Icon aria-hidden="true" />
-              <span>{label}</span>
-            </Button>
-          ))}
-        </fieldset>
-
-        <fieldset className={styles.toolbarGroup}>
-          <legend className={styles.srOnly}>Ênfase e histórico</legend>
-          <Button
-            type="button"
-            size="sm"
-            variant={editor.isActive('bold') ? 'default' : 'outline'}
-            aria-label="Negrito"
-            aria-pressed={editor.isActive('bold')}
-            title="Negrito (Ctrl+B)"
-            onClick={() => editor.chain().focus().toggleBold().run()}
-          >
-            <Bold aria-hidden="true" />
-            <span>Negrito</span>
-          </Button>
-          <Button
-            type="button"
-            size="sm"
-            variant={editor.isActive('italic') ? 'default' : 'outline'}
-            aria-label="Itálico"
-            aria-pressed={editor.isActive('italic')}
-            title="Itálico (Ctrl+I)"
-            onClick={() => editor.chain().focus().toggleItalic().run()}
-          >
-            <Italic aria-hidden="true" />
-            <span>Itálico</span>
-          </Button>
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            aria-label="Desfazer"
-            title="Desfazer"
-            disabled={!editor.can().chain().focus().undo().run()}
-            onClick={() => editor.chain().focus().undo().run()}
-          >
-            <Undo2 aria-hidden="true" />
-            <span>Desfazer</span>
-          </Button>
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            aria-label="Refazer"
-            title="Refazer"
-            disabled={!editor.can().chain().focus().redo().run()}
-            onClick={() => editor.chain().focus().redo().run()}
-          >
-            <Redo2 aria-hidden="true" />
-            <span>Refazer</span>
-          </Button>
-        </fieldset>
-      </div>
-
-      <EditorContent editor={editor} className={styles.editorSurface} />
-
+              {marks.map(({ label, name, icon: Icon }, index) => (
+                <div key={name}>
+                  {index === 4 && <ContextMenuSeparator />}
+                  <ContextMenuItem
+                    className={styles.menuItem}
+                    onClick={() =>
+                      run(() => {
+                        editor.chain().focus().toggleMark(name).run();
+                      })
+                    }
+                  >
+                    <Icon />
+                    <span>{label}</span>
+                    {editor.isActive(name) && (
+                      <Check
+                        className={styles.activeCheck}
+                        aria-label="Ativo"
+                      />
+                    )}
+                  </ContextMenuItem>
+                </div>
+              ))}
+              <ContextMenuSeparator />
+              <ContextMenuItem
+                className={styles.menuItem}
+                onClick={() =>
+                  run(() => {
+                    const chain = editor.chain();
+                    marks.forEach((mark) => chain.unsetMark(mark.name));
+                    chain.run();
+                  })
+                }
+              >
+                <Eraser />
+                Limpar formatação
+              </ContextMenuItem>
+            </ContextMenuSubContent>
+          </ContextMenuSub>
+          <ContextMenuSub>
+            <ContextMenuSubTrigger className={styles.menuItem}>
+              <Pilcrow />
+              Parágrafo
+            </ContextMenuSubTrigger>
+            <ContextMenuSubContent
+              className={styles.menu}
+              onKeyDown={(event) => {
+                if (event.key === 'Escape') {
+                  setMenuOpen(false);
+                  editor.commands.focus();
+                }
+              }}
+            >
+              {blocks.map(({ label, name, icon: Icon, ...attrs }, index) => {
+                const level = 'level' in attrs ? attrs.level : undefined;
+                const active =
+                  editor.isActive(name, level ? { level } : undefined) &&
+                  (name !== 'paragraph' ||
+                    ![
+                      'bulletList',
+                      'orderedList',
+                      'taskList',
+                      'blockquote',
+                    ].some((type) => editor.isActive(type)));
+                return (
+                  <div key={label}>
+                    {(index === 3 || index === 10) && <ContextMenuSeparator />}
+                    <ContextMenuItem
+                      className={styles.menuItem}
+                      onClick={() =>
+                        run(() => {
+                          const chain = editor.chain().clearNodes();
+                          if (name === 'heading' && level)
+                            chain.setHeading({ level });
+                          else if (name === 'blockquote') chain.setBlockquote();
+                          else if (name === 'bulletList')
+                            chain.toggleBulletList();
+                          else if (name === 'orderedList')
+                            chain.toggleOrderedList();
+                          else if (name === 'taskList')
+                            chain.toggleList('taskList', 'taskItem');
+                          else chain.setParagraph();
+                          chain.run();
+                        })
+                      }
+                    >
+                      <Icon />
+                      <span>{label}</span>
+                      {active && (
+                        <Check
+                          className={styles.activeCheck}
+                          aria-label="Ativo"
+                        />
+                      )}
+                    </ContextMenuItem>
+                  </div>
+                );
+              })}
+            </ContextMenuSubContent>
+          </ContextMenuSub>
+        </ContextMenuContent>
+      </ContextMenu>
       {validationError && (
         <p className={styles.validationError} role="alert">
           {validationError}

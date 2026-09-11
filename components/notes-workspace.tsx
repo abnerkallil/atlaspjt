@@ -51,7 +51,8 @@ type AtlasNote = {
 };
 
 function newId() {
-  return crypto.randomUUID();
+  if (typeof crypto.randomUUID === 'function') return crypto.randomUUID();
+  return `atlas-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
 }
 
 function emptyNoteContent() {
