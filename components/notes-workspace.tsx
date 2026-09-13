@@ -348,6 +348,7 @@ export function NotesWorkspace() {
           <NotesEditor
             key={draftId}
             initialContent={content}
+            noteTitle={title}
             onChange={updateEditor}
             onValidationChange={updateEditorValidation}
           />

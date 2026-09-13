@@ -13,6 +13,7 @@ import {
   assertAtlasNotesStructuredWrite,
   parseAtlasNotesSaveRequest,
 } from '../lib/atlas-notes-input.js';
+import { canSinkListItemWithinDepth } from '../components/notes-editor-list-guard.js';
 
 const v2Content = {
   format: ATLAS_NOTES_FORMAT,
@@ -65,6 +66,12 @@ function expectCode(action: () => unknown, code: string, status = 400) {
     return true;
   });
 }
+
+void test('prevents sinking a list item beyond the canonical depth limit', () => {
+  assert.equal(canSinkListItemWithinDepth(5, 2, ATLAS_NOTES_LIMITS.depth), true);
+  assert.equal(canSinkListItemWithinDepth(6, 2, ATLAS_NOTES_LIMITS.depth), false);
+  assert.equal(ATLAS_NOTES_LIMITS.depth, 16);
+});
 
 void test('accepts structured v2 input and persists canonical v2 fields', () => {
   const parsed = parseAtlasNotesSaveRequest(
@@ -249,6 +256,50 @@ void test('round-trips all v2 persistence shapes through request and stored JSON
   assert.deepEqual(stored, parsed.content);
   assert.equal(projectAtlasNotesBody(stored), body);
   assert.equal(stored.version, 2);
+});
+
+void test('round-trips nested lists through structured save and hydration', () => {
+  const content = {
+    format: ATLAS_NOTES_FORMAT,
+    version: 2,
+    doc: {
+      type: 'doc',
+      content: [
+        {
+          type: 'bulletList',
+          content: [
+            {
+              type: 'listItem',
+              content: [
+                { type: 'paragraph', content: [{ type: 'text', text: 'parent' }] },
+                {
+                  type: 'orderedList',
+                  attrs: { start: 1, type: null },
+                  content: [
+                    {
+                      type: 'listItem',
+                      content: [
+                        { type: 'paragraph', content: [{ type: 'text', text: 'child' }] },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  };
+  const body = projectAtlasNotesBody(content);
+  const parsed = parseAtlasNotesSaveRequest(
+    payload({ body, content }),
+    'create',
+  );
+  const stored = canonicalizeAtlasNotesContent(JSON.parse(parsed.contentJson!));
+  assert.equal(body, 'parent\nchild');
+  assert.deepEqual(stored, parsed.content);
+  assert.equal(projectAtlasNotesBody(stored), body);
 });
 
 void test('rejects malformed input and invalid relationships', () => {

@@ -31,6 +31,18 @@ const envelope = (content: unknown[], version: unknown = 2) => ({
   version,
   doc: { type: 'doc', content },
 });
+const nestedBulletList = (levels: number, withText = true): unknown => {
+  const itemContent: unknown[] = [
+    paragraph(withText ? `level ${levels}` : ''),
+  ];
+  if (levels > 1) {
+    itemContent.push(nestedBulletList(levels - 1, withText));
+  }
+  return {
+    type: 'bulletList',
+    content: [{ type: 'listItem', content: itemContent }],
+  };
+};
 
 function expectCode(action: () => unknown, code: string, status = 400) {
   assert.throws(action, (error) => {
@@ -41,12 +53,12 @@ function expectCode(action: () => unknown, code: string, status = 400) {
   });
 }
 
-void test('publishes the DEC-001 version and unchanged safety limits', () => {
+void test('publishes DEC-003 depth and unchanged safety limits', () => {
   assert.equal(ATLAS_NOTES_VERSION, 2);
   assert.deepEqual(ATLAS_NOTES_LIMITS, {
     requestBytes: 1_310_720,
     structuredBytes: 1_048_576,
-    depth: 8,
+    depth: 16,
     nodes: 20_000,
     textNodeLength: 100_000,
     visibleLength: 100_000,
@@ -166,6 +178,152 @@ void test('keeps v1-subset projection byte-identical between versions', () => {
   assert.equal(
     projectAtlasNotesBody(envelope(blocks, 1)),
     projectAtlasNotesBody(envelope(blocks, 2)),
+  );
+});
+
+void test('accepts mixed nested lists and projects them depth-first', () => {
+  const source = envelope([
+    {
+      type: 'bulletList',
+      content: [
+        {
+          type: 'listItem',
+          content: [
+            paragraph('bullet parent'),
+            {
+              type: 'bulletList',
+              content: [
+                { type: 'listItem', content: [paragraph('bullet child')] },
+              ],
+            },
+          ],
+        },
+        {
+          type: 'listItem',
+          content: [
+            paragraph('ordered parent'),
+            {
+              type: 'orderedList',
+              attrs: { start: 1, type: null },
+              content: [{ type: 'listItem', content: [paragraph('ordered child')] }],
+            },
+          ],
+        },
+        {
+          type: 'listItem',
+          content: [
+            paragraph('task parent'),
+            {
+              type: 'taskList',
+              content: [{ type: 'taskItem', attrs: { checked: false }, content: [paragraph('task child')] }],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      type: 'taskList',
+      content: [
+        {
+          type: 'taskItem',
+          attrs: { checked: true },
+          content: [
+            paragraph('task root'),
+            {
+              type: 'bulletList',
+              content: [{ type: 'listItem', content: [paragraph('bullet under task')] }],
+            },
+          ],
+        },
+      ],
+    },
+  ]);
+  const canonical = canonicalizeAtlasNotesContentV2(source);
+  assert.deepEqual(canonical, source);
+  assert.equal(
+    projectAtlasNotesBody(canonical),
+    'bullet parent\nbullet child\nordered parent\nordered child\ntask parent\ntask child\ntask root\nbullet under task',
+  );
+});
+
+void test('rejects invalid nested list child order, types and empty lists', () => {
+  const invalidCases: unknown[] = [
+    {
+      type: 'bulletList',
+      content: [
+        {
+          type: 'listItem',
+          content: [paragraph('parent'), paragraph('not a list')],
+        },
+      ],
+    },
+    {
+      type: 'bulletList',
+      content: [
+        {
+          type: 'listItem',
+          content: [{ type: 'orderedList', attrs: { start: 1, type: null }, content: [] }],
+        },
+      ],
+    },
+    {
+      type: 'bulletList',
+      content: [
+        {
+          type: 'listItem',
+          content: [paragraph('parent'), { type: 'paragraph' }],
+        },
+      ],
+    },
+    {
+      type: 'bulletList',
+      content: [
+        {
+          type: 'listItem',
+          content: [
+            paragraph('parent'),
+            { type: 'bulletList', content: [{ type: 'listItem', content: [paragraph('child'), { type: 'callout', content: [paragraph('bad')] }] }] },
+          ],
+        },
+      ],
+    },
+  ];
+  for (const invalid of invalidCases) {
+    assert.throws(() => canonicalizeAtlasNotesContent(envelope([invalid])), (error) => {
+      assert.ok(error instanceof AtlasNotesValidationError);
+      assert.ok(error.code === 'INVALID_NODE' || error.code === 'UNKNOWN_FIELD');
+      return true;
+    });
+  }
+  expectCode(
+    () =>
+      canonicalizeAtlasNotesContent(
+        envelope([
+          {
+            type: 'bulletList',
+            content: [
+              {
+                type: 'listItem',
+                content: [paragraph('parent'), paragraph('nested')],
+              },
+            ],
+          },
+        ], 1),
+      ),
+    'INVALID_NODE',
+  );
+});
+
+void test('accepts depth through 16 and rejects structures beyond it', () => {
+  assert.doesNotThrow(() =>
+    canonicalizeAtlasNotesContent(envelope([nestedBulletList(6)])),
+  );
+  assert.doesNotThrow(() =>
+    canonicalizeAtlasNotesContent(envelope([nestedBulletList(7, false)])),
+  );
+  expectCode(
+    () => canonicalizeAtlasNotesContent(envelope([nestedBulletList(7)])),
+    'STRUCTURE_TOO_DEEP',
   );
 });
 
@@ -933,7 +1091,7 @@ void test('enforces request, structured, depth, node and text-node guards', () =
     413,
   );
   let tooDeep: unknown = { type: 'text', text: 'x' };
-  for (let index = 0; index < 9; index += 1) {
+  for (let index = 0; index < 15; index += 1) {
     tooDeep = { type: `level-${index}`, content: [tooDeep] };
   }
   expectCode(

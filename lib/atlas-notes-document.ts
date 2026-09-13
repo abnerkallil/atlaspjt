@@ -4,7 +4,7 @@ export const ATLAS_NOTES_VERSION = 2 as const;
 export const ATLAS_NOTES_LIMITS = {
   requestBytes: 1_310_720,
   structuredBytes: 1_048_576,
-  depth: 8,
+  depth: 16,
   nodes: 20_000,
   textNodeLength: 100_000,
   visibleLength: 100_000,
@@ -73,12 +73,12 @@ export type AtlasNotesHeading = {
 };
 export type AtlasNotesListItem = {
   type: 'listItem';
-  content: [AtlasNotesParagraph];
+  content: [AtlasNotesParagraph, ...AtlasNotesNestedList[]];
 };
 export type AtlasNotesTaskItem = {
   type: 'taskItem';
   attrs: { checked: boolean };
-  content: [AtlasNotesParagraph];
+  content: [AtlasNotesParagraph, ...AtlasNotesNestedList[]];
 };
 export type AtlasNotesBulletList = {
   type: 'bulletList';
@@ -93,6 +93,10 @@ export type AtlasNotesTaskList = {
   type: 'taskList';
   content: AtlasNotesTaskItem[];
 };
+export type AtlasNotesNestedList =
+  | AtlasNotesBulletList
+  | AtlasNotesOrderedList
+  | AtlasNotesTaskList;
 export type AtlasNotesBlockquote = {
   type: 'blockquote';
   content: AtlasNotesParagraph[];
@@ -497,14 +501,29 @@ function canonicalizeListItem(
   if (
     node.type !== 'listItem' ||
     !Array.isArray(node.content) ||
-    node.content.length !== 1
+    node.content.length < 1
   ) {
     fail(
       'INVALID_NODE',
-      'Cada item de lista deve conter exatamente um parágrafo.',
+      'Cada item de lista deve começar com um parágrafo.',
       path,
     );
   }
+  if (version === 1 && node.content.length !== 1) {
+    fail(
+      'INVALID_NODE',
+      'Listas v1 não aceitam listas aninhadas.',
+      `${path}.content`,
+    );
+  }
+  const nested = (node.content as unknown[]).slice(1).map((child, index) =>
+    canonicalizeNestedList(
+      child,
+      `${path}.content[${index + 1}]`,
+      version,
+      footnotes,
+    ),
+  );
   return {
     type: 'listItem',
     content: [
@@ -514,13 +533,15 @@ function canonicalizeListItem(
         version,
         footnotes,
       ),
-    ],
+      ...nested,
+    ] as [AtlasNotesParagraph, ...AtlasNotesNestedList[]],
   };
 }
 
 function canonicalizeTaskItem(
   value: unknown,
   path: string,
+  version: AtlasNotesVersion,
   footnotes: FootnoteContext,
 ): AtlasNotesTaskItem {
   const node = asRecord(value, path);
@@ -531,14 +552,22 @@ function canonicalizeTaskItem(
     node.type !== 'taskItem' ||
     typeof attrs.checked !== 'boolean' ||
     !Array.isArray(node.content) ||
-    node.content.length !== 1
+    node.content.length < 1
   ) {
     fail(
       'INVALID_NODE',
-      'Cada tarefa deve conter estado e exatamente um parágrafo.',
+      'Cada tarefa deve conter estado e começar com um parágrafo.',
       path,
     );
   }
+  const nested = (node.content as unknown[]).slice(1).map((child, index) =>
+    canonicalizeNestedList(
+      child,
+      `${path}.content[${index + 1}]`,
+      version,
+      footnotes,
+    ),
+  );
   return {
     type: 'taskItem',
     attrs: { checked: attrs.checked },
@@ -546,11 +575,72 @@ function canonicalizeTaskItem(
       canonicalizeParagraph(
         node.content[0],
         `${path}.content[0]`,
-        2,
+        version,
         footnotes,
       ),
-    ],
+      ...nested,
+    ] as [AtlasNotesParagraph, ...AtlasNotesNestedList[]],
   };
+}
+
+function canonicalizeNestedList(
+  value: unknown,
+  path: string,
+  version: AtlasNotesVersion,
+  footnotes: FootnoteContext,
+): AtlasNotesNestedList {
+  const node = asRecord(value, path);
+  if (node.type === 'taskList') {
+    if (version === 1) {
+      fail('INVALID_NODE', 'Tipo de bloco não permitido.', path);
+    }
+    assertKeys(node, ['type', 'content'], path);
+    if (!Array.isArray(node.content) || !node.content.length) {
+      fail('INVALID_NODE', 'Uma lista de tarefas precisa ter itens.', path);
+    }
+    return {
+      type: 'taskList',
+      content: node.content.map((item, index) =>
+        canonicalizeTaskItem(
+          item,
+          `${path}.content[${index}]`,
+          version,
+          footnotes,
+        ),
+      ),
+    };
+  }
+  if (node.type !== 'bulletList' && node.type !== 'orderedList') {
+    fail('INVALID_NODE', 'Lista aninhada não permitida.', path);
+  }
+  const ordered = node.type === 'orderedList';
+  assertKeys(
+    node,
+    ordered ? ['type', 'attrs', 'content'] : ['type', 'content'],
+    path,
+  );
+  if (!Array.isArray(node.content) || !node.content.length) {
+    fail('INVALID_NODE', 'Uma lista precisa ter ao menos um item.', path);
+  }
+  const content = node.content.map((item, index) =>
+    canonicalizeListItem(
+      item,
+      `${path}.content[${index}]`,
+      version,
+      footnotes,
+    ),
+  );
+  if (!ordered) return { type: 'bulletList', content };
+  const attrs = asRecord(node.attrs, `${path}.attrs`);
+  assertKeys(attrs, ['start', 'type'], `${path}.attrs`);
+  if (attrs.start !== 1 || attrs.type !== null) {
+    fail(
+      'INVALID_NODE',
+      'A lista numerada deve usar a numeração padrão.',
+      `${path}.attrs`,
+    );
+  }
+  return { type: 'orderedList', attrs: { start: 1, type: null }, content };
 }
 
 function canonicalizeTableCell(
@@ -689,34 +779,7 @@ function canonicalizeBlock(
   }
 
   if (node.type === 'bulletList' || node.type === 'orderedList') {
-    const ordered = node.type === 'orderedList';
-    assertKeys(
-      node,
-      ordered ? ['type', 'attrs', 'content'] : ['type', 'content'],
-      path,
-    );
-    if (!Array.isArray(node.content) || !node.content.length) {
-      fail('INVALID_NODE', 'Uma lista precisa ter ao menos um item.', path);
-    }
-    const content = node.content.map((item, index) =>
-      canonicalizeListItem(
-        item,
-        `${path}.content[${index}]`,
-        version,
-        footnotes,
-      ),
-    );
-    if (!ordered) return { type: 'bulletList', content };
-    const attrs = asRecord(node.attrs, `${path}.attrs`);
-    assertKeys(attrs, ['start', 'type'], `${path}.attrs`);
-    if (attrs.start !== 1 || attrs.type !== null) {
-      fail(
-        'INVALID_NODE',
-        'A lista numerada deve usar a numeração padrão.',
-        `${path}.attrs`,
-      );
-    }
-    return { type: 'orderedList', attrs: { start: 1, type: null }, content };
+    return canonicalizeNestedList(node, path, version, footnotes);
   }
 
   if (node.type === 'blockquote') {
@@ -744,7 +807,12 @@ function canonicalizeBlock(
     return {
       type: 'taskList',
       content: node.content.map((item, index) =>
-        canonicalizeTaskItem(item, `${path}.content[${index}]`, footnotes),
+        canonicalizeTaskItem(
+          item,
+          `${path}.content[${index}]`,
+          version,
+          footnotes,
+        ),
       ),
     };
   }
@@ -960,13 +1028,29 @@ function projectParagraphs(
     .join('\n');
 }
 
+function projectListItem(
+  item: AtlasNotesListItem | AtlasNotesTaskItem,
+  version: AtlasNotesVersion,
+): string {
+  return [
+    projectInline(item.content[0].content, version),
+    ...(item.content.slice(1) as AtlasNotesNestedList[]).map((list) =>
+      projectList(list, version),
+    ),
+  ].join('\n');
+}
+
+function projectList(list: AtlasNotesNestedList, version: AtlasNotesVersion): string {
+  return list.content.map((item) => projectListItem(item, version)).join('\n');
+}
+
 function projectBlockV1(block: AtlasNotesBlock): string {
   if (block.type === 'paragraph' || block.type === 'heading') {
     return projectInline(block.content, 1);
   }
   if (block.type === 'bulletList' || block.type === 'orderedList') {
     return block.content
-      .map((item) => projectInline(item.content[0].content, 1))
+      .map((item) => projectListItem(item, 1))
       .join('\n');
   }
   if (block.type === 'blockquote') return projectParagraphs(block.content, 1);
@@ -983,7 +1067,7 @@ function projectBlockV2(block: AtlasNotesBlock): string {
     block.type === 'taskList'
   ) {
     return block.content
-      .map((item) => projectInline(item.content[0].content, 2))
+      .map((item) => projectListItem(item, 2))
       .join('\n');
   }
   if (

@@ -1,4 +1,5 @@
 .editorShell {
+  position: relative;
   display: flex;
   min-height: 390px;
   flex: 1;
@@ -95,6 +96,30 @@
   line-height: 1.45;
 }
 
+.listDepthNotice {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1000;
+  display: grid;
+  gap: 2px;
+  max-width: min(300px, calc(100% - 28px));
+  padding: 10px 13px;
+  border: 1px solid #d4ddec;
+  border-radius: 9px;
+  color: #526987;
+  background: #fff;
+  box-shadow: 0 8px 24px #243d6826;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  pointer-events: none;
+}
+
+.listDepthNotice strong {
+  color: #344d76;
+  font-weight: 700;
+}
+
 .loading {
   min-height: 390px;
   margin-top: 16px;
@@ -146,6 +171,130 @@
   margin-left: auto;
   color: #2463eb;
 }
+.inputPopover,
+.confirmPopover,
+.linkPopover {
+  position: absolute;
+  z-index: 20;
+  margin: 0;
+  width: min(340px, calc(100% - 28px));
+  padding: 12px;
+  border: 1px solid #dce3ef;
+  border-radius: 10px;
+  color: #353744;
+  background: #fff;
+  box-shadow: 0 10px 28px #243d6826;
+  font-family: var(--font-atlas-sans), Arial, sans-serif;
+  font-size: 0.8125rem;
+}
+.inputPopover {
+  top: 14px;
+  right: 14px;
+}
+.confirmPopover {
+  top: 14px;
+  right: 14px;
+}
+.inputPopover form,
+.confirmPopover,
+.linkPopover {
+  display: grid;
+  gap: 8px;
+}
+.inputPopover label,
+.confirmPopover strong {
+  color: #526987;
+  font-weight: 700;
+}
+.inputPopover input {
+  min-height: 34px;
+  padding: 6px 8px;
+  border: 1px solid #cfd8e8;
+  border-radius: 6px;
+  color: #26344d;
+  background: #fbfcfe;
+  outline: none;
+}
+.inputPopover input:focus {
+  border-color: #6b8fc9;
+  box-shadow: 0 0 0 3px rgb(36 99 235 / 14%);
+}
+.inputError {
+  color: #9c4327;
+  font-size: 0.75rem;
+}
+.linkPopover {
+  width: min(360px, calc(100% - 16px));
+  padding: 8px 10px;
+}
+.linkUrl,
+.confirmPopover > span {
+  overflow: hidden;
+  color: #526987;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.popoverActions,
+.inputActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+.popoverActions button,
+.inputActions button {
+  min-height: 29px;
+  padding: 4px 9px;
+  border: 1px solid #d1d9e8;
+  border-radius: 6px;
+  color: #4c5b73;
+  background: #fff;
+  cursor: pointer;
+  font: inherit;
+}
+.popoverActions button:hover,
+.inputActions button:hover {
+  background: #edf3ff;
+}
+.popoverActions .primaryAction,
+.inputActions .primaryAction {
+  border-color: #315ca8;
+  color: #fff;
+  background: #315ca8;
+}
+.popoverActions .primaryAction:hover,
+.inputActions .primaryAction:hover {
+  background: #274d91;
+}
+.tableControls {
+  position: absolute;
+  z-index: 15;
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid #dce3ef;
+  border-radius: 7px;
+  background: #fff;
+  box-shadow: 0 5px 16px #243d6826;
+}
+.tableControls button {
+  display: grid;
+  width: 26px;
+  height: 25px;
+  place-items: center;
+  border: 0;
+  border-radius: 4px;
+  color: #526987;
+  background: transparent;
+  cursor: pointer;
+}
+.tableControls button:hover {
+  color: #1d4ed8;
+  background: #edf3ff;
+}
+.tableControls svg {
+  width: 15px;
+  height: 15px;
+}
 .proseMirror h4,
 .proseMirror h5,
 .proseMirror h6 {
@@ -175,10 +324,124 @@
   padding: 0.1em 0.3em;
   border-radius: 4px;
 }
+.proseMirror pre {
+  margin: 1rem 0;
+  padding: 0.85rem 1rem;
+  overflow-x: auto;
+  border: 1px solid #d7deeb;
+  border-radius: 8px;
+  color: #26344d;
+  background: #f4f6fa;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+.proseMirror pre code {
+  padding: 0;
+  color: inherit;
+  background: transparent;
+}
 .proseMirror [data-atlas-comment] {
   color: #536681;
   background: #eff4fb;
   border-bottom: 1px dashed #7391bb;
+}
+.proseMirror [data-atlas-link] {
+  color: #245bb5;
+  text-decoration: underline;
+  text-decoration-color: #9fb8e2;
+  text-underline-offset: 3px;
+}
+.proseMirror [data-atlas-math-inline],
+.proseMirror [data-atlas-footnote-ref] {
+  display: inline-block;
+  padding: 0 0.35em;
+  border: 1px solid #c9d7ef;
+  border-radius: 4px;
+  color: #294b83;
+  background: #f2f6fd;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+  line-height: 1.45;
+}
+.proseMirror [data-atlas-math-block] {
+  margin: 1rem 0;
+  padding: 0.8rem 1rem;
+  overflow-x: auto;
+  border: 1px solid #c9d7ef;
+  border-radius: 8px;
+  color: #294b83;
+  background: #f2f6fd;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-align: center;
+}
+.proseMirror [data-atlas-footnote],
+.proseMirror [data-atlas-callout] {
+  position: relative;
+  display: block;
+  margin: 1rem 0;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid #d7deeb;
+  border-left: 3px solid #6685ba;
+  border-radius: 8px;
+  background: #f8faff;
+}
+.proseMirror [data-atlas-footnote] > strong,
+.proseMirror [data-atlas-callout] > strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #526987;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.proseMirror [data-atlas-footnote] > button {
+  position: absolute;
+  top: 7px;
+  right: 8px;
+  border: 0;
+  color: #6685ba;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0;
+}
+.proseMirror [data-atlas-footnote]:hover > button,
+.proseMirror [data-atlas-footnote] > button:focus-visible {
+  opacity: 1;
+}
+.proseMirror [data-atlas-footnote-body] > p:first-child,
+.proseMirror [data-atlas-callout] > div > p:first-child {
+  margin-top: 0;
+  color: #344d76;
+  font-weight: 700;
+}
+.proseMirror table {
+  width: 100%;
+  margin: 1rem 0;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.proseMirror th,
+.proseMirror td {
+  min-width: 80px;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid #cfd8e8;
+  vertical-align: top;
+}
+.proseMirror th {
+  color: #344d76;
+  background: #f4f7fc;
+  font-weight: 700;
+}
+.proseMirror td:focus-within,
+.proseMirror th:focus-within {
+  outline: 2px solid rgb(36 99 235 / 25%);
+  outline-offset: -2px;
+}
+.proseMirror td p,
+.proseMirror th p {
+  margin: 0;
 }
 .proseMirror ul {
   list-style-type: disc;
@@ -198,6 +461,9 @@
 .proseMirror li[data-type='taskItem'] > div {
   flex: 1;
   min-width: 0;
+}
+.proseMirror li[data-type='taskItem'][data-checked='true'] > div > p:first-child {
+  text-decoration: line-through;
 }
 .proseMirror li[data-type='taskItem'] input {
   accent-color: #2463eb;
