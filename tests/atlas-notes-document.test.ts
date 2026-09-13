@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { Schema } from '@tiptap/pm/model';
 import {
   ATLAS_NOTES_FORMAT,
   ATLAS_NOTES_LIMITS,
@@ -587,6 +588,34 @@ void test('merges adjacent highlight runs only when the color matches', () => {
     ],
   });
   assert.equal(projectAtlasNotesBody(canonical), 'abcd');
+});
+
+void test('recoloring a highlight/favorite mark replaces it instead of stacking a duplicate', () => {
+  // Regression test for QUEST-005 (bug #3, found during manual review):
+  // AtlasHighlight and AtlasFavorite (components/notes-editor.tsx) used to
+  // set `excludes: ''` on their mark spec. That disables ProseMirror's
+  // *default* exclusion behavior, under which a mark type excludes marks
+  // of its own type unless told otherwise — the exact mechanism that makes
+  // reapplying a mark with new attrs ("recoloring") replace the previous
+  // instance rather than add a second one. With self-exclusion disabled,
+  // recoloring left both the old and new mark instances on the same text
+  // run, and this schema's own canonicalizeMarks correctly rejected that
+  // duplicate with INVALID_MARK ("Marca de texto duplicada"), silently
+  // blocking every recolor. The fix was to stop overriding `excludes` on
+  // both marks. This test builds a minimal ProseMirror schema mirroring
+  // that (fixed) shape — an attrs-bearing mark with no `excludes`
+  // override — and exercises the exact mark-set mechanics
+  // (`Mark#addToSet`) the editor's `setMark` command relies on, proving a
+  // second color instance collapses into one instead of stacking.
+  const schema = new Schema({
+    nodes: { doc: { content: 'text*' }, text: {} },
+    marks: { highlight: { attrs: { color: { default: 'yellow' } } } },
+  });
+  const highlightType = schema.marks.highlight;
+  let markSet = highlightType.create({ color: 'yellow' }).addToSet([]);
+  markSet = highlightType.create({ color: 'green' }).addToSet(markSet);
+  assert.equal(markSet.length, 1);
+  assert.equal(markSet[0].attrs.color, 'green');
 });
 
 void test('validates favorite marks: shape, colors and stable ids', () => {

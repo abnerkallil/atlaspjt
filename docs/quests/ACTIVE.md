@@ -126,7 +126,7 @@ Separar "Favoritar texto" de "Realçar" como duas ações distintas no menu Form
 
 \- \[x] "Favoritar" e "Realçar" existem como ações distintas no menu Formatar, cada uma com seletor de cor (amarelo/verde/azul-claro/rosa/roxo) — validado manualmente em navegador real nesta sessão;
 
-\- \[ ] recolorir um trecho já marcado (highlight ou favorite) atualiza a marca existente — QUEBRADO, confirmado por teste manual em navegador real nesta sessão: reaplicar uma cor diferente sobre um trecho já destacado OU já favoritado lança `Marca de texto duplicada` (`INVALID_MARK`) e bloqueia a mudança (a marca visível não muda). Causa raiz identificada: tanto `AtlasHighlight` quanto `AtlasFavorite` definem `excludes: ''`, o que desliga a auto-exclusão padrão do ProseMirror para marcas do mesmo tipo — a nova instância de cor passa a coexistir com a antiga em vez de substituí-la, e o canonicalizador rejeita corretamente o documento resultante por marca duplicada. Correção mínima (remover `excludes: ''` de ambas as marcas) foi testada manualmente e resolve o problema nos dois casos, mas NÃO foi incluída nesta entrega — está fora do escopo dos dois problemas resolvidos neste ciclo, pendente de decisão explícita antes de ser aplicada;
+\- \[x] recolorir um trecho já marcado (highlight ou favorite) atualiza a marca existente — estava QUEBRADO (achado e corrigido nesta sessão): `AtlasHighlight` e `AtlasFavorite` definiam `excludes: ''`, o que desliga a auto-exclusão padrão do ProseMirror para marcas do mesmo tipo, então uma nova instância de cor passava a coexistir com a antiga em vez de substituí-la, e o canonicalizador rejeitava corretamente o documento resultante por marca duplicada (`Marca de texto duplicada` / `INVALID_MARK`), bloqueando a mudança de cor. Corrigido removendo `excludes: ''` das duas marcas (não tocado em `inlineMark`, usado por `comment`/`code`, que não têm atributos e não passam por este cenário). Validado automaticamente (teste de schema dedicado que constrói um schema ProseMirror mínimo com o mesmo formato — atributo `color` sem `excludes` — e confirma que recolorir com `Mark#addToSet` colapsa para uma única marca) e manualmente em navegador real: recolori um highlight já existente (amarelo → verde) e um favorite já existente (roxo → rosa); em ambos os casos nenhum erro de validação apareceu, o `data-color` do DOM atualizou corretamente, e a nova cor persistiu após salvar e recarregar a página inteira;
 
 \- \[x] painel de favoritos implementado na coluna esquerda como content-swap, com botão de retorno — validado manualmente em navegador real nesta sessão;
 
@@ -140,9 +140,9 @@ Separar "Favoritar texto" de "Realçar" como duas ações distintas no menu Form
 
 \- \[x] extensão de schema é aditiva; DEC-001/DEC-002 não foram reabertas;
 
-\- \[x] suíte de testes automatizados cobrindo o atributo de cor e o id estável de favorito no formato canônico (46/46 testes passando — 45 anteriores mais um novo caso de regressão para o bug do highlight amarelo);
+\- \[x] suíte de testes automatizados cobrindo o atributo de cor e o id estável de favorito no formato canônico (47/47 testes passando — 45 da entrega original, mais o caso de regressão do highlight amarelo e o caso de recolorir sem duplicar marca, ambos adicionados nesta sessão);
 
-\- \[x] validação manual/funcional em navegador real — REALIZADA PARCIALMENTE nesta sessão (diferente da entrega anterior, o ambiente permitiu `pnpm install` e `pnpm dev` sem bloqueio de rede). Cobriu: aplicar destaque amarelo e continuar editando sem erro de validação; salvar e recarregar a página inteira, confirmando persistência do destaque amarelo na forma legada sem atributos; favoritar um trecho e abrir o painel de favoritos com uma busca residual ativa que não batia com a nota favoritada, confirmando que o favorito continuou aparecendo; e recolorir um trecho já marcado, o que revelou que este item está quebrado (ver acima). NÃO cobriu: navegação/rolagem ao clicar em uma entrada do painel, atualização visual do painel após editar um trecho já favoritado, e persistência de favoritos através de reload.
+\- \[x] validação manual/funcional em navegador real — REALIZADA PARCIALMENTE nesta sessão (diferente da entrega anterior, o ambiente permitiu `pnpm install` e `pnpm dev` sem bloqueio de rede). Cobriu: aplicar destaque amarelo e continuar editando sem erro de validação; recolorir um highlight e um favorite já existentes; salvar e recarregar a página inteira, confirmando persistência tanto do destaque amarelo na forma legada sem atributos quanto de uma recoloração; favoritar um trecho e abrir o painel de favoritos com uma busca residual ativa que não batia com a nota favoritada, confirmando que o favorito continuou aparecendo. NÃO cobriu: navegação/rolagem ao clicar em uma entrada do painel, atualização visual do painel após editar um trecho já favoritado, e persistência de favoritos (como lista) através de reload.
 
 
 
@@ -254,11 +254,11 @@ Realizado nesta sessão de correção (ciclo de revisão seguinte):
 
 \- corrigido o bug do painel de favoritos escondendo favoritos por causa de um filtro de busca residual (a lista passa a carregar sem o filtro de busca enquanto o painel está aberto);
 
-\- suíte automatizada: 46/46 testes passando (45 anteriores + o novo caso de regressão);
+\- durante a validação manual desses dois itens foi descoberto um terceiro problema, já presente no Task Contract original desta quest como Required Behavior/Acceptance Criteria ("recolorir atualiza a marca existente"), mas nunca de fato exercitado: recolorir um trecho já marcado (highlight ou favorite) lançava `Marca de texto duplicada` e bloqueava a mudança, porque `AtlasHighlight`/`AtlasFavorite` definiam `excludes: ''`, desligando a auto-exclusão padrão do ProseMirror entre instâncias do mesmo tipo de marca — uma nova cor passava a coexistir com a antiga em vez de substituí-la. Corrigido removendo `excludes: ''` das duas marcas (não tocado em `inlineMark`, usado por `comment`/`code`, que não têm atributos);
 
-\- validação manual/funcional em navegador real REALIZADA (ao contrário da sessão anterior, `pnpm install`/`pnpm dev` funcionaram sem bloqueio de rede neste ambiente): aplicar destaque amarelo em texto novo e continuar editando sem erro de validação; salvar e recarregar a página inteira, confirmando a persistência do destaque amarelo na forma legada sem atributos; favoritar um trecho, digitar uma busca que só batia com outra nota, e confirmar que o favorito da primeira nota continuou aparecendo no painel de favoritos;
+\- suíte automatizada: 47/47 testes passando (45 da entrega original + o caso de regressão do highlight amarelo + o caso de recolorir sem duplicar marca, ambos novos nesta sessão);
 
-\- durante essa validação manual foi descoberto um terceiro problema, não relacionado aos dois acima e não corrigido nesta entrega (ver "Acceptance Criteria"): recolorir um trecho já marcado (highlight ou favorite) está quebrado — lança `Marca de texto duplicada` e bloqueia a mudança, porque `AtlasHighlight`/`AtlasFavorite` definem `excludes: ''`, desligando a auto-exclusão padrão do ProseMirror entre instâncias do mesmo tipo de marca. Uma correção mínima (remover `excludes: ''` de ambas) foi testada e funciona, mas não foi aplicada — aguardando decisão explícita antes de entrar em qualquer entrega.
+\- validação manual/funcional em navegador real REALIZADA (ao contrário da sessão anterior, `pnpm install`/`pnpm dev` funcionaram sem bloqueio de rede neste ambiente): aplicar destaque amarelo em texto novo e continuar editando sem erro de validação; recolorir um highlight já existente (amarelo → verde) e um favorite já existente (roxo → rosa), confirmando em ambos que a cor muda e nenhum erro de validação aparece; salvar e recarregar a página inteira, confirmando a persistência tanto do destaque amarelo na forma legada sem atributos quanto de uma recoloração; favoritar um trecho, digitar uma busca que só batia com outra nota, e confirmar que o favorito da primeira nota continuou aparecendo no painel de favoritos.
 
 
 
@@ -266,9 +266,7 @@ PENDENTE (não descartado):
 
 
 
-\- decisão sobre corrigir ou não o bug de recolorir nesta mesma entrega;
-
-\- validação manual em navegador real ainda não realizada para: navegação/rolagem ao clicar em uma entrada do painel de favoritos; atualização visual do painel após editar um trecho já favoritado; persistência de favoritos através de reload.
+\- validação manual em navegador real ainda não realizada para: navegação/rolagem ao clicar em uma entrada do painel de favoritos; atualização visual do painel após editar um trecho já favoritado; persistência de favoritos (como lista) através de reload.
 
 
 

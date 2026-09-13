@@ -335,7 +335,6 @@ const AtlasLink = Mark.create({
 
 const AtlasHighlight = Mark.create({
   name: 'highlight',
-  excludes: '',
   addAttributes() {
     return {
       color: {
@@ -362,7 +361,6 @@ const AtlasHighlight = Mark.create({
 
 const AtlasFavorite = Mark.create({
   name: 'favorite',
-  excludes: '',
   addAttributes() {
     return {
       id: { default: null },
