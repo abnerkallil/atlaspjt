@@ -66,7 +66,10 @@ Update this section only with capabilities that are already implemented and cons
 
 Do not describe implementation details.
 
-- To be reviewed.
+- Atlas Notes: formatação via menu contextual (negrito, itálico, riscado, código, comentário, destaque, links).
+- Atlas Notes: listas aninhadas, com limite de profundidade e aviso visual ao atingir o limite.
+- Atlas Notes: notas de rodapé, tabelas configuráveis, blocos de matemática e callouts.
+- Ambiente de desenvolvimento local com D1 (Miniflare) e visualização/edição via drizzle-kit studio.
 
 ---
 
