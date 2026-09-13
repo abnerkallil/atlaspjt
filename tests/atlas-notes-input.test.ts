@@ -131,6 +131,33 @@ void test('preserves the legacy body-only contract with existing trim behavior',
   assert.equal(parsed.contentJson, null);
 });
 
+void test('preserves pre-existing attrless (yellow) highlight marks without regression', () => {
+  const legacyHighlightContent = {
+    format: ATLAS_NOTES_FORMAT,
+    version: 2,
+    doc: {
+      type: 'doc',
+      content: [
+        {
+          type: 'paragraph',
+          content: [
+            { type: 'text', text: 'destaque legado', marks: [{ type: 'highlight' }] },
+          ],
+        },
+      ],
+    },
+  };
+  const body = projectAtlasNotesBody(legacyHighlightContent);
+  const parsed = parseAtlasNotesSaveRequest(
+    payload({ body, content: legacyHighlightContent }),
+    'create',
+  );
+  assert.deepEqual(parsed.content, legacyHighlightContent);
+  const stored = canonicalizeAtlasNotesContent(JSON.parse(parsed.contentJson!));
+  assert.deepEqual(stored, legacyHighlightContent);
+  assert.equal(projectAtlasNotesBody(stored), 'destaque legado');
+});
+
 void test('round-trips all v2 persistence shapes through request and stored JSON', () => {
   const content = {
     format: ATLAS_NOTES_FORMAT,
@@ -149,7 +176,15 @@ void test('round-trips all v2 persistence shapes through request and stored JSON
                 { type: 'italic' },
                 { type: 'strike' },
                 { type: 'code' },
-                { type: 'highlight' },
+                { type: 'highlight', attrs: { color: 'green' } },
+                {
+                  type: 'favorite',
+                  attrs: {
+                    id: 'fav-round-trip',
+                    color: 'purple',
+                    createdAt: '2026-09-13T10:00:00.000Z',
+                  },
+                },
                 { type: 'comment' },
                 { type: 'link', attrs: { href: 'https://atlas.example' } },
               ],

@@ -3,7 +3,13 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { EditorContent, Extension, Mark, useEditor } from '@tiptap/react';
+import {
+  EditorContent,
+  Extension,
+  Mark,
+  mergeAttributes,
+  useEditor,
+} from '@tiptap/react';
 import { Plugin, TextSelection } from '@tiptap/pm/state';
 import { Node as PMNode } from '@tiptap/pm/model';
 import StarterKit from '@tiptap/starter-kit';
@@ -36,6 +42,7 @@ import {
   ListMinus,
   Columns3,
   Trash2,
+  Star,
 } from 'lucide-react';
 import {
   ContextMenu,
@@ -50,11 +57,13 @@ import {
 import {
   ATLAS_NOTES_FORMAT,
   ATLAS_NOTES_LIMITS,
+  ATLAS_NOTES_MARK_COLORS,
   ATLAS_NOTES_VERSION,
   canonicalizeAtlasNotesContent,
   plainTextToAtlasNotesBlocks,
   projectAtlasNotesBody,
   type AtlasNotesEnvelope,
+  type AtlasNotesMarkColor,
 } from '@/lib/atlas-notes-document';
 import { AtlasAdvancedNodes } from './notes-editor-extensions';
 import {
@@ -69,12 +78,69 @@ export type NotesEditorSnapshot = {
   content: AtlasNotesEnvelope;
 };
 
+export type NotesEditorFocusRequest = {
+  favoriteId: string;
+  nonce: number;
+};
+
 type NotesEditorProps = {
   initialContent: AtlasNotesEnvelope;
   noteTitle: string;
   onChange: (snapshot: NotesEditorSnapshot) => void;
   onValidationChange: (message: string) => void;
+  focusRequest?: NotesEditorFocusRequest | null;
+  onFocusRequestHandled?: () => void;
 };
+
+export const MARK_COLOR_META: Record<
+  AtlasNotesMarkColor,
+  { label: string; hex: string }
+> = {
+  yellow: { label: 'Amarelo', hex: '#e3b431' },
+  green: { label: 'Verde', hex: '#128864' },
+  blue: { label: 'Azul-claro', hex: '#5f8ff7' },
+  pink: { label: 'Rosa', hex: '#d1548a' },
+  purple: { label: 'Roxo', hex: '#7c3aed' },
+};
+
+function findMarkRange(
+  doc: PMNode,
+  markName: string,
+  matches: (attrs: Record<string, unknown>) => boolean,
+): { from: number; to: number } | null {
+  let from: number | null = null;
+  let to: number | null = null;
+  doc.descendants((node, pos) => {
+    if (!node.isText) return;
+    const hasMatch = node.marks.some(
+      (mark) => mark.type.name === markName && matches(mark.attrs),
+    );
+    if (!hasMatch) return;
+    if (from === null) from = pos;
+    to = pos + node.nodeSize;
+  });
+  return from !== null && to !== null ? { from, to } : null;
+}
+
+function collectMarkIds(doc: PMNode, markName: string): Set<string> {
+  const ids = new Set<string>();
+  doc.descendants((node) => {
+    if (!node.isText) return;
+    node.marks.forEach((mark) => {
+      if (mark.type.name === markName && typeof mark.attrs.id === 'string') {
+        ids.add(mark.attrs.id);
+      }
+    });
+  });
+  return ids;
+}
+
+function newStableId(existing: Set<string>, prefix: string) {
+  let id = `${prefix}-${Date.now().toString(36)}`;
+  let suffix = 1;
+  while (existing.has(id)) id = `${prefix}-${Date.now().toString(36)}-${suffix++}`;
+  return id;
+}
 
 function envelopeFromDocument(doc: unknown) {
   return canonicalizeAtlasNotesContent({
@@ -267,6 +333,55 @@ const AtlasLink = Mark.create({
   },
 });
 
+const AtlasHighlight = Mark.create({
+  name: 'highlight',
+  excludes: '',
+  addAttributes() {
+    return {
+      color: {
+        default: 'yellow',
+        parseHTML: (element: HTMLElement) =>
+          element.getAttribute('data-color') ?? 'yellow',
+        renderHTML: (attrs: { color: string }) =>
+          attrs.color && attrs.color !== 'yellow'
+            ? { 'data-color': attrs.color }
+            : {},
+      },
+    };
+  },
+  parseHTML() {
+    return [
+      { tag: 'mark[data-atlas-highlight]' },
+      { tag: 'mark:not([data-atlas-favorite])' },
+    ];
+  },
+  renderHTML({ HTMLAttributes }) {
+    return ['mark', mergeAttributes(HTMLAttributes, { 'data-atlas-highlight': '' }), 0];
+  },
+});
+
+const AtlasFavorite = Mark.create({
+  name: 'favorite',
+  excludes: '',
+  addAttributes() {
+    return {
+      id: { default: null },
+      color: {
+        default: 'yellow',
+        parseHTML: (element: HTMLElement) => element.getAttribute('data-color'),
+        renderHTML: (attrs: { color: string }) => ({ 'data-color': attrs.color }),
+      },
+      createdAt: { default: null },
+    };
+  },
+  parseHTML() {
+    return [{ tag: 'mark[data-atlas-favorite]' }];
+  },
+  renderHTML({ HTMLAttributes }) {
+    return ['mark', mergeAttributes(HTMLAttributes, { 'data-atlas-favorite': '' }), 0];
+  },
+});
+
 function isAllowedHref(value: string) {
   try {
     const protocol = new URL(value.trim()).protocol;
@@ -277,10 +392,7 @@ function isAllowedHref(value: string) {
 }
 
 function newInlineId(existing: Set<string>) {
-  let id = `fn-${Date.now().toString(36)}`;
-  let suffix = 1;
-  while (existing.has(id)) id = `fn-${Date.now().toString(36)}-${suffix++}`;
-  return id;
+  return newStableId(existing, 'fn');
 }
 
 type LinkPopoverState = {
@@ -333,6 +445,8 @@ export function NotesEditor({
   noteTitle,
   onChange,
   onValidationChange,
+  focusRequest,
+  onFocusRequestHandled,
 }: NotesEditorProps) {
   const [validationError, setValidationError] = useState('');
   const [listDepthNotice, setListDepthNotice] = useState('');
@@ -403,7 +517,8 @@ export function NotesEditor({
         trailingNode: false,
         underline: false,
       }),
-      inlineMark('highlight', 'mark'),
+      AtlasHighlight,
+      AtlasFavorite,
       inlineMark('comment', 'span'),
       inlineMark('code', 'code'),
       AtlasLink,
@@ -662,6 +777,22 @@ export function NotesEditor({
     return () => editor.view.dom.removeEventListener('atlas-footnote-edit', onFootnoteEdit);
   }, [editor]);
 
+  useEffect(() => {
+    if (!editor || !focusRequest) return;
+    const range = findMarkRange(
+      editor.state.doc,
+      'favorite',
+      (attrs) => attrs.id === focusRequest.favoriteId,
+    );
+    if (range) {
+      editor.chain().setTextSelection(range).focus().scrollIntoView().run();
+    }
+    onFocusRequestHandled?.();
+    // Re-run whenever a new focus request comes in (identified by nonce),
+    // even if it targets the same favorite id as before.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editor, focusRequest?.favoriteId, focusRequest?.nonce]);
+
   if (!editor) {
     return <div className={styles.loading}>Preparando editor…</div>;
   }
@@ -671,6 +802,36 @@ export function NotesEditor({
     editor.commands.focus();
     action();
     setMenuOpen(false);
+  };
+  const applyHighlightColor = (color: AtlasNotesMarkColor) => {
+    run(() => {
+      editor
+        .chain()
+        .extendMarkRange('highlight')
+        .setMark('highlight', { color })
+        .run();
+    });
+  };
+  const applyFavoriteColor = (color: AtlasNotesMarkColor) => {
+    const existing = editor.getAttributes('favorite') as {
+      id?: string;
+      createdAt?: string;
+    };
+    const id =
+      typeof existing.id === 'string'
+        ? existing.id
+        : newStableId(collectMarkIds(editor.state.doc, 'favorite'), 'fav');
+    const createdAt =
+      typeof existing.createdAt === 'string'
+        ? existing.createdAt
+        : new Date().toISOString();
+    run(() => {
+      editor
+        .chain()
+        .extendMarkRange('favorite')
+        .setMark('favorite', { id, color, createdAt })
+        .run();
+    });
   };
   const openMathDialog = (kind: 'mathInline' | 'mathBlock', position?: number) => {
     const current = position === undefined ? '' : editor.state.doc.nodeAt(position)?.attrs.latex ?? '';
@@ -893,9 +1054,13 @@ export function NotesEditor({
     { label: 'Negrito', name: 'bold', icon: Bold },
     { label: 'Itálico', name: 'italic', icon: Italic },
     { label: 'Riscado', name: 'strike', icon: Strikethrough },
-    { label: 'Realce', name: 'highlight', icon: Highlighter },
     { label: 'Código inline', name: 'code', icon: Code },
     { label: 'Comentário inline', name: 'comment', icon: MessageSquare },
+  ];
+  const clearableMarkNames = [
+    ...marks.map((mark) => mark.name),
+    'highlight',
+    'favorite',
   ];
   const blocks = [
     { label: 'Lista de marcadores', name: 'bulletList', icon: List },
@@ -987,27 +1152,109 @@ export function NotesEditor({
                 }
               }}
             >
-              {marks.map(({ label, name, icon: Icon }, index) => (
-                <div key={name}>
-                  {index === 4 && <ContextMenuSeparator />}
-                  <ContextMenuItem
-                    className={styles.menuItem}
-                    onClick={() =>
-                      run(() => {
-                        editor.chain().focus().toggleMark(name).run();
-                      })
-                    }
-                  >
-                    <Icon />
-                    <span>{label}</span>
-                    {editor.isActive(name) && (
-                      <Check
-                        className={styles.activeCheck}
-                        aria-label="Ativo"
+              <ContextMenuSub>
+                <ContextMenuSubTrigger className={styles.menuItem}>
+                  <Star />
+                  <span>Favoritar texto</span>
+                  {editor.isActive('favorite') && (
+                    <Check className={styles.activeCheck} aria-label="Ativo" />
+                  )}
+                </ContextMenuSubTrigger>
+                <ContextMenuSubContent className={styles.menu}>
+                  {ATLAS_NOTES_MARK_COLORS.map((color) => (
+                    <ContextMenuItem
+                      key={color}
+                      className={styles.menuItem}
+                      onClick={() => applyFavoriteColor(color)}
+                    >
+                      <span
+                        className={styles.colorSwatch}
+                        style={{ background: MARK_COLOR_META[color].hex }}
+                        aria-hidden="true"
                       />
-                    )}
-                  </ContextMenuItem>
-                </div>
+                      <span>{MARK_COLOR_META[color].label}</span>
+                      {editor.isActive('favorite', { color }) && (
+                        <Check
+                          className={styles.activeCheck}
+                          aria-label="Ativo"
+                        />
+                      )}
+                    </ContextMenuItem>
+                  ))}
+                </ContextMenuSubContent>
+              </ContextMenuSub>
+              <ContextMenuSeparator />
+              {marks.slice(0, 3).map(({ label, name, icon: Icon }) => (
+                <ContextMenuItem
+                  key={name}
+                  className={styles.menuItem}
+                  onClick={() =>
+                    run(() => {
+                      editor.chain().focus().toggleMark(name).run();
+                    })
+                  }
+                >
+                  <Icon />
+                  <span>{label}</span>
+                  {editor.isActive(name) && (
+                    <Check
+                      className={styles.activeCheck}
+                      aria-label="Ativo"
+                    />
+                  )}
+                </ContextMenuItem>
+              ))}
+              <ContextMenuSeparator />
+              <ContextMenuSub>
+                <ContextMenuSubTrigger className={styles.menuItem}>
+                  <Highlighter />
+                  <span>Realçar</span>
+                  {editor.isActive('highlight') && (
+                    <Check className={styles.activeCheck} aria-label="Ativo" />
+                  )}
+                </ContextMenuSubTrigger>
+                <ContextMenuSubContent className={styles.menu}>
+                  {ATLAS_NOTES_MARK_COLORS.map((color) => (
+                    <ContextMenuItem
+                      key={color}
+                      className={styles.menuItem}
+                      onClick={() => applyHighlightColor(color)}
+                    >
+                      <span
+                        className={styles.colorSwatch}
+                        style={{ background: MARK_COLOR_META[color].hex }}
+                        aria-hidden="true"
+                      />
+                      <span>{MARK_COLOR_META[color].label}</span>
+                      {editor.isActive('highlight', { color }) && (
+                        <Check
+                          className={styles.activeCheck}
+                          aria-label="Ativo"
+                        />
+                      )}
+                    </ContextMenuItem>
+                  ))}
+                </ContextMenuSubContent>
+              </ContextMenuSub>
+              {marks.slice(3).map(({ label, name, icon: Icon }) => (
+                <ContextMenuItem
+                  key={name}
+                  className={styles.menuItem}
+                  onClick={() =>
+                    run(() => {
+                      editor.chain().focus().toggleMark(name).run();
+                    })
+                  }
+                >
+                  <Icon />
+                  <span>{label}</span>
+                  {editor.isActive(name) && (
+                    <Check
+                      className={styles.activeCheck}
+                      aria-label="Ativo"
+                    />
+                  )}
+                </ContextMenuItem>
               ))}
               <ContextMenuSeparator />
               <ContextMenuItem
@@ -1015,7 +1262,7 @@ export function NotesEditor({
                 onClick={() =>
                   run(() => {
                     const chain = editor.chain();
-                    marks.forEach((mark) => chain.unsetMark(mark.name));
+                    clearableMarkNames.forEach((name) => chain.unsetMark(name));
                     chain.run();
                   })
                 }

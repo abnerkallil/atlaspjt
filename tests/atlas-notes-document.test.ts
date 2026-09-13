@@ -3,12 +3,14 @@ import test from 'node:test';
 import {
   ATLAS_NOTES_FORMAT,
   ATLAS_NOTES_LIMITS,
+  ATLAS_NOTES_MARK_COLORS,
   ATLAS_NOTES_VERSION,
   AtlasNotesValidationError,
   assertAtlasNotesRequestSize,
   canonicalizeAtlasNotesContent,
   canonicalizeAtlasNotesContentV1,
   canonicalizeAtlasNotesContentV2,
+  extractAtlasNotesFavorites,
   isAtlasNotesDocument,
   legacyTextToAtlasNotesContent,
   plainTextToAtlasNotesBlocks,
@@ -465,14 +467,7 @@ void test('rejects duplicate, unknown and attributed attrless marks', () => {
       ),
     'INVALID_MARK',
   );
-  for (const type of [
-    'bold',
-    'italic',
-    'strike',
-    'code',
-    'highlight',
-    'comment',
-  ]) {
+  for (const type of ['bold', 'italic', 'strike', 'code', 'comment']) {
     expectCode(
       () =>
         canonicalizeAtlasNotesContent(
@@ -481,6 +476,271 @@ void test('rejects duplicate, unknown and attributed attrless marks', () => {
       'UNKNOWN_FIELD',
     );
   }
+  // highlight now accepts attrs (color), but an attrs object without a
+  // valid color is rejected rather than silently treated as unknown.
+  expectCode(
+    () =>
+      canonicalizeAtlasNotesContent(
+        envelope([
+          richParagraph([text('x', [{ type: 'highlight', attrs: {} }])]),
+        ]),
+      ),
+    'INVALID_MARK',
+  );
+});
+
+void test('canonicalizes highlight color: yellow normalizes to attrless legacy shape', () => {
+  for (const input of [
+    { type: 'highlight' },
+    { type: 'highlight', attrs: { color: 'yellow' } },
+  ]) {
+    const canonical = canonicalizeAtlasNotesContent(
+      envelope([richParagraph([text('x', [input])])]),
+    );
+    assert.deepEqual(canonical.doc.content[0], {
+      type: 'paragraph',
+      content: [{ type: 'text', text: 'x', marks: [{ type: 'highlight' }] }],
+    });
+  }
+});
+
+void test('rejects a null highlight color, the exact shape ProseMirror emits for an attribute at its schema default', () => {
+  // Regression test for QUEST-005: the editor's `color` attribute used to
+  // default to `null` (to mirror the legacy attrless yellow shape), but
+  // ProseMirror's Mark.toJSON() always includes every registered attribute
+  // — including ones still at their default — so every highlight mark
+  // (new or pre-existing) was serialized as `attrs: { color: null }` on
+  // every edit, not the hand-written string `'yellow'` the older tests
+  // exercised. The editor now defaults `color` to the string 'yellow'
+  // instead, so this shape should never reach the schema again — but the
+  // schema itself must keep rejecting it if it ever does.
+  expectCode(
+    () =>
+      canonicalizeAtlasNotesContent(
+        envelope([
+          richParagraph([
+            text('x', [{ type: 'highlight', attrs: { color: null } }]),
+          ]),
+        ]),
+      ),
+    'INVALID_MARK',
+  );
+});
+
+void test('accepts every standard highlight color and rejects unknown ones', () => {
+  for (const color of ATLAS_NOTES_MARK_COLORS) {
+    if (color === 'yellow') continue;
+    const canonical = canonicalizeAtlasNotesContent(
+      envelope([
+        richParagraph([text('x', [{ type: 'highlight', attrs: { color } }])]),
+      ]),
+    );
+    assert.deepEqual(canonical.doc.content[0], {
+      type: 'paragraph',
+      content: [
+        {
+          type: 'text',
+          text: 'x',
+          marks: [{ type: 'highlight', attrs: { color } }],
+        },
+      ],
+    });
+  }
+  expectCode(
+    () =>
+      canonicalizeAtlasNotesContent(
+        envelope([
+          richParagraph([
+            text('x', [{ type: 'highlight', attrs: { color: 'orange' } }]),
+          ]),
+        ]),
+      ),
+    'INVALID_MARK',
+  );
+});
+
+void test('merges adjacent highlight runs only when the color matches', () => {
+  const canonical = canonicalizeAtlasNotesContent(
+    envelope([
+      richParagraph([
+        text('a', [{ type: 'highlight', attrs: { color: 'green' } }]),
+        text('b', [{ type: 'highlight', attrs: { color: 'green' } }]),
+        text('c', [{ type: 'highlight', attrs: { color: 'blue' } }]),
+        text('d', [{ type: 'highlight' }]),
+      ]),
+    ]),
+  );
+  assert.deepEqual(canonical.doc.content[0], {
+    type: 'paragraph',
+    content: [
+      {
+        type: 'text',
+        text: 'ab',
+        marks: [{ type: 'highlight', attrs: { color: 'green' } }],
+      },
+      {
+        type: 'text',
+        text: 'c',
+        marks: [{ type: 'highlight', attrs: { color: 'blue' } }],
+      },
+      { type: 'text', text: 'd', marks: [{ type: 'highlight' }] },
+    ],
+  });
+  assert.equal(projectAtlasNotesBody(canonical), 'abcd');
+});
+
+void test('validates favorite marks: shape, colors and stable ids', () => {
+  const favorite = (id: string, color = 'yellow', createdAt = '2026-09-13T10:00:00.000Z') => ({
+    type: 'favorite',
+    attrs: { id, color, createdAt },
+  });
+  const canonical = canonicalizeAtlasNotesContent(
+    envelope([richParagraph([text('x', [favorite('fav-1')])])]),
+  );
+  assert.deepEqual(canonical.doc.content[0], {
+    type: 'paragraph',
+    content: [
+      {
+        type: 'text',
+        text: 'x',
+        marks: [
+          {
+            type: 'favorite',
+            attrs: {
+              id: 'fav-1',
+              color: 'yellow',
+              createdAt: '2026-09-13T10:00:00.000Z',
+            },
+          },
+        ],
+      },
+    ],
+  });
+  // Unlike footnote definitions, a favorite mark has no separate
+  // "definition" node — the same id may legitimately reappear on more than
+  // one text run (e.g. a single favorited selection spanning a paragraph
+  // break), so the canonicalizer must not reject repeated ids.
+  assert.doesNotThrow(() =>
+    canonicalizeAtlasNotesContent(
+      envelope([
+        richParagraph([text('a', [favorite('fav-2')])]),
+        richParagraph([text('b', [favorite('fav-2')])]),
+      ]),
+    ),
+  );
+  for (const [badAttrs, code] of [
+    [
+      { id: 'fav-3', color: 'not-a-color', createdAt: '2026-09-13T10:00:00.000Z' },
+      'INVALID_MARK',
+    ],
+    [
+      { id: 'has space', color: 'yellow', createdAt: '2026-09-13T10:00:00.000Z' },
+      'INVALID_NODE',
+    ],
+    [{ id: 'fav-3', color: 'yellow', createdAt: 'not-a-date' }, 'INVALID_MARK'],
+    [{ id: 'fav-3', color: 'yellow' }, 'INVALID_MARK'],
+  ] as const) {
+    expectCode(
+      () =>
+        canonicalizeAtlasNotesContent(
+          envelope([
+            richParagraph([
+              text('x', [{ type: 'favorite', attrs: badAttrs }]),
+            ]),
+          ]),
+        ),
+      code,
+    );
+  }
+});
+
+void test('does not merge adjacent favorite runs with different ids', () => {
+  const canonical = canonicalizeAtlasNotesContent(
+    envelope([
+      richParagraph([
+        text('a', [
+          {
+            type: 'favorite',
+            attrs: { id: 'fav-a', color: 'yellow', createdAt: '2026-09-13T10:00:00.000Z' },
+          },
+        ]),
+        text('b', [
+          {
+            type: 'favorite',
+            attrs: { id: 'fav-b', color: 'yellow', createdAt: '2026-09-13T10:00:00.000Z' },
+          },
+        ]),
+      ]),
+    ]),
+  );
+  const marksTexts = (
+    canonical.doc.content[0] as { content: Array<{ text: string }> }
+  ).content.map((node) => node.text);
+  assert.deepEqual(marksTexts, ['a', 'b']);
+});
+
+void test('extractAtlasNotesFavorites reflects the live document, not a frozen copy', () => {
+  const favoriteAttrs = (id: string, color = 'yellow') => ({
+    id,
+    color,
+    createdAt: '2026-09-13T10:00:00.000Z',
+  });
+  const doc = {
+    type: 'doc',
+    content: [
+      richParagraph([
+        text('Conceito ', []),
+        text('importante', [{ type: 'favorite', attrs: favoriteAttrs('fav-1', 'purple') }]),
+      ]),
+      {
+        type: 'bulletList',
+        content: [
+          {
+            type: 'listItem',
+            content: [
+              richParagraph([
+                text('item', [{ type: 'favorite', attrs: favoriteAttrs('fav-2', 'pink') }]),
+              ]),
+            ],
+          },
+        ],
+      },
+    ],
+  };
+  const canonical = canonicalizeAtlasNotesContent(envelope(doc.content));
+  const favorites = extractAtlasNotesFavorites(canonical.doc);
+  assert.deepEqual(
+    favorites.map((entry) => [entry.id, entry.color, entry.text]),
+    [
+      ['fav-1', 'purple', 'importante'],
+      ['fav-2', 'pink', 'item'],
+    ],
+  );
+
+  // Simulate editing the favorited excerpt: the extraction must reflect the
+  // current text, never a copy captured when the favorite was created.
+  const edited = {
+    type: 'doc',
+    content: [
+      richParagraph([
+        text('Conceito ', []),
+        text('atualizado', [{ type: 'favorite', attrs: favoriteAttrs('fav-1', 'purple') }]),
+      ]),
+    ],
+  };
+  const canonicalEdited = canonicalizeAtlasNotesContent(envelope(edited.content));
+  assert.deepEqual(
+    extractAtlasNotesFavorites(canonicalEdited.doc).map((entry) => entry.text),
+    ['atualizado'],
+  );
+
+  // Simulate the favorited text being fully deleted: it must disappear
+  // from the extracted list rather than linger as a stale entry.
+  const deleted = { type: 'doc', content: [paragraph('sem favoritos')] };
+  const canonicalDeleted = canonicalizeAtlasNotesContent(
+    envelope(deleted.content),
+  );
+  assert.deepEqual(extractAtlasNotesFavorites(canonicalDeleted.doc), []);
 });
 
 void test('validates link shape, length and protocols', () => {
