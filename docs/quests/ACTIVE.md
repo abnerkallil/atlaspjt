@@ -231,4 +231,3 @@ When the quest is complete:
 
 
 This file should contain only one active quest at a time.
-
