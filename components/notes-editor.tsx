@@ -122,6 +122,28 @@ function findMarkRange(
   return from !== null && to !== null ? { from, to } : null;
 }
 
+function collectMarkRanges(
+  doc: PMNode,
+  markName: string,
+  matches: (attrs: Record<string, unknown>) => boolean,
+): Array<{ from: number; to: number }> {
+  const ranges: Array<{ from: number; to: number }> = [];
+  doc.descendants((node, pos) => {
+    if (!node.isText) return;
+    const hasMatch = node.marks.some(
+      (mark) => mark.type.name === markName && matches(mark.attrs),
+    );
+    if (!hasMatch) return;
+    const last = ranges.at(-1);
+    if (last && last.to === pos) {
+      last.to = pos + node.nodeSize;
+    } else {
+      ranges.push({ from: pos, to: pos + node.nodeSize });
+    }
+  });
+  return ranges;
+}
+
 function collectMarkIds(doc: PMNode, markName: string): Set<string> {
   const ids = new Set<string>();
   doc.descendants((node) => {
@@ -815,20 +837,38 @@ export function NotesEditor({
       id?: string;
       createdAt?: string;
     };
+    const existingId = typeof existing.id === 'string' ? existing.id : null;
     const id =
-      typeof existing.id === 'string'
-        ? existing.id
-        : newStableId(collectMarkIds(editor.state.doc, 'favorite'), 'fav');
+      existingId ?? newStableId(collectMarkIds(editor.state.doc, 'favorite'), 'fav');
     const createdAt =
       typeof existing.createdAt === 'string'
         ? existing.createdAt
         : new Date().toISOString();
     run(() => {
-      editor
-        .chain()
-        .extendMarkRange('favorite')
-        .setMark('favorite', { id, color, createdAt })
-        .run();
+      if (existingId) {
+        // Recoloring an existing favorite: a favorite can legitimately span
+        // multiple paragraphs sharing one id (a single selection covering
+        // several blocks). extendMarkRange only reaches within the current
+        // paragraph, so it would recolor just the fragment under the
+        // cursor and leave the rest of the same id on the old color.
+        // Recolor every fragment carrying this id instead, wherever it is
+        // in the document, in one transaction.
+        const ranges = collectMarkRanges(
+          editor.state.doc,
+          'favorite',
+          (attrs) => attrs.id === id,
+        );
+        const mark = editor.schema.marks.favorite.create({ id, color, createdAt });
+        const tr = editor.state.tr;
+        ranges.forEach((range) => tr.addMark(range.from, range.to, mark));
+        editor.view.dispatch(tr);
+      } else {
+        editor
+          .chain()
+          .extendMarkRange('favorite')
+          .setMark('favorite', { id, color, createdAt })
+          .run();
+      }
     });
   };
   const openMathDialog = (kind: 'mathInline' | 'mathBlock', position?: number) => {

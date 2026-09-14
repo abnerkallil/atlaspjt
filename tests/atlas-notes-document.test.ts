@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { Schema } from '@tiptap/pm/model';
+import { Transform } from '@tiptap/pm/transform';
 import {
   ATLAS_NOTES_FORMAT,
   ATLAS_NOTES_LIMITS,
@@ -770,6 +771,122 @@ void test('extractAtlasNotesFavorites reflects the live document, not a frozen c
     envelope(deleted.content),
   );
   assert.deepEqual(extractAtlasNotesFavorites(canonicalDeleted.doc), []);
+});
+
+void test('a favorite id split across paragraphs with mismatched colors is accepted by the schema, and extraction silently keeps only the first color', () => {
+  // Regression test for QUEST-005 (bug #4, found during manual review of
+  // bugs #1-#3). Favorite ids are deliberately not required to be unique
+  // or consistent across fragments (unlike footnote definitions — see
+  // "validates favorite marks" above: the same id may legitimately repeat
+  // across paragraphs for one multi-paragraph selection). The schema has
+  // no cross-fragment color-consistency check, so if two fragments ever
+  // end up sharing an id but disagreeing on color, canonicalizeAtlasNotesContent
+  // accepts the document as-is, and extractAtlasNotesFavorites (used to
+  // build the favorites panel) silently keeps only the FIRST fragment's
+  // color — the second, divergent one is dropped without any error. This
+  // characterizes exactly why the editor must never let that mismatch
+  // happen in the first place: see the next test for the fix.
+  const favoriteAttrs = (color: string) => ({
+    id: 'fav-mixed',
+    color,
+    createdAt: '2026-09-13T10:00:00.000Z',
+  });
+  const doc = {
+    type: 'doc',
+    content: [
+      richParagraph([
+        text('primeiro', [{ type: 'favorite', attrs: favoriteAttrs('yellow') }]),
+      ]),
+      richParagraph([
+        text('segundo', [{ type: 'favorite', attrs: favoriteAttrs('green') }]),
+      ]),
+    ],
+  };
+  const canonical = canonicalizeAtlasNotesContent(envelope(doc.content));
+  const favorites = extractAtlasNotesFavorites(canonical.doc);
+  assert.equal(favorites.length, 1);
+  assert.equal(favorites[0].color, 'yellow');
+  assert.equal(favorites[0].text, 'primeiro segundo');
+});
+
+void test('recoloring a favorite updates every fragment sharing its id, not just the one under the cursor', () => {
+  // Regression test for QUEST-005 (bug #4). components/notes-editor.tsx's
+  // applyFavoriteColor used to recolor via `extendMarkRange('favorite')`,
+  // which — like every ProseMirror getMarkRange/extendMarkRange call —
+  // never crosses a parent-node boundary. A favorite spanning multiple
+  // paragraphs (the id-sharing case exercised in the previous test)
+  // recolored with the cursor in just one paragraph left every OTHER
+  // paragraph's fragment on the old color, under the same id: exactly the
+  // mismatch the previous test shows extractAtlasNotesFavorites silently
+  // masks (and that the favorites panel would then misreport).
+  //
+  // The fix replaces extendMarkRange with a full-document scan
+  // (`doc.descendants`, the same pattern already used by
+  // findMarkRange/collectMarkIds in notes-editor.tsx) that collects every
+  // fragment carrying the target id and recolors all of them in one
+  // transaction. This test exercises that exact mechanism against a
+  // minimal ProseMirror schema/doc/transform — the same technique used
+  // for the bug #3 regression test above — rather than reimplementing it
+  // as a black box.
+  const schema = new Schema({
+    nodes: {
+      doc: { content: 'paragraph+' },
+      paragraph: { content: 'text*' },
+      text: {},
+    },
+    marks: {
+      favorite: {
+        attrs: { id: {}, color: { default: 'yellow' }, createdAt: {} },
+      },
+    },
+  });
+  const favoriteType = schema.marks.favorite;
+  const createdAt = '2026-09-13T10:00:00.000Z';
+  const markWithColor = (color: string) =>
+    favoriteType.create({ id: 'fav-x', color, createdAt });
+  const doc = schema.node('doc', null, [
+    schema.node('paragraph', null, [
+      schema.text('primeiro', [markWithColor('yellow')]),
+    ]),
+    schema.node('paragraph', null, [
+      schema.text('segundo', [markWithColor('yellow')]),
+    ]),
+  ]);
+
+  // Mirrors collectMarkRanges() in components/notes-editor.tsx.
+  function collectMarkRanges(
+    node: typeof doc,
+    matches: (attrs: Record<string, unknown>) => boolean,
+  ) {
+    const ranges: Array<{ from: number; to: number }> = [];
+    node.descendants((child, pos) => {
+      if (!child.isText) return;
+      if (!child.marks.some((m) => m.type.name === 'favorite' && matches(m.attrs)))
+        return;
+      const last = ranges.at(-1);
+      if (last && last.to === pos) last.to = pos + child.nodeSize;
+      else ranges.push({ from: pos, to: pos + child.nodeSize });
+    });
+    return ranges;
+  }
+
+  const ranges = collectMarkRanges(doc, (attrs) => attrs.id === 'fav-x');
+  // Two disjoint ranges (one per paragraph) — proof this is NOT a single
+  // contiguous span extendMarkRange could have found on its own.
+  assert.equal(ranges.length, 2);
+
+  const greenMark = markWithColor('green');
+  const tr = new Transform(doc);
+  ranges.forEach((range) => tr.addMark(range.from, range.to, greenMark));
+
+  const colors: string[] = [];
+  tr.doc.descendants((node) => {
+    if (!node.isText) return;
+    node.marks.forEach((mark) => {
+      if (mark.type.name === 'favorite') colors.push(mark.attrs.color as string);
+    });
+  });
+  assert.deepEqual(colors, ['green', 'green']);
 });
 
 void test('validates link shape, length and protocols', () => {
