@@ -27,6 +27,10 @@ export type AtlasNote = {
   content: AtlasNotesEnvelope | null;
   createdAt: string;
   updatedAt: string;
+  // The moment this note was last opened OR saved, whichever is more
+  // recent. Never null to callers: rows predating this column fall back
+  // to updatedAt via COALESCE in every query below.
+  lastInteractedAt: string;
   links: NoteLink[];
   syncStatus: 'queued' | 'processing' | 'failed' | 'synced';
 };
@@ -38,6 +42,7 @@ type NoteRow = {
   content_json: string | null;
   created_at: string;
   updated_at: string;
+  last_interacted_at: string;
   sync_status: AtlasNote['syncStatus'] | null;
 };
 
@@ -108,18 +113,22 @@ async function hydrate(rows: NoteRow[]) {
     content: hydrateContent(row),
     createdAt: row.created_at,
     updatedAt: row.updated_at,
+    lastInteractedAt: row.last_interacted_at,
     links: byNote.get(row.id) ?? [],
     syncStatus: row.sync_status ?? 'synced',
   }));
 }
 
+const NOTE_COLUMNS = `n.id, n.title, n.body, n.content_json, n.created_at, n.updated_at,
+        COALESCE(n.last_interacted_at, n.updated_at) AS last_interacted_at,
+        (SELECT s.status FROM atlas_sync_operations s
+         WHERE s.note_id = n.id ORDER BY s.created_at DESC LIMIT 1) AS sync_status`;
+
 export async function listNotes(query = '') {
   const search = `%${query.trim().replace(/[\\%_]/g, '\\$&')}%`;
   const result = await database()
     .prepare(
-      `SELECT n.id, n.title, n.body, n.content_json, n.created_at, n.updated_at,
-        (SELECT s.status FROM atlas_sync_operations s
-         WHERE s.note_id = n.id ORDER BY s.created_at DESC LIMIT 1) AS sync_status
+      `SELECT ${NOTE_COLUMNS}
        FROM atlas_notes n
        WHERE ?1 = '' OR n.title LIKE ?2 ESCAPE '\\' OR n.body LIKE ?2 ESCAPE '\\'
        ORDER BY n.updated_at DESC`,
@@ -129,17 +138,32 @@ export async function listNotes(query = '') {
   return hydrate(result.results);
 }
 
-export async function getNote(id: string) {
+export async function listRecentNotes(limit = 5) {
   const result = await database()
     .prepare(
-      `SELECT n.id, n.title, n.body, n.content_json, n.created_at, n.updated_at,
-        (SELECT s.status FROM atlas_sync_operations s
-         WHERE s.note_id = n.id ORDER BY s.created_at DESC LIMIT 1) AS sync_status
-       FROM atlas_notes n WHERE n.id = ?1`,
+      `SELECT ${NOTE_COLUMNS}
+       FROM atlas_notes n
+       ORDER BY COALESCE(n.last_interacted_at, n.updated_at) DESC
+       LIMIT ?1`,
     )
+    .bind(limit)
+    .all<NoteRow>();
+  return hydrate(result.results);
+}
+
+export async function getNote(id: string) {
+  const result = await database()
+    .prepare(`SELECT ${NOTE_COLUMNS} FROM atlas_notes n WHERE n.id = ?1`)
     .bind(id)
     .all<NoteRow>();
   return (await hydrate(result.results))[0] ?? null;
+}
+
+export async function recordNoteOpen(id: string) {
+  await database()
+    .prepare('UPDATE atlas_notes SET last_interacted_at = ?1 WHERE id = ?2')
+    .bind(new Date().toISOString(), id)
+    .run();
 }
 
 export async function saveNote(input: AtlasNotesSaveInput) {
@@ -179,10 +203,11 @@ export async function saveNote(input: AtlasNotesSaveInput) {
   const statements = [
     db
       .prepare(
-        `INSERT INTO atlas_notes (id, title, body, content_json, created_at, updated_at)
-       VALUES (?1, ?2, ?3, ?4, ?5, ?6)
+        `INSERT INTO atlas_notes (id, title, body, content_json, created_at, updated_at, last_interacted_at)
+       VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)
        ON CONFLICT(id) DO UPDATE SET title = excluded.title, body = excluded.body,
-         content_json = excluded.content_json, updated_at = excluded.updated_at`,
+         content_json = excluded.content_json, updated_at = excluded.updated_at,
+         last_interacted_at = excluded.last_interacted_at`,
       )
       .bind(
         input.id,
@@ -190,6 +215,7 @@ export async function saveNote(input: AtlasNotesSaveInput) {
         input.body,
         input.contentJson,
         createdAt,
+        now,
         now,
       ),
     db

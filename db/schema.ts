@@ -16,8 +16,15 @@ export const atlasNotes = sqliteTable(
     contentJson: text('content_json'),
     createdAt: text('created_at').notNull(),
     updatedAt: text('updated_at').notNull(),
+    // Set whenever the note is opened OR saved, whichever is more recent.
+    // Nullable: existing rows predate this column and fall back to
+    // updatedAt (see lib/notes-store.ts) rather than being backfilled.
+    lastInteractedAt: text('last_interacted_at'),
   },
-  (table) => [index('idx_atlas_notes_updated_at').on(table.updatedAt)],
+  (table) => [
+    index('idx_atlas_notes_updated_at').on(table.updatedAt),
+    index('idx_atlas_notes_last_interacted_at').on(table.lastInteractedAt),
+  ],
 );
 
 export const atlasNoteLinks = sqliteTable(

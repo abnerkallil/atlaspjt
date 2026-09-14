@@ -15,6 +15,13 @@
       "when": 1788868258269,
       "tag": "0001_chubby_ghost_rider",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1789354456775,
+      "tag": "0002_freezing_marrow",
+      "breakpoints": true
     }
   ]
 }

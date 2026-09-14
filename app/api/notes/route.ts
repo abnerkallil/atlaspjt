@@ -1,4 +1,9 @@
-import { listNotes, saveNote } from '@/lib/notes-store';
+import {
+  listNotes,
+  listRecentNotes,
+  recordNoteOpen,
+  saveNote,
+} from '@/lib/notes-store';
 import { parseAtlasNotesSaveRequest } from '@/lib/atlas-notes-input';
 import { AtlasNotesValidationError } from '@/lib/atlas-notes-document';
 
@@ -22,10 +27,30 @@ function errorResponse(error: unknown, status = 500) {
 
 export async function GET(request: Request) {
   try {
-    const query = new URL(request.url).searchParams.get('q') ?? '';
+    const searchParams = new URL(request.url).searchParams;
+    if (searchParams.get('recent') === '1') {
+      return Response.json({ notes: await listRecentNotes(5) });
+    }
+    const query = searchParams.get('q') ?? '';
     return Response.json({ notes: await listNotes(query) });
   } catch (error) {
     return errorResponse(error);
+  }
+}
+
+export async function PATCH(request: Request) {
+  try {
+    const body = (await request.json()) as { id?: unknown };
+    if (typeof body.id !== 'string' || !body.id.trim()) {
+      return Response.json(
+        { error: 'Identificador da nota inválido.' },
+        { status: 400 },
+      );
+    }
+    await recordNoteOpen(body.id);
+    return Response.json({ ok: true });
+  } catch (error) {
+    return errorResponse(error, 400);
   }
 }
 

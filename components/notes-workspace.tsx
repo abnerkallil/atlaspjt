@@ -7,6 +7,7 @@ import {
   BookMarked,
   Check,
   ChevronRight,
+  Clock3,
   Cloud,
   FilePenLine,
   Link2,
@@ -37,6 +38,7 @@ import {
   searchContentCatalog,
   suggestContentLinks,
 } from '@/lib/content-catalog';
+import { mergeRecentInteraction } from './notes-recent-list';
 
 const LINK_STATUS = 'Anotado — ainda não trabalhado' as const;
 
@@ -47,6 +49,7 @@ type AtlasNote = {
   content: AtlasNotesEnvelope | null;
   createdAt: string;
   updatedAt: string;
+  lastInteractedAt: string;
   links: Array<{
     contentId: string;
     contentTitle: string;
@@ -109,6 +112,7 @@ export function NotesWorkspace() {
   const [focusRequest, setFocusRequest] = useState<FavoriteFocusRequest | null>(
     null,
   );
+  const [recentNotes, setRecentNotes] = useState<AtlasNote[]>([]);
 
   const favorites = useMemo<FavoriteEntry[]>(() => {
     const result: FavoriteEntry[] = [];
@@ -184,6 +188,30 @@ export function NotesWorkspace() {
     return () => window.clearTimeout(timer);
   }, [loadNotes, search, showFavorites]);
 
+  const loadRecentNotes = useCallback(async () => {
+    try {
+      const response = await fetch('/api/notes?recent=1');
+      const data = (await response.json()) as { notes?: AtlasNote[] };
+      if (response.ok) setRecentNotes(data.notes ?? []);
+    } catch {
+      // Non-critical, best-effort block: leave the previous state as-is.
+    }
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => void loadRecentNotes(), 0);
+    return () => window.clearTimeout(timer);
+  }, [loadRecentNotes]);
+
+  // Moves (or inserts) `note` to the front of the recent-notes block with a
+  // fresh interaction timestamp, so it reflects an open/save immediately —
+  // without waiting for a round trip back to the server.
+  function bumpRecentNote(note: AtlasNote, lastInteractedAt: string) {
+    setRecentNotes((current) =>
+      mergeRecentInteraction(current, { ...note, lastInteractedAt }, 5),
+    );
+  }
+
   function openNote(note: AtlasNote) {
     setSelectedId(note.id);
     setDraftId(note.id);
@@ -196,6 +224,12 @@ export function NotesWorkspace() {
     setError('');
     setSavedMessage('');
     operationId.current = newId();
+    bumpRecentNote(note, new Date().toISOString());
+    void fetch('/api/notes', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: note.id }),
+    });
   }
 
   function startNewNote() {
@@ -262,6 +296,7 @@ export function NotesWorkspace() {
         data.note!,
         ...current.filter((note) => note.id !== data.note!.id),
       ]);
+      bumpRecentNote(data.note, data.note.lastInteractedAt);
       setSavedMessage(
         'Nota salva. Os vínculos aguardam sincronização de metadados.',
       );
@@ -361,6 +396,37 @@ export function NotesWorkspace() {
                   <span className="favorites-count">{favorites.length}</span>
                 )}
               </button>
+              {recentNotes.length > 0 && (
+                <div className="notes-recent">
+                  <div className="notes-recent-heading">
+                    <Clock3 size={13} />
+                    <strong>Notas recentes</strong>
+                  </div>
+                  <div>
+                    {recentNotes.map((note) => (
+                      <button
+                        key={note.id}
+                        className={
+                          note.id === selectedId
+                            ? 'note-list-item active'
+                            : 'note-list-item'
+                        }
+                        onClick={() => openNote(note)}
+                      >
+                        <span className="note-list-icon">
+                          <FilePenLine size={16} />
+                        </span>
+                        <span>
+                          <strong>{note.title}</strong>
+                          <small>{note.body.replace(/\s+/g, ' ').slice(0, 86)}</small>
+                          <em>{formatDate(note.lastInteractedAt)}</em>
+                        </span>
+                        <ChevronRight size={15} />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div className="notes-search">
                 <Search size={17} />
                 <input
