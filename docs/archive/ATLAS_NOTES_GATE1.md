@@ -1,5 +1,7 @@
 # Atlas Notes — Gate 1 / Spike Tiptap
 
+> **Nota histórica (renomeação Codex → Claude Code):** este é um registro histórico preservado sem alteração. Todas as menções a "Codex" abaixo — incluindo o nome do branch `codex/atlas-notes-tiptap-spike` — referem-se à ferramenta de implementação usada na época (CLI Codex da OpenAI), hoje substituída pelo Claude Code. O texto original não foi reescrito.
+
 ## Estado
 
 **PASS técnico** no branch isolado `codex/atlas-notes-tiptap-spike`. Gate 2 permanece não autorizado.

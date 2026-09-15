@@ -1,5 +1,7 @@
 # Quest 3 — Atlas Notes: blocos avançados de edição
 
+> **Nota histórica (renomeação Codex → Claude Code):** este é um registro histórico preservado sem alteração. Todas as menções a "Codex" abaixo referem-se à ferramenta de implementação usada na época (CLI Codex da OpenAI), hoje substituída pelo Claude Code. O texto original não foi reescrito.
+
 Status: COMPLETE
 
 ## Nota sobre este registro

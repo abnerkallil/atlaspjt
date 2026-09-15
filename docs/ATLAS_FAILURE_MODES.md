@@ -17,7 +17,7 @@ They are recurring agent behaviors that previously caused:
 - weak functional validation;
 - unnecessary coordination between agents.
 
-The purpose of this document is to help Atlas, Hermes and Codex recognize these patterns before repeating them.
+The purpose of this document is to help Atlas, Hermes and Claude Code recognize these patterns before repeating them.
 
 ---
 
@@ -57,7 +57,7 @@ Consult it when:
 - scope begins expanding;
 - implementation is taking disproportionately long;
 - a task is being reported complete despite uncertain behavior;
-- Atlas, Hermes or Codex suspects process overproduction.
+- Atlas, Hermes or Claude Code suspects process overproduction.
 
 For ordinary implementation that clearly follows the active Task Contract, continue without loading this document.
 
@@ -163,7 +163,7 @@ The document itself is required to preserve a durable architectural or product d
 
 ## Signal
 
-Codex repeatedly asks Hermes whether routine implementation choices are acceptable.
+Claude Code repeatedly asks Hermes whether routine implementation choices are acceptable.
 
 Examples:
 
@@ -179,11 +179,11 @@ Hermes becomes a routine supervisor rather than an architectural authority.
 
 Every consultation creates additional context, reasoning and handoff cost.
 
-It also reduces Codex implementation autonomy.
+It also reduces Claude Code implementation autonomy.
 
 ## Expected Behavior
 
-Codex decides routine implementation inside the established architecture.
+Claude Code decides routine implementation inside the established architecture.
 
 Hermes participates only when a real Architecture Gate exists.
 
@@ -199,7 +199,7 @@ New repository evidence reveals a genuinely new architectural issue that materia
 
 ## Signal
 
-Codex presents its preferred solution to Hermes and asks for approval.
+Claude Code presents its preferred solution to Hermes and asks for approval.
 
 Example:
 
@@ -209,11 +209,11 @@ Example:
 
 The implementation agent controls the framing of the architectural decision.
 
-Hermes may end up validating Codex's proposal rather than independently evaluating the original requirement and repository facts.
+Hermes may end up validating Claude Code's proposal rather than independently evaluating the original requirement and repository facts.
 
 ## Expected Behavior
 
-Codex supplies:
+Claude Code supplies:
 
 - original requirement;
 - relevant repository facts;
@@ -224,11 +224,11 @@ Codex supplies:
 
 Hermes supplies architectural judgment.
 
-Codex recommendation remains `NOT REQUESTED` unless Hermes explicitly asks for it.
+Claude Code recommendation remains `NOT REQUESTED` unless Hermes explicitly asks for it.
 
 ## Legitimate Exception
 
-Hermes explicitly requests Codex's implementation recommendation after independently understanding the architectural problem.
+Hermes explicitly requests Claude Code's implementation recommendation after independently understanding the architectural problem.
 
 ---
 
@@ -258,9 +258,9 @@ Implementation convenience must not redefine product behavior.
 
 Atlas owns observable UX requirements.
 
-Codex may choose HOW to implement them.
+Claude Code may choose HOW to implement them.
 
-Codex may not replace them.
+Claude Code may not replace them.
 
 Hermes may report architectural conflict but may not silently redesign the product requirement.
 
@@ -543,7 +543,7 @@ Source of truth for:
 
 - source code;
 - operational development state;
-- Codex instructions;
+- Claude Code instructions;
 - Hermes instructions;
 - current quest;
 - architectural decisions.
@@ -575,7 +575,7 @@ Before coding begins, a SMALL task receives a detailed implementation plan conta
 
 ## Why This Is a Problem
 
-Atlas begins doing Codex's job before Codex has inspected the current repository.
+Atlas begins doing Claude Code's job before Claude Code has inspected the current repository.
 
 The implementation plan may be based on assumptions rather than actual code.
 
@@ -593,7 +593,7 @@ Atlas defines:
 - complexity;
 - validation.
 
-Codex inspects the repository and determines implementation.
+Claude Code inspects the repository and determines implementation.
 
 ## Legitimate Exception
 
@@ -676,7 +676,7 @@ Claims of validated behavior must correspond to actual validation.
 
 # SELF-CORRECTION RULE
 
-When Atlas, Hermes or Codex detects a likely Failure Mode:
+When Atlas, Hermes or Claude Code detects a likely Failure Mode:
 
 1. identify the suspected FM-*;
 2. determine whether current complexity is justified;

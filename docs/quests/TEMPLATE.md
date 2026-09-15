@@ -280,7 +280,7 @@ Dependencies: according to architectural decision
 
 
 
-Define what Codex must verify before completion.
+Define what Claude Code must verify before completion.
 
 
 
@@ -342,7 +342,7 @@ Atlas defines WHAT must work.
 
 
 
-Codex determines HOW to implement it inside the established architecture.
+Claude Code determines HOW to implement it inside the established architecture.
 
 
 

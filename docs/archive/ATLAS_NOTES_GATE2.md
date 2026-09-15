@@ -1,5 +1,7 @@
 # Atlas Notes — Gate 2 / Integração P0
 
+> **Nota histórica (renomeação Codex → Claude Code):** este é um registro histórico preservado sem alteração. Todas as menções a "Codex" abaixo referem-se à ferramenta de implementação usada na época (CLI Codex da OpenAI), hoje substituída pelo Claude Code. O texto original não foi reescrito.
+
 ## Estado
 
 **PASS técnico do Codex**, posteriormente integrado à branch `main` com autorização do usuário.
