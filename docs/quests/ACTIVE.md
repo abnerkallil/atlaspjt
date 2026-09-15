@@ -50,7 +50,7 @@ Do not accumulate completed quests here.
 
 
 
-NONE
+QUEST-005 — Atlas Notes: marcação colorida e sistema de favoritos
 
 
 
@@ -58,7 +58,7 @@ NONE
 
 
 
-NONE
+Not specified in the originating Task Contract.
 
 
 
@@ -66,7 +66,7 @@ NONE
 
 
 
-NONE
+MEDIUM
 
 
 
@@ -74,7 +74,7 @@ NONE
 
 
 
-NONE
+NO (no concrete architectural conflict was found; DEC-001/DEC-002 were not reopened)
 
 
 
@@ -86,7 +86,7 @@ NONE
 
 
 
-No active development quest is currently defined.
+Separar "Favoritar texto" de "Realçar" como duas ações distintas no menu Formatar, cada uma com paleta de cores padrão (amarelo/verde/azul-claro/vermelho-rosa/roxo), permitindo recolorir trechos já marcados. Adicionar um painel de favoritos na coluna esquerda (acima do futuro bloco "Notas recentes", ainda não implementado — quest separada). Cada item do painel exibe o texto marcado, o título da nota de origem e a data de marcação; clicar em um item abre a nota de origem e posiciona/rola até o ponto exato marcado. Texto e alvo de navegação devem sempre refletir o estado ATUAL da nota, nunca uma cópia congelada.
 
 
 
@@ -98,7 +98,21 @@ No active development quest is currently defined.
 
 
 
-None.
+\- "Favoritar texto" e "Realçar" aparecem como ações distintas no menu Formatar, cada uma abrindo um submenu de seleção de cor;
+
+\- selecionar uma cor aplica a marca correspondente (highlight ou favorite) ao trecho selecionado;
+
+\- reaplicar uma cor diferente sobre um trecho já marcado recolore a marca existente em vez de empilhar marcas duplicadas;
+
+\- o painel de favoritos é acionado por um botão/aba na coluna esquerda (reaproveitando o padrão visual de `.sync-pill`) e substitui o conteúdo da coluna (content-swap), com um caminho claro de volta ao estado padrão;
+
+\- cada entrada do painel mostra o texto marcado, o título da nota de origem e a data de marcação (reaproveitando o padrão visual de `.note-list-item`);
+
+\- clicar em uma entrada abre a nota de origem (se não estiver aberta) e rola/posiciona o cursor exatamente no trecho marcado, inclusive em notas longas que exigem rolagem;
+
+\- se o texto favoritado for editado depois de marcado, tanto o texto exibido no painel quanto o alvo de navegação refletem o estado atual da nota;
+
+\- marcas de destaque (highlight) pré-existentes, sem cor explícita, continuam renderizando em amarelo sem regressão.
 
 
 
@@ -110,7 +124,29 @@ None.
 
 
 
-None.
+\- \[x] "Favoritar" e "Realçar" existem como ações distintas no menu Formatar, cada uma com seletor de cor (amarelo/verde/azul-claro/rosa/roxo) — validado manualmente em navegador real nesta sessão;
+
+\- \[x] recolorir um trecho já marcado (highlight ou favorite) atualiza a marca existente — estava QUEBRADO de duas formas independentes, achadas e corrigidas nesta sessão:
+  1. `AtlasHighlight` e `AtlasFavorite` definiam `excludes: ''`, o que desliga a auto-exclusão padrão do ProseMirror para marcas do mesmo tipo, então uma nova instância de cor passava a coexistir com a antiga em vez de substituí-la, e o canonicalizador rejeitava corretamente o documento resultante por marca duplicada (`Marca de texto duplicada` / `INVALID_MARK`), bloqueando a mudança de cor. Corrigido removendo `excludes: ''` das duas marcas (não tocado em `inlineMark`, usado por `comment`/`code`, que não têm atributos e não passam por este cenário).
+  2. Um favorite que abrange mais de um parágrafo (cenário suportado de propósito — o mesmo `id` pode legitimamente reaparecer em mais de um trecho, ver critério "não-mesclagem de ids diferentes" abaixo) podia ficar com cores inconsistentes entre parágrafos ao recolorir: `applyFavoriteColor` usava `extendMarkRange('favorite')`, que — como todo `getMarkRange`/`extendMarkRange` do ProseMirror — nunca atravessa fronteira de nó pai, então recolorir com o cursor em só um dos parágrafos deixava os outros na cor antiga, mesmo `id`, sem nenhum erro de validação (o schema não tem checagem de consistência de cor entre trechos com o mesmo id — deliberado, ver Dependencies). `extractAtlasNotesFavorites` então reportava só a cor do primeiro fragmento encontrado, então o painel de favoritos mostrava uma cor enquanto o editor mostrava duas. Efeito colateral relacionado: como o id reaproveitado vinha só da âncora da seleção, selecionar um trecho que tocava um favorito existente e também texto fora dele podia anexar essa parte extra sob o id do primeiro. Corrigido: `applyFavoriteColor`, ao recolorir um favorite já existente, agora varre o documento inteiro (`collectMarkRanges`, novo helper que segue o mesmo padrão de `doc.descendants` já usado por `findMarkRange`/`collectMarkIds`) atrás de todas as ocorrências do mesmo id e reaplica a nova cor a todas elas numa única transação — em vez de estender a seleção atual. Isso também elimina o efeito colateral de anexação, já que só fragmentos que já carregam aquele id são tocados.
+
+  Validado automaticamente: teste de schema dedicado que constrói um schema ProseMirror mínimo com o mesmo formato — atributo `color` sem `excludes` — e confirma que recolorir com `Mark#addToSet` colapsa para uma única marca (bug 3.1); teste que documenta, ao nível de schema/extração, que cores divergentes sob o mesmo id são aceitas silenciosamente e só a primeira sobrevive em `extractAtlasNotesFavorites` (caracteriza o bug 3.2); e teste que exercita o mecanismo real da correção (`doc.descendants` + `Transform#addMark` sobre um doc de dois parágrafos) confirmando que todas as ocorrências do id acabam com a mesma cor nova. Validado manualmente em navegador real: recolori um highlight já existente (amarelo → verde) e um favorite já existente (roxo → rosa) — nenhum erro de validação, `data-color` atualizado, cor persistida após salvar e recarregar a página inteira; reproduzi o cenário de favorite em dois parágrafos (favoritei os dois parágrafos em amarelo, recolori com o cursor em só um deles) e confirmei que ANTES da correção os dois `<mark>` ficavam com `data-color` diferente e o painel de favoritos mostrava só a cor do primeiro fragmento, e que DEPOIS da correção os dois `<mark>` ficam com a mesma cor nova e o painel reflete corretamente; também confirmei que selecionar um favorite existente mais texto extra não marcado e recolorir não anexa mais esse texto extra ao favorite;
+
+\- \[x] painel de favoritos implementado na coluna esquerda como content-swap, com botão de retorno — validado manualmente em navegador real nesta sessão;
+
+\- \[x] cada entrada do painel mostra texto, nota de origem e data — validado manualmente em navegador real nesta sessão;
+
+\- \[ ] clicar em uma entrada navega até o trecho exato, inclusive entre notas e com rolagem em notas longas — NÃO validado nesta sessão (nem automatizado nem manual);
+
+\- \[x] favoritos e destaques refletem o estado vivo do documento (verificado via `extractAtlasNotesFavorites` recalculado a partir do documento atual, nunca de uma cópia congelada, incluindo o caso do trecho totalmente apagado — teste automatizado). A lista do painel de favoritos não é mais silenciosamente filtrada por um termo de busca residual ao abrir o painel — validado manualmente em navegador real: favoritei um trecho em uma nota, digitei uma busca que só batia com outra nota, e o favorito continuou aparecendo no painel. A atualização do texto exibido no painel após editar um trecho já favoritado permanece validada apenas por teste automatizado, não reexercitada manualmente nesta sessão;
+
+\- \[x] destaques amarelos pré-existentes continuam renderizando corretamente após a migração de schema — agora genuinamente validado, não apenas por teste de schema isolado: teste automatizado dedicado alimentando a forma real que o editor chega a emitir (`attrs: { color: null }`, antes da correção) confirma que o schema a rejeita, e teste manual em navegador real confirma o fluxo completo editor→schema→salvar — apliquei um destaque amarelo em texto novo, continuei editando (o gatilho exato do bug relatado), salvei, recarreguei a página inteira e reabri a nota: nenhum erro de validação em nenhum momento, cor preservada;
+
+\- \[x] extensão de schema é aditiva; DEC-001/DEC-002 não foram reabertas;
+
+\- \[x] suíte de testes automatizados cobrindo o atributo de cor e o id estável de favorito no formato canônico (49/49 testes passando — 45 da entrega original, mais 4 casos de regressão adicionados nesta sessão: highlight amarelo, recolorir sem duplicar marca, cores divergentes sob o mesmo id de favorite, e recolorir atualizando todas as ocorrências do id);
+
+\- \[x] validação manual/funcional em navegador real — REALIZADA PARCIALMENTE nesta sessão (diferente da entrega anterior, o ambiente permitiu `pnpm install` e `pnpm dev` sem bloqueio de rede). Cobriu: aplicar destaque amarelo e continuar editando sem erro de validação; recolorir um highlight e um favorite já existentes (incluindo um favorite de dois parágrafos, reproduzindo o bug de cores divergentes antes da correção e confirmando a consistência depois); confirmar que recolorir não anexa mais texto extra não marcado a um favorite existente; salvar e recarregar a página inteira, confirmando persistência tanto do destaque amarelo na forma legada sem atributos quanto de uma recoloração; favoritar um trecho e abrir o painel de favoritos com uma busca residual ativa que não batia com a nota favoritada, confirmando que o favorito continuou aparecendo. NÃO cobriu: navegação/rolagem ao clicar em uma entrada do painel, atualização visual do painel após editar um trecho já favoritado, e persistência de favoritos (como lista) através de reload.
 
 
 
@@ -122,7 +158,13 @@ None.
 
 
 
-None.
+\- painel de favoritos é troca de conteúdo dentro da coluna esquerda existente, não uma nova rota/página;
+
+\- seletor de cor segue a identidade visual branco/azul/dourado do Atlas;
+
+\- reaproveita padrões visuais existentes (`.sync-pill`, `.note-list-item`) em vez de introduzir novos padrões visuais do zero;
+
+\- menu Formatar não é redesenhado além do necessário para acomodar "Favoritar".
 
 
 
@@ -134,7 +176,13 @@ None.
 
 
 
-None.
+\- não alterar as marcas existentes comment/code/link;
+
+\- sem busca/filtro no painel de favoritos;
+
+\- sem alterações de modelo de permissão/usuário;
+
+\- não implementar "Notas recentes" nem "Todas as notas" (QUEST-004/QUEST-006, separadas).
 
 
 
@@ -146,7 +194,11 @@ None.
 
 
 
-None.
+\- DEC-001 (formato canônico v2, `highlight` sem atributos, `assertKeys` estrito) — estendida de forma aditiva, não reaberta;
+
+\- DEC-002 (listas aninhadas) — não afetada;
+
+\- padrão de referência estável por id já usado por `footnoteRef`/`footnote` — reutilizado para a marca `favorite`.
 
 
 
@@ -158,7 +210,7 @@ None.
 
 
 
-Architecture: NONE
+Architecture: LIMITED (extensão aditiva de schema; sem novo runtime/persistência)
 
 
 
@@ -166,11 +218,11 @@ Hermes: 0
 
 
 
-Documentation: NONE
+Documentation: UPDATE EXISTING WHEN NECESSARY (este registro em ACTIVE.md)
 
 
 
-Refactor: NONE
+Refactor: RELATED CODE ONLY (`components/notes-editor.tsx`, `components/notes-workspace.tsx`)
 
 
 
@@ -186,7 +238,41 @@ Dependencies: NONE
 
 
 
-No active validation requirements.
+Realizado na sessão original:
+
+
+
+\- suíte automatizada (`tsc -p tsconfig.notes-spike.json && node --test .notes-spike-dist/tests/*.test.js`): 45/45 testes passando;
+
+\- revisão manual linha a linha do diff de todos os arquivos alterados para consistência estrutural (JSX balanceado, tipos, dispatch de schema);
+
+\- correção preventiva identificada durante a revisão: regra `parseHTML` de fallback do highlight (`{ tag: 'mark' }`) poderia capturar indevidamente um `<mark data-atlas-favorite>` colado externamente; ajustada para `mark:not([data-atlas-favorite])`.
+
+
+
+Realizado nesta sessão de correção (ciclo de revisão seguinte):
+
+
+
+\- corrigido o bug bloqueante do highlight amarelo (`color` deixou de default para `null`, passou a default para `'yellow'`; `applyHighlightColor`, `parseHTML` e `renderHTML` ajustados no mesmo sentido) e adicionado teste automatizado alimentando a forma real e problemática (`attrs: { color: null }`);
+
+\- corrigido o bug do painel de favoritos escondendo favoritos por causa de um filtro de busca residual (a lista passa a carregar sem o filtro de busca enquanto o painel está aberto);
+
+\- durante a validação manual desses dois itens foi descoberto um terceiro problema, já presente no Task Contract original desta quest como Required Behavior/Acceptance Criteria ("recolorir atualiza a marca existente"), mas nunca de fato exercitado: recolorir um trecho já marcado (highlight ou favorite) lançava `Marca de texto duplicada` e bloqueava a mudança, porque `AtlasHighlight`/`AtlasFavorite` definiam `excludes: ''`, desligando a auto-exclusão padrão do ProseMirror entre instâncias do mesmo tipo de marca — uma nova cor passava a coexistir com a antiga em vez de substituí-la. Corrigido removendo `excludes: ''` das duas marcas (não tocado em `inlineMark`, usado por `comment`/`code`, que não têm atributos);
+
+\- ao validar manualmente a correção acima (recolorir um favorite multi-parágrafo), foi descoberto um quarto problema, mesma área (`applyFavoriteColor`), causa raiz diferente: `extendMarkRange('favorite')` nunca atravessa fronteira de parágrafo, então recolorir com o cursor em só um dos parágrafos de um favorite que abrange vários deixava os demais na cor antiga sob o mesmo id, sem erro de validação — e `extractAtlasNotesFavorites` reportava só a cor do primeiro fragmento, então o painel de favoritos podia mostrar uma cor divergente do que estava realmente aplicado no editor. Efeito colateral relacionado: recolorir podia anexar silenciosamente texto extra não marcado (ou até um segundo favorite com outro id) sob o id do favorite tocado pela seleção. Corrigido: `applyFavoriteColor`, ao recolorir um favorite existente, agora varre o documento inteiro atrás de todas as ocorrências do mesmo id (novo helper `collectMarkRanges`, mesmo padrão de `doc.descendants` de `findMarkRange`/`collectMarkIds`) e reaplica a nova cor a todas elas numa única transação, em vez de depender de `extendMarkRange`;
+
+\- suíte automatizada: 49/49 testes passando (45 da entrega original + 4 casos de regressão novos nesta sessão: highlight amarelo, recolorir sem duplicar marca, cores divergentes sob o mesmo id de favorite, e recolorir atualizando todas as ocorrências do id);
+
+\- validação manual/funcional em navegador real REALIZADA (ao contrário da sessão anterior, `pnpm install`/`pnpm dev` funcionaram sem bloqueio de rede neste ambiente): aplicar destaque amarelo em texto novo e continuar editando sem erro de validação; recolorir um highlight já existente (amarelo → verde) e um favorite já existente (roxo → rosa), confirmando em ambos que a cor muda e nenhum erro de validação aparece; reproduzir o bug do favorite multi-parágrafo (favoritar dois parágrafos em amarelo, recolorir com o cursor em só um deles) e confirmar, ANTES da correção, que os dois `<mark>` ficavam com `data-color` diferente e o painel mostrava só a cor do primeiro, e, DEPOIS da correção, que os dois ficam com a mesma cor e o painel reflete corretamente; confirmar que recolorir não anexa mais texto extra não marcado a um favorite existente; salvar e recarregar a página inteira, confirmando a persistência tanto do destaque amarelo na forma legada sem atributos quanto de uma recoloração; favoritar um trecho, digitar uma busca que só batia com outra nota, e confirmar que o favorito da primeira nota continuou aparecendo no painel de favoritos.
+
+
+
+PENDENTE (não descartado):
+
+
+
+\- validação manual em navegador real ainda não realizada para: navegação/rolagem ao clicar em uma entrada do painel de favoritos; atualização visual do painel após editar um trecho já favoritado; persistência de favoritos (como lista) através de reload.
 
 
 

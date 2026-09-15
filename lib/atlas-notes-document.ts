@@ -40,9 +40,22 @@ export class AtlasNotesValidationError extends Error {
 }
 
 export type AtlasNotesVersion = 1 | 2;
+export const ATLAS_NOTES_MARK_COLORS = [
+  'yellow',
+  'green',
+  'blue',
+  'pink',
+  'purple',
+] as const;
+export type AtlasNotesMarkColor = (typeof ATLAS_NOTES_MARK_COLORS)[number];
 export type AtlasNotesMark =
   | {
-      type: 'bold' | 'italic' | 'strike' | 'code' | 'highlight' | 'comment';
+      type: 'bold' | 'italic' | 'strike' | 'code' | 'comment';
+    }
+  | { type: 'highlight'; attrs?: { color: AtlasNotesMarkColor } }
+  | {
+      type: 'favorite';
+      attrs: { id: string; color: AtlasNotesMarkColor; createdAt: string };
     }
   | { type: 'link'; attrs: { href: string } };
 export type AtlasNotesText = {
@@ -173,10 +186,12 @@ const markRank: Record<AtlasNotesMark['type'], number> = {
   strike: 2,
   code: 3,
   highlight: 4,
-  comment: 5,
-  link: 6,
+  favorite: 5,
+  comment: 6,
+  link: 7,
 };
-const footnoteIdPattern = /^[A-Za-z0-9_-]{1,64}$/;
+const stableIdPattern = /^[A-Za-z0-9_-]{1,64}$/;
+const markColorSet = new Set<string>(ATLAS_NOTES_MARK_COLORS);
 const codeLanguagePattern = /^[a-z0-9._+#-]{1,32}$/i;
 
 function fail(
@@ -292,6 +307,37 @@ function canonicalizeLinkMark(mark: UnknownRecord, path: string) {
   return { type: 'link', attrs: { href } } as const;
 }
 
+function canonicalizeMarkColor(value: unknown, path: string): AtlasNotesMarkColor {
+  if (typeof value !== 'string' || !markColorSet.has(value)) {
+    fail('INVALID_MARK', 'Cor de marcação não permitida.', path);
+  }
+  return value as AtlasNotesMarkColor;
+}
+
+function canonicalizeHighlightMark(mark: UnknownRecord, path: string): AtlasNotesMark {
+  if (mark.attrs === undefined) {
+    assertKeys(mark, ['type'], path);
+    return { type: 'highlight' };
+  }
+  assertKeys(mark, ['type', 'attrs'], path);
+  const attrs = asRecord(mark.attrs, `${path}.attrs`);
+  assertKeys(attrs, ['color'], `${path}.attrs`);
+  const color = canonicalizeMarkColor(attrs.color, `${path}.attrs.color`);
+  return color === 'yellow'
+    ? { type: 'highlight' }
+    : { type: 'highlight', attrs: { color } };
+}
+
+function canonicalizeFavoriteMark(mark: UnknownRecord, path: string): AtlasNotesMark {
+  assertKeys(mark, ['type', 'attrs'], path);
+  const attrs = asRecord(mark.attrs, `${path}.attrs`);
+  assertKeys(attrs, ['id', 'color', 'createdAt'], `${path}.attrs`);
+  const id = canonicalizeStableId(attrs.id, `${path}.attrs.id`);
+  const color = canonicalizeMarkColor(attrs.color, `${path}.attrs.color`);
+  const createdAt = canonicalizeTimestamp(attrs.createdAt, `${path}.attrs.createdAt`);
+  return { type: 'favorite', attrs: { id, color, createdAt } };
+}
+
 function canonicalizeMarks(
   value: unknown,
   path: string,
@@ -308,7 +354,16 @@ function canonicalizeMarks(
     const allowedTypes: readonly string[] =
       version === 1
         ? ['bold', 'italic']
-        : ['bold', 'italic', 'strike', 'code', 'highlight', 'comment', 'link'];
+        : [
+            'bold',
+            'italic',
+            'strike',
+            'code',
+            'highlight',
+            'favorite',
+            'comment',
+            'link',
+          ];
     if (typeof mark.type !== 'string' || !allowedTypes.includes(mark.type)) {
       fail('INVALID_MARK', 'Marca de texto não permitida.', markPath);
     }
@@ -318,6 +373,8 @@ function canonicalizeMarks(
     }
     seen.add(type);
     if (type === 'link') return canonicalizeLinkMark(mark, markPath);
+    if (type === 'highlight') return canonicalizeHighlightMark(mark, markPath);
+    if (type === 'favorite') return canonicalizeFavoriteMark(mark, markPath);
     assertKeys(mark, ['type'], markPath);
     return { type };
   });
@@ -337,8 +394,16 @@ function sameMarks(
     left.every((mark, index) => {
       const other = right[index];
       if (!other || mark.type !== other.type) return false;
-      if (mark.type !== 'link' || other.type !== 'link') return true;
-      return mark.attrs.href === other.attrs.href;
+      if (mark.type === 'link' && other.type === 'link') {
+        return mark.attrs.href === other.attrs.href;
+      }
+      if (mark.type === 'highlight' && other.type === 'highlight') {
+        return (mark.attrs?.color ?? null) === (other.attrs?.color ?? null);
+      }
+      if (mark.type === 'favorite' && other.type === 'favorite') {
+        return mark.attrs.id === other.attrs.id;
+      }
+      return true;
     })
   );
 }
@@ -384,9 +449,20 @@ function canonicalizeLatex(
   return value;
 }
 
-function canonicalizeFootnoteId(value: unknown, path: string) {
-  if (typeof value !== 'string' || !footnoteIdPattern.test(value)) {
-    fail('INVALID_NODE', 'Identificador de nota de rodapé inválido.', path);
+function canonicalizeStableId(value: unknown, path: string) {
+  if (typeof value !== 'string' || !stableIdPattern.test(value)) {
+    fail('INVALID_NODE', 'Identificador estável inválido.', path);
+  }
+  return value;
+}
+
+function canonicalizeTimestamp(value: unknown, path: string) {
+  if (typeof value !== 'string' || value.length > 40) {
+    fail('INVALID_MARK', 'Data inválida.', path);
+  }
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime()) || date.toISOString() !== value) {
+    fail('INVALID_MARK', 'Data inválida.', path);
   }
   return value;
 }
@@ -426,7 +502,7 @@ function canonicalizeInlineContent(
       assertKeys(inline, ['type', 'attrs'], inlinePath);
       const attrs = asRecord(inline.attrs, `${inlinePath}.attrs`);
       assertKeys(attrs, ['id'], `${inlinePath}.attrs`);
-      const id = canonicalizeFootnoteId(attrs.id, `${inlinePath}.attrs.id`);
+      const id = canonicalizeStableId(attrs.id, `${inlinePath}.attrs.id`);
       footnotes.references.push({ id, path: `${inlinePath}.attrs.id` });
       next = { type: 'footnoteRef', attrs: { id } };
     } else {
@@ -853,7 +929,7 @@ function canonicalizeBlock(
     assertKeys(node, ['type', 'attrs', 'content'], path);
     const attrs = asRecord(node.attrs, `${path}.attrs`);
     assertKeys(attrs, ['id'], `${path}.attrs`);
-    const id = canonicalizeFootnoteId(attrs.id, `${path}.attrs.id`);
+    const id = canonicalizeStableId(attrs.id, `${path}.attrs.id`);
     if (footnotes.definitions.has(id)) {
       fail('INVALID_NODE', 'Nota de rodapé duplicada.', `${path}.attrs.id`);
     }
@@ -1096,6 +1172,112 @@ function projectCanonicalContent(content: AtlasNotesEnvelope) {
 
 export function projectAtlasNotesBody(value: unknown) {
   return projectCanonicalContent(canonicalizeAtlasNotesContent(value));
+}
+
+export type AtlasNotesFavoriteEntry = {
+  id: string;
+  color: AtlasNotesMarkColor;
+  createdAt: string;
+  text: string;
+};
+
+function walkFavoriteInline(
+  content: AtlasNotesInline[] | undefined,
+  onText: (id: string, color: AtlasNotesMarkColor, createdAt: string, text: string) => void,
+) {
+  content?.forEach((node) => {
+    if (node.type !== 'text' || !node.marks) return;
+    const favorite = node.marks.find(
+      (mark): mark is Extract<AtlasNotesMark, { type: 'favorite' }> =>
+        mark.type === 'favorite',
+    );
+    if (!favorite) return;
+    onText(favorite.attrs.id, favorite.attrs.color, favorite.attrs.createdAt, node.text);
+  });
+}
+
+function walkFavoriteListItems(
+  items: Array<AtlasNotesListItem | AtlasNotesTaskItem>,
+  onText: Parameters<typeof walkFavoriteInline>[1],
+) {
+  items.forEach((item) => {
+    const [paragraph, ...nested] = item.content;
+    walkFavoriteInline(paragraph.content, onText);
+    nested.forEach((list) => walkFavoriteBlocks([list], onText));
+  });
+}
+
+function walkFavoriteBlocks(
+  blocks: AtlasNotesBlock[],
+  onText: Parameters<typeof walkFavoriteInline>[1],
+) {
+  blocks.forEach((block) => {
+    switch (block.type) {
+      case 'paragraph':
+      case 'heading':
+        walkFavoriteInline(block.content, onText);
+        break;
+      case 'bulletList':
+      case 'orderedList':
+        walkFavoriteListItems(block.content, onText);
+        break;
+      case 'taskList':
+        walkFavoriteListItems(block.content, onText);
+        break;
+      case 'blockquote':
+      case 'callout':
+      case 'footnote':
+        block.content.forEach((paragraph) =>
+          walkFavoriteInline(paragraph.content, onText),
+        );
+        break;
+      case 'table':
+        block.content.forEach((row) =>
+          row.content.forEach((cell) =>
+            cell.content.forEach((paragraph) =>
+              walkFavoriteInline(paragraph.content, onText),
+            ),
+          ),
+        );
+        break;
+      default:
+        break;
+    }
+  });
+}
+
+/**
+ * Extrai todos os trechos favoritados de um documento canônico, na ordem em
+ * que aparecem. O texto e a posição lógica sempre refletem o estado atual do
+ * documento (nunca uma cópia congelada), já que o favorito é identificado
+ * por um id estável (mark), não por uma posição bruta.
+ */
+export function extractAtlasNotesFavorites(
+  doc: AtlasNotesDocument,
+): AtlasNotesFavoriteEntry[] {
+  const order: string[] = [];
+  const byId = new Map<
+    string,
+    { color: AtlasNotesMarkColor; createdAt: string; parts: string[] }
+  >();
+  walkFavoriteBlocks(doc.content, (id, color, createdAt, text) => {
+    let entry = byId.get(id);
+    if (!entry) {
+      entry = { color, createdAt, parts: [] };
+      byId.set(id, entry);
+      order.push(id);
+    }
+    entry.parts.push(text);
+  });
+  return order.map((id) => {
+    const entry = byId.get(id)!;
+    return {
+      id,
+      color: entry.color,
+      createdAt: entry.createdAt,
+      text: entry.parts.join(' ').trim(),
+    };
+  });
 }
 
 export function prepareAtlasNotesForSave(value: unknown) {

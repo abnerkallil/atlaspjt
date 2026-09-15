@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   AlertTriangle,
+  ArrowLeft,
   BookMarked,
   Check,
   ChevronRight,
@@ -13,16 +14,21 @@ import {
   Plus,
   Search,
   Sparkles,
+  Star,
   Unlink,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
+  MARK_COLOR_META,
   NotesEditor,
+  type NotesEditorFocusRequest,
   type NotesEditorSnapshot,
 } from '@/components/notes-editor';
 import {
+  extractAtlasNotesFavorites,
   legacyTextToAtlasNotesContent,
   type AtlasNotesEnvelope,
+  type AtlasNotesMarkColor,
 } from '@/lib/atlas-notes-document';
 import {
   CONTENT_CATALOG_SNAPSHOT_DATE,
@@ -68,6 +74,21 @@ function formatDate(value: string) {
   }).format(new Date(value));
 }
 
+type FavoriteEntry = {
+  id: string;
+  color: AtlasNotesMarkColor;
+  createdAt: string;
+  text: string;
+  noteId: string;
+  noteTitle: string;
+};
+
+type FavoriteFocusRequest = {
+  noteId: string;
+  favoriteId: string;
+  nonce: number;
+};
+
 export function NotesWorkspace() {
   const [notes, setNotes] = useState<AtlasNote[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -84,6 +105,36 @@ export function NotesWorkspace() {
   const [error, setError] = useState('');
   const [savedMessage, setSavedMessage] = useState('');
   const operationId = useRef(newId());
+  const [showFavorites, setShowFavorites] = useState(false);
+  const [focusRequest, setFocusRequest] = useState<FavoriteFocusRequest | null>(
+    null,
+  );
+
+  const favorites = useMemo<FavoriteEntry[]>(() => {
+    const result: FavoriteEntry[] = [];
+    for (const note of notes) {
+      const liveContent = note.id === selectedId ? content : note.content;
+      if (!liveContent) continue;
+      for (const entry of extractAtlasNotesFavorites(liveContent.doc)) {
+        result.push({ ...entry, noteId: note.id, noteTitle: note.title });
+      }
+    }
+    return result.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+  }, [notes, selectedId, content]);
+
+  function openFavorite(entry: FavoriteEntry) {
+    if (entry.noteId !== selectedId) {
+      const note = notes.find((candidate) => candidate.id === entry.noteId);
+      if (!note) return;
+      openNote(note);
+    }
+    setFocusRequest({ noteId: entry.noteId, favoriteId: entry.id, nonce: Date.now() });
+  }
+
+  const editorFocusRequest: NotesEditorFocusRequest | null =
+    focusRequest && focusRequest.noteId === draftId
+      ? { favoriteId: focusRequest.favoriteId, nonce: focusRequest.nonce }
+      : null;
 
   const suggestions = useMemo(
     () =>
@@ -124,9 +175,14 @@ export function NotesWorkspace() {
   }, []);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => void loadNotes(search), 220);
+    // While the favorites panel is open the search box is hidden, but a
+    // stale query would otherwise keep filtering `notes` behind the scenes
+    // and silently drop favorites from notes that don't match it. Load the
+    // full list instead for as long as the panel stays open.
+    const effectiveQuery = showFavorites ? '' : search;
+    const timer = window.setTimeout(() => void loadNotes(effectiveQuery), 220);
     return () => window.clearTimeout(timer);
-  }, [loadNotes, search]);
+  }, [loadNotes, search, showFavorites]);
 
   function openNote(note: AtlasNote) {
     setSelectedId(note.id);
@@ -245,77 +301,139 @@ export function NotesWorkspace() {
 
       <div className="notes-workspace">
         <aside className="notes-index" aria-label="Lista de notas">
-          <div className="notes-search">
-            <Search size={17} />
-            <input
-              aria-label="Pesquisar notas"
-              placeholder="Pesquisar título ou texto"
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-            />
-          </div>
-
-          <div className="notes-list">
-            {loading ? (
-              <div className="notes-loading">
-                <LoaderCircle size={18} className="spin" /> Carregando notas
+          {showFavorites ? (
+            <div className="favorites-panel">
+              <button
+                type="button"
+                className="favorites-back"
+                onClick={() => setShowFavorites(false)}
+              >
+                <ArrowLeft size={15} /> Voltar às notas
+              </button>
+              <div className="favorites-heading">
+                <Star size={15} />
+                <strong>Favoritos</strong>
               </div>
-            ) : notes.length ? (
-              notes.map((note) => (
-                <button
-                  key={note.id}
-                  className={
-                    note.id === selectedId
-                      ? 'note-list-item active'
-                      : 'note-list-item'
-                  }
-                  onClick={() => openNote(note)}
-                >
-                  <span className="note-list-icon">
-                    <FilePenLine size={16} />
-                  </span>
-                  <span>
-                    <strong>{note.title}</strong>
-                    <small>{note.body.replace(/\s+/g, ' ').slice(0, 86)}</small>
-                    <em>
-                      {formatDate(note.updatedAt)} · {note.links.length} vínculo
-                      {note.links.length === 1 ? '' : 's'}
-                    </em>
-                  </span>
-                  <ChevronRight size={15} />
-                </button>
-              ))
-            ) : (
-              <div className="notes-empty">
-                <BookMarked size={22} />
-                <strong>
-                  {search
-                    ? 'Nenhuma nota encontrada'
-                    : 'Seu caderno começa aqui'}
-                </strong>
-                <p>
-                  {search
-                    ? 'Tente outra palavra ou limpe a busca.'
-                    : 'Crie uma nota sem alterar seu progresso de estudo.'}
-                </p>
+              <div className="notes-list favorites-list">
+                {favorites.length ? (
+                  favorites.map((entry) => (
+                    <button
+                      key={entry.id}
+                      className="note-list-item"
+                      onClick={() => openFavorite(entry)}
+                    >
+                      <span className="note-list-icon favorite-color-icon">
+                        <span
+                          className="favorite-color-dot"
+                          style={{ background: MARK_COLOR_META[entry.color].hex }}
+                        />
+                      </span>
+                      <span>
+                        <strong>{entry.text || '(trecho vazio)'}</strong>
+                        <small>{entry.noteTitle}</small>
+                        <em>{formatDate(entry.createdAt)}</em>
+                      </span>
+                      <ChevronRight size={15} />
+                    </button>
+                  ))
+                ) : (
+                  <div className="notes-empty">
+                    <Star size={22} />
+                    <strong>Nenhum favorito ainda</strong>
+                    <p>
+                      Selecione um trecho e escolha &quot;Favoritar
+                      texto&quot; no menu Formatar.
+                    </p>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <>
+              <button
+                type="button"
+                className="sync-pill favorites-entry"
+                onClick={() => setShowFavorites(true)}
+              >
+                <Star size={13} />
+                Favoritos
+                {favorites.length > 0 && (
+                  <span className="favorites-count">{favorites.length}</span>
+                )}
+              </button>
+              <div className="notes-search">
+                <Search size={17} />
+                <input
+                  aria-label="Pesquisar notas"
+                  placeholder="Pesquisar título ou texto"
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                />
+              </div>
 
-          <div className="notes-source">
-            <span>
-              <Cloud size={14} /> Catálogo oficial
-            </span>
-            <a href={OFFICIAL_SPREADSHEET_URL} target="_blank" rel="noreferrer">
-              Planilha Atlas
-            </a>
-            <small>
-              Leitura de{' '}
-              {new Date(
-                `${CONTENT_CATALOG_SNAPSHOT_DATE}T12:00:00`,
-              ).toLocaleDateString('pt-BR')}
-            </small>
-          </div>
+              <div className="notes-list">
+                {loading ? (
+                  <div className="notes-loading">
+                    <LoaderCircle size={18} className="spin" /> Carregando notas
+                  </div>
+                ) : notes.length ? (
+                  notes.map((note) => (
+                    <button
+                      key={note.id}
+                      className={
+                        note.id === selectedId
+                          ? 'note-list-item active'
+                          : 'note-list-item'
+                      }
+                      onClick={() => openNote(note)}
+                    >
+                      <span className="note-list-icon">
+                        <FilePenLine size={16} />
+                      </span>
+                      <span>
+                        <strong>{note.title}</strong>
+                        <small>{note.body.replace(/\s+/g, ' ').slice(0, 86)}</small>
+                        <em>
+                          {formatDate(note.updatedAt)} · {note.links.length} vínculo
+                          {note.links.length === 1 ? '' : 's'}
+                        </em>
+                      </span>
+                      <ChevronRight size={15} />
+                    </button>
+                  ))
+                ) : (
+                  <div className="notes-empty">
+                    <BookMarked size={22} />
+                    <strong>
+                      {search
+                        ? 'Nenhuma nota encontrada'
+                        : 'Seu caderno começa aqui'}
+                    </strong>
+                    <p>
+                      {search
+                        ? 'Tente outra palavra ou limpe a busca.'
+                        : 'Crie uma nota sem alterar seu progresso de estudo.'}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <div className="notes-source">
+                <span>
+                  <Cloud size={14} /> Catálogo oficial
+                </span>
+                <a href={OFFICIAL_SPREADSHEET_URL} target="_blank" rel="noreferrer">
+                  Planilha Atlas
+                </a>
+                <small>
+                  Leitura de{' '}
+                  {new Date(
+                    `${CONTENT_CATALOG_SNAPSHOT_DATE}T12:00:00`,
+                  ).toLocaleDateString('pt-BR')}
+                </small>
+              </div>
+            </>
+          )}
         </aside>
 
         <article className="note-editor-card">
@@ -351,6 +469,8 @@ export function NotesWorkspace() {
             noteTitle={title}
             onChange={updateEditor}
             onValidationChange={updateEditorValidation}
+            focusRequest={editorFocusRequest}
+            onFocusRequestHandled={() => setFocusRequest(null)}
           />
           <div className="note-editor-footer">
             <div>
