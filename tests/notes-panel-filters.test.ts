@@ -174,3 +174,128 @@ void test('applyNotesPanelFilters: defaults to date-desc and no filtering when o
     ['new', 'old'],
   );
 });
+
+// --- QA additions (QUEST-006 acceptance-criteria audit) -------------------
+//
+// The block above (12 tests) is what shipped with the quest. Everything
+// below was added while auditing that work against the Task Contract's
+// Acceptance Criteria — targeting edge cases the original suite left
+// uncovered, not just re-testing what it already proved.
+
+void test('acceptance: painel funciona com zero notas — filtering an empty list never throws and returns []', () => {
+  assert.deepEqual(applyNotesPanelFilters([], {}), []);
+  assert.deepEqual(
+    applyNotesPanelFilters([], { search: 'qualquer coisa', linkedContentId: 'DC-102', sort: 'title-asc' }),
+    [],
+  );
+});
+
+void test('acceptance: painel funciona com uma única nota (poucas notas)', () => {
+  const notes = [note({ id: 'only', title: 'Única nota' })];
+  assert.deepEqual(applyNotesPanelFilters(notes, {}).map((n) => n.id), ['only']);
+  assert.deepEqual(
+    applyNotesPanelFilters(notes, { search: 'não bate com nada' }).map((n) => n.id),
+    [],
+  );
+});
+
+void test('linked-content filter: a contentId that no note has produces an empty result, not everything', () => {
+  const notes = [
+    note({ id: 'a', links: [{ contentId: 'DC-102', contentTitle: 'Constitucional' }] }),
+    note({ id: 'b', links: [] }),
+  ];
+  assert.deepEqual(
+    applyNotesPanelFilters(notes, { linkedContentId: 'NAO-EXISTE' }),
+    [],
+  );
+});
+
+void test('linked-content filter: an empty string behaves like "no filter" (the panel\'s "Todos" option)', () => {
+  const notes = [
+    note({ id: 'a', links: [{ contentId: 'DC-102', contentTitle: 'Constitucional' }] }),
+    note({ id: 'b', links: [] }),
+  ];
+  assert.deepEqual(
+    applyNotesPanelFilters(notes, { linkedContentId: '' }).map((n) => n.id).sort(),
+    ['a', 'b'],
+  );
+});
+
+void test('search matches a note when only its SECOND link (not the first) matches', () => {
+  const n = note({
+    id: 'a',
+    title: 'Nota qualquer',
+    body: 'Corpo qualquer',
+    links: [
+      { contentId: 'DP-01', contentTitle: 'Direito Penal' },
+      { contentId: 'DC-102', contentTitle: 'Controle de Constitucionalidade' },
+    ],
+  });
+  assert.equal(matchesNotesPanelSearch(n, 'constitucionalidade'), true);
+});
+
+void test('search: a partial (substring) match against a linked contentId still counts as "texto incluído"', () => {
+  const n = note({
+    id: 'a',
+    links: [{ contentId: 'DC-102', contentTitle: 'Controle de Constitucionalidade' }],
+  });
+  assert.equal(matchesNotesPanelSearch(n, 'DC-1'), true);
+  assert.equal(matchesNotesPanelSearch(n, 'dc-102-nope'), false);
+});
+
+void test('search query surrounded by whitespace is trimmed before matching', () => {
+  const n = note({ id: 'a', title: 'Direito Constitucional' });
+  assert.equal(matchesNotesPanelSearch(n, '  constitucional  '), true);
+});
+
+void test('search does not cross-match: a term present only in one note must not match a different note', () => {
+  const notes = [
+    note({ id: 'match', title: 'Direito Constitucional' }),
+    note({ id: 'no-match', title: 'Direito Penal', body: 'Nada sobre o outro tema' }),
+  ];
+  const result = applyNotesPanelFilters(notes, { search: 'constitucional' });
+  assert.deepEqual(result.map((n) => n.id), ['match']);
+});
+
+void test('sortNotesPanel: title sort is case-insensitive-ish via localeCompare (lowercase title still sorts correctly)', () => {
+  const notes = [
+    note({ id: 'b', title: 'banana' }),
+    note({ id: 'a', title: 'Abacaxi' }),
+  ];
+  assert.deepEqual(
+    sortNotesPanel(notes, 'title-asc').map((n) => n.id),
+    ['a', 'b'],
+  );
+});
+
+void test('sortNotesPanel: date-asc and date-desc are exact reverses of each other', () => {
+  const notes = [
+    note({ id: 'x', updatedAt: '2026-01-01T00:00:00.000Z' }),
+    note({ id: 'y', updatedAt: '2026-05-01T00:00:00.000Z' }),
+    note({ id: 'z', updatedAt: '2026-03-01T00:00:00.000Z' }),
+  ];
+  const asc = sortNotesPanel(notes, 'date-asc').map((n) => n.id);
+  const desc = sortNotesPanel(notes, 'date-desc').map((n) => n.id);
+  assert.deepEqual(asc, [...desc].reverse());
+});
+
+void test('sortNotesPanel: title-asc and title-desc are exact reverses of each other', () => {
+  const notes = [
+    note({ id: 'x', title: 'Zebra' }),
+    note({ id: 'y', title: 'Abelha' }),
+    note({ id: 'z', title: 'Mico' }),
+  ];
+  const asc = sortNotesPanel(notes, 'title-asc').map((n) => n.id);
+  const desc = sortNotesPanel(notes, 'title-desc').map((n) => n.id);
+  assert.deepEqual(asc, [...desc].reverse());
+});
+
+void test('applyNotesPanelFilters never mutates the input array (filter + sort combined)', () => {
+  const notes = [
+    note({ id: 'b', title: 'Banana', links: [{ contentId: 'DC-102', contentTitle: 'X' }] }),
+    note({ id: 'a', title: 'Abacaxi', links: [{ contentId: 'DC-102', contentTitle: 'X' }] }),
+  ];
+  const originalOrder = notes.map((n) => n.id);
+  applyNotesPanelFilters(notes, { linkedContentId: 'DC-102', sort: 'title-asc' });
+  assert.deepEqual(notes.map((n) => n.id), originalOrder);
+});
