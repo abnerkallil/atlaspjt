@@ -14,7 +14,7 @@ Google Drive is the source of truth for:
 - product requirements;
 - product principles;
 - UX intent;
-- governance of the Atlas / Hermes / Codex authority model;
+- governance of the Atlas / Hermes / Claude Code authority model;
 - future product concepts such as Atlas Business.
 
 Primary governance documents:
@@ -115,13 +115,13 @@ Archive content should only be consulted when historical context is genuinely re
 
 - **Atlas** — Product & Specification Authority
 - **Hermes** — Architecture Authority
-- **Codex** — Implementation Authority
+- **Claude Code** — Implementation Authority
 
 Atlas defines **WHAT**.
 
 Hermes decides architecture only when a genuine Architecture Gate exists.
 
-Codex decides **HOW** to implement within established product and architectural constraints.
+Claude Code decides **HOW** to implement within established product and architectural constraints.
 
 ---
 

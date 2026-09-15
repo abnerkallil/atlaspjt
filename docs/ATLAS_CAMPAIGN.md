@@ -33,7 +33,7 @@ Architectural decisions belong to the project's DEC-* records.
 
 This document should be read only when strategic context is relevant.
 
-Codex should consult `ATLAS_CAMPAIGN.md` when:
+Claude Code should consult `ATLAS_CAMPAIGN.md` when:
 
 - quest dependencies must be resolved;
 - roadmap sequencing matters;

@@ -18,7 +18,7 @@ Atlas defines the product requirement.
 
 
 
-Codex implements the requirement.
+Claude Code implements the requirement.
 
 
 
@@ -280,11 +280,11 @@ When a new development quest begins, Atlas should replace the ACTIVE QUEST secti
 
 
 
-Codex should use this file as the primary product specification for implementation.
+Claude Code should use this file as the primary product specification for implementation.
 
 
 
-Codex must not reinterpret explicit observable requirements without approval.
+Claude Code must not reinterpret explicit observable requirements without approval.
 
 
 
@@ -292,7 +292,7 @@ If the task is classified as SMALL, Hermes should normally not be involved.
 
 
 
-If Codex discovers a real Architecture Gate, the original requirement in this file must remain the common reference for both Codex and Hermes.
+If Claude Code discovers a real Architecture Gate, the original requirement in this file must remain the common reference for both Claude Code and Hermes.
 
 
 

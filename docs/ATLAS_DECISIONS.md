@@ -26,13 +26,13 @@ Atlas owns product requirements.
 
 Hermes owns architectural decisions.
 
-Codex owns implementation decisions inside the established architecture.
+Claude Code owns implementation decisions inside the established architecture.
 
 A DEC-* record should normally represent a decision made or validated by Hermes.
 
-Codex must respect active DEC-* decisions.
+Claude Code must respect active DEC-* decisions.
 
-Codex must not create DEC-* records for routine implementation choices.
+Claude Code must not create DEC-* records for routine implementation choices.
 
 ---
 
@@ -79,7 +79,7 @@ Do NOT create DEC-* records for:
 - ordinary bug fixes;
 - routine UI behavior.
 
-These belong to Codex implementation authority.
+These belong to Claude Code implementation authority.
 
 ---
 
@@ -128,7 +128,7 @@ Maximum three concise reasons by default.
 2.
 3.
 
-### Constraints for Codex
+### Constraints for Claude Code
 
 List only implementation constraints that must be preserved.
 
@@ -187,15 +187,15 @@ Proceed within the existing architecture.
 
 ---
 
-# CODEX RULE
+# CLAUDE CODE RULE
 
-Codex must:
+Claude Code must:
 
 - respect ACCEPTED DEC-* decisions;
 - consult relevant DEC-* records only when the current task touches them;
 - escalate conflicts instead of silently overriding a decision.
 
-Codex must NOT:
+Claude Code must NOT:
 
 - read every DEC-* record for every task;
 - create DEC-* records for routine implementation;
@@ -242,7 +242,7 @@ Introduce envelope version 2 as the durable canonical representation. Readers ac
 2. Adopting Tiptap's conventional shapes with Atlas normalization and an editor adapter maximizes interoperability while keeping server validation deterministic and DOM-free.
 3. Existing limits already accommodate new nesting (table path depth 6 < 8), so no speculative limit inflation is needed.
 
-### Constraints for Codex
+### Constraints for Claude Code
 
 - Envelope is { format:"atlas-notes", version:1|2, doc:{ type:"doc", content:Block[] } }; readers accept 1 and 2 only; writers persist 2 only; unsupported versions reject INVALID_ENVELOPE; no read-time rewrite.
 - v2 blocks: paragraph, heading 1-6, bulletList/orderedList (attrs start:1 type:null, strict), taskList/taskItem (attrs checked:boolean), blockquote, horizontalRule (atom), codeBlock (attrs language string| null, content text-no-marks), mathBlock (attrs latex), table/tableRow/tableCell/tableHeader (cell content 1+ paragraphs, no colspan/rowspan), footnote (attrs id unique, content 1+ paragraphs), callout (content 1+ paragraphs, no attrs). Inline: text (marks sorted by rank) plus atom mathInline (latex) and footnoteRef (id). Marks: bold(0), italic(1), strike(2), code(3), highlight(4, no attrs), comment(5, no attrs), link(6, attrs href http/https/mailto only, last). Unknown fields/nodes/marks/attrs, duplicate marks, invalid children, nested lists where forbidden → reject. Canonicalize by sorting marks then merging adjacent same-mark text.
@@ -301,7 +301,7 @@ DEC-001 permanece como decisão base do Canonical Document v2; esta DEC suplemen
 2. Mixing heterogêneo total com regra única evita limite artificial de tipo sem custo adicional e cobre todos os casos do Gate.
 3. Reuso do limite `depth:8` como teto técnico satisfaz "sem limite artificial além dos limites técnicos" sem inflação especulativa.
 
-### Constraints for Codex
+### Constraints for Claude Code
 
 - Não criar envelope version 3; não alterar `ATLAS_NOTES_VERSION`; não redefinir DEC-001 fora de nesting.
 - Canonicalizer deve validar `content[0]=paragraph` + `content[1..]=bulletList|orderedList|taskList` canônicos com `assertKeys` estrito; rejeitar qualquer outro filho ou lista vazia; manter sort de marks e merge de texto de DEC-001.
@@ -356,7 +356,7 @@ Suplementar DEC-002 somente quanto ao limite estrutural de profundidade, sem alt
 2. Manter `depth` como único limite global é a menor mudança (1 constante) vs redefinir contagem ou criar limite separado para listas.
 3. `nodes:20_000` e limites de bytes continuam como proteção primária contra documentos patologicamente grandes; `depth:16` permanece ordens de magnitude abaixo do stack JS, preservando segurança determinística e compatibilidade retroativa.
 
-### Constraints for Codex
+### Constraints for Claude Code
 
 - Alterar apenas `ATLAS_NOTES_LIMITS.depth` de 8 para 16; não alterar `nodes`, `textNodeLength`, `structuredBytes`, `requestBytes`, `visibleLength`.
 - Preservar semântica `inspectStructure` (`depth+1` recursivo) e erro `STRUCTURE_TOO_DEEP` quando `depth > 16`.

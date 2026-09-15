@@ -2,11 +2,11 @@
 
 ## Purpose
 
-This file is the temporary communication interface between Codex and Hermes when a real Architecture Gate is triggered.
+This file is the temporary communication interface between Claude Code and Hermes when a real Architecture Gate is triggered.
 
 It exists to preserve separation of authority:
 - Atlas defines the original product requirement;
-- Codex reports relevant repository facts;
+- Claude Code reports relevant repository facts;
 - Hermes makes the architectural decision.
 
 This file must NOT be used for routine implementation questions.
@@ -25,7 +25,7 @@ Status: RESOLVED — FOLLOW-UP TO RESOLVED GATE (não é reabertura — é fato 
 
 Quest 3 — ambiente de desenvolvimento local (Atlas Notes) — Follow-up Alt 3 Bridge (Correlation: ATLAS-HERMES-GATE-20260911-LOCAL-PERSISTENCE-FOLLOWUP)
 
-Reference: Gate anterior Status: RESOLVED — "NO ARCHITECTURAL DECISION REQUIRED. Proceed within the existing architecture." Autorizou sob autoridade local Codex, sem DEC: Alt 1 (status quo D1), Alt 2 (visualizador SQLite local), e condicionalmente Alt 3 (protótipo R2 local, JSON por nota, dev-only, atrás de abstração, D1 como produção, com re-escalada obrigatória se deixar de ser descartável). Decisão do usuário: seguir com Alt 3.
+Reference: Gate anterior Status: RESOLVED — "NO ARCHITECTURAL DECISION REQUIRED. Proceed within the existing architecture." Autorizou sob autoridade local Claude Code, sem DEC: Alt 1 (status quo D1), Alt 2 (visualizador SQLite local), e condicionalmente Alt 3 (protótipo R2 local, JSON por nota, dev-only, atrás de abstração, D1 como produção, com re-escalada obrigatória se deixar de ser descartável). Decisão do usuário: seguir com Alt 3.
 
 ---
 
@@ -39,7 +39,7 @@ Se coberto, qual das opções de ponte deve ser adotada?
 
 # GATE TRIGGER
 
-Fato técnico novo verificado após resolução anterior: persistência local do R2 pelo Miniflare (`.wrangler/state/v3/r2/`) não é filesystem legível por chave — é "Miniflare persistence state, not a bucket-shaped filesystem" (blobs opacos + SQLite interno); existe ferramenta de terceiros `r2-local-fs` justamente para criar pasta-espelho. Por contraste, D1 local persiste como `.sqlite` comum em `.wrangler/state/v3/d1/` diretamente editável via DB Browser / `drizzle-kit studio`. Consequência: Alt 3 sozinha não entrega "pasta local editável em tempo real" sem componente adicional de ponte não previsto. Limitação operacional Codex: `device_bash` indisponível (Plan9/virtiofs pós-atualização Windows) — não pode instalar/rodar wrangler, drizzle-kit studio, scripts de sync; apenas ler/escrever arquivos via ponte.
+Fato técnico novo verificado após resolução anterior: persistência local do R2 pelo Miniflare (`.wrangler/state/v3/r2/`) não é filesystem legível por chave — é "Miniflare persistence state, not a bucket-shaped filesystem" (blobs opacos + SQLite interno); existe ferramenta de terceiros `r2-local-fs` justamente para criar pasta-espelho. Por contraste, D1 local persiste como `.sqlite` comum em `.wrangler/state/v3/d1/` diretamente editável via DB Browser / `drizzle-kit studio`. Consequência: Alt 3 sozinha não entrega "pasta local editável em tempo real" sem componente adicional de ponte não previsto. Limitação operacional Claude Code: `device_bash` indisponível (Plan9/virtiofs pós-atualização Windows) — não pode instalar/rodar wrangler, drizzle-kit studio, scripts de sync; apenas ler/escrever arquivos via ponte.
 
 ---
 
@@ -105,7 +105,7 @@ Se houver alternativa fora destas cinco, Hermes deve apontar.
 
 ---
 
-# CODEX RECOMMENDATION
+# CLAUDE CODE RECOMMENDATION
 
 NOT REQUESTED
 
@@ -140,14 +140,14 @@ Nenhuma das opções de ponte (A, B, D) é adotada neste Gate.
 
 1. Ponte é Gate, mas não é arquitetura durável: todos os designs de ponte adicionam processo extra, watcher e lógica de conflito apenas para conveniência de dev temporária e reversível — custo de manutenção e risco de corrida/divergência desproporcional ao requisito, que Alt 2 já resolve com 0 linhas de persistência.
 2. Menor risco técnico: D1 local já persiste como `.sqlite` comum em `.wrangler/state/v3/d1/` diretamente editável via GUI; Alt 2 entrega "ver mudanças sem reiniciar" sem reescrever `lib/notes-store.ts`, sem binding novo e sem sair do `runtime='edge'`.
-3. Restrição operacional atual reforça adiamento: com `device_bash` indisponível, qualquer ponte (A/B/D) exigiria instalação/configuração manual pelo usuário, sem validação automatizada por Codex — adiar evita introduzir componente não-verificável.
+3. Restrição operacional atual reforça adiamento: com `device_bash` indisponível, qualquer ponte (A/B/D) exigiria instalação/configuração manual pelo usuário, sem validação automatizada por Claude Code — adiar evita introduzir componente não-verificável.
 
-## Constraints for Codex
+## Constraints for Claude Code
 
 - Não implementar Opção A, B ou D sem novo Gate — todas violam *"no separate process"* da resolução anterior e, no caso de D, tocam o arquivo D1 por fora, arriscando corrupção e violação de `STRUCTURED_DOWNGRADE`/projeção.
 - Não provisionar `r2` em `.openai/hosting.json` e não reescrever `lib/notes-store.ts` para R2/KV além de protótipo descartável já autorizado; se protótipo R2 já existe, mantê-lo sem ponte (Opção C) ou removê-lo.
 - Não adicionar dependência `r2-local-fs` ou watcher custom neste momento.
-- Permitido (autoridade local Codex, sem DEC): Alt 1 e Alt 2; instruções manuais ao usuário para abrir o `.sqlite` de `.wrangler/state/` com ferramenta local — sem `git add` de estado do Miniflare.
+- Permitido (autoridade local Claude Code, sem DEC): Alt 1 e Alt 2; instruções manuais ao usuário para abrir o `.sqlite` de `.wrangler/state/` com ferramenta local — sem `git add` de estado do Miniflare.
 - Se no futuro "pasta JSON editável" voltar a ser perseguido, re-escalar antes com prova de que Alt 2 é insuficiente e com design explícito de resolução de conflitos.
 
 ## DEC Required
@@ -158,7 +158,7 @@ NO — é decisão de ferramental de desenvolvimento local, reversível, sem rel
 
 ## Resolution Rule
 
-This Gate is RESOLVED (follow-up). Codex may resume implementation respecting the constraints above. Status: RESOLVED — FOLLOW-UP.
+This Gate is RESOLVED (follow-up). Claude Code may resume implementation respecting the constraints above. Status: RESOLVED — FOLLOW-UP.
 
 ---
 
@@ -170,4 +170,4 @@ Follow-up resolvido como ferramenta de dev local — não requer DEC-* per docs/
 
 # CORE PRINCIPLE
 
-Atlas supplies product requirement. Codex supplies evidence. Hermes supplies architectural judgment. These responsibilities must remain separate.
+Atlas supplies product requirement. Claude Code supplies evidence. Hermes supplies architectural judgment. These responsibilities must remain separate.
