@@ -50,7 +50,7 @@ Do not accumulate completed quests here.
 
 
 
-QUEST-004 — Atlas Notes: bloco de Notas recentes
+QUEST-006 — Atlas Notes: painel "Todas as notas" com filtros e busca
 
 
 
@@ -58,7 +58,7 @@ QUEST-004 — Atlas Notes: bloco de Notas recentes
 
 
 
-P0 (frente ativa: finalizar Atlas Notes antes de outras páginas/backend)
+P1
 
 
 
@@ -74,7 +74,7 @@ MEDIUM
 
 
 
-CONDITIONAL — sem conflito arquitetural conhecido hoje, mas esta quest provavelmente exige um novo campo de persistência (ver Dependencies). Só acione Hermes se isso levantar uma questão arquitetural real (ex.: volume de escrita no D1 a cada abertura de nota) — não para aprovar rotineiramente uma coluna nova.
+NO
 
 
 
@@ -86,7 +86,7 @@ CONDITIONAL — sem conflito arquitetural conhecido hoje, mas esta quest provave
 
 
 
-Adicionar um bloco "Notas recentes" fixo na coluna esquerda do Atlas Notes, sempre visível, mostrando as 5 notas mais recentemente interagidas pelo usuário — onde "interagida" significa aberta OU editada/salva, prevalecendo sempre a ação mais recente entre as duas. Isso é diferente da lista principal de notas, que já ordena só por última edição salva: o bloco de recentes deve refletir também simples aberturas de leitura, sem exigir que o usuário tenha alterado nada.
+Criar um painel full-width abaixo da grade de notas (recentes/editor/vínculos) com a navegação completa por todas as notas, incluindo busca por título, conteúdo e texto incluído, e filtros por conteúdo vinculado e por ordenação. A coluna esquerda deixa de mostrar a lista completa/busca que existia — passa a mostrar só o bloco "Notas recentes" (sem mudança nele), já que a navegação completa migra inteiramente para o painel novo.
 
 
 
@@ -98,21 +98,17 @@ Adicionar um bloco "Notas recentes" fixo na coluna esquerda do Atlas Notes, semp
 
 
 
-\- Quando o painel de Favoritos NÃO está aberto, a coluna esquerda mostra, nesta ordem: botão Favoritos → bloco Notas recentes → busca → lista completa de notas;
+\- painel novo, abaixo da grade de 3 colunas, listando todas as notas do usuário;
 
-\- o bloco mostra sempre as 5 notas com a interação mais recente;
+\- campo de busca que encontra notas por título, corpo do texto, ou texto incluído na nota;
 
-\- abrir uma nota (só visualizar/entrar nela) conta como interação, mesmo sem editar nada;
+\- filtro por conteúdo vinculado (nota tem vínculo com X do catálogo);
 
-\- editar e salvar uma nota também conta como interação;
+\- ordenação por data (mais recente/mais antiga) e por título (A-Z / Z-A);
 
-\- entre abertura e edição da mesma nota, vale sempre o momento mais recente dos dois, não uma prioridade fixa de um sobre o outro;
+\- clicar numa nota do painel abre ela no editor central, como já acontece na lista atual;
 
-\- clicar em um item do bloco abre a nota correspondente no editor, igual ao comportamento já existente da lista principal;
-
-\- o bloco reflete o estado atual imediatamente após abrir ou salvar uma nota, sem precisar recarregar a página;
-
-\- a ordem/composição do bloco sobrevive a um reload completo da página (não pode ser só estado em memória do cliente).
+\- a coluna esquerda mantém só o bloco "Notas recentes" — a busca e a lista completa que existiam ali (abaixo dele) são removidas dessa coluna.
 
 
 
@@ -124,23 +120,17 @@ Adicionar um bloco "Notas recentes" fixo na coluna esquerda do Atlas Notes, semp
 
 
 
-\- \[x] bloco "Notas recentes" sempre visível na coluna esquerda, na posição descrita acima, quando o painel de Favoritos não está aberto — validado manualmente em navegador real: botão Favoritos → bloco Notas recentes → busca → lista completa, nessa ordem, confirmado via captura de tela e inspeção do DOM; o bloco some quando o painel de Favoritos é aberto (é renderizado no mesmo ramo condicional que busca/lista, que o painel de Favoritos substitui) e reaparece ao fechar o painel — ambos confirmados manualmente;
+\- \[x\] busca encontra notas por título, corpo e texto incluído — validado automaticamente (12 testes novos em `notes-panel-filters.test.ts`) e manualmente em navegador real com 6 notas reais (5 semeadas nesta sessão + 1 pré-existente): busca por "Equacao" achou só pelo título; busca por "IRPJ" (presente só no corpo, não no título) achou a nota certa; busca por "Patrimônio Líquido" e por "CG-001" (nem no título nem no corpo da nota, só no conteúdo vinculado) achou a nota certa nos dois casos. \*\*Decisão de interpretação, sinalizada aqui para revisão\*\*: o Task Contract lista três alvos de busca (título, corpo, "texto incluído na nota") mas o corpo (`body`) já é a projeção textual de todo o conteúdo visível da nota (parágrafos, listas, tabelas, citações, notas de rodapé — ver `projectCanonicalContent` em `lib/atlas-notes-document.ts`), então um terceiro alvo redundante com o corpo não faria sentido. Interpretei "texto incluído na nota" como o texto do conteúdo do catálogo vinculado à nota (`contentTitle`/`contentId` de `note.links`) — ou seja, buscar por um termo que aparece no conteúdo oficial vinculado, mesmo que esse termo não apareça literalmente no título ou corpo da nota. Se essa não for a leitura pretendida, é uma mudança pequena e isolada em `matchesNotesPanelSearch` (`components/notes-panel-filters.ts`);
 
-\- \[x] mostra as 5 notas mais recentemente interagidas (aberta OU editada/salva, o mais recente prevalece) — validado manualmente: abri as 5 notas existentes em uma ordem específica e confirmei que o bloco refletiu exatamente a ordem inversa (mais recentemente aberta primeiro); a semântica "o mais recente prevalece" é garantida no servidor por um `UPDATE`/`ON CONFLICT` incondicional de `last_interacted_at` tanto ao abrir quanto ao salvar (nunca uma comparação condicional), então a última ação em ordem real de chegada sempre vence — não há uma janela de decisão "abertura vs. edição" para acertar, cada ação simplesmente registra o momento em que aconteceu;
+\- \[x\] cada filtro (conteúdo vinculado, data, título) funciona isoladamente e em combinação — validado automaticamente (testes de `applyNotesPanelFilters` cobrindo filtro isolado, busca+filtro combinados como E lógico — não OU —, e busca+filtro+ordenação juntos) e manualmente: filtro por um conteúdo vinculado isolado retornou só as notas certas; filtro + busca combinados retornaram a interseção correta (não a união); os 4 modos de ordenação (`date-desc`, `date-asc`, `title-asc`, `title-desc`) foram testados e confirmados como exato espelho um do outro onde esperado (`date-asc` é o reverso exato de `date-desc`, `title-desc` o reverso exato de `title-asc`) e como ordem alfabética real via comparação programática das listas;
 
-\- \[x] abrir uma nota sem editá-la conta como interação e reordena/inclui essa nota no bloco — validado automaticamente (teste do helper puro `mergeRecentInteraction`) e manualmente: abrir uma nota que não estava no bloco a trouxe para o topo imediatamente, sem editar nada;
+\- \[x\] abrir uma nota pelo painel funciona igual ao comportamento já existente — validado manualmente: cliquei num item do painel novo e confirmei que o campo de título do editor passou a mostrar exatamente esse título e que o próprio item ficou destacado como ativo no painel — mesmo `openNote()` já usado pela lista antiga e pelo bloco de recentes, sem duplicação de lógica;
 
-\- \[x] editar e salvar uma nota conta como interação — validado manualmente: editei a nota que estava mais embaixo no bloco (a interagida há mais tempo) e, ao salvar, ela subiu para o topo;
+\- \[x\] painel funciona com zero, poucas e muitas notas — validado manualmente com poucas notas (6) cobrindo busca sem resultado nenhum (estado vazio apareceu corretamente, sem erros no console). \*\*Ressalva honesta\*\*: o caso de zero notas no banco \*não\* foi validado ao vivo nesta sessão — a rotina de limpar o D1 local (`DELETE FROM atlas_notes`) foi bloqueada pelo classificador de destruição irreversível do ambiente sandbox, e optei por não insistir em contornar esse bloqueio. Validei esse caso por leitura de código em vez disso: `filteredAllNotes` é derivado de `applyNotesPanelFilters(notes, ...)`, que sobre um array vazio retorna `[]` incondicionalmente (mesmo caminho de código já exercitado ao vivo pelo teste de busca-sem-resultado acima, que também produz uma lista filtrada vazia), então o painel cai no mesmo ramo `.notes-empty` já visualmente confirmado; e `linkedContentOptions`, derivado de `notes.flatMap`, retorna `[]` da mesma forma, deixando o filtro só com a opção "Todos". Não é o mesmo nível de confiança de um teste ao vivo contra o banco — registrando isso explicitamente em vez de marcar como validado sem ressalva;
 
-\- \[x] clicar em um item do bloco abre a nota certa no editor — validado manualmente: cliquei no 3º item do bloco e confirmei que o campo de título do editor passou a mostrar exatamente esse título;
+\- \[x\] responsivo em tela estreita (filtros não quebram o layout) — validado manualmente em viewport de 380px: sem overflow horizontal da página (`scrollWidth` = `clientWidth`), os três controles (busca, filtro de conteúdo vinculado, ordenação) empilham verticalmente em vez de comprimir lado a lado, e a lista de notas do painel cai para uma coluna;
 
-\- \[x] o bloco atualiza imediatamente após abrir/salvar, sem reload — validado manualmente em todos os cenários acima (nenhum deles envolveu recarregar a página) e também no caso extremo de criar a toda-primeira nota depois de zero notas: o bloco apareceu com 1 item imediatamente após salvar, sem reload;
-
-\- \[x] a "última interação" persiste através de um reload completo da página — validado manualmente: após a sequência de aberturas/edições acima, recarreguei a página inteira e o bloco reapareceu na mesma ordem exata de antes do reload (comparação exata das duas listas de títulos);
-
-\- \[x] com menos de 5 notas no total, o bloco mostra só as que existem; com zero notas, o bloco não aparece — validado manualmente nos dois extremos: com 2 notas no banco local, o bloco mostrou exatamente 2 itens (sem preenchimento artificial) e o layout não quebrou; com 0 notas, o elemento do bloco não é renderizado (confirmado via seletor DOM retornando zero elementos) e o layout permanece limpo (vai direto de Favoritos para a busca, sem espaço vazio). Decisão tomada: não renderizar o bloco quando vazio (mais simples que reaproveitar o padrão de estado vazio `.notes-empty`, e evita duplicar a mensagem "comece aqui" que a lista principal já mostra logo abaixo);
-
-\- \[x] nenhuma regressão na lista principal de notas, na busca, ou no painel de Favoritos entregue na QUEST-005 — validado manualmente: digitar um termo de busca que não bate com nenhuma nota não afeta o conteúdo do bloco de recentes (ele não é filtrado pela busca, propositalmente — ver Dependencies/Validation); o painel de Favoritos continua abrindo, mostrando contagem e itens, e fechando normalmente; suíte automatizada completa (53/53, incluindo os 49 testes de highlight/favorite da QUEST-005) continua passando sem nenhuma alteração nos arquivos daquela quest.
+\- \[x\] coluna esquerda, após a mudança, mostra só Favoritos + Notas recentes — sem busca/lista antigas — e sem regressão em nenhum dos dois blocos — validado manualmente: inspeção do DOM confirmou que `.notes-index` (a coluna esquerda) agora só tem três filhos no ramo sem o painel de Favoritos aberto (botão Favoritos, bloco Notas recentes, rodapé do catálogo oficial — este último não fazia parte do que o Task Contract pediu para remover, então foi mantido); o bloco de Notas recentes continua funcionando exatamente como na QUEST-004 (mesmo componente, não tocado); o painel de Favoritos (QUEST-005) não foi alterado.
 
 
 
@@ -152,13 +142,9 @@ Adicionar um bloco "Notas recentes" fixo na coluna esquerda do Atlas Notes, semp
 
 
 
-\- bloco FIXO, sempre visível — não é content-swap como o painel de Favoritos (sem botão de "voltar", sem substituir a coluna inteira);
+\- reaproveitar o padrão visual de item de lista já existente (`.note-list-item` e equivalentes) — feito: o painel novo usa exatamente a mesma classe/estrutura da lista antiga e do bloco de recentes, só reorganizada num grid multi-coluna via CSS quando há espaço horizontal;
 
-\- reaproveita o padrão visual `.note-list-item`, já usado tanto na lista principal quanto no painel de Favoritos;
-
-\- posição: imediatamente abaixo do botão "Favoritos", acima da busca;
-
-\- não introduz nova rota/página.
+\- filtros com comportamento acessível em telas menores (podem virar menu suspenso) — implementado como empilhamento vertical simples via `flex-wrap`/media query, não como um menu suspenso à parte: os dois filtros já são `<select>` nativos (que o próprio navegador já abre como um menu suspenso em telas pequenas), então não havia necessidade de construir um componente de menu adicional para atender ao requisito.
 
 
 
@@ -170,15 +156,7 @@ Adicionar um bloco "Notas recentes" fixo na coluna esquerda do Atlas Notes, semp
 
 
 
-\- não implementar QUEST-006 (Todas as notas) — quest separada;
-
-\- não alterar o critério de ordenação da lista principal de notas (continua por última edição salva);
-
-\- sem paginação/scroll infinito no bloco — é uma lista curta fixa de 5;
-
-\- não implementar pastas, anexos ou associação assistida por IA a conteúdo — fora do escopo desta quest;
-
-\- não mexer no painel de Favoritos além do necessário para acomodar o novo bloco no layout.
+\- não introduzir paginação server-side nesta quest — não foi necessária: o painel busca a lista completa de notas uma única vez (mesma chamada `GET /api/notes` que já existia) e filtra/ordena inteiramente no cliente, o que é suficiente no volume de notas testado e evita adicionar parâmetros novos ao endpoint.
 
 
 
@@ -190,13 +168,11 @@ Adicionar um bloco "Notas recentes" fixo na coluna esquerda do Atlas Notes, semp
 
 
 
-\- reaproveita os padrões visuais `.note-list-item`/`.sync-pill` já usados no painel de Favoritos (QUEST-005);
+\- QUEST-004 (Notas recentes) — concluída; esta quest assume o bloco "Notas recentes" já existente na coluna esquerda e apenas remove o que estava abaixo dele — confirmado: `components/notes-recent-list.ts` e a lógica de `bumpRecentNote`/`loadRecentNotes` em `notes-workspace.tsx` não foram tocados;
 
-\- provavelmente exige um pequeno campo novo de persistência para registrar o momento da última interação por nota (ex.: uma coluna `last_opened_at` ou equivalente, atualizada tanto ao abrir quanto ao salvar uma nota) — o mecanismo exato é decisão sua;
+\- endpoint `/api/notes` já existente (`q=` de busca) — a filtragem acabou sendo feita no cliente sobre a lista já carregada (ver Non-Goals), então o parâmetro `q=` do servidor ficou sem uso pelo cliente novo (continua existindo no endpoint, sem motivo para removê-lo — não é código morto, é uma capacidade do endpoint que simplesmente não é mais exercitada por este componente);
 
-\- IMPORTANTE: a PR #1 (QUEST-005) ainda não foi mergeada em main. O botão "Favoritos" e o layout da coluna esquerda que este Task Contract referencia só existem na branch claude/fervent-keller-kz0mvz. Abra a branch desta quest a partir de claude/fervent-keller-kz0mvz (não de main/origin), para não trabalhar contra um layout que ainda não existe no destino final. Se isso gerar alguma complicação de merge mais adiante (PR #1 ainda aberta, ordem de merge, rebase), avise o usuário antes de decidir sozinho como resolver — não é uma decisão de implementação rotineira.
-
-  Seguido sem complicação: a branch `claude/quest-004-notas-recentes` foi criada a partir da ponta de `claude/fervent-keller-kz0mvz` (commit `0163f27`, o mesmo já enviado em PR #1), então o histórico desta quest é um descendente linear direto da PR #1 — não houve divergência, nenhum rebase foi necessário, e não há nada de decisão de merge a fazer agora. Quando/se a PR #1 for mergeada em `main` antes desta quest, a diferença entre esta branch e `main` deixará de incluir os commits da QUEST-005 automaticamente (já estarão em `main`); nenhuma ação preventiva foi tomada aqui além de registrar isso.
+\- IMPORTANTE: nem a PR #1 (QUEST-005) nem a PR #2 (QUEST-004) foram mergeadas em `main` até o momento em que esta quest começou. A branch desta quest (`claude/quest-006-todas-notas`) foi criada a partir da ponta de `claude/quest-004-notas-recentes` (commit `319c686`), por ser a branch mais recente com todo o layout de que esta quest depende (botão Favoritos da QUEST-005 + bloco Notas recentes da QUEST-004). Nenhum push ou PR foi aberto para esta quest ainda — aguardando instrução, seguindo o mesmo padrão das quests anteriores.
 
 
 
@@ -208,23 +184,23 @@ Adicionar um bloco "Notas recentes" fixo na coluna esquerda do Atlas Notes, semp
 
 
 
-Architecture: LIMITED (extensão aditiva de persistência — novo campo de "última interação"; sem migração de dados existentes)
+Architecture: LIMITED (nenhuma mudança de schema/persistência; filtragem e ordenação inteiramente client-side sobre dados já existentes)
 
 
 
-Hermes: 0–1 (só se o padrão de escrita a cada abertura de nota levantar uma questão real de performance/arquitetura)
+Hermes: 0
 
 
 
-Documentation: UPDATE EXISTING WHEN NECESSARY
+Documentation: NONE
 
 
 
-Refactor: RELATED CODE ONLY (`components/notes-workspace.tsx`, `lib/notes-store.ts`, `db/schema.ts`, `app/api/notes/route.ts`)
+Refactor: RELATED CODE ONLY (`components/notes-workspace.tsx`; a remoção do parâmetro de busca (`search`) do efeito de carregamento de `notes` também simplificou o workaround `showFavorites ? '' : search` da QUEST-005 — como a busca antiga deixou de existir neste arquivo, `notes` passa a ser sempre a lista completa não filtrada para todo mundo que a consome (Favoritos, nota selecionada, painel novo), o que elimina de raiz a classe de bug da QUEST-005 nº2, não só o sintoma que já tinha sido corrigido lá)
 
 
 
-Dependencies: NONE unless technically required
+Dependencies: NONE unless technically required — nenhuma dependência nova foi adicionada.
 
 
 
@@ -236,11 +212,9 @@ Dependencies: NONE unless technically required
 
 
 
-\- testes automatizados cobrindo a lógica de "última interação" (abrir vs. editar, o mais recente prevalece) e o corte para 5 itens;
+\- validação manual no navegador de busca e cada filtro — feita, ver Acceptance Criteria acima para o detalhe de cada cenário;
 
-\- validação manual em navegador real: abrir várias notas em ordens diferentes e confirmar que o bloco reflete a ordem certa; editar uma nota mais antiga e confirmar que ela sobe para o topo; salvar, recarregar a página inteira, e confirmar que a ordem persiste;
-
-\- confirmar que a lista principal, a busca e o painel de Favoritos continuam funcionando sem regressão.
+\- revisão do diff final antes de considerar concluído — pendente de revisão externa, como nas quests anteriores.
 
 
 
@@ -252,23 +226,19 @@ Dependencies: NONE unless technically required
 
 
 
-Decisões tomadas (persistência):
+Decisões tomadas:
 
 
 
-\- nova coluna `last_interacted_at` (nullable) em `atlas_notes`, gerada via `pnpm run db:generate` (migração `drizzle/0002_freezing_marrow.sql`: só `ALTER TABLE ... ADD` + `CREATE INDEX`, sem backfill — consistente com "sem migração de dados existentes" no Complexity Budget). Notas já existentes antes desta quest ficam com a coluna `NULL` até serem abertas ou salvas de novo;
+\- toda a lógica de busca/filtro/ordenação foi extraída para um módulo puro novo, `components/notes-panel-filters.ts` (`matchesNotesPanelSearch`, `sortNotesPanel`, `applyNotesPanelFilters`), seguindo o mesmo padrão já usado por `notes-editor-list-guard.ts` e `notes-recent-list.ts` — lógica testável por `node --test` sem DOM/jsdom, sem tocar o componente React para testar as regras de negócio;
 
-\- toda leitura (`listNotes`, `getNote`, novo `listRecentNotes`) usa `COALESCE(last_interacted_at, updated_at)` — uma nota nunca chega ao cliente sem uma `lastInteractedAt` definida; para uma nota pré-existente ainda não reaberta, isso naturalmente usa a última edição como proxy razoável, sem precisar de um script de backfill separado;
+\- a busca é E lógico (AND) com o filtro de conteúdo vinculado, não OU — uma nota só aparece se satisfizer os dois ao mesmo tempo quando ambos estão ativos; validado explicitamente por teste automatizado e manualmente (ver Acceptance Criteria);
 
-\- `saveNote` grava `last_interacted_at = now` no mesmo `INSERT ... ON CONFLICT`, então salvar já conta como interação sem uma escrita separada; abrir uma nota (sem editar) usa uma função nova, `recordNoteOpen(id)`, com um `UPDATE` mínimo de uma coluna só;
+\- as opções do filtro "Conteúdo vinculado" são derivadas dinamicamente das notas que já existem (`note.links`), não do catálogo oficial inteiro (`content-catalog.ts`) — evita listar dezenas de itens do catálogo que nenhuma nota usa, e mantém o filtro sempre relevante ao conjunto de notas real;
 
-\- a regra "o mais recente prevalece" não é implementada como uma comparação condicional (tipo `MAX(x, y)`) — cada ação (abrir ou salvar) simplesmente sobrescreve `last_interacted_at` com o instante em que ela de fato aconteceu, incondicionalmente. Como as ações chegam ao servidor na ordem real em que aconteceram, isso já produz o resultado correto sem lógica extra. Não foi implementado nenhum controle de concorrência otimista (tipo "só atualiza se o novo timestamp for maior que o atual") para o caso extremo de duas requisições chegarem fora de ordem (ex.: uma abertura e um salvamento quase simultâneos, com a rede entregando fora de ordem) — julguei isso fora do orçamento desta quest (Architecture: LIMITED) e um cenário raro o suficiente para não justificar a complexidade extra; registrando aqui para o caso de precisar revisitar;
+\- o carregamento de `notes` deixou de depender de um parâmetro de busca (`loadNotes()` agora sempre busca a lista completa, sem debounce): antes, um workaround da QUEST-005 (`effectiveQuery = showFavorites ? '' : search`) existia só para evitar que a busca da coluna esquerda escondesse favoritos; como essa busca não existe mais nesta coluna, o workaround inteiro foi removido — mudança tratada como "Refactor: RELATED CODE ONLY" (mesmo arquivo, consequência direta de remover a busca antiga, não um retoque à parte);
 
-\- endpoint: em vez de uma rota nova, o `GET /api/notes` existente ganhou um parâmetro `?recent=1` que troca para `listRecentNotes(5)` (ignora `q`), e o mesmo arquivo ganhou um handler `PATCH` novo (`{ id }` no corpo) para registrar uma abertura. Escolhido para ficar dentro do Complexity Budget, que já listava só `app/api/notes/route.ts` (não uma rota aninhada nova) como arquivo permitido;
-
-\- no cliente, abrir ou salvar atualiza o bloco de recentes de forma otimista (sem esperar um novo `GET`): `openNote` já tem o objeto `AtlasNote` completo em mãos e só precisa trocar o timestamp; `save()` usa o `lastInteractedAt` que já vem autoritativo na resposta do servidor. O `PATCH` de abertura é "fire-and-forget" (não bloqueia a UI); a busca por texto nunca filtra o bloco de recentes — ele usa sua própria chamada (`?recent=1`), independente do estado de `search`, para não repetir o bug da QUEST-005 (painel de Favoritos escondido por um filtro residual);
-
-\- a lógica de "mover para o topo, desduplicar por id, cortar em 5" foi extraída para uma função pura (`components/notes-recent-list.ts`, `mergeRecentInteraction`), seguindo o mesmo padrão já usado por `notes-editor-list-guard.ts` (lógica pura fora do componente React, testável por `node --test` sem DOM/jsdom).
+\- a lista do painel novo reaproveita a mesma marcação/classe `.note-list-item` da lista antiga (mesmo ícone, título, trecho do corpo, data e contagem de vínculos por item) — só o container em volta mudou, de uma coluna estreita rolável para um grid `repeat(auto-fill, minmax(300px,1fr))` que aproveita a largura total do painel e cai para 1 coluna em telas estreitas.
 
 
 
@@ -276,13 +246,13 @@ Realizado nesta sessão:
 
 
 
-\- suíte automatizada: 53/53 testes passando (49 herdados da QUEST-005, sem nenhuma alteração nos arquivos daquela quest, mais 4 novos casos para `mergeRecentInteraction`: move para o topo, uma interação mais recente substitui a posição antiga em vez de duplicar, corta no limite descartando os mais antigos, e os casos de lista vazia/abaixo do limite);
+\- suíte automatizada: 65/65 testes passando (53 herdados das QUEST-004/005, sem nenhuma alteração nos arquivos daquelas quests, mais 12 novos casos em `notes-panel-filters.test.ts`: busca por título/corpo/conteúdo vinculado, busca vazia, os 4 modos de ordenação, ordenação não destrutiva, filtro isolado, busca+filtro como E lógico, busca+filtro+ordenação combinados, e os valores default);
 
 \- `pnpm run typecheck` limpo;
 
-\- `pnpm run lint`: nenhum erro novo introduzido (o comando já falhava antes desta quest, com dezenas de erros pré-existentes em `components/ui/*`, `app/page.tsx` e `hooks/use-mobile.ts` não relacionados; o único achado novo nesta sessão — `react-compiler(EffectSetState)` no efeito que carrega o bloco de recentes ao montar — foi corrigido envolvendo a chamada num `window.setTimeout`, replicando exatamente o padrão já usado pelo efeito de busca existente no mesmo arquivo);
+\- `pnpm run lint`: nenhum erro novo introduzido (o comando já falhava antes desta quest, com dezenas de erros pré-existentes em `components/ui/*`, `app/page.tsx`, `hooks/use-mobile.ts` e o mesmo achado pré-existente de `Date.now()` em `notes-workspace.tsx` já registrado na QUEST-004 — nada disso foi tocado ou piorado por esta quest);
 
-\- validação manual em navegador real (`pnpm run dev` + D1 local migrado, Chromium via Playwright), cobrindo cada Acceptance Criteria acima (ver detalhes lá): ordem do bloco após abrir 5 notas em sequência específica; abrir um item a partir do próprio bloco de recentes; editar e salvar uma nota mais antiga; busca sem afetar o bloco; painel de Favoritos escondendo/reexibindo o bloco corretamente; persistência através de reload completo; bloco ausente com zero notas; bloco com exatamente as notas existentes quando há menos de 5; bloco aparecendo imediatamente com 1 item ao criar a toda-primeira nota depois de zero.
+\- validação manual em navegador real (`pnpm run dev` + D1 local migrado + 5 notas novas semeadas via API, cobrindo títulos/corpos/vínculos variados, além da nota já existente de sessões anteriores), cobrindo cada Acceptance Criteria acima (ver detalhes lá).
 
 
 
@@ -290,7 +260,11 @@ PENDENTE (não descartado):
 
 
 
-\- nenhum item de Acceptance Criteria desta quest ficou sem validação. Fora do escopo desta quest, seguem os mesmos itens já pendentes da QUEST-005 (navegação/rolagem ao clicar em um favorito, atualização visual do painel de favoritos após editar um trecho já favoritado, persistência da lista de favoritos como um todo através de reload) — inalterados por este trabalho.
+\- caso de zero notas no banco: validado só por leitura de código, não ao vivo no navegador (ver Acceptance Criteria acima para o motivo exato — bloqueio do sandbox à limpeza do banco local, não uma omissão);
+
+\- a interpretação de "texto incluído na nota" como busca sobre o conteúdo vinculado (não sobre outra coisa) é uma decisão que fiz sozinho diante de uma ambiguidade real no Task Contract — sinalizada explicitamente acima para confirmação, não escondida atrás de "concluído";
+
+\- nenhum push ou PR foi feito para esta quest ainda, aguardando instrução.
 
 
 

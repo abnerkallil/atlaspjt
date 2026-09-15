@@ -39,6 +39,10 @@ import {
   suggestContentLinks,
 } from '@/lib/content-catalog';
 import { mergeRecentInteraction } from './notes-recent-list';
+import {
+  applyNotesPanelFilters,
+  type NotesPanelSort,
+} from './notes-panel-filters';
 
 const LINK_STATUS = 'Anotado — ainda não trabalhado' as const;
 
@@ -101,8 +105,10 @@ export function NotesWorkspace() {
   const [content, setContent] = useState<AtlasNotesEnvelope>(emptyNoteContent);
   const [editorError, setEditorError] = useState('');
   const [confirmedIds, setConfirmedIds] = useState<string[]>([]);
-  const [search, setSearch] = useState('');
   const [catalogSearch, setCatalogSearch] = useState('');
+  const [allNotesQuery, setAllNotesQuery] = useState('');
+  const [linkedContentFilter, setLinkedContentFilter] = useState('');
+  const [sortOption, setSortOption] = useState<NotesPanelSort>('date-desc');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -155,11 +161,11 @@ export function NotesWorkspace() {
     suggestions.length > 1 && suggestions[0].score - suggestions[1].score < 4;
   const selectedNote = notes.find((note) => note.id === selectedId) ?? null;
 
-  const loadNotes = useCallback(async (query = '') => {
+  const loadNotes = useCallback(async () => {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch(`/api/notes?q=${encodeURIComponent(query)}`);
+      const response = await fetch('/api/notes');
       const data = (await response.json()) as {
         notes?: AtlasNote[];
         error?: string;
@@ -179,14 +185,31 @@ export function NotesWorkspace() {
   }, []);
 
   useEffect(() => {
-    // While the favorites panel is open the search box is hidden, but a
-    // stale query would otherwise keep filtering `notes` behind the scenes
-    // and silently drop favorites from notes that don't match it. Load the
-    // full list instead for as long as the panel stays open.
-    const effectiveQuery = showFavorites ? '' : search;
-    const timer = window.setTimeout(() => void loadNotes(effectiveQuery), 220);
+    const timer = window.setTimeout(() => void loadNotes(), 0);
     return () => window.clearTimeout(timer);
-  }, [loadNotes, search, showFavorites]);
+  }, [loadNotes]);
+
+  const linkedContentOptions = useMemo(() => {
+    const byId = new Map<string, string>();
+    for (const note of notes) {
+      for (const link of note.links) {
+        if (!byId.has(link.contentId)) byId.set(link.contentId, link.contentTitle);
+      }
+    }
+    return [...byId.entries()]
+      .map(([contentId, contentTitle]) => ({ contentId, contentTitle }))
+      .sort((a, b) => a.contentTitle.localeCompare(b.contentTitle, 'pt-BR'));
+  }, [notes]);
+
+  const filteredAllNotes = useMemo(
+    () =>
+      applyNotesPanelFilters(notes, {
+        search: allNotesQuery,
+        linkedContentId: linkedContentFilter || null,
+        sort: sortOption,
+      }),
+    [notes, allNotesQuery, linkedContentFilter, sortOption],
+  );
 
   const loadRecentNotes = useCallback(async () => {
     try {
@@ -427,62 +450,6 @@ export function NotesWorkspace() {
                   </div>
                 </div>
               )}
-              <div className="notes-search">
-                <Search size={17} />
-                <input
-                  aria-label="Pesquisar notas"
-                  placeholder="Pesquisar título ou texto"
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                />
-              </div>
-
-              <div className="notes-list">
-                {loading ? (
-                  <div className="notes-loading">
-                    <LoaderCircle size={18} className="spin" /> Carregando notas
-                  </div>
-                ) : notes.length ? (
-                  notes.map((note) => (
-                    <button
-                      key={note.id}
-                      className={
-                        note.id === selectedId
-                          ? 'note-list-item active'
-                          : 'note-list-item'
-                      }
-                      onClick={() => openNote(note)}
-                    >
-                      <span className="note-list-icon">
-                        <FilePenLine size={16} />
-                      </span>
-                      <span>
-                        <strong>{note.title}</strong>
-                        <small>{note.body.replace(/\s+/g, ' ').slice(0, 86)}</small>
-                        <em>
-                          {formatDate(note.updatedAt)} · {note.links.length} vínculo
-                          {note.links.length === 1 ? '' : 's'}
-                        </em>
-                      </span>
-                      <ChevronRight size={15} />
-                    </button>
-                  ))
-                ) : (
-                  <div className="notes-empty">
-                    <BookMarked size={22} />
-                    <strong>
-                      {search
-                        ? 'Nenhuma nota encontrada'
-                        : 'Seu caderno começa aqui'}
-                    </strong>
-                    <p>
-                      {search
-                        ? 'Tente outra palavra ou limpe a busca.'
-                        : 'Crie uma nota sem alterar seu progresso de estudo.'}
-                    </p>
-                  </div>
-                )}
-              </div>
 
               <div className="notes-source">
                 <span>
@@ -679,6 +646,102 @@ export function NotesWorkspace() {
           </div>
         </aside>
       </div>
+
+      <section className="notes-all-panel" aria-label="Todas as notas">
+        <div className="notes-all-heading">
+          <p className="eyebrow">TODAS AS NOTAS</p>
+          <h2>Busque, filtre e reabra qualquer nota</h2>
+        </div>
+
+        <div className="notes-all-controls">
+          <div className="notes-search">
+            <Search size={17} />
+            <input
+              aria-label="Pesquisar em todas as notas"
+              placeholder="Buscar por título, texto ou conteúdo vinculado"
+              value={allNotesQuery}
+              onChange={(event) => setAllNotesQuery(event.target.value)}
+            />
+          </div>
+          <label className="notes-all-filter">
+            <span>Conteúdo vinculado</span>
+            <select
+              aria-label="Filtrar por conteúdo vinculado"
+              value={linkedContentFilter}
+              onChange={(event) => setLinkedContentFilter(event.target.value)}
+            >
+              <option value="">Todos</option>
+              {linkedContentOptions.map((option) => (
+                <option key={option.contentId} value={option.contentId}>
+                  {option.contentId} · {option.contentTitle}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="notes-all-filter">
+            <span>Ordenar por</span>
+            <select
+              aria-label="Ordenar notas"
+              value={sortOption}
+              onChange={(event) =>
+                setSortOption(event.target.value as NotesPanelSort)
+              }
+            >
+              <option value="date-desc">Mais recente primeiro</option>
+              <option value="date-asc">Mais antiga primeiro</option>
+              <option value="title-asc">Título (A–Z)</option>
+              <option value="title-desc">Título (Z–A)</option>
+            </select>
+          </label>
+        </div>
+
+        <div className="notes-all-list">
+          {loading ? (
+            <div className="notes-loading">
+              <LoaderCircle size={18} className="spin" /> Carregando notas
+            </div>
+          ) : filteredAllNotes.length ? (
+            filteredAllNotes.map((note) => (
+              <button
+                key={note.id}
+                className={
+                  note.id === selectedId
+                    ? 'note-list-item active'
+                    : 'note-list-item'
+                }
+                onClick={() => openNote(note)}
+              >
+                <span className="note-list-icon">
+                  <FilePenLine size={16} />
+                </span>
+                <span>
+                  <strong>{note.title}</strong>
+                  <small>{note.body.replace(/\s+/g, ' ').slice(0, 86)}</small>
+                  <em>
+                    {formatDate(note.updatedAt)} · {note.links.length} vínculo
+                    {note.links.length === 1 ? '' : 's'}
+                  </em>
+                </span>
+                <ChevronRight size={15} />
+              </button>
+            ))
+          ) : (
+            <div className="notes-empty">
+              <BookMarked size={22} />
+              <strong>
+                {allNotesQuery || linkedContentFilter
+                  ? 'Nenhuma nota encontrada'
+                  : 'Seu caderno começa aqui'}
+              </strong>
+              <p>
+                {allNotesQuery || linkedContentFilter
+                  ? 'Tente outra palavra ou ajuste os filtros.'
+                  : 'Crie uma nota sem alterar seu progresso de estudo.'}
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
     </section>
   );
 }
