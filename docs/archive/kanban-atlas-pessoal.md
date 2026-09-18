@@ -6,6 +6,57 @@
 **Quadro oficial:** https://trello.com/b/g5FqnOUs/atlas-project  
 **Sincronização inicial:** 69 cartões criados; 15 cartões históricos marcados como concluídos.
 
+---
+
+## 🔍 Auditoria de status real — 18 de setembro de 2026
+
+Auditoria feita por código-fonte (`app/`, `components/`, `db/schema.ts`, `lib/`), histórico de commits/PRs mergeados e documentos de quest. Nenhum card de "Pronto para fazer" está 100% concluído conforme o checklist original; a tabela abaixo substitui a suposição de "não iniciado" por um status real por card. **Esta seção é só um registro de auditoria — as definições originais dos cards abaixo continuam valendo e não foram reescritas.** Espelhar manualmente no Trello.
+
+### Experiência visual
+
+| Card | Status real | % | Observação |
+|---|---|---|---|
+| UX-01 Estudar | 🟡 protótipo visual, incompleto | ~35% | tela existe com dados fixos; faltam vídeo/PDF real, atividade prática, questões de fixação, encerramento funcional |
+| UX-02 Roadmap | 🔴 não iniciado | 0% | placeholder "será desenhada na próxima etapa" |
+| UX-03 Notas | 🟢 maior parte concluída e testada | ~75% | editor, salvamento, busca, filtros, recentes, favoritos e vínculo ao catálogo prontos (QUEST-003/004/005/006); faltam árvore de pastas e indicação de conteúdo privado |
+| UX-04 Quizzes | 🔴 não iniciado | 0% | mesmo placeholder genérico |
+| UX-05 Progresso | 🔴 não iniciado | 0% | mesmo placeholder genérico |
+| UX-06 Revisar Hoje | 🔴 não pode estar concluído | 0% | depende de UX-01 a UX-05; página ainda usa métricas fixas de exemplo |
+| UX-07 Sistema de componentes | 🟡 base sólida, sem documentação | ~60% | ~50 primitivos shadcn + tokens CSS prontos; falta documentação de uso |
+| UX-08 Validação visual/responsiva | 🟡 só validado pontualmente | ~15% | só o painel de notas (QUEST-006) foi validado em 380px; resto do site sem validação formal |
+
+### Fundação técnica
+
+| Card | Status real | % | Observação |
+|---|---|---|---|
+| TEC-01 Reorganizar protótipo | 🔴 não feito | 0% | `app/page.tsx` continua monolítico, sem rotas separadas |
+| TEC-02 Modelo de dados | 🔴 só o pedaço de Notas | ~10% | schema só tem `atlasNotes`, `atlasNoteLinks`, `atlasSyncOperations` |
+| TEC-03 Autenticação | 🔴 não feito | 0% | nenhum código de login/sessão/proteção de rota |
+| TEC-04 Persistência básica | 🔴 só Notas persiste | ~10% | roadmaps, conteúdos, progresso, sessões, tarefas e preferências continuam mock |
+| TEC-05 Armazenamento de anexos | 🔴 não feito | 0% | `components/ui/attachment.tsx` é só primitivo de UI, sem upload/storage real |
+| TEC-06 Trilha de auditoria | 🔴 não feito | 0% | `atlasSyncOperations` é fila de sincronização, não log de auditoria |
+| TEC-07 Testes e CI | 🟡 testes sim, CI não | ~40% | 5 arquivos de teste + scripts de typecheck/lint; sem `.github/workflows` nem proteção de branch |
+| TEC-08 Publicar versão visual | 🔴 sem evidência | 0% | nenhum registro de deploy em `ATLAS_STATUS.md` |
+
+### Núcleo funcional
+
+| Card | Status real | % | Observação |
+|---|---|---|---|
+| MVP-01 Conteúdos e pré-requisitos | 🔴 não feito | 0% | `lib/content-catalog.ts` é só lista estática de referência |
+| MVP-02 Sessões de estudo | 🔴 não feito | 0% | fluxo de sessão é só UI decorativa |
+| MVP-03 Atlas Notes | 🟡 parcial | ~50% | editor, salvamento e vínculo com conteúdo prontos; faltam pastas e histórico de versões |
+| MVP-04 Quizzes pré-cadastrados | 🔴 não feito | 0% | página nem existe |
+| MVP-05 Agenda interna | 🔴 não feito | 0% | sem código relacionado |
+| MVP-06 Revisões 24h/7d/30d | 🔴 não feito | 0% | depende de MVP-04/05, inexistentes |
+| MVP-07 Cálculo determinístico de progresso | 🔴 não feito | 0% | percentuais de progresso são valores fixos no código |
+| MVP-08 Recuperação e bloqueios | 🔴 não feito | 0% | só existe um "módulo bloqueado" estático, sem lógica real |
+| MVP-09 Relatórios explicáveis | 🔴 não feito | 0% | sem código relacionado |
+| MVP-10 Teste longitudinal | 🔴 não feito | 0% | depende de MVP-01 a 09 |
+
+**Cards realmente livres para começar agora** (sem dependência pendente e com 0% de trabalho feito, portanto de escopo limpo): UX-02, UX-04, UX-05, TEC-07 (completar a parte de CI). UX-07 e UX-08 já têm base parcial. UX-03/MVP-03 (Notas) precisam só de complemento (pastas + histórico), não de recomeço.
+
+---
+
 ## Estrutura recomendada do quadro
 
 Crie estas listas no Trello, nesta ordem:
@@ -603,6 +654,21 @@ Crie estes cartões como histórico inicial do quadro:
 
 **Etiquetas:** Infraestrutura.  
 **Observação:** o envio do código ainda precisa ser confirmado no próprio repositório GitHub.
+
+## DONE-16 — Implementar formatação avançada e blocos do Atlas Notes
+
+**Etiquetas:** Frontend, UX/UI.  
+**Observação:** QUEST-003 (listas aninhadas, links, notas de rodapé, tabelas, blocos de matemática, callouts, menu contextual de formatação). Contribui para UX-03/MVP-03, ainda não fecha os dois cards por completo.
+
+## DONE-17 — Criar bloco "Notas recentes" e corrigir bugs de favoritos/destaque
+
+**Etiquetas:** Frontend, Backend.  
+**Observação:** QUEST-004 (bloco fixo de notas recentes) e QUEST-005 (correção de bugs ao recolorir favoritos/destaques). Contribui para UX-03/MVP-03.
+
+## DONE-18 — Criar painel "Todas as notas" com busca, filtros e ordenação
+
+**Etiquetas:** Frontend, Backend.  
+**Observação:** QUEST-006, com 12 testes automatizados novos (`notes-panel-filters.test.ts`) e validação manual em navegador. Contribui para UX-03/MVP-03.
 
 ---
 
