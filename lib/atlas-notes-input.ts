@@ -14,6 +14,8 @@ export type AtlasNotesSaveInput = {
   content: AtlasNotesEnvelope | null;
   contentJson: string | null;
   contentIds: string[];
+  folderId: string | null;
+  isPrivate: boolean;
   mode: 'create' | 'update';
 };
 
@@ -43,6 +45,18 @@ export function assertAtlasNotesStructuredWrite(
 
 function invalid(message = 'Dados da nota inválidos.'): never {
   throw new AtlasNotesValidationError('INVALID_REQUEST', message);
+}
+
+function parseFolderId(value: unknown): string | null {
+  if (value === undefined || value === null) return null;
+  if (typeof value !== 'string' || !value.trim()) invalid('Pasta inválida.');
+  return value;
+}
+
+function parseIsPrivate(value: unknown): boolean {
+  if (value === undefined) return false;
+  if (typeof value !== 'boolean') invalid('Indicação de nota privada inválida.');
+  return value;
 }
 
 function parseObject(rawBody: string) {
@@ -81,6 +95,9 @@ export function parseAtlasNotesSaveRequest(
     invalid('O título deve ter no máximo 180 caracteres.');
   }
 
+  const folderId = parseFolderId(input.folderId);
+  const isPrivate = parseIsPrivate(input.isPrivate);
+
   const hasStructuredContent =
     input.content !== undefined && input.content !== null;
   if (hasStructuredContent) {
@@ -101,6 +118,8 @@ export function parseAtlasNotesSaveRequest(
       content: prepared.content,
       contentJson: prepared.contentJson,
       contentIds: input.contentIds as string[],
+      folderId,
+      isPrivate,
       mode,
     };
   }
@@ -123,6 +142,8 @@ export function parseAtlasNotesSaveRequest(
     content: null,
     contentJson: null,
     contentIds: input.contentIds as string[],
+    folderId,
+    isPrivate,
     mode,
   };
 }

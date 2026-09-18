@@ -1,315 +1,165 @@
-\# ATLAS PROJECT — ACTIVE QUEST
+# ATLAS PROJECT — ACTIVE QUEST
 
-
-
-\## Purpose
-
-
+## Purpose
 
 This file contains the current active Task Contract for Atlas development.
 
-
-
 It is the operational source of truth for the task currently being implemented.
-
-
 
 Atlas defines the product requirement.
 
-
-
 Claude Code implements the requirement.
-
-
 
 Hermes reads this same requirement only when an Architecture Gate is triggered.
 
-
-
 The active quest must remain concise and focused on observable requirements.
-
-
 
 Do not use this file as a development diary.
 
-
-
 Do not accumulate completed quests here.
 
+---
 
+# ACTIVE QUEST
 
-\---
+## Quest
 
+QUEST-007 — Finalizar UX-03: página Notas (pastas, mapa de cobertura, anexos, indicação de conteúdo privado)
 
+## Priority
 
-\# ACTIVE QUEST
+P0
 
-
-
-\## Quest
-
-
-
-QUEST-006 — Atlas Notes: painel "Todas as notas" com filtros e busca
-
-
-
-\## Priority
-
-
-
-P1
-
-
-
-\## Complexity
-
-
+## Complexity
 
 MEDIUM
 
+## Hermes Gate
 
+NO — a menos que uma mudança real de arquitetura/schema necessária seja identificada; se identificada, a implementação para antes de prosseguir (ver Non-Goals).
 
-\## Hermes Gate
+---
 
+## Contexto
 
+O card UX-03 do quadro kanban ("Desenhar a página Notas") está ~75% concluído. Já implementado e testado (QUEST-003/004/005/006, ver docs/ATLAS_STATUS.md e docs/archive/): editor rico (Tiptap), salvamento automático, busca, filtros, ordenação, bloco de notas recentes, favoritos e vínculo com o catálogo de conteúdo (lib/content-catalog.ts). Componente principal: components/notes-workspace.tsx (+ notes-editor.tsx, notes-panel-filters.ts, notes-recent-list.ts).
 
-NO
+Faltam 4 itens do checklist original de UX-03, todos no nível de **experiência visual** (esta lista do kanban é sobre UX/UI demonstrativa — não sobre persistência real de backend além do já usado por atlasNotes/atlasNoteLinks, que pertence aos cards TEC-02/TEC-04/TEC-05/MVP-03):
 
+1. Árvore de pastas para organizar notas;
+2. Mapa de cobertura (visualizar quanto do conteúdo do catálogo está coberto por notas);
+3. Anexos (representação visual de anexos na nota, reaproveitando o primitivo já existente em components/ui/attachment.tsx);
+4. Indicação visual de conteúdo privado.
 
+## Objective
 
-\---
+Fechar os 4 itens pendentes do checklist de UX-03 ao nível de experiência visual/demonstrativa, seguindo o mesmo padrão já usado no restante do painel de Notas (reaproveitar `.note-list-item` e classes existentes, lógica pura extraída em módulos testáveis como `notes-panel-filters.ts`).
 
+## Required Behavior
 
+- usuário pode organizar notas em pastas (criar pasta, mover nota para pasta, ver notas dentro de uma pasta, ver notas sem pasta);
+- existe uma visualização (mesmo que simples) mostrando quanto do catálogo de conteúdo (lib/content-catalog.ts) está coberto por pelo menos uma nota vinculada — não precisa ser um cálculo pedagógico real (isso é MVP-07/TEC-02, fora de escopo), apenas a razão simples "conteúdos com nota vinculada / total de conteúdos", por assunto;
+- é possível anexar uma referência de arquivo a uma nota e vê-la listada na nota (usar components/ui/attachment.tsx como base visual; NÃO implementar upload real para storage — isso é TEC-05, ainda 0% e fora de escopo desta quest; se simulado, deixar claro no código e na UI que é demonstrativo, sem prometer persistência real de arquivo);
+- notas marcadas como privadas exibem um indicador visual claro (ícone/badge) na lista e no editor.
 
-\## Objective
+## Acceptance Criteria
 
+- [x] pastas: criar, renomear, mover nota entre pastas e "sem pasta" funcionam e persistem entre reloads (via API/D1, seguindo o padrão já usado por atlasNotes/atlasNoteLinks em db/schema.ts) — validado com teste automatizado (lógica pura, sem DOM: 6 casos novos em `notes-panel-filters.test.ts` cobrindo o filtro por pasta, incluindo o sentinel "sem pasta" e a combinação AND com o filtro de conteúdo vinculado) e manualmente no navegador real: criei 2 pastas, renomeei uma delas, movi uma nota entre pastas via o seletor do editor + Salvar, e confirmei por `curl` direto na API que `folderId` e o nome renomeado sobreviveram a uma releitura de `/api/notes` e `/api/notes/folders` (equivalente a um reload) — ver Implementation Notes para o detalhe de onde a persistência acontece;
+- [x] mapa de cobertura mostra a proporção correta e atualiza quando uma nota é criada/vinculada/desvinculada de um conteúdo — validado com teste automatizado (10 casos em `notes-coverage.test.ts`, incluindo catálogo vazio, notas vazias, duplicidade de vínculo não inflar contagem, e a atualização ao ganhar/perder um vínculo) e manualmente: com 1 nota vinculada a `CG-001`, o painel "Cobertura" mostrou corretamente 1/157 no total e 1/40 em "Contabilidade Geral" com a barra proporcional;
+- [x] anexos: adicionar/remover referência de anexo numa nota e vê-la listada, com clareza visual de que é uma representação demonstrativa (sem persistência de arquivo real) — validado manualmente: selecionei um arquivo real pelo seletor de arquivos do navegador, confirmei que nome e tamanho aparecem listados com o selo "Demonstrativo — sem upload real" e o aviso explicando que o arquivo não é enviado nem salvo, removi o anexo pelo botão (X) e confirmei que a lista esvazia; note o **escopo decidido** documentado em Implementation Notes;
+- [x] indicação de conteúdo privado aparece consistentemente na lista de notas e no editor quando a nota está marcada como privada — validado manualmente: ativei "Marcar como privada" no editor, salvei, e o ícone de cadeado apareceu tanto em "Notas recentes" quanto no painel "Todas as notas", em telas largas e em 380px;
+- [x] nenhuma regressão nos testes existentes (`pnpm run test:notes`) — a suíte já estava em 91 testes (não 65 — número desatualizado no card do kanban; confirmado com `git stash -u` + rebuild limpo do `.notes-spike-dist` antes desta quest) e passa em 107/107 depois (91 herdados, sem nenhuma alteração, + 16 novos: 6 casos de filtro por pasta em `notes-panel-filters.test.ts` e 10 em `notes-coverage.test.ts`);
+- [x] `pnpm run typecheck` limpo;
+- [x] `pnpm run lint` sem novos erros introduzidos — comparei a lista de erros antes/depois por arquivo:linha; a única variação foi o achado pré-existente `Date.now()` em `notes-workspace.tsx` (já registrado nas quests anteriores) mudando de número de linha por causa do código inserido acima dele — mesmo código, não uma regressão nova;
+- [x] responsivo (sem quebrar em ~380px), seguindo o mesmo padrão já validado no painel "Todas as notas" (QUEST-006) — validado com Playwright em viewport 380×820: `document.documentElement.scrollWidth === clientWidth` (sem overflow horizontal) nos 4 estados (índice, painel Pastas, painel Cobertura, editor com nota privada+pasta+anexo abertos).
 
+## UX Constraints
 
-Criar um painel full-width abaixo da grade de notas (recentes/editor/vínculos) com a navegação completa por todas as notas, incluindo busca por título, conteúdo e texto incluído, e filtros por conteúdo vinculado e por ordenação. A coluna esquerda deixa de mostrar a lista completa/busca que existia — passa a mostrar só o bloco "Notas recentes" (sem mudança nele), já que a navegação completa migra inteiramente para o painel novo.
+- reaproveitar o padrão visual já existente (`.note-list-item`, cores e tokens de app/globals.css, componentes de components/ui/) — não introduzir um novo sistema de estilo;
+- pastas e mapa de cobertura devem caber na estrutura atual da página Notas (coluna esquerda / editor central / painel "Todas as notas") sem redesenhar o layout inteiro.
 
+## Non-Goals
 
+- NÃO implementar upload/storage real de anexos (isso é TEC-05, bloqueado, fora de escopo);
+- NÃO implementar a política de privacidade completa nem decidir o que a IA pode ou não acessar (isso é DEC-08, decisão de produto em aberto) — apenas o indicador visual de uma nota já marcada como privada, mais o campo mínimo (`isPrivate`) necessário para marcá-la, sem regras de acesso além disso;
+- NÃO tocar em UX-01, UX-02, UX-04 a UX-08, nem em nenhum card TEC-*/MVP-* além do estritamente necessário para os 4 itens acima;
+- NÃO refatorar partes do editor/workspace que já funcionam e não estão no escopo desta quest.
 
-\---
+## Dependencies
 
+- QUEST-003/004/005/006 (já concluídas — esta quest constrói sobre elas);
+- TEC-05 (armazenamento de anexos) — bloqueia persistência real de arquivo, não bloqueia a representação visual demonstrativa pedida aqui;
+- DEC-08 (escopo de privacidade do MVP) — bloqueia a política de acesso, não bloqueia o indicador visual simples.
 
+## Complexity Budget
 
-\## Required Behavior
-
-
-
-\- painel novo, abaixo da grade de 3 colunas, listando todas as notas do usuário;
-
-\- campo de busca que encontra notas por título, corpo do texto, ou texto incluído na nota;
-
-\- filtro por conteúdo vinculado (nota tem vínculo com X do catálogo);
-
-\- ordenação por data (mais recente/mais antiga) e por título (A-Z / Z-A);
-
-\- clicar numa nota do painel abre ela no editor central, como já acontece na lista atual;
-
-\- a coluna esquerda mantém só o bloco "Notas recentes" — a busca e a lista completa que existiam ali (abaixo dele) são removidas dessa coluna.
-
-
-
-\---
-
-
-
-\## Acceptance Criteria
-
-
-
-\- \[x\] busca encontra notas por título, corpo e texto incluído — validado automaticamente (12 testes novos em `notes-panel-filters.test.ts`) e manualmente em navegador real com 6 notas reais (5 semeadas nesta sessão + 1 pré-existente): busca por "Equacao" achou só pelo título; busca por "IRPJ" (presente só no corpo, não no título) achou a nota certa; busca por "Patrimônio Líquido" e por "CG-001" (nem no título nem no corpo da nota, só no conteúdo vinculado) achou a nota certa nos dois casos. \*\*Decisão de interpretação, sinalizada aqui para revisão\*\*: o Task Contract lista três alvos de busca (título, corpo, "texto incluído na nota") mas o corpo (`body`) já é a projeção textual de todo o conteúdo visível da nota (parágrafos, listas, tabelas, citações, notas de rodapé — ver `projectCanonicalContent` em `lib/atlas-notes-document.ts`), então um terceiro alvo redundante com o corpo não faria sentido. Interpretei "texto incluído na nota" como o texto do conteúdo do catálogo vinculado à nota (`contentTitle`/`contentId` de `note.links`) — ou seja, buscar por um termo que aparece no conteúdo oficial vinculado, mesmo que esse termo não apareça literalmente no título ou corpo da nota. Se essa não for a leitura pretendida, é uma mudança pequena e isolada em `matchesNotesPanelSearch` (`components/notes-panel-filters.ts`);
-
-\- \[x\] cada filtro (conteúdo vinculado, data, título) funciona isoladamente e em combinação — validado automaticamente (testes de `applyNotesPanelFilters` cobrindo filtro isolado, busca+filtro combinados como E lógico — não OU —, e busca+filtro+ordenação juntos) e manualmente: filtro por um conteúdo vinculado isolado retornou só as notas certas; filtro + busca combinados retornaram a interseção correta (não a união); os 4 modos de ordenação (`date-desc`, `date-asc`, `title-asc`, `title-desc`) foram testados e confirmados como exato espelho um do outro onde esperado (`date-asc` é o reverso exato de `date-desc`, `title-desc` o reverso exato de `title-asc`) e como ordem alfabética real via comparação programática das listas;
-
-\- \[x\] abrir uma nota pelo painel funciona igual ao comportamento já existente — validado manualmente: cliquei num item do painel novo e confirmei que o campo de título do editor passou a mostrar exatamente esse título e que o próprio item ficou destacado como ativo no painel — mesmo `openNote()` já usado pela lista antiga e pelo bloco de recentes, sem duplicação de lógica;
-
-\- \[x\] painel funciona com zero, poucas e muitas notas — validado manualmente com poucas notas (6) cobrindo busca sem resultado nenhum (estado vazio apareceu corretamente, sem erros no console). \*\*Ressalva honesta\*\*: o caso de zero notas no banco \*não\* foi validado ao vivo nesta sessão — a rotina de limpar o D1 local (`DELETE FROM atlas_notes`) foi bloqueada pelo classificador de destruição irreversível do ambiente sandbox, e optei por não insistir em contornar esse bloqueio. Validei esse caso por leitura de código em vez disso: `filteredAllNotes` é derivado de `applyNotesPanelFilters(notes, ...)`, que sobre um array vazio retorna `[]` incondicionalmente (mesmo caminho de código já exercitado ao vivo pelo teste de busca-sem-resultado acima, que também produz uma lista filtrada vazia), então o painel cai no mesmo ramo `.notes-empty` já visualmente confirmado; e `linkedContentOptions`, derivado de `notes.flatMap`, retorna `[]` da mesma forma, deixando o filtro só com a opção "Todos". Não é o mesmo nível de confiança de um teste ao vivo contra o banco — registrando isso explicitamente em vez de marcar como validado sem ressalva;
-
-\- \[x\] responsivo em tela estreita (filtros não quebram o layout) — validado manualmente em viewport de 380px: sem overflow horizontal da página (`scrollWidth` = `clientWidth`), os três controles (busca, filtro de conteúdo vinculado, ordenação) empilham verticalmente em vez de comprimir lado a lado, e a lista de notas do painel cai para uma coluna;
-
-\- \[x\] coluna esquerda, após a mudança, mostra só Favoritos + Notas recentes — sem busca/lista antigas — e sem regressão em nenhum dos dois blocos — validado manualmente: inspeção do DOM confirmou que `.notes-index` (a coluna esquerda) agora só tem três filhos no ramo sem o painel de Favoritos aberto (botão Favoritos, bloco Notas recentes, rodapé do catálogo oficial — este último não fazia parte do que o Task Contract pediu para remover, então foi mantido); o bloco de Notas recentes continua funcionando exatamente como na QUEST-004 (mesmo componente, não tocado); o painel de Favoritos (QUEST-005) não foi alterado.
-
-
-
-\---
-
-
-
-\## UX Constraints
-
-
-
-\- reaproveitar o padrão visual de item de lista já existente (`.note-list-item` e equivalentes) — feito: o painel novo usa exatamente a mesma classe/estrutura da lista antiga e do bloco de recentes, só reorganizada num grid multi-coluna via CSS quando há espaço horizontal;
-
-\- filtros com comportamento acessível em telas menores (podem virar menu suspenso) — implementado como empilhamento vertical simples via `flex-wrap`/media query, não como um menu suspenso à parte: os dois filtros já são `<select>` nativos (que o próprio navegador já abre como um menu suspenso em telas pequenas), então não havia necessidade de construir um componente de menu adicional para atender ao requisito.
-
-
-
-\---
-
-
-
-\## Non-Goals
-
-
-
-\- não introduzir paginação server-side nesta quest — não foi necessária: o painel busca a lista completa de notas uma única vez (mesma chamada `GET /api/notes` que já existia) e filtra/ordena inteiramente no cliente, o que é suficiente no volume de notas testado e evita adicionar parâmetros novos ao endpoint.
-
-
-
-\---
-
-
-
-\## Dependencies
-
-
-
-\- QUEST-004 (Notas recentes) — concluída; esta quest assume o bloco "Notas recentes" já existente na coluna esquerda e apenas remove o que estava abaixo dele — confirmado: `components/notes-recent-list.ts` e a lógica de `bumpRecentNote`/`loadRecentNotes` em `notes-workspace.tsx` não foram tocados;
-
-\- endpoint `/api/notes` já existente (`q=` de busca) — a filtragem acabou sendo feita no cliente sobre a lista já carregada (ver Non-Goals), então o parâmetro `q=` do servidor ficou sem uso pelo cliente novo (continua existindo no endpoint, sem motivo para removê-lo — não é código morto, é uma capacidade do endpoint que simplesmente não é mais exercitada por este componente);
-
-\- IMPORTANTE: nem a PR #1 (QUEST-005) nem a PR #2 (QUEST-004) foram mergeadas em `main` até o momento em que esta quest começou. A branch desta quest (`claude/quest-006-todas-notas`) foi criada a partir da ponta de `claude/quest-004-notas-recentes` (commit `319c686`), por ser a branch mais recente com todo o layout de que esta quest depende (botão Favoritos da QUEST-005 + bloco Notas recentes da QUEST-004). Nenhum push ou PR foi aberto para esta quest ainda — aguardando instrução, seguindo o mesmo padrão das quests anteriores.
-
-
-
-\---
-
-
-
-\## Complexity Budget
-
-
-
-Architecture: LIMITED (nenhuma mudança de schema/persistência; filtragem e ordenação inteiramente client-side sobre dados já existentes)
-
-
+Architecture: LIMITED (novas colunas/tabela simples em db/schema.ts para pastas e para o campo isPrivate; nenhuma mudança maior)
 
 Hermes: 0
 
+Documentation: UPDATE EXISTING (docs/quests/ACTIVE.md ao final, seguindo o mesmo padrão das quests anteriores)
 
+Refactor: RELATED CODE ONLY (components/notes-workspace.tsx e módulos irmãos)
 
-Documentation: NONE
+Dependencies: NONE unless technically required
 
+## Validation
 
+- `pnpm run test:notes` (suíte completa, sem regressão);
+- `pnpm run typecheck`;
+- `pnpm run lint`;
+- validação manual no navegador real (`pnpm run dev`) de cada um dos 4 itens, incluindo estados vazio/poucos/muitos dados e viewport estreito;
+- revisão do diff final antes de considerar concluído.
 
-Refactor: RELATED CODE ONLY (`components/notes-workspace.tsx`; a remoção do parâmetro de busca (`search`) do efeito de carregamento de `notes` também simplificou o workaround `showFavorites ? '' : search` da QUEST-005 — como a busca antiga deixou de existir neste arquivo, `notes` passa a ser sempre a lista completa não filtrada para todo mundo que a consome (Favoritos, nota selecionada, painel novo), o que elimina de raiz a classe de bug da QUEST-005 nº2, não só o sintoma que já tinha sido corrigido lá)
+---
 
-
-
-Dependencies: NONE unless technically required — nenhuma dependência nova foi adicionada.
-
-
-
-\---
-
-
-
-\## Validation
-
-
-
-\- validação manual no navegador de busca e cada filtro — feita, ver Acceptance Criteria acima para o detalhe de cada cenário;
-
-\- revisão do diff final antes de considerar concluído — pendente de revisão externa, como nas quests anteriores.
-
-
-
-\---
-
-
-
-\## Implementation Notes
-
-
+## Implementation Notes
 
 Decisões tomadas:
 
-
-
-\- toda a lógica de busca/filtro/ordenação foi extraída para um módulo puro novo, `components/notes-panel-filters.ts` (`matchesNotesPanelSearch`, `sortNotesPanel`, `applyNotesPanelFilters`), seguindo o mesmo padrão já usado por `notes-editor-list-guard.ts` e `notes-recent-list.ts` — lógica testável por `node --test` sem DOM/jsdom, sem tocar o componente React para testar as regras de negócio;
-
-\- a busca é E lógico (AND) com o filtro de conteúdo vinculado, não OU — uma nota só aparece se satisfizer os dois ao mesmo tempo quando ambos estão ativos; validado explicitamente por teste automatizado e manualmente (ver Acceptance Criteria);
-
-\- as opções do filtro "Conteúdo vinculado" são derivadas dinamicamente das notas que já existem (`note.links`), não do catálogo oficial inteiro (`content-catalog.ts`) — evita listar dezenas de itens do catálogo que nenhuma nota usa, e mantém o filtro sempre relevante ao conjunto de notas real;
-
-\- o carregamento de `notes` deixou de depender de um parâmetro de busca (`loadNotes()` agora sempre busca a lista completa, sem debounce): antes, um workaround da QUEST-005 (`effectiveQuery = showFavorites ? '' : search`) existia só para evitar que a busca da coluna esquerda escondesse favoritos; como essa busca não existe mais nesta coluna, o workaround inteiro foi removido — mudança tratada como "Refactor: RELATED CODE ONLY" (mesmo arquivo, consequência direta de remover a busca antiga, não um retoque à parte);
-
-\- a lista do painel novo reaproveita a mesma marcação/classe `.note-list-item` da lista antiga (mesmo ícone, título, trecho do corpo, data e contagem de vínculos por item) — só o container em volta mudou, de uma coluna estreita rolável para um grid `repeat(auto-fill, minmax(300px,1fr))` que aproveita a largura total do painel e cai para 1 coluna em telas estreitas.
-
-
+- **Schema (Architecture: LIMITED, conforme previsto)**: nova tabela `atlas_note_folders` (id, name, createdAt, updatedAt) e duas colunas novas em `atlas_notes`: `folder_id` (nullable, FK para `atlas_note_folders.id` com `onDelete: 'set null'` — uma nota nunca fica "presa" a uma pasta apagada) e `is_private` (boolean, default false). Migração gerada via `drizzle-kit generate` (`drizzle/0003_little_amazoness.sql`) e aplicada localmente via `pnpm run db:migrate:local`, mesmo fluxo já usado nas migrações anteriores do projeto — nenhuma mudança de arquitetura além do que o Complexity Budget já previa, então nenhuma consulta a Hermes foi necessária;
+- **Persistência de pastas via endpoint próprio, não via `/api/notes`**: o Task Contract pede que a persistência siga "o padrão já usado por atlasNotes/atlasNoteLinks em db/schema.ts" (ou seja, D1 via API), mas pastas são uma entidade própria (CRUD independente de notas), então criei `app/api/notes/folders` (GET lista, POST cria, PATCH renomeia) em vez de sobrecarregar o endpoint de notas existente. **Interpretação sinalizada para revisão** (mesmo padrão de transparência usado na QUEST-006): entendi "via API/D1, seguindo o padrão" como "persistir de verdade no D1 através de uma rota de API", não como "literalmente a mesma URL `/api/notes`". Mover uma nota entre pastas ou marcá-la como privada, por outro lado, usa o `/api/notes` existente (o `PUT`/`POST` de salvar já aceita `folderId`/`isPrivate` no corpo) — isso evitou criar um caminho de escrita paralelo para um campo que já faz parte do "salvar a nota";
+- **Exclusão de pasta não foi implementada**: o Required Behavior e os Acceptance Criteria pedem criar, renomear, mover nota e ver "sem pasta" — nenhum deles pede apagar uma pasta. Para manter a mudança no tamanho do que foi pedido (`AGENTS.md`: "não expandir escopo sem justificativa"), não adicionei exclusão. Se for necessária, o `onDelete: 'set null'` na FK já está preparado para não deixar notas órfãs quando essa capacidade for adicionada;
+- **Anexos são efêmeros por decisão, não por limitação técnica** — **ambiguidade sinalizada para revisão**: o Task Contract deixa claro que upload real está fora de escopo, mas não diz explicitamente se a referência (nome do arquivo) deve sobreviver a um reload. Optei por mantê-la só em memória, por nota aberta no editor (reseta ao trocar de nota ou recarregar a página), por dois motivos: (1) nenhum Acceptance Criterion pede persistência entre reloads para anexos — só para pastas e privacidade, que têm coluna de schema explícita nesta quest; (2) o efêmero reforça visualmente que não é uma persistência real, em vez de um metadado "meio persistido" que poderia confundir o usuário sobre o que exatamente foi salvo. Se o comportamento esperado for "nome do anexo persiste entre reloads, mas o arquivo em si não", isso exigiria uma nova coluna (`attachments_json` ou tabela própria) — uma decisão de escopo que não estava clara no contrato, então não a tomei sozinho;
+- **Mapa de cobertura**: função pura `computeContentCoverage`/`computeOverallCoverage` em `components/notes-coverage.ts`, mesmo padrão de `notes-panel-filters.ts` — calcula, por assunto do catálogo (`lib/content-catalog.ts`), quantos conteúdos têm pelo menos uma nota com `links` apontando para o `id` deles. É a proporção simples pedida no Task Contract, não o cálculo pedagógico real (MVP-07/TEC-02, fora de escopo, como o contrato já explicita);
+- **Filtro de pasta reaproveita `notes-panel-filters.ts`**: adicionei `folderId` opcional a `NotesPanelNote` e um sentinel exportado `NO_FOLDER_FILTER` para representar "sem pasta" sem colidir com `''` ("todas as pastas") ou com qualquer id real — mesma técnica que já existia para o filtro de conteúdo vinculado, só estendida;
+- **UI**: o botão único "Favoritos" da coluna esquerda virou uma linha de 3 botões (Favoritos | Pastas | Cobertura) que abrem o mesmo tipo de painel (`.favorites-panel`/`.favorites-back`/`.favorites-heading`, reaproveitados sem mudança de estrutura) — nenhum sistema de estilo novo, conforme a UX Constraint. O painel "Pastas" também serve para navegar (clicar numa pasta filtra o painel "Todas as notas" por ela, incluindo "Sem pasta"), evitando duplicar a renderização de lista de notas que já existe lá embaixo. Pasta e privacidade da nota aberta são editadas na linha de ferramentas do editor (seletor de pasta + pill de privacidade, ao lado do `sync-pill` já existente) e só persistem quando o usuário clica "Salvar nota" — mesmo modelo que título/corpo já seguem, sem um caminho de salvamento paralelo.
 
 Realizado nesta sessão:
 
-
-
-\- suíte automatizada: 65/65 testes passando (53 herdados das QUEST-004/005, sem nenhuma alteração nos arquivos daquelas quests, mais 12 novos casos em `notes-panel-filters.test.ts`: busca por título/corpo/conteúdo vinculado, busca vazia, os 4 modos de ordenação, ordenação não destrutiva, filtro isolado, busca+filtro como E lógico, busca+filtro+ordenação combinados, e os valores default);
-
-\- `pnpm run typecheck` limpo;
-
-\- `pnpm run lint`: nenhum erro novo introduzido (o comando já falhava antes desta quest, com dezenas de erros pré-existentes em `components/ui/*`, `app/page.tsx`, `hooks/use-mobile.ts` e o mesmo achado pré-existente de `Date.now()` em `notes-workspace.tsx` já registrado na QUEST-004 — nada disso foi tocado ou piorado por esta quest);
-
-\- validação manual em navegador real (`pnpm run dev` + D1 local migrado + 5 notas novas semeadas via API, cobrindo títulos/corpos/vínculos variados, além da nota já existente de sessões anteriores), cobrindo cada Acceptance Criteria acima (ver detalhes lá).
-
-
+- suíte automatizada: 107/107 testes passando (91 herdados — suíte já estava nesse número antes desta quest, não 65 como o card do kanban dizia — mais 16 novos: 6 de filtro por pasta em `notes-panel-filters.test.ts`, 10 de cobertura em `notes-coverage.test.ts`);
+- `pnpm run typecheck` limpo;
+- `pnpm run lint`: nenhum erro novo (comparei a lista de erros antes/depois por arquivo:linha; a única diferença foi o achado pré-existente de `Date.now()` em `notes-workspace.tsx` mudando de número de linha por causa do código inserido acima — mesmo código, já registrado nas quests anteriores, não uma regressão nova);
+- validação manual em navegador real (`pnpm run dev` + D1 local migrado) com Playwright, cobrindo os 4 itens: criei 2 pastas, renomeei uma, movi uma nota entre pastas e confirmei via API que persiste; abri o painel de cobertura com 1 nota vinculada e confirmi a proporção 1/157 (1/40 em Contabilidade Geral); anexei um arquivo real pelo seletor de arquivo do navegador, vi nome+tamanho listados com o aviso demonstrativo, e removi; marquei uma nota como privada e vi o cadeado em "Notas recentes" e em "Todas as notas". Repeti as mesmas interações em viewport 380×820 e confirmei `scrollWidth === clientWidth` (sem overflow horizontal) em todos os estados;
+- validação da API por `curl`, incluindo os casos de erro: `folderId` inexistente ao salvar uma nota retorna 400 "Pasta não encontrada.", nome de pasta vazio ao criar retorna 400 "Dê um nome à pasta.".
 
 PENDENTE (não descartado):
 
+- exclusão de pasta não foi implementada (ver Implementation Notes acima — não estava nos Acceptance Criteria);
+- anexos não persistem entre reloads por decisão deliberada, sinalizada acima para confirmação — se o comportamento esperado for outro, é uma mudança pequena e isolada (nova coluna + wiring no mesmo padrão de `folderId`/`isPrivate`);
+- a rota de pastas ficou em `app/api/notes/folders` (não em `/api/notes`) — interpretação sinalizada acima para confirmação;
+- nenhum push ou PR foi feito para esta quest ainda, aguardando instrução.
 
+---
 
-\- caso de zero notas no banco: validado só por leitura de código, não ao vivo no navegador (ver Acceptance Criteria acima para o motivo exato — bloqueio do sandbox à limpeza do banco local, não uma omissão);
-
-\- a interpretação de "texto incluído na nota" como busca sobre o conteúdo vinculado (não sobre outra coisa) é uma decisão que fiz sozinho diante de uma ambiguidade real no Task Contract — sinalizada explicitamente acima para confirmação, não escondida atrás de "concluído";
-
-\- nenhum push ou PR foi feito para esta quest ainda, aguardando instrução.
-
-
-
-\---
-
-
-
-\# USAGE RULES
-
-
+# USAGE RULES
 
 When a new development quest begins, Atlas should replace the ACTIVE QUEST section with the current Task Contract.
 
-
-
 Claude Code should use this file as the primary product specification for implementation.
-
-
 
 Claude Code must not reinterpret explicit observable requirements without approval.
 
-
-
 If the task is classified as SMALL, Hermes should normally not be involved.
-
-
 
 If Claude Code discovers a real Architecture Gate, the original requirement in this file must remain the common reference for both Claude Code and Hermes.
 
-
-
 When the quest is complete:
 
+1. validate the acceptance criteria;
 
+2. archive the quest if historical retention is useful;
 
-1\. validate the acceptance criteria;
-
-
-
-2\. archive the quest if historical retention is useful;
-
-
-
-3\. reset this file before the next active quest.
-
-
+3. reset this file before the next active quest.
 
 This file should contain only one active quest at a time.

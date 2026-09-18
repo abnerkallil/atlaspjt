@@ -6,9 +6,16 @@ export type NotesPanelNote = {
   body: string;
   updatedAt: string;
   links: NotesPanelLink[];
+  // Optional so existing call sites/tests that don't track folders keep
+  // working unchanged; a missing value means "sem pasta", same as null.
+  folderId?: string | null;
 };
 
 export type NotesPanelSort = 'date-desc' | 'date-asc' | 'title-asc' | 'title-desc';
+
+// Sentinel for the "Sem pasta" filter option — distinct from '' ("Todas as
+// pastas", no filtering) and from any real folder id.
+export const NO_FOLDER_FILTER = '__sem_pasta__';
 
 function normalize(value: string) {
   return value.toLowerCase();
@@ -54,11 +61,26 @@ export function sortNotesPanel<T extends NotesPanelNote>(
 
 export function applyNotesPanelFilters<T extends NotesPanelNote>(
   notes: T[],
-  options: { search?: string; linkedContentId?: string | null; sort?: NotesPanelSort },
+  options: {
+    search?: string;
+    linkedContentId?: string | null;
+    folderId?: string | null;
+    sort?: NotesPanelSort;
+  },
 ): T[] {
-  const { search = '', linkedContentId = null, sort = 'date-desc' } = options;
+  const {
+    search = '',
+    linkedContentId = null,
+    folderId = null,
+    sort = 'date-desc',
+  } = options;
   const filtered = notes.filter((note) => {
     if (linkedContentId && !note.links.some((link) => link.contentId === linkedContentId)) {
+      return false;
+    }
+    if (folderId === NO_FOLDER_FILTER) {
+      if ((note.folderId ?? null) !== null) return false;
+    } else if (folderId && (note.folderId ?? null) !== folderId) {
       return false;
     }
     return matchesNotesPanelSearch(note, search);

@@ -7,6 +7,13 @@ import {
   uniqueIndex,
 } from 'drizzle-orm/sqlite-core';
 
+export const atlasNoteFolders = sqliteTable('atlas_note_folders', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  createdAt: text('created_at').notNull(),
+  updatedAt: text('updated_at').notNull(),
+});
+
 export const atlasNotes = sqliteTable(
   'atlas_notes',
   {
@@ -20,10 +27,18 @@ export const atlasNotes = sqliteTable(
     // Nullable: existing rows predate this column and fall back to
     // updatedAt (see lib/notes-store.ts) rather than being backfilled.
     lastInteractedAt: text('last_interacted_at'),
+    // Nullable: a note with no folder is "sem pasta", not an error state.
+    folderId: text('folder_id').references(() => atlasNoteFolders.id, {
+      onDelete: 'set null',
+    }),
+    isPrivate: integer('is_private', { mode: 'boolean' })
+      .notNull()
+      .default(false),
   },
   (table) => [
     index('idx_atlas_notes_updated_at').on(table.updatedAt),
     index('idx_atlas_notes_last_interacted_at').on(table.lastInteractedAt),
+    index('idx_atlas_notes_folder_id').on(table.folderId),
   ],
 );
 

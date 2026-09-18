@@ -33,6 +33,16 @@ export type AtlasNote = {
   lastInteractedAt: string;
   links: NoteLink[];
   syncStatus: 'queued' | 'processing' | 'failed' | 'synced';
+  // Null means "sem pasta" — not an error state, the default.
+  folderId: string | null;
+  isPrivate: boolean;
+};
+
+export type NoteFolder = {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 type NoteRow = {
@@ -44,6 +54,15 @@ type NoteRow = {
   updated_at: string;
   last_interacted_at: string;
   sync_status: AtlasNote['syncStatus'] | null;
+  folder_id: string | null;
+  is_private: number;
+};
+
+type FolderRow = {
+  id: string;
+  name: string;
+  created_at: string;
+  updated_at: string;
 };
 
 type LinkRow = {
@@ -116,11 +135,14 @@ async function hydrate(rows: NoteRow[]) {
     lastInteractedAt: row.last_interacted_at,
     links: byNote.get(row.id) ?? [],
     syncStatus: row.sync_status ?? 'synced',
+    folderId: row.folder_id,
+    isPrivate: Boolean(row.is_private),
   }));
 }
 
 const NOTE_COLUMNS = `n.id, n.title, n.body, n.content_json, n.created_at, n.updated_at,
         COALESCE(n.last_interacted_at, n.updated_at) AS last_interacted_at,
+        n.folder_id, n.is_private,
         (SELECT s.status FROM atlas_sync_operations s
          WHERE s.note_id = n.id ORDER BY s.created_at DESC LIMIT 1) AS sync_status`;
 
@@ -200,14 +222,23 @@ export async function saveNote(input: AtlasNotesSaveInput) {
       'Um dos conteúdos selecionados não pertence ao catálogo oficial.',
     );
 
+  if (input.folderId !== null) {
+    const folder = await db
+      .prepare('SELECT id FROM atlas_note_folders WHERE id = ?1')
+      .bind(input.folderId)
+      .first<{ id: string }>();
+    if (!folder) throw new Error('Pasta não encontrada.');
+  }
+
   const statements = [
     db
       .prepare(
-        `INSERT INTO atlas_notes (id, title, body, content_json, created_at, updated_at, last_interacted_at)
-       VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)
+        `INSERT INTO atlas_notes (id, title, body, content_json, created_at, updated_at, last_interacted_at, folder_id, is_private)
+       VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)
        ON CONFLICT(id) DO UPDATE SET title = excluded.title, body = excluded.body,
          content_json = excluded.content_json, updated_at = excluded.updated_at,
-         last_interacted_at = excluded.last_interacted_at`,
+         last_interacted_at = excluded.last_interacted_at, folder_id = excluded.folder_id,
+         is_private = excluded.is_private`,
       )
       .bind(
         input.id,
@@ -217,6 +248,8 @@ export async function saveNote(input: AtlasNotesSaveInput) {
         createdAt,
         now,
         now,
+        input.folderId,
+        input.isPrivate ? 1 : 0,
       ),
     db
       .prepare('DELETE FROM atlas_note_links WHERE note_id = ?1')
@@ -264,4 +297,59 @@ export async function saveNote(input: AtlasNotesSaveInput) {
 
   await db.batch(statements);
   return { note: await getNote(input.id), deduplicated: false };
+}
+
+function mapFolder(row: FolderRow): NoteFolder {
+  return {
+    id: row.id,
+    name: row.name,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+export async function listFolders(): Promise<NoteFolder[]> {
+  const result = await database()
+    .prepare(
+      'SELECT id, name, created_at, updated_at FROM atlas_note_folders ORDER BY name COLLATE NOCASE',
+    )
+    .all<FolderRow>();
+  return result.results.map(mapFolder);
+}
+
+export async function createFolder(name: string): Promise<NoteFolder> {
+  const db = database();
+  const now = new Date().toISOString();
+  const id = crypto.randomUUID();
+  await db
+    .prepare(
+      'INSERT INTO atlas_note_folders (id, name, created_at, updated_at) VALUES (?1, ?2, ?3, ?3)',
+    )
+    .bind(id, name, now)
+    .run();
+  return { id, name, createdAt: now, updatedAt: now };
+}
+
+export async function renameFolder(
+  id: string,
+  name: string,
+): Promise<NoteFolder> {
+  const db = database();
+  const now = new Date().toISOString();
+  const existing = await db
+    .prepare('SELECT id FROM atlas_note_folders WHERE id = ?1')
+    .bind(id)
+    .first<{ id: string }>();
+  if (!existing) throw new Error('Pasta não encontrada.');
+  await db
+    .prepare(
+      'UPDATE atlas_note_folders SET name = ?1, updated_at = ?2 WHERE id = ?3',
+    )
+    .bind(name, now, id)
+    .run();
+  const folder = await db
+    .prepare('SELECT id, name, created_at, updated_at FROM atlas_note_folders WHERE id = ?1')
+    .bind(id)
+    .first<FolderRow>();
+  return mapFolder(folder!);
 }

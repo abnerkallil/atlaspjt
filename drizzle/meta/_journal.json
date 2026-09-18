@@ -22,6 +22,13 @@
       "when": 1789354456775,
       "tag": "0002_freezing_marrow",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1789762148533,
+      "tag": "0003_little_amazoness",
+      "breakpoints": true
     }
   ]
 }

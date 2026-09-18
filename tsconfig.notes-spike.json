@@ -20,7 +20,9 @@
     "tests/notes-recent-list.test.ts",
     "components/notes-panel-filters.ts",
     "tests/notes-panel-filters.test.ts",
-    "tests/notes-workspace-structure.test.ts"
+    "tests/notes-workspace-structure.test.ts",
+    "components/notes-coverage.ts",
+    "tests/notes-coverage.test.ts"
   ],
   "exclude": ["node_modules"]
 }
