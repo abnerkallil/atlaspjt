@@ -3,6 +3,7 @@ import test from 'node:test';
 import {
   applyNotesPanelFilters,
   matchesNotesPanelSearch,
+  NO_FOLDER_FILTER,
   sortNotesPanel,
   type NotesPanelNote,
 } from '../components/notes-panel-filters.js';
@@ -13,6 +14,7 @@ function note(overrides: Partial<NotesPanelNote> & { id: string }): NotesPanelNo
     body: 'Corpo padrão',
     updatedAt: '2026-01-01T00:00:00.000Z',
     links: [],
+    folderId: null,
     ...overrides,
   };
 }
@@ -298,4 +300,91 @@ void test('applyNotesPanelFilters never mutates the input array (filter + sort c
   const originalOrder = notes.map((n) => n.id);
   applyNotesPanelFilters(notes, { linkedContentId: 'DC-102', sort: 'title-asc' });
   assert.deepEqual(notes.map((n) => n.id), originalOrder);
+});
+
+// --- QUEST-007: folder filtering (pastas) ---------------------------------
+
+void test('folderId filter: an empty/omitted value behaves like "no filter" (the panel\'s "Todas as pastas" option)', () => {
+  const notes = [
+    note({ id: 'a', folderId: 'folder-1' }),
+    note({ id: 'b', folderId: null }),
+  ];
+  assert.deepEqual(
+    applyNotesPanelFilters(notes, {}).map((n) => n.id).sort(),
+    ['a', 'b'],
+  );
+  assert.deepEqual(
+    applyNotesPanelFilters(notes, { folderId: '' }).map((n) => n.id).sort(),
+    ['a', 'b'],
+  );
+});
+
+void test('folderId filter: a real folder id keeps only notes inside that folder', () => {
+  const notes = [
+    note({ id: 'in-folder', folderId: 'folder-1' }),
+    note({ id: 'other-folder', folderId: 'folder-2' }),
+    note({ id: 'no-folder', folderId: null }),
+  ];
+  assert.deepEqual(
+    applyNotesPanelFilters(notes, { folderId: 'folder-1' }).map((n) => n.id),
+    ['in-folder'],
+  );
+});
+
+void test('folderId filter: NO_FOLDER_FILTER sentinel keeps only notes with no folder ("sem pasta")', () => {
+  const notes = [
+    note({ id: 'in-folder', folderId: 'folder-1' }),
+    note({ id: 'no-folder-a', folderId: null }),
+    note({ id: 'no-folder-b' }),
+  ];
+  const result = applyNotesPanelFilters(notes, { folderId: NO_FOLDER_FILTER });
+  assert.deepEqual(result.map((n) => n.id).sort(), ['no-folder-a', 'no-folder-b']);
+});
+
+void test('folderId filter: a note missing the folderId field entirely is treated as "sem pasta"', () => {
+  const legacyNote: NotesPanelNote = {
+    id: 'legacy',
+    title: 'Nota antiga',
+    body: 'Sem campo folderId',
+    updatedAt: '2026-01-01T00:00:00.000Z',
+    links: [],
+  };
+  assert.deepEqual(
+    applyNotesPanelFilters([legacyNote], { folderId: NO_FOLDER_FILTER }).map((n) => n.id),
+    ['legacy'],
+  );
+  assert.deepEqual(
+    applyNotesPanelFilters([legacyNote], { folderId: 'folder-1' }),
+    [],
+  );
+});
+
+void test('folderId and linkedContentId filters combine (AND, not OR)', () => {
+  const notes = [
+    note({
+      id: 'match-both',
+      folderId: 'folder-1',
+      links: [{ contentId: 'DC-102', contentTitle: 'Constitucional' }],
+    }),
+    note({
+      id: 'wrong-folder',
+      folderId: 'folder-2',
+      links: [{ contentId: 'DC-102', contentTitle: 'Constitucional' }],
+    }),
+    note({
+      id: 'wrong-link',
+      folderId: 'folder-1',
+      links: [{ contentId: 'DP-01', contentTitle: 'Penal' }],
+    }),
+  ];
+  const result = applyNotesPanelFilters(notes, {
+    folderId: 'folder-1',
+    linkedContentId: 'DC-102',
+  });
+  assert.deepEqual(result.map((n) => n.id), ['match-both']);
+});
+
+void test('folderId filter: a folder id no note belongs to produces an empty result', () => {
+  const notes = [note({ id: 'a', folderId: 'folder-1' })];
+  assert.deepEqual(applyNotesPanelFilters(notes, { folderId: 'nao-existe' }), []);
 });

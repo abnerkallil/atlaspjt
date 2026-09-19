@@ -324,6 +324,51 @@ button { color: inherit; }
 .spin { animation: atlas-spin .8s linear infinite; }
 @keyframes atlas-spin { to { transform: rotate(360deg); } }
 
+/* Atlas Notes — QUEST-007: pastas, mapa de cobertura, anexos demonstrativos, indicação de privacidade. */
+.notes-index-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 16px 0; }
+.notes-index-actions .favorites-entry { flex: 1 1 auto; min-width: 92px; width: auto; margin: 0; justify-content: center; }
+.folder-create { display: flex; gap: 8px; margin: 14px 16px 0; }
+.folder-create input { flex: 1; min-width: 0; height: 38px; padding: 0 10px; border: 1px solid #d9e2f2; border-radius: 9px; color: var(--ink); background: #f7faff; font-size: 13px; }
+.folder-create input:focus-visible { border-color: #8db1f5; outline: 0; box-shadow: 0 0 0 3px #e9f1ff; }
+.folder-create button { flex: none; width: 38px; height: 38px; display: grid; place-items: center; border: 0; border-radius: 9px; color: #fff; background: var(--blue); cursor: pointer; }
+.folder-action-error { margin: 8px 16px 0; color: #a14d27; font-size: 12px; }
+.folder-list { flex: 1; min-height: 0; overflow-y: auto; border-top: 1px solid #eeecf2; }
+.folder-item { display: flex; align-items: center; gap: 4px; padding: 0; }
+.folder-open { flex: 1; min-width: 0; display: grid; grid-template-columns: 34px minmax(0,1fr); align-items: center; gap: 9px; padding: 15px 13px; border: 0; background: transparent; cursor: pointer; text-align: left; }
+.folder-open:hover { background: #f8faff; }
+.folder-rename-trigger { flex: none; width: 30px; height: 30px; margin-right: 10px; display: grid; place-items: center; border: 0; border-radius: 8px; color: #7b8ca6; background: transparent; cursor: pointer; }
+.folder-rename-trigger:hover { color: #315da8; background: #eaf2ff; }
+.folder-rename { flex: 1; display: flex; align-items: center; gap: 6px; padding: 10px 13px; }
+.folder-rename input { flex: 1; min-width: 0; height: 34px; padding: 0 9px; border: 1px solid #d9e2f2; border-radius: 8px; color: var(--ink); background: #fff; font-size: 13px; }
+.folder-rename button { flex: none; width: 30px; height: 30px; display: grid; place-items: center; border: 0; border-radius: 8px; color: #3f587c; background: #eaf2ff; cursor: pointer; }
+
+.coverage-panel { flex: 1; min-height: 0; overflow-y: auto; padding: 14px 16px 18px; }
+.coverage-disclaimer { margin: 0 0 14px; color: var(--muted); font-size: 11px; line-height: 1.5; }
+.coverage-overall { display: flex; align-items: baseline; gap: 8px; margin-bottom: 16px; padding: 12px 13px; border: 1px solid #d9e2f2; border-radius: 11px; background: #f7faff; }
+.coverage-overall strong { color: #1d4ed8; font-size: 20px; }
+.coverage-overall span { color: #3f587c; font-size: 12px; }
+.coverage-list { display: grid; gap: 12px; }
+.coverage-item-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 6px; font-size: 12px; }
+.coverage-item-heading span { color: var(--ink); font-weight: 700; }
+.coverage-item-heading em { color: #7b8ca6; font-style: normal; }
+.coverage-bar { height: 8px; border-radius: 999px; background: #eaecf3; overflow: hidden; }
+.coverage-bar-fill { height: 100%; border-radius: 999px; background: var(--green); }
+
+.note-editor-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.note-folder-select { display: inline-flex; align-items: center; gap: 6px; max-width: 160px; padding: 6px 9px; border-radius: 999px; color: #365b91; background: #edf4ff; font-size: 11px; font-weight: 700; }
+.note-folder-select select { min-width: 0; border: 0; outline: 0; color: inherit; background: transparent; font-size: 11px; font-weight: 700; }
+.privacy-toggle { border: 0; cursor: pointer; }
+.privacy-toggle.active { color: #8d6718; background: #fff9e8; }
+.private-note-icon { margin-right: 5px; vertical-align: -1px; color: #8d6718; }
+
+.note-attachments { margin-top: 18px; padding-top: 16px; border-top: 1px solid #e9e6ed; }
+.note-attachments-heading { display: flex; align-items: center; gap: 7px; margin-bottom: 10px; color: #4f5663; font-size: 12px; font-weight: 700; }
+.attachments-demo-badge { margin-left: auto; padding: 3px 8px; border-radius: 999px; color: #8d6718; background: #fff9e8; font-size: 10px; font-weight: 700; }
+.attachment-add { display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 12px; border: 1px dashed #c8d3e6; border-radius: 10px; color: #3f587c; background: #f7faff; cursor: pointer; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.attachment-add:hover { border-color: #8db1f5; }
+.attachment-input { display: none; }
+.attachments-disclaimer { margin: 10px 0 0; color: #8390a2; font-size: 11px; line-height: 1.5; }
+
 .ask-atlas { position: fixed; z-index: 15; right: 25px; bottom: 23px; border: 1px solid #2463eb; border-radius: 999px; padding: 7px 16px 7px 7px; display: flex; align-items: center; gap: 9px; color: #fff; background: #2463eb; box-shadow: 0 18px 55px rgba(25,75,171,.25); cursor: pointer; font-size: 12px; font-weight: 700; }
 .ask-atlas > span { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; color: #2463eb; background: #fff; }
 
@@ -415,4 +460,8 @@ button { color: inherit; }
   .note-editor-footer { align-items: stretch; flex-direction: column; }
   .note-editor-footer > button { width: 100%; }
   .note-links-card { grid-column: 1; }
+  .note-editor-tools { width: 100%; }
+  .note-folder-select { max-width: none; }
+  .note-attachments-heading { flex-wrap: wrap; }
+  .attachments-demo-badge { margin-left: 0; }
 }

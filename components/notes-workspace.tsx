@@ -10,15 +10,32 @@ import {
   Clock3,
   Cloud,
   FilePenLine,
+  FolderTree,
   Link2,
   LoaderCircle,
+  Lock,
+  LockOpen,
+  Paperclip,
+  Pencil,
+  PieChart,
   Plus,
   Search,
   Sparkles,
   Star,
   Unlink,
+  X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  Attachment,
+  AttachmentActions,
+  AttachmentAction,
+  AttachmentContent,
+  AttachmentDescription,
+  AttachmentGroup,
+  AttachmentMedia,
+  AttachmentTitle,
+} from '@/components/ui/attachment';
 import {
   MARK_COLOR_META,
   NotesEditor,
@@ -33,6 +50,7 @@ import {
 } from '@/lib/atlas-notes-document';
 import {
   CONTENT_CATALOG_SNAPSHOT_DATE,
+  contentCatalog,
   ContentReference,
   OFFICIAL_SPREADSHEET_URL,
   searchContentCatalog,
@@ -41,8 +59,10 @@ import {
 import { mergeRecentInteraction } from './notes-recent-list';
 import {
   applyNotesPanelFilters,
+  NO_FOLDER_FILTER,
   type NotesPanelSort,
 } from './notes-panel-filters';
+import { computeContentCoverage, computeOverallCoverage } from './notes-coverage';
 
 const LINK_STATUS = 'Anotado — ainda não trabalhado' as const;
 
@@ -61,7 +81,24 @@ type AtlasNote = {
     status: typeof LINK_STATUS;
   }>;
   syncStatus: 'queued' | 'processing' | 'failed' | 'synced';
+  folderId: string | null;
+  isPrivate: boolean;
 };
+
+type NoteFolder = {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+// Demonstrative only — see the "Anexos" block below. No file bytes are ever
+// read, uploaded or persisted; only the picked file's name/size are kept in
+// memory for the note currently open in the editor (TEC-05, real storage,
+// is out of scope for this quest).
+type DemoAttachment = { id: string; name: string; size: number };
+
+type SidePanel = 'none' | 'favorites' | 'folders' | 'coverage';
 
 function newId() {
   if (typeof crypto.randomUUID === 'function') return crypto.randomUUID();
@@ -79,6 +116,18 @@ function formatDate(value: string) {
     hour: '2-digit',
     minute: '2-digit',
   }).format(new Date(value));
+}
+
+function formatFileSize(bytes: number) {
+  if (bytes < 1024) return `${bytes} B`;
+  const units = ['KB', 'MB', 'GB'];
+  let value = bytes / 1024;
+  let unitIndex = 0;
+  while (value >= 1024 && unitIndex < units.length - 1) {
+    value /= 1024;
+    unitIndex += 1;
+  }
+  return `${value.toFixed(value < 10 ? 1 : 0)} ${units[unitIndex]}`;
 }
 
 type FavoriteEntry = {
@@ -108,17 +157,29 @@ export function NotesWorkspace() {
   const [catalogSearch, setCatalogSearch] = useState('');
   const [allNotesQuery, setAllNotesQuery] = useState('');
   const [linkedContentFilter, setLinkedContentFilter] = useState('');
+  const [folderFilter, setFolderFilter] = useState('');
   const [sortOption, setSortOption] = useState<NotesPanelSort>('date-desc');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [savedMessage, setSavedMessage] = useState('');
   const operationId = useRef(newId());
-  const [showFavorites, setShowFavorites] = useState(false);
+  const [activePanel, setActivePanel] = useState<SidePanel>('none');
   const [focusRequest, setFocusRequest] = useState<FavoriteFocusRequest | null>(
     null,
   );
   const [recentNotes, setRecentNotes] = useState<AtlasNote[]>([]);
+  const [folders, setFolders] = useState<NoteFolder[]>([]);
+  const [newFolderName, setNewFolderName] = useState('');
+  const [folderActionError, setFolderActionError] = useState('');
+  const [renamingFolderId, setRenamingFolderId] = useState<string | null>(
+    null,
+  );
+  const [renameDraft, setRenameDraft] = useState('');
+  const [folderId, setFolderId] = useState<string | null>(null);
+  const [isPrivate, setIsPrivate] = useState(false);
+  const [attachments, setAttachments] = useState<DemoAttachment[]>([]);
+  const attachmentInputRef = useRef<HTMLInputElement>(null);
 
   const favorites = useMemo<FavoriteEntry[]>(() => {
     const result: FavoriteEntry[] = [];
@@ -206,10 +267,107 @@ export function NotesWorkspace() {
       applyNotesPanelFilters(notes, {
         search: allNotesQuery,
         linkedContentId: linkedContentFilter || null,
+        folderId: folderFilter || null,
         sort: sortOption,
       }),
-    [notes, allNotesQuery, linkedContentFilter, sortOption],
+    [notes, allNotesQuery, linkedContentFilter, folderFilter, sortOption],
   );
+
+  const coverageBySubject = useMemo(
+    () => computeContentCoverage(notes, contentCatalog),
+    [notes],
+  );
+  const overallCoverage = useMemo(
+    () => computeOverallCoverage(coverageBySubject),
+    [coverageBySubject],
+  );
+
+  const loadFolders = useCallback(async () => {
+    try {
+      const response = await fetch('/api/notes/folders');
+      const data = (await response.json()) as { folders?: NoteFolder[] };
+      if (response.ok) setFolders(data.folders ?? []);
+    } catch {
+      // Non-critical, best-effort block: leave the previous state as-is.
+    }
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => void loadFolders(), 0);
+    return () => window.clearTimeout(timer);
+  }, [loadFolders]);
+
+  async function createFolder() {
+    const name = newFolderName.trim();
+    if (!name) return;
+    setFolderActionError('');
+    try {
+      const response = await fetch('/api/notes/folders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name }),
+      });
+      const data = (await response.json()) as {
+        folder?: NoteFolder;
+        error?: string;
+      };
+      if (!response.ok || !data.folder)
+        throw new Error(data.error ?? 'Não foi possível criar a pasta.');
+      setFolders((current) =>
+        [...current, data.folder!].sort((a, b) =>
+          a.name.localeCompare(b.name, 'pt-BR'),
+        ),
+      );
+      setNewFolderName('');
+    } catch (cause) {
+      setFolderActionError(
+        cause instanceof Error
+          ? cause.message
+          : 'Não foi possível criar a pasta.',
+      );
+    }
+  }
+
+  function startRenameFolder(folder: NoteFolder) {
+    setRenamingFolderId(folder.id);
+    setRenameDraft(folder.name);
+    setFolderActionError('');
+  }
+
+  async function submitRenameFolder(id: string) {
+    const name = renameDraft.trim();
+    if (!name) return;
+    try {
+      const response = await fetch('/api/notes/folders', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, name }),
+      });
+      const data = (await response.json()) as {
+        folder?: NoteFolder;
+        error?: string;
+      };
+      if (!response.ok || !data.folder)
+        throw new Error(data.error ?? 'Não foi possível renomear a pasta.');
+      setFolders((current) =>
+        current
+          .map((folder) => (folder.id === id ? data.folder! : folder))
+          .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR')),
+      );
+      setRenamingFolderId(null);
+    } catch (cause) {
+      setFolderActionError(
+        cause instanceof Error
+          ? cause.message
+          : 'Não foi possível renomear a pasta.',
+      );
+    }
+  }
+
+  function browseFolder(value: string) {
+    setFolderFilter(value);
+    setActivePanel('none');
+  }
 
   const loadRecentNotes = useCallback(async () => {
     try {
@@ -246,6 +404,9 @@ export function NotesWorkspace() {
     setCatalogSearch('');
     setError('');
     setSavedMessage('');
+    setFolderId(note.folderId);
+    setIsPrivate(note.isPrivate);
+    setAttachments([]);
     operationId.current = newId();
     bumpRecentNote(note, new Date().toISOString());
     void fetch('/api/notes', {
@@ -266,7 +427,21 @@ export function NotesWorkspace() {
     setCatalogSearch('');
     setError('');
     setSavedMessage('');
+    setFolderId(null);
+    setIsPrivate(false);
+    setAttachments([]);
     operationId.current = newId();
+  }
+
+  function addAttachment(file: File) {
+    setAttachments((current) => [
+      ...current,
+      { id: newId(), name: file.name, size: file.size },
+    ]);
+  }
+
+  function removeAttachment(id: string) {
+    setAttachments((current) => current.filter((item) => item.id !== id));
   }
 
   function confirmLink(reference: ContentReference) {
@@ -301,6 +476,8 @@ export function NotesWorkspace() {
           body,
           content,
           contentIds: confirmedIds,
+          folderId,
+          isPrivate,
         }),
       });
       const data = (await response.json()) as {
@@ -315,6 +492,8 @@ export function NotesWorkspace() {
         data.note.content ?? legacyTextToAtlasNotesContent(data.note.body),
       );
       setEditorError('');
+      setFolderId(data.note.folderId);
+      setIsPrivate(data.note.isPrivate);
       setNotes((current) => [
         data.note!,
         ...current.filter((note) => note.id !== data.note!.id),
@@ -359,12 +538,12 @@ export function NotesWorkspace() {
 
       <div className="notes-workspace">
         <aside className="notes-index" aria-label="Lista de notas">
-          {showFavorites ? (
+          {activePanel === 'favorites' ? (
             <div className="favorites-panel">
               <button
                 type="button"
                 className="favorites-back"
-                onClick={() => setShowFavorites(false)}
+                onClick={() => setActivePanel('none')}
               >
                 <ArrowLeft size={15} /> Voltar às notas
               </button>
@@ -406,19 +585,226 @@ export function NotesWorkspace() {
                 )}
               </div>
             </div>
-          ) : (
-            <>
+          ) : activePanel === 'folders' ? (
+            <div className="favorites-panel">
               <button
                 type="button"
-                className="sync-pill favorites-entry"
-                onClick={() => setShowFavorites(true)}
+                className="favorites-back"
+                onClick={() => setActivePanel('none')}
               >
-                <Star size={13} />
-                Favoritos
-                {favorites.length > 0 && (
-                  <span className="favorites-count">{favorites.length}</span>
-                )}
+                <ArrowLeft size={15} /> Voltar às notas
               </button>
+              <div className="favorites-heading">
+                <FolderTree size={15} />
+                <strong>Pastas</strong>
+              </div>
+              <form
+                className="folder-create"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  void createFolder();
+                }}
+              >
+                <input
+                  aria-label="Nome da nova pasta"
+                  placeholder="Nova pasta"
+                  maxLength={80}
+                  value={newFolderName}
+                  onChange={(event) => setNewFolderName(event.target.value)}
+                />
+                <button type="submit" aria-label="Criar pasta">
+                  <Plus size={15} />
+                </button>
+              </form>
+              {folderActionError && (
+                <p className="folder-action-error">{folderActionError}</p>
+              )}
+              <div className="notes-list folder-list">
+                <button
+                  type="button"
+                  className="note-list-item"
+                  onClick={() => browseFolder('')}
+                >
+                  <span className="note-list-icon">
+                    <FolderTree size={16} />
+                  </span>
+                  <span>
+                    <strong>Todas as pastas</strong>
+                    <small>{notes.length} nota{notes.length === 1 ? '' : 's'}</small>
+                  </span>
+                  <ChevronRight size={15} />
+                </button>
+                <button
+                  type="button"
+                  className="note-list-item"
+                  onClick={() => browseFolder(NO_FOLDER_FILTER)}
+                >
+                  <span className="note-list-icon">
+                    <FolderTree size={16} />
+                  </span>
+                  <span>
+                    <strong>Sem pasta</strong>
+                    <small>
+                      {notes.filter((note) => !note.folderId).length} nota
+                      {notes.filter((note) => !note.folderId).length === 1
+                        ? ''
+                        : 's'}
+                    </small>
+                  </span>
+                  <ChevronRight size={15} />
+                </button>
+                {folders.map((folder) => (
+                  <div key={folder.id} className="note-list-item folder-item">
+                    {renamingFolderId === folder.id ? (
+                      <form
+                        className="folder-rename"
+                        onSubmit={(event) => {
+                          event.preventDefault();
+                          void submitRenameFolder(folder.id);
+                        }}
+                      >
+                        <input
+                          aria-label={`Renomear pasta ${folder.name}`}
+                          maxLength={80}
+                          value={renameDraft}
+                          onChange={(event) => setRenameDraft(event.target.value)}
+                        />
+                        <button type="submit" aria-label="Salvar novo nome">
+                          <Check size={14} />
+                        </button>
+                        <button
+                          type="button"
+                          aria-label="Cancelar renomeação"
+                          onClick={() => setRenamingFolderId(null)}
+                        >
+                          <X size={14} />
+                        </button>
+                      </form>
+                    ) : (
+                      <>
+                        <button
+                          type="button"
+                          className="folder-open"
+                          onClick={() => browseFolder(folder.id)}
+                        >
+                          <span className="note-list-icon">
+                            <FolderTree size={16} />
+                          </span>
+                          <span>
+                            <strong>{folder.name}</strong>
+                            <small>
+                              {
+                                notes.filter((note) => note.folderId === folder.id)
+                                  .length
+                              }{' '}
+                              nota
+                              {notes.filter((note) => note.folderId === folder.id)
+                                .length === 1
+                                ? ''
+                                : 's'}
+                            </small>
+                          </span>
+                        </button>
+                        <button
+                          type="button"
+                          className="folder-rename-trigger"
+                          aria-label={`Renomear pasta ${folder.name}`}
+                          onClick={() => startRenameFolder(folder)}
+                        >
+                          <Pencil size={14} />
+                        </button>
+                      </>
+                    )}
+                  </div>
+                ))}
+                {folders.length === 0 && (
+                  <div className="notes-empty">
+                    <FolderTree size={22} />
+                    <strong>Nenhuma pasta ainda</strong>
+                    <p>Crie uma pasta acima para organizar suas notas.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : activePanel === 'coverage' ? (
+            <div className="favorites-panel">
+              <button
+                type="button"
+                className="favorites-back"
+                onClick={() => setActivePanel('none')}
+              >
+                <ArrowLeft size={15} /> Voltar às notas
+              </button>
+              <div className="favorites-heading">
+                <PieChart size={15} />
+                <strong>Mapa de cobertura</strong>
+              </div>
+              <div className="coverage-panel">
+                <p className="coverage-disclaimer">
+                  Proporção simples de conteúdos do catálogo com ao menos uma
+                  nota vinculada — não é o cálculo pedagógico real (fora do
+                  escopo desta tela).
+                </p>
+                <div className="coverage-overall">
+                  <strong>
+                    {overallCoverage.covered}/{overallCoverage.total}
+                  </strong>
+                  <span>
+                    conteúdos com nota (
+                    {Math.round(overallCoverage.ratio * 100)}%)
+                  </span>
+                </div>
+                <div className="coverage-list">
+                  {coverageBySubject.map((entry) => (
+                    <div className="coverage-item" key={entry.subject}>
+                      <div className="coverage-item-heading">
+                        <span>{entry.subject}</span>
+                        <em>
+                          {entry.covered}/{entry.total}
+                        </em>
+                      </div>
+                      <div className="coverage-bar">
+                        <div
+                          className="coverage-bar-fill"
+                          style={{ width: `${Math.round(entry.ratio * 100)}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="notes-index-actions">
+                <button
+                  type="button"
+                  className="sync-pill favorites-entry"
+                  onClick={() => setActivePanel('favorites')}
+                >
+                  <Star size={13} />
+                  Favoritos
+                  {favorites.length > 0 && (
+                    <span className="favorites-count">{favorites.length}</span>
+                  )}
+                </button>
+                <button
+                  type="button"
+                  className="sync-pill favorites-entry"
+                  onClick={() => setActivePanel('folders')}
+                >
+                  <FolderTree size={13} />
+                  Pastas
+                </button>
+                <button
+                  type="button"
+                  className="sync-pill favorites-entry"
+                  onClick={() => setActivePanel('coverage')}
+                >
+                  <PieChart size={13} />
+                  Cobertura
+                </button>
+              </div>
               {recentNotes.length > 0 && (
                 <div className="notes-recent">
                   <div className="notes-recent-heading">
@@ -440,7 +826,16 @@ export function NotesWorkspace() {
                           <FilePenLine size={16} />
                         </span>
                         <span>
-                          <strong>{note.title}</strong>
+                          <strong>
+                            {note.isPrivate && (
+                              <Lock
+                                size={11}
+                                className="private-note-icon"
+                                aria-label="Nota privada"
+                              />
+                            )}
+                            {note.title}
+                          </strong>
                           <small>{note.body.replace(/\s+/g, ' ').slice(0, 86)}</small>
                           <em>{formatDate(note.lastInteractedAt)}</em>
                         </span>
@@ -472,18 +867,50 @@ export function NotesWorkspace() {
         <article className="note-editor-card">
           <div className="note-editor-topline">
             <span>{selectedId ? 'EDITANDO NOTA' : 'NOVA NOTA'}</span>
-            {selectedNote && (
-              <span className={`sync-pill ${selectedNote.syncStatus}`}>
-                <Cloud size={13} />
-                {selectedNote.syncStatus === 'failed'
-                  ? 'Sincronização pendente'
-                  : selectedNote.syncStatus === 'queued'
-                    ? 'Na fila de sincronização'
-                    : selectedNote.syncStatus === 'processing'
-                      ? 'Sincronizando metadados'
-                      : 'Metadados sincronizados'}
-              </span>
-            )}
+            <div className="note-editor-tools">
+              <label className="note-folder-select">
+                <FolderTree size={13} />
+                <select
+                  aria-label="Pasta da nota"
+                  value={folderId ?? ''}
+                  onChange={(event) => {
+                    setFolderId(event.target.value || null);
+                    setSavedMessage('');
+                  }}
+                >
+                  <option value="">Sem pasta</option>
+                  {folders.map((folder) => (
+                    <option key={folder.id} value={folder.id}>
+                      {folder.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <button
+                type="button"
+                className={isPrivate ? 'sync-pill privacy-toggle active' : 'sync-pill privacy-toggle'}
+                aria-pressed={isPrivate}
+                onClick={() => {
+                  setIsPrivate((current) => !current);
+                  setSavedMessage('');
+                }}
+              >
+                {isPrivate ? <Lock size={13} /> : <LockOpen size={13} />}
+                {isPrivate ? 'Nota privada' : 'Marcar como privada'}
+              </button>
+              {selectedNote && (
+                <span className={`sync-pill ${selectedNote.syncStatus}`}>
+                  <Cloud size={13} />
+                  {selectedNote.syncStatus === 'failed'
+                    ? 'Sincronização pendente'
+                    : selectedNote.syncStatus === 'queued'
+                      ? 'Na fila de sincronização'
+                      : selectedNote.syncStatus === 'processing'
+                        ? 'Sincronizando metadados'
+                        : 'Metadados sincronizados'}
+                </span>
+              )}
+            </div>
           </div>
           <input
             className="note-title-input"
@@ -505,6 +932,60 @@ export function NotesWorkspace() {
             focusRequest={editorFocusRequest}
             onFocusRequestHandled={() => setFocusRequest(null)}
           />
+          <div className="note-attachments">
+            <div className="note-attachments-heading">
+              <Paperclip size={14} />
+              <strong>Anexos</strong>
+              <span className="attachments-demo-badge">
+                Demonstrativo — sem upload real
+              </span>
+            </div>
+            <AttachmentGroup>
+              {attachments.map((item) => (
+                <Attachment key={item.id} size="sm">
+                  <AttachmentMedia>
+                    <Paperclip size={14} />
+                  </AttachmentMedia>
+                  <AttachmentContent>
+                    <AttachmentTitle>{item.name}</AttachmentTitle>
+                    <AttachmentDescription>
+                      {formatFileSize(item.size)}
+                    </AttachmentDescription>
+                  </AttachmentContent>
+                  <AttachmentActions>
+                    <AttachmentAction
+                      aria-label={`Remover anexo ${item.name}`}
+                      onClick={() => removeAttachment(item.id)}
+                    >
+                      <X size={13} />
+                    </AttachmentAction>
+                  </AttachmentActions>
+                </Attachment>
+              ))}
+              <button
+                type="button"
+                className="attachment-add"
+                onClick={() => attachmentInputRef.current?.click()}
+              >
+                <Plus size={14} /> Anexar referência
+              </button>
+            </AttachmentGroup>
+            <input
+              ref={attachmentInputRef}
+              type="file"
+              className="attachment-input"
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                if (file) addAttachment(file);
+                event.target.value = '';
+              }}
+            />
+            <p className="attachments-disclaimer">
+              O arquivo não é enviado nem salvo — apenas o nome e o tamanho
+              ficam visíveis enquanto você edita esta nota nesta sessão
+              (armazenamento real de anexos: TEC-05, ainda fora do escopo).
+            </p>
+          </div>
           <div className="note-editor-footer">
             <div>
               <span>{body.length.toLocaleString('pt-BR')} caracteres</span>
@@ -679,6 +1160,22 @@ export function NotesWorkspace() {
             </select>
           </label>
           <label className="notes-all-filter">
+            <span>Pasta</span>
+            <select
+              aria-label="Filtrar por pasta"
+              value={folderFilter}
+              onChange={(event) => setFolderFilter(event.target.value)}
+            >
+              <option value="">Todas as pastas</option>
+              <option value={NO_FOLDER_FILTER}>Sem pasta</option>
+              {folders.map((folder) => (
+                <option key={folder.id} value={folder.id}>
+                  {folder.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="notes-all-filter">
             <span>Ordenar por</span>
             <select
               aria-label="Ordenar notas"
@@ -715,7 +1212,16 @@ export function NotesWorkspace() {
                   <FilePenLine size={16} />
                 </span>
                 <span>
-                  <strong>{note.title}</strong>
+                  <strong>
+                    {note.isPrivate && (
+                      <Lock
+                        size={11}
+                        className="private-note-icon"
+                        aria-label="Nota privada"
+                      />
+                    )}
+                    {note.title}
+                  </strong>
                   <small>{note.body.replace(/\s+/g, ' ').slice(0, 86)}</small>
                   <em>
                     {formatDate(note.updatedAt)} · {note.links.length} vínculo
@@ -729,12 +1235,12 @@ export function NotesWorkspace() {
             <div className="notes-empty">
               <BookMarked size={22} />
               <strong>
-                {allNotesQuery || linkedContentFilter
+                {allNotesQuery || linkedContentFilter || folderFilter
                   ? 'Nenhuma nota encontrada'
                   : 'Seu caderno começa aqui'}
               </strong>
               <p>
-                {allNotesQuery || linkedContentFilter
+                {allNotesQuery || linkedContentFilter || folderFilter
                   ? 'Tente outra palavra ou ajuste os filtros.'
                   : 'Crie uma nota sem alterar seu progresso de estudo.'}
               </p>
