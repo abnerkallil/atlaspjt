@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { NotesWorkspace } from '@/components/notes-workspace';
+import { RoadmapPage } from '@/components/pages/roadmap-page';
 
 const navItems = ['Hoje', 'Estudar', 'Roadmap', 'Notas', 'Quizzes', 'Progresso'];
 
@@ -235,7 +236,7 @@ export default function Home() {
             <div><span>Progresso da fase</span><strong>68%</strong></div>
             <div className="progress-track"><span style={{ width: '68%' }} /></div>
           </div>
-          <button>Ver roadmap completo <ChevronRight size={17} /></button>
+          <button onClick={() => setActive('Roadmap')}>Ver roadmap completo <ChevronRight size={17} /></button>
         </section>
         </>}
 
@@ -327,7 +328,9 @@ export default function Home() {
 
         {active === 'Notas' && <NotesWorkspace />}
 
-        {active !== 'Hoje' && active !== 'Estudar' && active !== 'Notas' && (
+        {active === 'Roadmap' && <RoadmapPage />}
+
+        {active !== 'Hoje' && active !== 'Estudar' && active !== 'Notas' && active !== 'Roadmap' && (
           <div className="preview-notice" role="status">
             <span><Sparkles size={16} /> A página <strong>{active}</strong> será desenhada na próxima etapa.</span>
             <button onClick={() => setActive('Hoje')}>Voltar para Hoje</button>

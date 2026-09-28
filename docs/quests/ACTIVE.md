@@ -29,7 +29,7 @@ Complexity: MEDIUM · Raf Gate: NO (item 5 CONDITIONAL, só se surgir pergunta a
 Executar na ordem, um commit por item. Páginas novas usam dados de demonstração (mesmo padrão de Hoje/Estudar).
 
 - [x] 1. UX-07 — Documentação do sistema de componentes (`docs/DESIGN_SYSTEM.md`)
-- [ ] 2. UX-02 — Página Roadmap
+- [x] 2. UX-02 — Página Roadmap
 - [ ] 3. UX-04 — Página Quizzes
 - [ ] 4. UX-05 — Página Progresso
 - [ ] 5. TEC-01 — Rotas reais, cabeçalho compartilhado, componentes comuns, dados demo isolados, estado local por rota
