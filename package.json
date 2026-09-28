@@ -16,6 +16,7 @@
     "lint": "oxlint",
     "format": "oxfmt",
     "typecheck": "tsc --noEmit",
+    "export:data": "node scripts/export-data.mjs",
     "test:notes": "tsc -p tsconfig.notes-spike.json && node --test .notes-spike-dist/tests/*.test.js",
     "test:notes-spike": "pnpm run test:notes"
   },
