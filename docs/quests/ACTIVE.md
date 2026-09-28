@@ -30,7 +30,7 @@ Executar na ordem, um commit por item. Páginas novas usam dados de demonstraç�
 
 - [x] 1. UX-07 — Documentação do sistema de componentes (`docs/DESIGN_SYSTEM.md`)
 - [x] 2. UX-02 — Página Roadmap
-- [ ] 3. UX-04 — Página Quizzes
+- [x] 3. UX-04 — Página Quizzes
 - [ ] 4. UX-05 — Página Progresso
 - [ ] 5. TEC-01 — Rotas reais, cabeçalho compartilhado, componentes comuns, dados demo isolados, estado local por rota
 - [ ] 6. UX-08 — Validação visual e responsiva (resultado em `docs/ATLAS_STATUS.md`)
