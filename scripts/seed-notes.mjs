@@ -49,5 +49,20 @@ const args = ['wrangler', 'd1', 'execute', values.db, '--file', sqlPath];
 args.push(values.remote ? '--remote' : '--local');
 if (values.config) args.push('--config', values.config);
 console.log(`Semeando ${notes.length} notas em "${values.db}" (${values.remote ? 'remoto' : 'local'})...`);
-const result = spawnSync('npx', args, { stdio: 'inherit' });
-process.exit(result.status ?? 1);
+
+// No Windows, `npx` é um .cmd e só inicia através de um shell.
+const isWindows = process.platform === 'win32';
+const result = spawnSync(
+  isWindows ? 'npx.cmd' : 'npx',
+  isWindows ? args.map((arg) => `"${arg}"`) : args,
+  { stdio: 'inherit', shell: isWindows },
+);
+if (result.error) {
+  console.error(`Falha ao executar o wrangler: ${result.error.message}`);
+  process.exit(1);
+}
+if (result.status !== 0) {
+  console.error(`O wrangler terminou com erro (código ${result.status}). Nada foi confirmado.`);
+  process.exit(result.status ?? 1);
+}
+console.log('Seed concluído.');
