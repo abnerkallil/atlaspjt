@@ -70,6 +70,7 @@ Do not describe implementation details.
 - Atlas Notes: listas aninhadas, com limite de profundidade e aviso visual ao atingir o limite.
 - Atlas Notes: notas de rodapé, tabelas configuráveis, blocos de matemática e callouts.
 - Ambiente de desenvolvimento local com D1 (Miniflare) e visualização/edição via drizzle-kit studio.
+- Deployment próprio e independente na Cloudflare do usuário (Worker `atlas-notes` + D1 `atlas-notes-own`): https://atlas-notes.atlaspjt.workers.dev — com as 8 notas de produção semeadas (DEC-005). O site antigo hospedado pela OpenAI não foi alterado.
 
 ---
 

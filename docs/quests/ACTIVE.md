@@ -67,10 +67,10 @@ Bloco B: ter um deployment funcional do app atual (`main`) rodando na conta Clou
 - [x] Bloco A: o artefato de export consolidado gera notas e pastas completas em formato portátil, usando os endpoints existentes; **nenhum endpoint novo** é criado — `pnpm run export:data` (`scripts/export-data.mjs`, Node puro, sem dependências; `-- --url <site>` para produção, `-- --out <arquivo>` para o destino; padrão `outputs/atlas-export-<data>.json`);
 - [x] Bloco A: o export é verificado contra os dados reais — validado no ambiente local: 3 notas e 2 pastas no arquivo, idênticas (deep-equal) à resposta direta de `GET /api/notes` e `GET /api/notes/folders`; o script também relê os endpoints e aborta se as contagens divergirem; `typecheck` limpo, nenhum erro de lint no arquivo novo;
 - [x] Bloco B: script de seed (`scripts/seed-notes.mjs`) preserva `id`, `title`, `body`, `createdAt`, `updatedAt` e vínculos — validado em D1 local recém-migrado: `GET /api/notes` devolveu as 8 notas idênticas ao JSON de seed (comparação exata);
-- [ ] Bloco B: D1 novo criado na conta Cloudflare do usuário e schema criado com as migrations Drizzle existentes;
-- [ ] Bloco B: Worker novo implantado, apontando para o D1 novo (sem R2);
-- [ ] Bloco B: D1 novo semeado; `GET /api/notes` do novo deployment retorna as 8 notas com os mesmos `id`s e `title`s do seed (comparação exata);
-- [ ] Bloco B: `docs/ATLAS_STATUS.md` atualizado com a URL do novo Worker.
+- [x] Bloco B: D1 novo `atlas-notes-own` criado na conta Cloudflare do usuário e schema criado com as migrations Drizzle existentes (executado pelo usuário);
+- [x] Bloco B: Worker `atlas-notes` implantado, apontando para o D1 novo (sem R2) — https://atlas-notes.atlaspjt.workers.dev;
+- [x] Bloco B: D1 novo semeado; `GET /api/notes` do novo deployment retorna 8 notas — **contagem confirmada pelo usuário; a comparação exata de `id`s/`title`s contra o seed NÃO foi feita a partir do deployment** (o ambiente de Claude Code não alcança a Cloudflare). O seed foi validado com comparação exata apenas em D1 local;
+- [x] Bloco B: `docs/ATLAS_STATUS.md` atualizado com a URL do novo Worker.
 
 ## Non-Goals
 
