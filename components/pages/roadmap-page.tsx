@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from 'react';
 import { AlertTriangle, Check, LockKeyhole, Map as MapIcon, RotateCcw, Route, Sparkles } from 'lucide-react';
+import { PageHeading } from '@/components/atlas/page-heading';
+import { ProgressBar } from '@/components/atlas/progress-bar';
 import {
   roadmapChanges,
   roadmapPhaseOrder,
@@ -50,14 +52,14 @@ export function RoadmapPage() {
 
   return (
     <section className="rm-view" aria-labelledby="rm-title">
-      <div className="page-heading">
-        <div>
-          <p className="eyebrow">ROADMAP</p>
-          <h1 id="rm-title">Seu caminho até o domínio.</h1>
-          <p>Fases, pré-requisitos e o motivo de cada ajuste — tudo o que o Atlas decidiu por você.</p>
-        </div>
-        <div className="streak-pill"><Route size={17} /> {PHASE_STATUS_LABEL[phase.status]}: {phase.name}</div>
-      </div>
+      <PageHeading
+        eyebrow="ROADMAP"
+        title="Seu caminho até o domínio."
+        titleId="rm-title"
+        aside={<div className="streak-pill"><Route size={17} /> {PHASE_STATUS_LABEL[phase.status]}: {phase.name}</div>}
+      >
+        Fases, pré-requisitos e o motivo de cada ajuste — tudo o que o Atlas decidiu por você.
+      </PageHeading>
 
       <div className="rm-phases" role="tablist" aria-label="Fases do roadmap">
         {orderedPhases.map((item, index) => (
@@ -83,13 +85,13 @@ export function RoadmapPage() {
         <article className="rm-progress-card">
           <span>Progresso bruto</span>
           <strong>{phase.raw}%</strong>
-          <div className="progress-track"><span style={{ width: `${phase.raw}%` }} /></div>
+          <ProgressBar value={phase.raw} />
           <small>Conteúdos concluídos, sem considerar penalidades.</small>
         </article>
         <article className="rm-progress-card adjusted">
           <span>Progresso ajustado</span>
           <strong>{phase.adjusted}%</strong>
-          <div className="progress-track"><span style={{ width: `${phase.adjusted}%` }} /></div>
+          <ProgressBar value={phase.adjusted} />
           <small>
             {penaltyTotal > 0
               ? `Bruto menos ${penaltyTotal} pontos de penalidades ainda não recuperadas.`

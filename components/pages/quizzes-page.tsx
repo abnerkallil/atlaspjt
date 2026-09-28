@@ -5,6 +5,7 @@ import {
   AlertTriangle, ArrowLeft, ArrowRight, Check, CircleCheck, CircleX, Clock3, Flag, ListChecks, Play, RotateCcw, Send, X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { PageHeading } from '@/components/atlas/page-heading';
 import { demoQuiz, REPORT_REASONS, type QuizQuestion } from '@/lib/demo/quizzes';
 
 type Phase = 'preparo' | 'execucao' | 'revisao' | 'resultado';
@@ -123,13 +124,9 @@ export function QuizzesPage() {
   if (phase === 'preparo') {
     return (
       <section className="qz-view" aria-labelledby="qz-title">
-        <div className="page-heading">
-          <div>
-            <p className="eyebrow">QUIZ · {demoQuiz.subject.toUpperCase()}</p>
-            <h1 id="qz-title">{demoQuiz.title}</h1>
-            <p>Um quiz curto para medir retenção e localizar pontos frágeis.</p>
-          </div>
-        </div>
+        <PageHeading eyebrow={`QUIZ · ${demoQuiz.subject.toUpperCase()}`} title={demoQuiz.title} titleId="qz-title">
+          Um quiz curto para medir retenção e localizar pontos frágeis.
+        </PageHeading>
         <div className="qz-prep">
           <article className="qz-card">
             <h2>Regras</h2>

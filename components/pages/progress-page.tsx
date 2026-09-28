@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { AlertTriangle, BrainCircuit, Flame, Lightbulb, RotateCcw, Target, TrendingDown, TrendingUp } from 'lucide-react';
+import { MetricCard } from '@/components/atlas/metric-card';
+import { PageHeading } from '@/components/atlas/page-heading';
 import {
   atRisk, competencies, consistencyDays, recommendations, recoveryPlan, WEEK_LABELS,
 } from '@/lib/demo/progress';
@@ -50,19 +52,19 @@ export function ProgressPage() {
 
   return (
     <section className="pg-view" aria-labelledby="pg-title">
-      <div className="page-heading">
-        <div>
-          <p className="eyebrow">PROGRESSO</p>
-          <h1 id="pg-title">O que você já domina — e o que precisa de atenção.</h1>
-          <p>Competências, tendência, retenção e recomendações explicadas.</p>
-        </div>
-        <div className="streak-pill"><Flame size={17} /> {studiedDays} de 28 dias estudados</div>
-      </div>
+      <PageHeading
+        eyebrow="PROGRESSO"
+        title="O que você já domina — e o que precisa de atenção."
+        titleId="pg-title"
+        aside={<div className="streak-pill"><Flame size={17} /> {studiedDays} de 28 dias estudados</div>}
+      >
+        Competências, tendência, retenção e recomendações explicadas.
+      </PageHeading>
 
       <section className="metrics-section" aria-label="Resumo">
-        <div className="metric-card gold"><div className="metric-icon"><Target size={19} /></div><div><span>Domínio geral</span><strong>{avg(competencies.map((c) => c.mastery))}%</strong><small>Conhecimento consolidado</small></div></div>
-        <div className="metric-card violet"><div className="metric-icon"><BrainCircuit size={19} /></div><div><span>Retenção média</span><strong>{avg(competencies.map((c) => c.retention))}%</strong><small>Estimada por revisão espaçada</small></div></div>
-        <div className="metric-card green"><div className="metric-icon"><Flame size={19} /></div><div><span>Consistência</span><strong>7 dias</strong><small>Melhor sequência: 12 dias</small></div></div>
+        <MetricCard tone="gold" icon={<Target size={19} />} label="Domínio geral" value={`${avg(competencies.map((c) => c.mastery))}%`} hint="Conhecimento consolidado" />
+        <MetricCard tone="violet" icon={<BrainCircuit size={19} />} label="Retenção média" value={`${avg(competencies.map((c) => c.retention))}%`} hint="Estimada por revisão espaçada" />
+        <MetricCard tone="green" icon={<Flame size={19} />} label="Consistência" value="7 dias" hint="Melhor sequência: 12 dias" />
       </section>
 
       <div className="pg-grid">

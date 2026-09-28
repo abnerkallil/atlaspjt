@@ -44,16 +44,16 @@ button { color: inherit; }
 
 .site-header { position: sticky; z-index: 20; top: 0; border-bottom: 1px solid #e7e5ec; background: rgba(255,255,255,.94); backdrop-filter: blur(18px); box-shadow: 0 4px 16px rgba(31,23,54,.04); }
 .site-header-inner { height: 76px; display: flex; align-items: center; gap: 36px; }
-.brand { border: 0; background: transparent; display: flex; align-items: center; gap: 12px; font-weight: 760; font-size: 19px; letter-spacing: .18em; cursor: pointer; }
+.brand { text-decoration: none; color: inherit; border: 0; background: transparent; display: flex; align-items: center; gap: 12px; font-weight: 760; font-size: 19px; letter-spacing: .18em; cursor: pointer; }
 .brand-mark { width: 29px; height: 26px; position: relative; display: block; }
 .brand-mark span { position: absolute; bottom: 0; width: 7px; border-radius: 5px 5px 2px 2px; transform: skew(-10deg); background: linear-gradient(180deg, #5f8ff7, #1d4ed8); }
 .brand-mark span:nth-child(1) { left: 0; height: 15px; }
 .brand-mark span:nth-child(2) { left: 10px; height: 25px; }
 .brand-mark span:nth-child(3) { right: 0; height: 19px; }
 .main-nav { display: flex; align-items: center; gap: 3px; padding: 5px; margin-right: auto; border: 1px solid #ddd9e7; border-radius: 999px; background: #faf9fc; }
-.main-nav button { border: 0; border-radius: 999px; padding: 9px 14px; background: transparent; color: var(--muted); cursor: pointer; transition: .2s ease; font-size: 13px; }
-.main-nav button:hover { color: #1d4ed8; }
-.main-nav button.active { color: #fff; background: #2463eb; box-shadow: 0 3px 10px rgba(36,99,235,.18); }
+.main-nav a { text-decoration: none; border: 0; border-radius: 999px; padding: 9px 14px; background: transparent; color: var(--muted); cursor: pointer; transition: .2s ease; font-size: 13px; }
+.main-nav a:hover { color: #1d4ed8; }
+.main-nav a.active { color: #fff; background: #2463eb; box-shadow: 0 3px 10px rgba(36,99,235,.18); }
 .header-actions { display: flex; align-items: center; gap: 8px; }
 .header-actions > button { width: 39px; height: 39px; border-radius: 50%; border: 1px solid #ddd9e7; background: #fff; display: grid; place-items: center; cursor: pointer; }
 .header-actions .avatar { border-color: #a9c4f4; background: #eaf2ff; color: #1d4ed8; font-size: 12px; font-weight: 750; }
@@ -144,7 +144,7 @@ button { color: inherit; }
 .roadmap-title h2 { margin: 4px 0 0; font-size: 18px; }
 .roadmap-progress > div:first-child { display: flex; justify-content: space-between; margin-bottom: 10px; }
 .roadmap-progress strong { font-size: 13px; }
-.roadmap-card > button { border: 0; background: transparent; color: #1d4ed8; display: flex; align-items: center; gap: 5px; cursor: pointer; font-size: 12px; font-weight: 700; }
+.roadmap-card > button, .roadmap-card > a { text-decoration: none; border: 0; background: transparent; color: #1d4ed8; display: flex; align-items: center; gap: 5px; cursor: pointer; font-size: 12px; font-weight: 700; }
 
 /* Estudar — o conteúdo ativo ocupa o centro; a estrutura completa fica a um clique. */
 .study-view { min-height: 660px; }
@@ -407,7 +407,7 @@ button { color: inherit; }
   .metrics-section { grid-template-columns: 1fr; }
   .metric-card { min-height: 98px; }
   .roadmap-card { grid-template-columns: 1fr; gap: 23px; }
-  .roadmap-card > button { padding: 0; }
+  .roadmap-card > button, .roadmap-card > a { padding: 0; }
   .notes-workspace { grid-template-columns: minmax(220px,.7fr) minmax(0,1.3fr); }
   .note-links-card { min-height: 0; grid-column: 1 / -1; }
   .notes-all-list { grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); }
@@ -703,3 +703,13 @@ button { color: inherit; }
   .pg-days { grid-template-columns: repeat(7, 1fr); }
 }
 .pg-bar .progress-track, .pg-retention .progress-track { display: block; }
+
+/* Diálogos nativos (<dialog>) usam o mesmo visual do modal anterior. */
+dialog.start-modal { margin: auto; color: var(--ink); }
+dialog.start-modal::backdrop { background: rgba(30,19,49,.32); backdrop-filter: blur(4px); }
+.qz-report .modal-actions > button:first-child { color: var(--ink); border-color: #c9c5d3; background: #fff; }
+
+/* Assistente lateral como <dialog> nativo. */
+dialog.assistant-drawer { position: fixed; inset: 0 0 0 auto; height: 100%; max-height: none; margin: 0; padding: 0; border: 0; border-left: 1px solid var(--line); color: var(--ink); }
+dialog.assistant-drawer[open] { display: flex; }
+dialog.assistant-drawer::backdrop { background: rgba(30,19,49,.32); backdrop-filter: blur(4px); }
