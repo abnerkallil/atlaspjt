@@ -1,5 +1,5 @@
 @echo off
-setlocal
+setlocal EnableDelayedExpansion
 cd /d "%~dp0"
 
 echo ================================
@@ -35,6 +35,32 @@ if errorlevel 1 (
     echo.
     pause
     exit /b 1
+)
+
+echo Verificando se ha alteracoes locais ainda nao enviadas ao GitHub...
+set HAS_CHANGES=
+for /f "delims=" %%i in ('git status --porcelain 2^>nul') do set HAS_CHANGES=1
+
+if defined HAS_CHANGES (
+    echo.
+    echo ATENCAO: existem alteracoes nesta pasta que ainda NAO foram commitadas/enviadas ao GitHub:
+    echo.
+    git status --short
+    echo.
+    echo Continuar vai APAGAR essas alteracoes para igualar a pasta ao GitHub ^(git reset --hard^).
+    echo Se quiser manter essas alteracoes, feche esta janela agora, abra um terminal aqui e rode:
+    echo   git add -A
+    echo   git commit -m "sua mensagem"
+    echo   git push
+    echo e depois rode este atualizador de novo.
+    echo.
+    set /p CONFIRM="Digite APAGAR para descartar essas alteracoes e continuar mesmo assim: "
+    if /I not "!CONFIRM!"=="APAGAR" (
+        echo.
+        echo Operacao cancelada. Nada foi alterado.
+        pause
+        exit /b 1
+    )
 )
 
 echo Sincronizando a pasta com o "main" do GitHub ^(a versao local sera igualada a de la^)...
