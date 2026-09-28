@@ -24,13 +24,13 @@ function TrendChart({ values, label }: { values: number[]; label: string }) {
       <svg viewBox={`0 0 ${w} ${h}`}>
         <title>{`${label} nas últimas 8 semanas: de ${values[0]}% para ${values[values.length - 1]}%`}</title>
         {[0, 50, 100].map((g) => (
-          <g key={g}><line x1={padX} x2={w - padX} y1={y(g)} y2={y(g)} stroke="#e4e1ea" /><text x={0} y={y(g) + 4} fontSize="10" fill="#5f5b6a">{g}</text></g>
+          <g key={g}><line x1={padX} x2={w - padX} y1={y(g)} y2={y(g)} stroke="#e4e1ea" /><text x={0} y={y(g) + 4} fontSize="14" fill="#5f5b6a">{g}</text></g>
         ))}
         <polyline points={points} fill="none" stroke="#2463eb" strokeWidth="2.5" strokeLinejoin="round" />
         {values.map((v, i) => (
           <g key={WEEK_LABELS[i]}>
             <circle cx={x(i)} cy={y(v)} r="4" fill="#fff" stroke="#2463eb" strokeWidth="2" />
-            <text x={x(i)} y={h - 2} fontSize="10" textAnchor="middle" fill="#5f5b6a">{WEEK_LABELS[i]}</text>
+            <text x={x(i)} y={h - 2} fontSize="14" textAnchor="middle" fill="#5f5b6a">{WEEK_LABELS[i]}</text>
           </g>
         ))}
       </svg>

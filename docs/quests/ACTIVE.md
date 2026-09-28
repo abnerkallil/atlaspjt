@@ -33,7 +33,7 @@ Executar na ordem, um commit por item. Páginas novas usam dados de demonstraç�
 - [x] 3. UX-04 — Página Quizzes
 - [x] 4. UX-05 — Página Progresso
 - [x] 5. TEC-01 — Rotas reais, cabeçalho compartilhado, componentes comuns, dados demo isolados, estado local por rota
-- [ ] 6. UX-08 — Validação visual e responsiva (resultado em `docs/ATLAS_STATUS.md`)
+- [x] 6. UX-08 — Validação visual e responsiva (resultado em `docs/ATLAS_STATUS.md`)
 - [ ] 7. TEC-07 — CI (`.github/workflows/`) e proteção da branch principal (documentar se sem permissão)
 
 Fora de escopo: os 17 itens do Bloco 2 (dependem de DEC-*).

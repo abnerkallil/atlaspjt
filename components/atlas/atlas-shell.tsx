@@ -59,6 +59,7 @@ export function AtlasShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [done, setDone] = useState<number[]>([]);
   const [assistantOpen, setAssistantOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleTask = useCallback((id: number) => {
     setDone((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));
@@ -106,9 +107,20 @@ export function AtlasShell({ children }: { children: ReactNode }) {
               <button aria-label="Buscar"><Search size={18} /></button>
               <button aria-label="Notificações" className="notification-button"><Bell size={18} /><span /></button>
               <button className="avatar" aria-label="Abrir perfil">{learner.initials}</button>
-              <button className="mobile-menu" aria-label="Abrir menu"><Menu size={20} /></button>
+              <button className="mobile-menu" aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'} aria-expanded={menuOpen} aria-controls="mobile-nav" onClick={() => setMenuOpen((open) => !open)}>
+                {menuOpen ? <X size={20} /> : <Menu size={20} />}
+              </button>
             </div>
           </div>
+          {menuOpen && (
+            <nav id="mobile-nav" className="mobile-nav" aria-label="Navegação principal (menu)">
+              {navItems.map((item) => (
+                <Link key={item.href} href={item.href} className={pathname === item.href ? 'active' : ''} aria-current={pathname === item.href ? 'page' : undefined} onClick={() => setMenuOpen(false)}>
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          )}
         </header>
 
         <main className="page-wrap">{children}</main>
