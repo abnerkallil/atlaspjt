@@ -2,7 +2,7 @@
 
 > **Nota histórica (renomeação Codex → Claude Code):** este é um registro histórico preservado sem alteração. Todas as menções a "Codex" abaixo referem-se à ferramenta de implementação usada na época (CLI Codex da OpenAI), hoje substituída pelo Claude Code. O texto original não foi reescrito.
 >
-> **Nota histórica (renomeação Hermes → Gemini):** as menções a "Hermes" abaixo (incluindo "Revisão Hermes" e "Sessões Hermes") referem-se à autoridade de arquitetura executada à época pela ferramenta então chamada Hermes (via os modelos indicados, como Muse e Bonsai), hoje substituída pelo Gemini CLI, mesma função. O texto original não foi reescrito.
+> **Nota histórica (renomeação Hermes → Gemini → Raf):** as menções a "Hermes" abaixo (incluindo "Revisão Hermes" e "Sessões Hermes") referem-se à autoridade de arquitetura executada à época pela ferramenta então chamada Hermes (via os modelos indicados, como Muse e Bonsai), hoje exercida pelo Raf (aplicativo desktop do usuário), mesma função. Entre os dois, o papel chegou a ser chamado "Gemini". O texto original não foi reescrito.
 
 ## Estado
 

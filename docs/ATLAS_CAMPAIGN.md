@@ -41,7 +41,7 @@ Claude Code should consult `ATLAS_CAMPAIGN.md` when:
 - MVP versus FUT-* scope matters;
 - the active quest explicitly depends on campaign context.
 
-Gemini should consult `ATLAS_CAMPAIGN.md` only when strategic sequencing materially affects an architectural decision.
+Raf should consult `ATLAS_CAMPAIGN.md` only when strategic sequencing materially affects an architectural decision.
 
 Do not require this document to be read for routine implementation work.
 

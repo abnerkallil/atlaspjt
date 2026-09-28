@@ -51,7 +51,7 @@
 
 Antes da redação deste relatório, foi executada a renomeação do papel de "Implementation Authority" do projeto: de **Codex** (CLI da OpenAI, ferramenta original de implementação) para **Claude Code**. O modelo de autoridade de desenvolvimento passou a ser:
 
-**Atlas (Product & Specification Authority) → Gemini (Architecture Authority) → Claude Code (Implementation Authority)**
+**Atlas (Product & Specification Authority) → Raf (Architecture Authority) → Claude Code (Implementation Authority)**
 
 O detalhamento completo (o que mudou, por quê, e as duas exceções tratadas de forma diferente) está registrado no changelog da seção 16.4. Em resumo:
 
@@ -372,12 +372,12 @@ Esse trio é **100% conceitual hoje** — nenhum dos três está implementado co
 
 Essas referências não estão nomeadas nos documentos originais do projeto — são o enquadramento acadêmico proposto por este relatório para dar peso teórico a uma arquitetura hoje inteiramente conceitual.
 
-## 7.2 Papéis de autoridade do DESENVOLVIMENTO: Atlas, Gemini e Claude Code
+## 7.2 Papéis de autoridade do DESENVOLVIMENTO: Atlas, Raf e Claude Code
 
 Este é um uso **completamente diferente** do nome "Atlas": aqui, Atlas não é o assistente pedagógico do produto — é a **autoridade de especificação do processo de desenvolvimento** do próprio projeto de software.
 
 ```
-   ATLAS                    GEMINI                  CLAUDE CODE
+   ATLAS                    RAF                  CLAUDE CODE
 (Product &               (Architecture           (Implementation
  Specification             Authority)                Authority)
  Authority)
@@ -389,7 +389,7 @@ Este é um uso **completamente diferente** do nome "Atlas": aqui, Atlas não é 
      ▼                         │                          ▼
 ┌───────────┐                 │                    ┌───────────────┐
 │Task        │──── SMALL ─────┼───────────────────►│  INSPECT →     │
-│Contract    │   (sem Gemini) │                     │  IMPLEMENT →   │
+│Contract    │   (sem Raf) │                     │  IMPLEMENT →   │
 │(QUEST-XXX) │                │                     │  TESTE →       │
 └─────┬─────┘                 │                     │  VALIDAÇÃO →   │
       │                       │                     │  COMMIT        │
@@ -409,16 +409,16 @@ Este é um uso **completamente diferente** do nome "Atlas": aqui, Atlas não é 
                       (se durável e arquitetural)
 ```
 
-**Como o modelo governa o fluxo de quests** (fonte: `AGENTS.md`, `.hermes.md`, `docs/README.md`, `docs/ATLAS_DECISIONS.md`, doc "ATLAS — Quest Handoff Protocol" do Drive):
+**Como o modelo governa o fluxo de quests** (fonte: `AGENTS.md`, `.raf.md`, `docs/README.md`, `docs/ATLAS_DECISIONS.md`, doc "ATLAS — Quest Handoff Protocol" do Drive):
 
 1. Atlas converte um pedido do usuário em um **Task Contract** conciso (Quest, Prioridade P0/P1/P2, Objetivo, Comportamento Requerido, Critérios de Aceite, Restrições de UX, Não-Objetivos, Dependências).
 2. A tarefa é classificada como **SMALL, MEDIUM ou LARGE** — a classificação determina quanta arquitetura, documentação e coordenação entre agentes é justificada.
-3. Para tarefas SMALL, Gemini normalmente **não** é envolvido; o fluxo é direto: Task Contract → Claude Code → Implementação → Validação → Commit.
-4. Para tarefas MEDIUM/LARGE, se surgir um **Architecture Gate genuíno** (mudança de modelo de dados persistente, fronteira arquitetural, dependência estrutural significativa, conflito com uma decisão DEC-* existente, entre outros gatilhos listados em `AGENTS.md`), Claude Code prepara uma solicitação neutra de decisão e consulta Gemini via `docs/quests/ARCHITECTURE_GATE.md`.
-5. Se a decisão de Gemini for durável e arquitetural, ela é registrada como um novo **DEC-*** em `docs/ATLAS_DECISIONS.md` (exemplos reais: DEC-001, DEC-002, DEC-003, detalhados na seção 5.7).
+3. Para tarefas SMALL, Raf normalmente **não** é envolvido; o fluxo é direto: Task Contract → Claude Code → Implementação → Validação → Commit.
+4. Para tarefas MEDIUM/LARGE, se surgir um **Architecture Gate genuíno** (mudança de modelo de dados persistente, fronteira arquitetural, dependência estrutural significativa, conflito com uma decisão DEC-* existente, entre outros gatilhos listados em `AGENTS.md`), Claude Code prepara uma solicitação neutra de decisão e consulta Raf via `docs/quests/ARCHITECTURE_GATE.md`.
+5. Se a decisão de Raf for durável e arquitetural, ela é registrada como um novo **DEC-*** em `docs/ATLAS_DECISIONS.md` (exemplos reais: DEC-001, DEC-002, DEC-003, detalhados na seção 5.7).
 6. Claude Code retoma a implementação respeitando as restrições definidas pelo Gate.
 
-**Por que não é o mesmo grupo da seção 7.1:** o trio de produto (Atlas/Hades/Themis) é uma visão de IA pedagógica que ainda não existe em código — seu "Atlas" conversa com o estudante. O trio de desenvolvimento (Atlas/Gemini/Claude Code) é o processo humano-assistido que **já rege como este próprio repositório é construído** — seu "Atlas" conversa com quem pede uma mudança no software. São dois papéis do mesmo nome, para dois públicos e dois momentos completamente diferentes do projeto.
+**Por que não é o mesmo grupo da seção 7.1:** o trio de produto (Atlas/Hades/Themis) é uma visão de IA pedagógica que ainda não existe em código — seu "Atlas" conversa com o estudante. O trio de desenvolvimento (Atlas/Raf/Claude Code) é o processo humano-assistido que **já rege como este próprio repositório é construído** — seu "Atlas" conversa com quem pede uma mudança no software. São dois papéis do mesmo nome, para dois públicos e dois momentos completamente diferentes do projeto.
 
 ---
 
@@ -736,7 +736,7 @@ Esta recomendação prática cruza o que o kanban já sinaliza como "pronto para
 | **Cobertura confirmada** | Estado pedagógico: 100% do conteúdo estudado + exame intermediário com nota mínima 70 |
 | **Envelope canônico (`atlas-notes`)** | Estrutura de dados versionada (v1/v2) que representa uma nota do Atlas Notes de forma determinística, validada no servidor |
 | **Projeção LF** | Representação textual determinística (uma linha por bloco, via `\n`) do conteúdo estruturado de uma nota, usada para busca/prévia/contagem |
-| **Architecture Gate** | Interface formal de escalonamento de uma decisão arquitetural de Claude Code para Gemini |
+| **Architecture Gate** | Interface formal de escalonamento de uma decisão arquitetural de Claude Code para Raf |
 | **Task Contract** | Especificação concisa de uma quest de desenvolvimento, produzida por Atlas (autoridade de desenvolvimento) |
 | **DEC-XXX (dev)** | Decisão arquitetural durável registrada em `docs/ATLAS_DECISIONS.md` (numeração de 3 dígitos, ex.: DEC-001) |
 | **DEC-XX (kanban)** | Decisão de produto/UX/pedagogia pendente no kanban (numeração de 2 dígitos, ex.: DEC-01) — sistema **diferente** do anterior |
@@ -753,7 +753,7 @@ Esta recomendação prática cruza o que o kanban já sinaliza como "pronto para
 | Drive — `atlas-pessoal-fundacao.md` | Seções 3, 6.1–6.3, 12 |
 | Drive — `atlas-business.md` | Seções 9, 12 |
 | `AGENTS.md` (repo) | Seção 7.2, 0 |
-| `.hermes.md` (repo) | Seção 7.2, 0 |
+| `.raf.md` (repo) | Seção 7.2, 0 |
 | `docs/README.md` (repo) | Seção 0, 7.2 |
 | `docs/ATLAS_STATUS.md` (repo) | Seções 1, 5, 11.5 |
 | `docs/ATLAS_CAMPAIGN.md` (repo) | Seções 7.2, 14.2, 15.3 |

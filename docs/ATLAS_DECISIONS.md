@@ -24,11 +24,11 @@ Only decisions with lasting architectural relevance belong here.
 
 Atlas owns product requirements.
 
-Hermes owns architectural decisions.
+Raf owns architectural decisions.
 
 Claude Code owns implementation decisions inside the established architecture.
 
-A DEC-* record should normally represent a decision made or validated by Hermes.
+A DEC-* record should normally represent a decision made or validated by Raf.
 
 Claude Code must respect active DEC-* decisions.
 
@@ -164,7 +164,7 @@ Prefer the smallest durable architectural decision that preserves long-term proj
 
 ---
 
-# HERMES DECISION PROCESS
+# RAF DECISION PROCESS
 
 When an Architecture Gate is triggered:
 
@@ -179,7 +179,7 @@ If the decision is routine or local:
 
 Do not create a DEC-*.
 
-If no architectural decision is required, Hermes should return:
+If no architectural decision is required, Raf should return:
 
 NO ARCHITECTURAL DECISION REQUIRED.
 
@@ -373,6 +373,77 @@ Suplementar DEC-002 somente quanto ao limite estrutural de profundidade, sem alt
 ### Related
 
 Quest: Quest 3 — Atlas Notes: Inserir, links e blocos avançados — Nested Lists Practical Depth (ATLAS-HERMES-GATE-20260911-NESTED-LISTS-DEPTH)
+
+Supersedes: NONE
+
+Superseded by: NONE
+
+---
+
+## DEC-004 — Estratégia de export de dados (Bloco A da migração Cloudflare)
+
+Status: ACCEPTED
+
+Date: 2026-09-28
+
+### Context
+
+Antes de qualquer migração de hosting, é necessário provar que os dados de produção (notas e pastas) podem ser exportados de forma completa e portátil.
+
+### Decision
+
+Usar os endpoints já existentes `GET /api/notes` (sem parâmetros) e `GET /api/notes/folders` como caminho canônico de export. Nenhum endpoint novo é necessário para satisfazer o export de dados.
+
+### Rationale
+
+Inspeção direta do código-fonte confirmou que `listNotes('')` em `lib/notes-store.ts` já retorna o conteúdo completo de todas as notas (`id`, `title`, `body`, `content`, timestamps, `links`, `syncStatus`, `folderId`, `isPrivate`), e `app/api/notes/folders/route.ts` já envolve `listFolders()`.
+
+### Constraints for Claude Code
+
+- Não criar novos endpoints para export de dados.
+- O trabalho restante do Bloco A do QUEST-008 é produzir um artefato de export consolidado (script/rotina que chama os dois endpoints e serializa o resultado em formato portátil).
+
+### Consequences
+
+Export de dados fica desacoplado do hosting e pode prosseguir independentemente do Bloco B.
+
+### Related
+
+Quest: QUEST-008 — Migração de ownership Cloudflare (Bloco A) (ATLAS-RAF-GATE-20260928-CLOUDFLARE-OWNERSHIP)
+
+Supersedes: NONE
+
+Superseded by: NONE
+
+---
+
+## DEC-005 — Padrão de migração de ownership Cloudflare (Bloco B)
+
+Status: PARTIAL / DRAFT — execução bloqueada por precondição de plataforma
+
+Date: 2026-09-28
+
+### Context
+
+`atlaspjt` roda como projeto OpenAI "ChatGPT Sites" (`vinext` e `@openai/sites-vite-plugin` em `package.json`). A infraestrutura (Workers/D1/R2) é provisionada e governada pela OpenAI, não pela conta Cloudflare do usuário. A conta Cloudflare própria do usuário (criada em 2026-09-28) está vazia (`workers_list`, `d1_databases_list`, `r2_buckets_list` vazios).
+
+### Decision
+
+Padrão arquitetural adotado (avaliado pelo Raf): migração blue/green — provisionar a stack equivalente (schema D1 via migrations Drizzle, buckets R2, Worker) na conta Cloudflare própria do usuário, popular via o export da DEC-004, validar em paralelo e só então cortar o hosting/DNS para o novo ambiente. Nunca migração destrutiva in-place.
+
+### Blocking Precondition
+
+Não é uma questão arquitetural, é uma questão de plataforma: ainda não se sabe se o ChatGPT Sites permite apontar o projeto para uma conta Cloudflare própria do usuário, ou exportar/portar os recursos Workers/D1/R2 subjacentes. Só pode ser respondida pelo usuário, checando a UI de publicação/configurações do ChatGPT Sites.
+
+### Constraints for Claude Code
+
+- Bloco A (export, DEC-004) pode prosseguir de forma independente.
+- Bloco B (migração de hosting) permanece com Raf Gate: YES; execução pausada até a precondição ser respondida.
+- Não provisionar recursos na conta Cloudflare do usuário nem alterar `.openai/hosting.json` antes disso.
+
+### Related
+
+Quest: QUEST-008 — Migração de ownership Cloudflare (Bloco B) (ATLAS-RAF-GATE-20260928-CLOUDFLARE-OWNERSHIP)
 
 Supersedes: NONE
 

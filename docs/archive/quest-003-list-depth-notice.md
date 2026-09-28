@@ -8,7 +8,7 @@ P1
 ## Complexity
 SMALL
 
-## Hermes Gate
+## Raf Gate (registrado à época como "Hermes Gate")
 NO
 
 ---
