@@ -17,7 +17,7 @@ If no Architecture Gate exists, this file should remain in the IDLE state.
 
 # GATE STATUS
 
-Status: PARTIALLY RESOLVED — DEC-005 é PARTIAL/DRAFT; Bloco B bloqueado por precondição de plataforma (não arquitetural)
+Status: RESOLVED — DEC-005 final (ACCEPTED); Bloco B segue por deploy independente + seed
 
 ---
 
@@ -69,9 +69,9 @@ Ver `docs/quests/ACTIVE.md` (QUEST-008).
 Registro completo em `docs/ATLAS_DECISIONS.md`:
 
 - **DEC-004 (ACCEPTED):** export via `GET /api/notes` e `GET /api/notes/folders`; nenhum endpoint novo.
-- **DEC-005 (PARTIAL/DRAFT):** migração blue/green para a conta Cloudflare do usuário; nunca in-place. Bloco B pausado até o usuário confirmar, na UI de publicação/configurações do ChatGPT Sites, se a plataforma permite apontar o projeto para conta Cloudflare própria ou exportar os recursos Workers/D1/R2.
+- **DEC-005 (ACCEPTED, versão final):** abandonada a migração/portabilidade da infraestrutura gerenciada pela OpenAI; deploy independente (Worker + D1) na conta Cloudflare do usuário a partir de `main`, migrations Drizzle existentes e seed com os dados extraídos manualmente. A precondição de plataforma deixou de existir.
 
-Constraints for Claude Code: Bloco A pode prosseguir; Bloco B não deve ser iniciado (nem provisionamento na conta Cloudflare, nem alteração de `.openai/hosting.json`) até a precondição ser respondida.
+Constraints for Claude Code: não alterar o site publicado atual; não provisionar R2; escalar ao Raf apenas se surgir problema arquitetural real.
 
 DEC Required: YES (já persistidas).
 

@@ -417,34 +417,44 @@ Superseded by: NONE
 
 ---
 
-## DEC-005 — Padrão de migração de ownership Cloudflare (Bloco B)
+## DEC-005 — Estratégia final de migração de ownership Cloudflare: deploy independente + seed de dados (substitui a versão draft)
 
-Status: PARTIAL / DRAFT — execução bloqueada por precondição de plataforma
+Status: ACCEPTED
 
 Date: 2026-09-28
 
 ### Context
 
-`atlaspjt` roda como projeto OpenAI "ChatGPT Sites" (`vinext` e `@openai/sites-vite-plugin` em `package.json`). A infraestrutura (Workers/D1/R2) é provisionada e governada pela OpenAI, não pela conta Cloudflare do usuário. A conta Cloudflare própria do usuário (criada em 2026-09-28) está vazia (`workers_list`, `d1_databases_list`, `r2_buckets_list` vazios).
+O Bloco B do QUEST-008 dependia de confirmar se a plataforma ChatGPT Sites da OpenAI permitia portar os recursos Workers/D1/R2 geridos por ela para a conta Cloudflare própria do usuário. O usuário perdeu acesso administrativo a essa conta/workspace ChatGPT antes de conseguir confirmar essa precondição — só consegue abrir o site publicado normalmente no navegador, nada além disso.
 
 ### Decision
 
-Padrão arquitetural adotado (avaliado pelo Raf): migração blue/green — provisionar a stack equivalente (schema D1 via migrations Drizzle, buckets R2, Worker) na conta Cloudflare própria do usuário, popular via o export da DEC-004, validar em paralelo e só então cortar o hosting/DNS para o novo ambiente. Nunca migração destrutiva in-place.
+Abandonar a tentativa de migrar/portar a infraestrutura gerenciada pela OpenAI. O caminho passa a ser:
 
-### Blocking Precondition
+1. extrair os dados reais de produção manualmente, via o próprio navegador autenticado do usuário, acessando `GET /api/notes` diretamente (já feito — `scripts/seed-data/atlas-export-production-20260928.json`);
+2. provisionar um deployment novo e independente (Worker + D1) na conta Cloudflare própria do usuário, a partir do código já existente em `main`;
+3. rodar as migrations Drizzle já estabelecidas para criar o schema;
+4. semear esse D1 novo com os dados extraídos.
 
-Não é uma questão arquitetural, é uma questão de plataforma: ainda não se sabe se o ChatGPT Sites permite apontar o projeto para uma conta Cloudflare própria do usuário, ou exportar/portar os recursos Workers/D1/R2 subjacentes. Só pode ser respondida pelo usuário, checando a UI de publicação/configurações do ChatGPT Sites.
+### Rationale
+
+Essa abordagem não depende de nenhuma cooperação ou permissão adicional da OpenAI — só precisa dos dados, que já foram obtidos. Ela também é objetivamente mais simples e menos arriscada que a migração in-place originalmente cogitada: é um deploy padrão de um projeto vinext/Cloudflare já documentado, não uma operação sobre um sistema de terceiros em produção.
 
 ### Constraints for Claude Code
 
-- Bloco A (export, DEC-004) pode prosseguir de forma independente.
-- Bloco B (migração de hosting) permanece com Raf Gate: YES; execução pausada até a precondição ser respondida.
-- Não provisionar recursos na conta Cloudflare do usuário nem alterar `.openai/hosting.json` antes disso.
+- Não alterar nada no site publicado atual (ChatGPT Sites).
+- Não provisionar R2 (binding é `null` em `.openai/hosting.json`; o app não usa R2 hoje).
+- Preservar os `id`s originais das notas no seed.
+- Escalar ao Raf apenas se surgir problema genuinamente arquitetural (ex.: schema incompatível); provisionar D1/Worker em si não é motivo de Gate.
+
+### Consequences
+
+O site publicado atual (ChatGPT Sites, gerenciado pela OpenAI) permanece como está, sem nenhuma alteração — não é mais alvo de migração. O novo ambiente na Cloudflare própria do usuário passa a ser o ambiente de produção daqui em diante.
 
 ### Related
 
 Quest: QUEST-008 — Migração de ownership Cloudflare (Bloco B) (ATLAS-RAF-GATE-20260928-CLOUDFLARE-OWNERSHIP)
 
-Supersedes: NONE
+Supersedes: DEC-005 (versão PARTIAL/DRAFT)
 
 Superseded by: NONE
