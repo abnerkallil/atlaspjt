@@ -26,7 +26,7 @@ SMALL | MEDIUM | LARGE
 
 
 
-\## Hermes Gate
+\## Gemini Gate
 
 
 
@@ -230,7 +230,7 @@ Use the defaults below unless the task has a justified exception.
 
 Architecture: NONE  
 
-Hermes: 0  
+Gemini: 0  
 
 Documentation: NONE  
 
@@ -246,7 +246,7 @@ Dependencies: NONE unless technically required
 
 Architecture: LIMITED  
 
-Hermes: normally 0–1 architectural decisions  
+Gemini: normally 0–1 architectural decisions  
 
 Documentation: UPDATE EXISTING WHEN NECESSARY  
 
@@ -262,7 +262,7 @@ Dependencies: only when justified
 
 Architecture: OPEN  
 
-Hermes: AS REQUIRED  
+Gemini: AS REQUIRED  
 
 Documentation: ALLOWED  
 
@@ -346,7 +346,7 @@ Claude Code determines HOW to implement it inside the established architecture.
 
 
 
-Hermes participates only when an Architecture Gate exists.
+Gemini participates only when an Architecture Gate exists.
 
 
 

@@ -14,7 +14,7 @@ Google Drive is the source of truth for:
 - product requirements;
 - product principles;
 - UX intent;
-- governance of the Atlas / Hermes / Claude Code authority model;
+- governance of the Atlas / Gemini / Claude Code authority model;
 - future product concepts such as Atlas Business.
 
 Primary governance documents:
@@ -90,9 +90,9 @@ Template for a new Task Contract.
 
 ### `quests/ARCHITECTURE_GATE.md`
 
-Interface used when a genuine architectural decision requires Hermes.
+Interface used when a genuine architectural decision requires Gemini.
 
-Hermes is not a routine approval step.
+Gemini is not a routine approval step.
 
 ---
 
@@ -114,12 +114,12 @@ Archive content should only be consulted when historical context is genuinely re
 ## Authority Model
 
 - **Atlas** — Product & Specification Authority
-- **Hermes** — Architecture Authority
+- **Gemini** — Architecture Authority
 - **Claude Code** — Implementation Authority
 
 Atlas defines **WHAT**.
 
-Hermes decides architecture only when a genuine Architecture Gate exists.
+Gemini decides architecture only when a genuine Architecture Gate exists.
 
 Claude Code decides **HOW** to implement within established product and architectural constraints.
 

@@ -9,7 +9,7 @@ Claude Code is the Implementation Authority of the Atlas Project.
 Authority model:
 
 - Atlas → Product and Specification Authority
-- Hermes → Architecture Authority
+- Gemini → Architecture Authority
 - Claude Code → Implementation Authority
 
 Claude Code owns HOW requirements are implemented inside the established architecture.
@@ -47,7 +47,7 @@ Claude Code must not:
 - redefine product requirements;
 - silently change requested UX behavior;
 - override Atlas product decisions;
-- override Hermes architectural decisions;
+- override Gemini architectural decisions;
 - expand task scope without justification;
 - create architecture for speculative future use;
 - introduce unrelated refactors;
@@ -109,8 +109,8 @@ Typical examples:
 
 Default rules:
 
-- Hermes Gate: NO
-- Hermes Budget: 0
+- Gemini Gate: NO
+- Gemini Budget: 0
 - Architecture Budget: NONE
 - New Documentation: NONE
 - Refactor Budget: LOCAL
@@ -129,7 +129,7 @@ INSPECT
 
 A SMALL task must not become an architecture project without a concrete escalation trigger.
 
-Do not invoke Hermes for routine SMALL work.
+Do not invoke Gemini for routine SMALL work.
 
 ---
 
@@ -139,13 +139,13 @@ A MEDIUM task affects multiple related components or requires broader reasoning 
 
 Default rules:
 
-- Hermes Gate: CONDITIONAL
-- Hermes Budget: normally 0–1 architectural decisions
+- Gemini Gate: CONDITIONAL
+- Gemini Budget: normally 0–1 architectural decisions
 - Architecture Budget: LIMITED
 - Documentation: update existing documentation only when necessary
 - Refactor Budget: RELATED CODE ONLY
 
-Invoke Hermes only if a real Architecture Gate is triggered.
+Invoke Gemini only if a real Architecture Gate is triggered.
 
 ---
 
@@ -167,9 +167,9 @@ Typical examples:
 
 Default rules:
 
-- Hermes Gate: YES
+- Gemini Gate: YES
 - Architecture Budget: OPEN
-- Hermes Budget: AS REQUIRED
+- Gemini Budget: AS REQUIRED
 - Architectural Documentation: ALLOWED
 
 Architectural decisions must be resolved before dependent implementation.
@@ -178,7 +178,7 @@ Architectural decisions must be resolved before dependent implementation.
 
 # ARCHITECTURE GATE
 
-Claude Code should invoke Hermes only when at least one meaningful architectural trigger exists.
+Claude Code should invoke Gemini only when at least one meaningful architectural trigger exists.
 
 Architecture Gate examples:
 
@@ -195,7 +195,7 @@ Architecture Gate examples:
 
 Routine implementation questions are NOT Architecture Gates.
 
-Examples that normally do NOT require Hermes:
+Examples that normally do NOT require Gemini:
 
 - CSS;
 - local UI behavior;
@@ -209,7 +209,7 @@ Examples that normally do NOT require Hermes:
 
 ---
 
-# HERMES ESCALATION
+# GEMINI ESCALATION
 
 When an Architecture Gate is triggered:
 
@@ -217,7 +217,7 @@ When an Architecture Gate is triggered:
 2. Read the original active quest.
 3. Gather only repository facts relevant to the architectural question.
 4. Prepare a neutral Decision Request.
-5. Consult Hermes.
+5. Consult Gemini.
 6. Apply the resulting architectural constraints.
 7. Continue implementation.
 
@@ -237,48 +237,48 @@ Prefer:
 - relevant constraints;
 - decision required.
 
-Claude Code should not advocate for an option unless Hermes explicitly requests an implementation recommendation.
+Claude Code should not advocate for an option unless Gemini explicitly requests an implementation recommendation.
 
 ---
 
-## Hermes Invocation Protocol
+## Gemini Invocation Protocol
 
-When a genuine Architecture Gate requires Hermes:
+When a genuine Architecture Gate requires Gemini:
 
-1. Invoke Hermes from the current Atlas repository working directory.
-2. Use the existing Hermes CLI directly. Do not invent wrappers, bridge processes, coordination files or custom logging mechanisms.
+1. Invoke Gemini from the current Atlas repository working directory.
+2. Use the existing Gemini CLI directly. Do not invent wrappers, bridge processes, coordination files or custom logging mechanisms.
 3. Preferred invocation:
    - provider: `opencode-free`
    - model: `muse-spark-1.3-contributor-free`
    - reasoning: `none`
 4. The contributor model requires explicit user consent for each invocation.
-5. When Hermes displays:
+5. When Gemini displays:
 
    `Use this model for this invocation? [y/N]`
 
    Claude Code must pause and request user authorization.
 
 6. Claude Code must never answer this consent prompt automatically.
-7. If the user authorizes, send `y` to the same running Hermes process and continue that invocation.
-8. Do not switch models, bypass consent, alter persistent Hermes configuration or retry automatically unless explicitly instructed.
-9. Use one Hermes invocation per Gate by default.
+7. If the user authorizes, send `y` to the same running Gemini process and continue that invocation.
+8. Do not switch models, bypass consent, alter persistent Gemini configuration or retry automatically unless explicitly instructed.
+9. Use one Gemini invocation per Gate by default.
 
 ### Traceability
 
-Hermes already records sessions automatically.
+Gemini already records sessions automatically.
 
-Do not create repository coordination logs or new logging infrastructure solely to record Claude Code ↔ Hermes communication.
+Do not create repository coordination logs or new logging infrastructure solely to record Claude Code ↔ Gemini communication.
 
-When traceability is useful, include a unique correlation identifier in the Hermes request, for example:
+When traceability is useful, include a unique correlation identifier in the Gemini request, for example:
 
-`ATLAS-HERMES-GATE-YYYYMMDD-NNN`
+`ATLAS-GEMINI-GATE-YYYYMMDD-NNN`
 
 The same identifier can later be matched between:
 
 - the Claude Code transcript;
-- the Hermes automatic session history.
+- the Gemini automatic session history.
 
-Hermes automatic session data is stored locally by Hermes. It is not a GitHub source of truth and must not be copied into the repository merely for auditing.
+Gemini automatic session data is stored locally by Gemini. It is not a GitHub source of truth and must not be copied into the repository merely for auditing.
 
 ### Neutrality
 
@@ -286,8 +286,8 @@ Claude Code is responsible only for transmitting a neutral architectural Decisio
 
 Claude Code must not:
 
-- preselect Hermes's answer;
-- ask Hermes to approve Claude Code's preferred implementation;
+- preselect Gemini's answer;
+- ask Gemini to approve Claude Code's preferred implementation;
 - add persuasive framing;
 - fabricate architectural alternatives merely to justify escalation.
 

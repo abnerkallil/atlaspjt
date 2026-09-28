@@ -10,7 +10,7 @@ Atlas defines the product requirement.
 
 Claude Code implements the requirement.
 
-Hermes reads this same requirement only when an Architecture Gate is triggered.
+Gemini reads this same requirement only when an Architecture Gate is triggered.
 
 The active quest must remain concise and focused on observable requirements.
 
@@ -34,7 +34,7 @@ P0
 
 MEDIUM
 
-## Hermes Gate
+## Gemini Gate
 
 NO — a menos que uma mudança real de arquitetura/schema necessária seja identificada; se identificada, a implementação para antes de prosseguir (ver Non-Goals).
 
@@ -95,7 +95,7 @@ Fechar os 4 itens pendentes do checklist de UX-03 ao nível de experiência visu
 
 Architecture: LIMITED (novas colunas/tabela simples em db/schema.ts para pastas e para o campo isPrivate; nenhuma mudança maior)
 
-Hermes: 0
+Gemini: 0
 
 Documentation: UPDATE EXISTING (docs/quests/ACTIVE.md ao final, seguindo o mesmo padrão das quests anteriores)
 
@@ -117,7 +117,7 @@ Dependencies: NONE unless technically required
 
 Decisões tomadas:
 
-- **Schema (Architecture: LIMITED, conforme previsto)**: nova tabela `atlas_note_folders` (id, name, createdAt, updatedAt) e duas colunas novas em `atlas_notes`: `folder_id` (nullable, FK para `atlas_note_folders.id` com `onDelete: 'set null'` — uma nota nunca fica "presa" a uma pasta apagada) e `is_private` (boolean, default false). Migração gerada via `drizzle-kit generate` (`drizzle/0003_little_amazoness.sql`) e aplicada localmente via `pnpm run db:migrate:local`, mesmo fluxo já usado nas migrações anteriores do projeto — nenhuma mudança de arquitetura além do que o Complexity Budget já previa, então nenhuma consulta a Hermes foi necessária;
+- **Schema (Architecture: LIMITED, conforme previsto)**: nova tabela `atlas_note_folders` (id, name, createdAt, updatedAt) e duas colunas novas em `atlas_notes`: `folder_id` (nullable, FK para `atlas_note_folders.id` com `onDelete: 'set null'` — uma nota nunca fica "presa" a uma pasta apagada) e `is_private` (boolean, default false). Migração gerada via `drizzle-kit generate` (`drizzle/0003_little_amazoness.sql`) e aplicada localmente via `pnpm run db:migrate:local`, mesmo fluxo já usado nas migrações anteriores do projeto — nenhuma mudança de arquitetura além do que o Complexity Budget já previa, então nenhuma consulta a Gemini foi necessária;
 - **Persistência de pastas via endpoint próprio, não via `/api/notes`**: o Task Contract pede que a persistência siga "o padrão já usado por atlasNotes/atlasNoteLinks em db/schema.ts" (ou seja, D1 via API), mas pastas são uma entidade própria (CRUD independente de notas), então criei `app/api/notes/folders` (GET lista, POST cria, PATCH renomeia) em vez de sobrecarregar o endpoint de notas existente. **Interpretação sinalizada para revisão** (mesmo padrão de transparência usado na QUEST-006): entendi "via API/D1, seguindo o padrão" como "persistir de verdade no D1 através de uma rota de API", não como "literalmente a mesma URL `/api/notes`". Mover uma nota entre pastas ou marcá-la como privada, por outro lado, usa o `/api/notes` existente (o `PUT`/`POST` de salvar já aceita `folderId`/`isPrivate` no corpo) — isso evitou criar um caminho de escrita paralelo para um campo que já faz parte do "salvar a nota";
 - **Exclusão de pasta não foi implementada**: o Required Behavior e os Acceptance Criteria pedem criar, renomear, mover nota e ver "sem pasta" — nenhum deles pede apagar uma pasta. Para manter a mudança no tamanho do que foi pedido (`AGENTS.md`: "não expandir escopo sem justificativa"), não adicionei exclusão. **Correção aplicada nesta mesma branch, antes do push**: a revisão externa do pacote QUEST-007 encontrou uma divergência entre a intenção declarada em `db/schema.ts` (`onDelete: 'set null'`) e o SQL de fato gerado em `drizzle/0003_little_amazoness.sql` — o `ALTER TABLE ... ADD folder_id ... REFERENCES atlas_note_folders(id)` não carregava a cláusula `ON DELETE SET NULL`, então, em vez de zerar `folder_id`, apagar uma pasta referenciada lançava `FOREIGN KEY constraint failed`. Reproduzi o bug com `better-sqlite3` (`PRAGMA foreign_keys = ON` + a DDL exata do arquivo), corrigi a migração para `... REFERENCES atlas_note_folders(id) ON DELETE SET NULL`, resetei o D1 local (`.wrangler/state/v3/d1`) e reapliquei as 4 migrações do zero, e confirmei com `drizzle-kit generate` que `schema.ts`/snapshot/SQL aplicado convergem ("No schema changes, nothing to migrate"). Validado empiricamente contra o D1 local recriado: criei uma pasta e uma nota vinculada pela API real, apaguei a pasta direto via SQL (`DELETE FROM atlas_note_folders`) e confirmei que `folder_id` da nota virou `NULL` em vez de lançar erro de FK. Suíte de testes (107/107), typecheck e lint re-executados sem regressão depois da correção;
 - **Anexos são efêmeros por decisão, não por limitação técnica** — **ambiguidade sinalizada para revisão**: o Task Contract deixa claro que upload real está fora de escopo, mas não diz explicitamente se a referência (nome do arquivo) deve sobreviver a um reload. Optei por mantê-la só em memória, por nota aberta no editor (reseta ao trocar de nota ou recarregar a página), por dois motivos: (1) nenhum Acceptance Criterion pede persistência entre reloads para anexos — só para pastas e privacidade, que têm coluna de schema explícita nesta quest; (2) o efêmero reforça visualmente que não é uma persistência real, em vez de um metadado "meio persistido" que poderia confundir o usuário sobre o que exatamente foi salvo. Se o comportamento esperado for "nome do anexo persiste entre reloads, mas o arquivo em si não", isso exigiria uma nova coluna (`attachments_json` ou tabela própria) — uma decisão de escopo que não estava clara no contrato, então não a tomei sozinho;
@@ -150,9 +150,9 @@ Claude Code should use this file as the primary product specification for implem
 
 Claude Code must not reinterpret explicit observable requirements without approval.
 
-If the task is classified as SMALL, Hermes should normally not be involved.
+If the task is classified as SMALL, Gemini should normally not be involved.
 
-If Claude Code discovers a real Architecture Gate, the original requirement in this file must remain the common reference for both Claude Code and Hermes.
+If Claude Code discovers a real Architecture Gate, the original requirement in this file must remain the common reference for both Claude Code and Gemini.
 
 When the quest is complete:
 
