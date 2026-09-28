@@ -32,54 +32,61 @@ A confirmar por Atlas
 
 ## Complexity
 
-LARGE (Bloco B); o Bloco A isolado é SMALL
+MEDIUM (Bloco B, era LARGE); o Bloco A isolado é SMALL
 
 ## Raf Gate
 
 Bloco A: NO — coberto por DEC-004.
 
-Bloco B: YES — DEC-005 (parcial/draft), execução pausada até a precondição de plataforma ser respondida (ver `docs/quests/ARCHITECTURE_GATE.md`). Correlation: ATLAS-RAF-GATE-20260928-CLOUDFLARE-OWNERSHIP.
+Bloco B: CONDITIONAL (era YES) — DEC-005 final (ACCEPTED): só escalar ao Raf se surgir um problema arquitetural real durante a execução. Correlation: ATLAS-RAF-GATE-20260928-CLOUDFLARE-OWNERSHIP.
 
 ---
 
 ## Contexto
 
 - `atlaspjt` é um projeto OpenAI "ChatGPT Sites" (`package.json` tem `vinext` e `@openai/sites-vite-plugin`). Workers, D1 e R2 são hoje provisionados e governados pela OpenAI dentro do workspace do ChatGPT, não pela conta Cloudflare pessoal do usuário.
-- O usuário criou a própria conta Cloudflare em 2026-09-28; ela está vazia (`workers_list`, `d1_databases_list`, `r2_buckets_list` vazios).
+- O usuário criou a própria conta Cloudflare em 2026-09-28; ela está vazia (0 Workers, 0 bancos D1; R2 ainda não habilitado, e não é necessário).
+- O usuário perdeu o acesso administrativo ao workspace ChatGPT/OpenAI; só consegue abrir o site publicado. Os dados reais foram extraídos manualmente (`GET /api/notes` no navegador): 8 notas, nenhuma pasta (pastas nunca foram publicadas). Ver `scripts/seed-data/atlas-export-production-20260928.json`.
 - `lib/notes-store.ts`: `listNotes('')` já retorna todas as notas com conteúdo completo (`id`, `title`, `body`, `content`, timestamps, `links`, `syncStatus`, `folderId`, `isPrivate`).
 - `GET /api/notes` (sem parâmetros, `app/api/notes/route.ts`) já chama `listNotes('')`: o export completo de notas já existe.
 - `GET /api/notes/folders` (`app/api/notes/folders/route.ts`) já existe e retorna `{ folders: await listFolders() }`: o export de pastas já existe.
 
 ## Objective
 
-Provar que os dados de produção são exportáveis de forma completa e portátil (Bloco A) e, quando a precondição de plataforma permitir, migrar o hosting para a conta Cloudflare do usuário sem migração destrutiva in-place (Bloco B).
+Bloco A: provar que os dados são exportáveis de forma completa e portátil.
+
+Bloco B: ter um deployment funcional do app atual (`main`) rodando na conta Cloudflare própria do usuário (Worker + D1), com o schema migrado e os dados reais de produção (extraídos manualmente do site hospedado pela OpenAI) carregados.
 
 ## Required Behavior
 
 - Bloco A: existe um artefato de export consolidado (script/rotina) que chama `GET /api/notes` e `GET /api/notes/folders` e serializa o resultado em formato portátil;
-- Bloco B: migração blue/green (DEC-005) para a conta Cloudflare do usuário — bloqueado.
+- Bloco B: deployment independente (Worker + D1 novos) na conta Cloudflare do usuário, semeado com os dados extraídos (DEC-005).
 
 ## Acceptance Criteria
 
 - [x] Bloco A: o artefato de export consolidado gera notas e pastas completas em formato portátil, usando os endpoints existentes; **nenhum endpoint novo** é criado — `pnpm run export:data` (`scripts/export-data.mjs`, Node puro, sem dependências; `-- --url <site>` para produção, `-- --out <arquivo>` para o destino; padrão `outputs/atlas-export-<data>.json`);
 - [x] Bloco A: o export é verificado contra os dados reais — validado no ambiente local: 3 notas e 2 pastas no arquivo, idênticas (deep-equal) à resposta direta de `GET /api/notes` e `GET /api/notes/folders`; o script também relê os endpoints e aborta se as contagens divergirem; `typecheck` limpo, nenhum erro de lint no arquivo novo;
-- [ ] Bloco B (bloqueado): só inicia depois que o usuário confirmar se o ChatGPT Sites permite apontar o projeto para conta Cloudflare própria ou exportar os recursos Workers/D1/R2.
+- [x] Bloco B: script de seed (`scripts/seed-notes.mjs`) preserva `id`, `title`, `body`, `createdAt`, `updatedAt` e vínculos — validado em D1 local recém-migrado: `GET /api/notes` devolveu as 8 notas idênticas ao JSON de seed (comparação exata);
+- [ ] Bloco B: D1 novo criado na conta Cloudflare do usuário e schema criado com as migrations Drizzle existentes;
+- [ ] Bloco B: Worker novo implantado, apontando para o D1 novo (sem R2);
+- [ ] Bloco B: D1 novo semeado; `GET /api/notes` do novo deployment retorna as 8 notas com os mesmos `id`s e `title`s do seed (comparação exata);
+- [ ] Bloco B: `docs/ATLAS_STATUS.md` atualizado com a URL do novo Worker.
 
 ## Non-Goals
 
-- Não provisionar recursos na conta Cloudflare do usuário nem alterar `.openai/hosting.json` antes da precondição do Bloco B;
+- Não migrar/portar nenhum recurso gerenciado pela OpenAI e não alterar nada no site publicado atual;
+- Não provisionar R2 (não usado hoje);
 - Não criar novos endpoints de export (DEC-004);
-- Não fazer migração destrutiva in-place.
 
 ## Dependencies
 
-- DEC-004 (aceita) e DEC-005 (parcial/draft).
+- DEC-004 (aceita) e DEC-005 (versão final, aceita); dados de seed em `scripts/seed-data/`.
 
 ## Complexity Budget
 
 Bloco A: Architecture NONE, Documentation NONE, Refactor NONE, Dependencies NONE.
 
-Bloco B: Architecture OPEN, Raf AS REQUIRED.
+Bloco B: Architecture LIMITED, Raf CONDITIONAL.
 
 ## Validation
 
