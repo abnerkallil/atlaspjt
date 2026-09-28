@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { NotesWorkspace } from '@/components/notes-workspace';
+import { ProgressPage } from '@/components/pages/progress-page';
 import { QuizzesPage } from '@/components/pages/quizzes-page';
 import { RoadmapPage } from '@/components/pages/roadmap-page';
 
@@ -333,7 +334,9 @@ export default function Home() {
 
         {active === 'Quizzes' && <QuizzesPage />}
 
-        {active !== 'Hoje' && active !== 'Estudar' && active !== 'Notas' && active !== 'Roadmap' && active !== 'Quizzes' && (
+        {active === 'Progresso' && <ProgressPage />}
+
+        {active !== 'Hoje' && active !== 'Estudar' && active !== 'Notas' && active !== 'Roadmap' && active !== 'Quizzes' && active !== 'Progresso' && (
           <div className="preview-notice" role="status">
             <span><Sparkles size={16} /> A página <strong>{active}</strong> será desenhada na próxima etapa.</span>
             <button onClick={() => setActive('Hoje')}>Voltar para Hoje</button>
