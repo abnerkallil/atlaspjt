@@ -61,8 +61,8 @@ Provar que os dados de produção são exportáveis de forma completa e portáti
 
 ## Acceptance Criteria
 
-- [ ] Bloco A: o artefato de export consolidado gera notas e pastas completas em formato portátil, usando os endpoints existentes; **nenhum endpoint novo** é criado (o endpoint de export de pastas já existe em `app/api/notes/folders/route.ts` e não requer código novo);
-- [ ] Bloco A: o export é verificado contra os dados reais (contagem de notas e pastas confere com a API);
+- [x] Bloco A: o artefato de export consolidado gera notas e pastas completas em formato portátil, usando os endpoints existentes; **nenhum endpoint novo** é criado — `pnpm run export:data` (`scripts/export-data.mjs`, Node puro, sem dependências; `-- --url <site>` para produção, `-- --out <arquivo>` para o destino; padrão `outputs/atlas-export-<data>.json`);
+- [x] Bloco A: o export é verificado contra os dados reais — validado no ambiente local: 3 notas e 2 pastas no arquivo, idênticas (deep-equal) à resposta direta de `GET /api/notes` e `GET /api/notes/folders`; o script também relê os endpoints e aborta se as contagens divergirem; `typecheck` limpo, nenhum erro de lint no arquivo novo;
 - [ ] Bloco B (bloqueado): só inicia depois que o usuário confirmar se o ChatGPT Sites permite apontar o projeto para conta Cloudflare própria ou exportar os recursos Workers/D1/R2.
 
 ## Non-Goals
