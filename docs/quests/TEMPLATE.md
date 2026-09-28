@@ -26,7 +26,7 @@ SMALL | MEDIUM | LARGE
 
 
 
-\## Gemini Gate
+\## Raf Gate
 
 
 
@@ -230,7 +230,7 @@ Use the defaults below unless the task has a justified exception.
 
 Architecture: NONE  
 
-Gemini: 0  
+Raf: 0  
 
 Documentation: NONE  
 
@@ -246,7 +246,7 @@ Dependencies: NONE unless technically required
 
 Architecture: LIMITED  
 
-Gemini: normally 0–1 architectural decisions  
+Raf: normally 0–1 architectural decisions  
 
 Documentation: UPDATE EXISTING WHEN NECESSARY  
 
@@ -262,7 +262,7 @@ Dependencies: only when justified
 
 Architecture: OPEN  
 
-Gemini: AS REQUIRED  
+Raf: AS REQUIRED  
 
 Documentation: ALLOWED  
 
@@ -346,7 +346,7 @@ Claude Code determines HOW to implement it inside the established architecture.
 
 
 
-Gemini participates only when an Architecture Gate exists.
+Raf participates only when an Architecture Gate exists.
 
 
 

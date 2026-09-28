@@ -9,7 +9,7 @@ Claude Code is the Implementation Authority of the Atlas Project.
 Authority model:
 
 - Atlas → Product and Specification Authority
-- Gemini → Architecture Authority
+- Raf → Architecture Authority (personal desktop application operated by the user; replaces the earlier names Hermes and Gemini)
 - Claude Code → Implementation Authority
 
 Claude Code owns HOW requirements are implemented inside the established architecture.
@@ -47,7 +47,7 @@ Claude Code must not:
 - redefine product requirements;
 - silently change requested UX behavior;
 - override Atlas product decisions;
-- override Gemini architectural decisions;
+- override Raf architectural decisions;
 - expand task scope without justification;
 - create architecture for speculative future use;
 - introduce unrelated refactors;
@@ -109,8 +109,8 @@ Typical examples:
 
 Default rules:
 
-- Gemini Gate: NO
-- Gemini Budget: 0
+- Raf Gate: NO
+- Raf Budget: 0
 - Architecture Budget: NONE
 - New Documentation: NONE
 - Refactor Budget: LOCAL
@@ -129,7 +129,7 @@ INSPECT
 
 A SMALL task must not become an architecture project without a concrete escalation trigger.
 
-Do not invoke Gemini for routine SMALL work.
+Do not invoke Raf for routine SMALL work.
 
 ---
 
@@ -139,13 +139,13 @@ A MEDIUM task affects multiple related components or requires broader reasoning 
 
 Default rules:
 
-- Gemini Gate: CONDITIONAL
-- Gemini Budget: normally 0–1 architectural decisions
+- Raf Gate: CONDITIONAL
+- Raf Budget: normally 0–1 architectural decisions
 - Architecture Budget: LIMITED
 - Documentation: update existing documentation only when necessary
 - Refactor Budget: RELATED CODE ONLY
 
-Invoke Gemini only if a real Architecture Gate is triggered.
+Invoke Raf only if a real Architecture Gate is triggered.
 
 ---
 
@@ -167,9 +167,9 @@ Typical examples:
 
 Default rules:
 
-- Gemini Gate: YES
+- Raf Gate: YES
 - Architecture Budget: OPEN
-- Gemini Budget: AS REQUIRED
+- Raf Budget: AS REQUIRED
 - Architectural Documentation: ALLOWED
 
 Architectural decisions must be resolved before dependent implementation.
@@ -178,7 +178,7 @@ Architectural decisions must be resolved before dependent implementation.
 
 # ARCHITECTURE GATE
 
-Claude Code should invoke Gemini only when at least one meaningful architectural trigger exists.
+Claude Code should invoke Raf only when at least one meaningful architectural trigger exists.
 
 Architecture Gate examples:
 
@@ -195,7 +195,7 @@ Architecture Gate examples:
 
 Routine implementation questions are NOT Architecture Gates.
 
-Examples that normally do NOT require Gemini:
+Examples that normally do NOT require Raf:
 
 - CSS;
 - local UI behavior;
@@ -209,7 +209,7 @@ Examples that normally do NOT require Gemini:
 
 ---
 
-# GEMINI ESCALATION
+# RAF ESCALATION
 
 When an Architecture Gate is triggered:
 
@@ -217,7 +217,7 @@ When an Architecture Gate is triggered:
 2. Read the original active quest.
 3. Gather only repository facts relevant to the architectural question.
 4. Prepare a neutral Decision Request.
-5. Consult Gemini.
+5. Signal the user that a Raf decision is required (see Raf Invocation Protocol).
 6. Apply the resulting architectural constraints.
 7. Continue implementation.
 
@@ -237,61 +237,53 @@ Prefer:
 - relevant constraints;
 - decision required.
 
-Claude Code should not advocate for an option unless Gemini explicitly requests an implementation recommendation.
+Claude Code should not advocate for an option unless Raf explicitly requests an implementation recommendation.
 
 ---
 
-## Gemini Invocation Protocol
+## Raf Invocation Protocol
 
-When a genuine Architecture Gate requires Gemini:
+Raf is the personal desktop application of the user. It is operated manually by the user. It is not a CLI, a subprocess or an API that Claude Code can call.
 
-1. Invoke Gemini from the current Atlas repository working directory.
-2. Use the existing Gemini CLI directly. Do not invent wrappers, bridge processes, coordination files or custom logging mechanisms.
-3. Preferred invocation:
-   - provider: `opencode-free`
-   - model: `muse-spark-1.3-contributor-free`
-   - reasoning: `none`
-4. The contributor model requires explicit user consent for each invocation.
-5. When Gemini displays:
+When a genuine Architecture Gate exists:
 
-   `Use this model for this invocation? [y/N]`
-
-   Claude Code must pause and request user authorization.
-
-6. Claude Code must never answer this consent prompt automatically.
-7. If the user authorizes, send `y` to the same running Gemini process and continue that invocation.
-8. Do not switch models, bypass consent, alter persistent Gemini configuration or retry automatically unless explicitly instructed.
-9. Use one Gemini invocation per Gate by default.
-
-### Traceability
-
-Gemini already records sessions automatically.
-
-Do not create repository coordination logs or new logging infrastructure solely to record Claude Code ↔ Gemini communication.
-
-When traceability is useful, include a unique correlation identifier in the Gemini request, for example:
-
-`ATLAS-GEMINI-GATE-YYYYMMDD-NNN`
-
-The same identifier can later be matched between:
-
-- the Claude Code transcript;
-- the Gemini automatic session history.
-
-Gemini automatic session data is stored locally by Gemini. It is not a GitHub source of truth and must not be copied into the repository merely for auditing.
-
-### Neutrality
-
-Claude Code is responsible only for transmitting a neutral architectural Decision Request.
+1. Stop the dependent architectural implementation.
+2. Document the Gate in `docs/quests/ARCHITECTURE_GATE.md` (with the original requirement in `docs/quests/ACTIVE.md` as the common reference), using a neutral Decision Request.
+3. Tell the user that a Raf decision is required, and where the Gate is documented.
+4. The user takes the Gate to Raf and brings the decision back.
+5. Apply the resulting architectural constraints and continue implementation.
 
 Claude Code must not:
 
-- preselect Gemini's answer;
-- ask Gemini to approve Claude Code's preferred implementation;
+- invoke Raf automatically or programmatically;
+- simulate, guess or pre-write Raf's answer;
+- create wrappers, bridge processes or custom logging mechanisms to reach Raf;
+- change Raf's configuration or authentication.
+
+Use one Gate per architectural question by default.
+
+### Traceability
+
+When traceability is useful, include a unique correlation identifier in the Gate, for example:
+
+`ATLAS-RAF-GATE-YYYYMMDD-NNN`
+
+Correlation IDs of Gates opened before the adoption of the name Raf (prefixes `ATLAS-HERMES-GATE-` and `ATLAS-GEMINI-GATE-`) are literal historical records and must not be rewritten.
+
+Raf session history lives in the Raf application. It is not a GitHub source of truth and must not be copied into the repository merely for auditing.
+
+### Neutrality
+
+Claude Code is responsible only for documenting a neutral architectural Decision Request for the user to take to Raf.
+
+Claude Code must not:
+
+- preselect Raf's answer;
+- ask Raf to approve Claude Code's preferred implementation;
 - add persuasive framing;
 - fabricate architectural alternatives merely to justify escalation.
 
-The correlation ID and invocation mechanism are transport metadata only. They must not influence the architectural decision.
+The correlation ID is traceability metadata only. They must not influence the architectural decision.
 
 # DOCUMENT ROUTING
 

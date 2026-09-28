@@ -17,7 +17,7 @@ They are recurring agent behaviors that previously caused:
 - weak functional validation;
 - unnecessary coordination between agents.
 
-The purpose of this document is to help Atlas, Gemini and Claude Code recognize these patterns before repeating them.
+The purpose of this document is to help Atlas, Raf and Claude Code recognize these patterns before repeating them.
 
 ---
 
@@ -57,7 +57,7 @@ Consult it when:
 - scope begins expanding;
 - implementation is taking disproportionately long;
 - a task is being reported complete despite uncertain behavior;
-- Atlas, Gemini or Claude Code suspects process overproduction.
+- Atlas, Raf or Claude Code suspects process overproduction.
 
 For ordinary implementation that clearly follows the active Task Contract, continue without loading this document.
 
@@ -74,7 +74,7 @@ A local or reversible task begins producing:
 - subsystem redesign;
 - new abstraction layers;
 - broad architectural analysis;
-- Gemini consultation;
+- Raf consultation;
 
 without a concrete Architecture Gate.
 
@@ -163,19 +163,19 @@ The document itself is required to preserve a durable architectural or product d
 
 ## Signal
 
-Claude Code repeatedly asks Gemini whether routine implementation choices are acceptable.
+Claude Code repeatedly asks Raf whether routine implementation choices are acceptable.
 
 Examples:
 
-- asking Gemini about handlers;
-- asking Gemini about local component structure;
-- asking Gemini about CSS;
-- asking Gemini to approve implementation progress;
-- asking Gemini multiple times during one small feature.
+- asking Raf about handlers;
+- asking Raf about local component structure;
+- asking Raf about CSS;
+- asking Raf to approve implementation progress;
+- asking Raf multiple times during one small feature.
 
 ## Why This Is a Problem
 
-Gemini becomes a routine supervisor rather than an architectural authority.
+Raf becomes a routine supervisor rather than an architectural authority.
 
 Every consultation creates additional context, reasoning and handoff cost.
 
@@ -185,9 +185,9 @@ It also reduces Claude Code implementation autonomy.
 
 Claude Code decides routine implementation inside the established architecture.
 
-Gemini participates only when a real Architecture Gate exists.
+Raf participates only when a real Architecture Gate exists.
 
-One architectural question should normally produce one Gemini decision cycle.
+One architectural question should normally produce one Raf decision cycle.
 
 ## Legitimate Exception
 
@@ -199,7 +199,7 @@ New repository evidence reveals a genuinely new architectural issue that materia
 
 ## Signal
 
-Claude Code presents its preferred solution to Gemini and asks for approval.
+Claude Code presents its preferred solution to Raf and asks for approval.
 
 Example:
 
@@ -209,7 +209,7 @@ Example:
 
 The implementation agent controls the framing of the architectural decision.
 
-Gemini may end up validating Claude Code's proposal rather than independently evaluating the original requirement and repository facts.
+Raf may end up validating Claude Code's proposal rather than independently evaluating the original requirement and repository facts.
 
 ## Expected Behavior
 
@@ -222,13 +222,13 @@ Claude Code supplies:
 - trade-offs;
 - smallest decision required.
 
-Gemini supplies architectural judgment.
+Raf supplies architectural judgment.
 
-Claude Code recommendation remains `NOT REQUESTED` unless Gemini explicitly asks for it.
+Claude Code recommendation remains `NOT REQUESTED` unless Raf explicitly asks for it.
 
 ## Legitimate Exception
 
-Gemini explicitly requests Claude Code's implementation recommendation after independently understanding the architectural problem.
+Raf explicitly requests Claude Code's implementation recommendation after independently understanding the architectural problem.
 
 ---
 
@@ -262,7 +262,7 @@ Claude Code may choose HOW to implement them.
 
 Claude Code may not replace them.
 
-Gemini may report architectural conflict but may not silently redesign the product requirement.
+Raf may report architectural conflict but may not silently redesign the product requirement.
 
 ## Legitimate Exception
 
@@ -486,7 +486,7 @@ The discovered issue directly prevents correct completion of the active requirem
 
 ## Signal
 
-Gemini receives one architectural question and begins reviewing or redesigning the entire subsystem.
+Raf receives one architectural question and begins reviewing or redesigning the entire subsystem.
 
 ## Why This Is a Problem
 
@@ -496,7 +496,7 @@ This increases reasoning cost and may introduce decisions unrelated to the block
 
 ## Expected Behavior
 
-Gemini answers the smallest architectural question necessary to unblock implementation.
+Raf answers the smallest architectural question necessary to unblock implementation.
 
 Do not redesign adjacent systems.
 
@@ -544,7 +544,7 @@ Source of truth for:
 - source code;
 - operational development state;
 - Claude Code instructions;
-- Gemini instructions;
+- Raf instructions;
 - current quest;
 - architectural decisions.
 
@@ -676,7 +676,7 @@ Claims of validated behavior must correspond to actual validation.
 
 # SELF-CORRECTION RULE
 
-When Atlas, Gemini or Claude Code detects a likely Failure Mode:
+When Atlas, Raf or Claude Code detects a likely Failure Mode:
 
 1. identify the suspected FM-*;
 2. determine whether current complexity is justified;
