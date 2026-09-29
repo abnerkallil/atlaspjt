@@ -1,0 +1,35 @@
+'use client';
+
+import { useEffect, useRef } from 'react';
+import { ArrowRight, BookOpen } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { sessionModal } from '@/lib/demo/study';
+
+export function SessionStartModal({ onClose }: { onClose: () => void }) {
+  const ref = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    const dialog = ref.current;
+    if (!dialog) return;
+    if (!dialog.open) dialog.showModal();
+    const onBackdropClick = (event: MouseEvent) => { if (event.target === dialog) dialog.close(); };
+    dialog.addEventListener('click', onBackdropClick);
+    return () => dialog.removeEventListener('click', onBackdropClick);
+  }, []);
+  return (
+    <dialog
+      ref={ref}
+      className="start-modal"
+      aria-labelledby="session-modal-title"
+      onClose={onClose}
+    >
+      <div className="modal-symbol"><BookOpen size={24} /></div>
+      <p className="eyebrow">SESSÃO PREPARADA</p>
+      <h2 id="session-modal-title">{sessionModal.title}</h2>
+      <p>{sessionModal.description}</p>
+      <div className="modal-actions">
+        <Button variant="outline" onClick={onClose}>Agora não</Button>
+        <Button className="primary-button" onClick={onClose}>Iniciar sessão <ArrowRight size={17} /></Button>
+      </div>
+    </dialog>
+  );
+}
