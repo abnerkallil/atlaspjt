@@ -458,3 +458,44 @@ Quest: QUEST-008 — Migração de ownership Cloudflare (Bloco B) (ATLAS-RAF-GAT
 Supersedes: DEC-005 (versão PARTIAL/DRAFT)
 
 Superseded by: NONE
+
+---
+
+## DEC-006 — Upgrade de vinext (1.0.0-beta.5 → 1.0.0) para corrigir navegação client-side quebrada em produção
+
+Status: ACCEPTED
+
+Date: 2026-09-29
+
+### Context
+
+O menu principal (`atlas-shell.tsx`, `next/link`) não navega por clique em produção nem em `pnpm run build` + `pnpm start` (funciona em `pnpm run dev`, sem bundle). Diagnóstico isolou a causa em `vinext@1.0.0-beta.5`: o chunk de shims `vinext-*.js` que deveria conter `navigateClientSide`, `getPrefetchInterceptionContext`, `createRscRequestUrl` etc. não é gerado pelo build; esses exports ficam ausentes do chunk de entrada, causando `TypeError` no runtime de navegação do cliente. Testado em cópia descartável fora do repositório: `vinext@1.0.0` + `@vitejs/plugin-rsc@0.5.34` (peer exigido) gera o chunk corretamente e os 6 itens do menu navegam sem os erros observados.
+
+### Decision
+
+Atualizar a dependência `vinext` de `1.0.0-beta.5` para `1.0.0`, e `@vitejs/plugin-rsc` de `0.5.26` para `0.5.34` (peer exigido pelo vinext 1.0.0). Nenhuma outra mudança de código de navegação.
+
+### Rationale
+
+1. Causa raiz confirmada e isolada na versão da dependência, não no código do app; a versão estável corrige o problema de forma verificada.
+2. As alternativas (workaround de chunking manual, ou evitar `next/link`) não corrigem a causa real do runtime de navegação quebrado e/ou violam o requisito explícito de navegação client-side.
+3. A cadeia de build/deploy já validada localmente (`vinext build` + `wrangler`) é a mesma usada pelo deploy de produção real (Worker independente na Cloudflare do usuário, DEC-005), reduzindo o risco de incompatibilidade de deploy.
+
+### Constraints for Claude Code
+
+- `vinext` fixado em `1.0.0` (sem `^`); `@vitejs/plugin-rsc` em `0.5.34`.
+- Não alterar `atlas-shell.tsx` nem substituir `next/link` por `<a>`/`router.push` como parte desta correção.
+- Revalidar client-side navigation (desktop + mobile, sem novos erros de console) após o upgrade, antes de mergear/deploy.
+- Deploy apenas no Worker independente (`atlas-notes.atlaspjt.workers.dev`); não tocar o site antigo da OpenAI.
+
+### Consequences
+
+`vinext` passa a ser tratado como dependência estável (não mais beta); futuras mudanças de versão do vinext continuam sujeitas a Architecture Gate por regra do quest. Nenhuma mudança de schema, persistência ou paradigma de navegação.
+
+### Related
+
+Quest: BUG P0 — navegação por clique do menu principal (ATLAS-RAF-GATE-20260929-VINEXT-NAV)
+
+Supersedes: NONE
+
+Superseded by: NONE
