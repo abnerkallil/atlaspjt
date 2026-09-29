@@ -107,6 +107,9 @@ export function AtlasShell({ children }: { children: ReactNode }) {
               <button aria-label="Buscar"><Search size={18} /></button>
               <button aria-label="Notificações" className="notification-button"><Bell size={18} /><span /></button>
               <button className="avatar" aria-label="Abrir perfil">{learner.initials}</button>
+              <form action="/api/auth/logout" method="post">
+                <button type="submit" className="quiet-button">Sair</button>
+              </form>
               <button className="mobile-menu" aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'} aria-expanded={menuOpen} aria-controls="mobile-nav" onClick={() => setMenuOpen((open) => !open)}>
                 {menuOpen ? <X size={20} /> : <Menu size={20} />}
               </button>
