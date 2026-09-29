@@ -17,7 +17,7 @@ If no Architecture Gate exists, this file should remain in the IDLE state.
 
 # GATE STATUS
 
-Status: OPEN — aguardando decisão do Raf
+Status: RESOLVED — DEC-006 (ACCEPTED); upgrade vinext 1.0.0-beta.5 → 1.0.0
 
 ---
 
@@ -69,6 +69,27 @@ C. Manter `vinext@1.0.0-beta.5` e evitar `next/link` no menu (navegação por `<
 # DECISION REQUIRED
 
 Qual opção (ou outra) adotar. O quest será retomado com as restrições que o Raf definir.
+
+---
+
+# RAF DECISION
+
+**Decision:** Adotar a Opção A — atualizar `vinext` para `1.0.0` e `@vitejs/plugin-rsc` para `0.5.34` (peer exigido). Nenhuma mudança em `atlas-shell.tsx` ou no uso de `next/link`.
+
+**Rationale:**
+1. Causa raiz isolada e reproduzida: só `vinext@1.0.0-beta.5` falha em gerar o chunk `vinext-*.js` de shims; `1.0.0` + peer correto foi verificado (cópia descartável) navegando corretamente nos 6 itens do menu, sem os erros `[vinext] RSC prefetch setup error` / `PAGEERR`.
+2. Opções B e C não corrigem a causa real ou violam o requisito: os exports quebrados (`navigateClientSide`, `getPrefetchInterceptionContext`) pertencem ao runtime de navegação do cliente inteiro, não só ao `next/link` — evitar `next/link` (C) não corrige `router.push` e cair para `<a>` com reload completo contradiz "navegar (client-side)" do requisito original; B acopla o projeto a internals não documentados do Rolldown/vinext sem nenhuma evidência de que funcione.
+3. Risco de deploy é baixo: a produção real hoje é o Worker independente na Cloudflare do próprio usuário (`atlas-notes.atlaspjt.workers.dev`, DEC-005), construído com `vinext build` e servido via `wrangler` — exatamente a cadeia já validada localmente (`pnpm run build` + `wrangler dev`/`pnpm start`). O site antigo gerido pela OpenAI (dependente de `@openai/sites-vite-plugin`) não é mais o alvo de produção e não deve ser tocado.
+
+**Constraints for Claude Code:**
+- Atualizar apenas `vinext` → `1.0.0` e `@vitejs/plugin-rsc` → `0.5.34` no `package.json` (mantendo o padrão de pin exato, sem `^`); atualizar o lockfile.
+- Não alterar `atlas-shell.tsx`, não trocar `next/link` por `<a>`/`router.push` — o fix é só na camada de dependência.
+- Revalidar antes de mergear em `main`: `pnpm run build` + `pnpm start`/`wrangler dev` com o mesmo teste (6 cliques do menu desktop navegam client-side, URL muda, sem erros novos no console) e checar também mobile, já que o requisito cobre os dois.
+- Deploy do fix vai para o Worker independente (`atlas-notes.atlaspjt.workers.dev`) pelo pipeline já estabelecido em DEC-005; não tocar o site antigo da OpenAI.
+- Qualquer regressão fora do menu causada pelo upgrade (além dos 404/500 de recursos pré-existentes já observados em `dev`) é fato novo — reportar, não contornar silenciosamente com B ou C.
+- B e C não são fallback implícito desta decisão; qualquer necessidade de reconsiderá-las exige novo Gate.
+
+**DEC Required:** YES (DEC-006, ver `docs/ATLAS_DECISIONS.md`).
 
 ---
 
