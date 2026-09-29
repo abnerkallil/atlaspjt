@@ -22,21 +22,64 @@ Do not accumulate completed quests here.
 
 # ACTIVE QUEST
 
-## QUEST-009 — Cadeia de tarefas em escada, Bloco 1 (itens sem bloqueio)
+## QUEST-010 — Infraestrutura restante do usuário único (autenticação, storage de anexos, dev/produção, backup)
 
-Complexity: MEDIUM · Raf Gate: NO (item 5 CONDITIONAL, só se surgir pergunta arquitetural real sobre Server Components do vinext).
+Priority: P0 · Complexity: LARGE · Raf Gate: YES (um Gate por área arquitetural, um de cada vez)
 
-Executar na ordem, um commit por item. Páginas novas usam dados de demonstração (mesmo padrão de Hoje/Estudar).
+### Objective
 
-- [x] 1. UX-07 — Documentação do sistema de componentes (`docs/DESIGN_SYSTEM.md`)
-- [x] 2. UX-02 — Página Roadmap
-- [x] 3. UX-04 — Página Quizzes
-- [x] 4. UX-05 — Página Progresso
-- [x] 5. TEC-01 — Rotas reais, cabeçalho compartilhado, componentes comuns, dados demo isolados, estado local por rota
-- [x] 6. UX-08 — Validação visual e responsiva (resultado em `docs/ATLAS_STATUS.md`)
-- [x] 7. TEC-07 — CI (`.github/workflows/`) e proteção da branch principal (documentar se sem permissão)
+Fechar os 4 itens de infraestrutura ainda em aberto do card DEC-06 (banco e limites do plano gratuito já fechados), dentro da conta Cloudflare pessoal do usuário (Worker `atlas-notes`, D1 `atlas-notes-own`, DEC-005): autenticação real, armazenamento durável de anexos (limites do DEC-07), separação segura dev/produção e rotina mínima de backup.
 
-Fora de escopo: os 17 itens do Bloco 2 (dependem de DEC-*).
+### Required Behavior
+
+- Usuário consegue se autenticar (login) para acessar seus próprios dados; a sessão persiste entre visitas sem exigir novo login a cada acesso.
+- Usuário consegue anexar imagem (PNG/JPG/JPEG) ou documento (PDF/DOCX) até 10MB (DEC-07); o arquivo fica armazenado de forma durável e só o próprio usuário consegue acessá-lo.
+- É possível desenvolver/testar mudanças sem afetar ou corromper os dados reais de produção.
+- Existe uma forma (mesmo manual/documentada) de gerar backup dos dados e restaurá-los em caso de perda.
+
+### Acceptance Criteria
+
+- Login/logout funcional, sessão persistente validada manualmente.
+- Upload de anexo funcional (10MB; PNG/JPG/JPEG/PDF/DOCX), com storage durável — arquivo continua acessível após reload/nova sessão.
+- Ambiente de desenvolvimento comprovadamente isolado de produção (dado de teste enviado em dev não aparece em produção).
+- Rotina de backup documentada e testada ao menos uma vez (executar backup, simular restauração).
+- Toda decisão arquitetural registrada em `docs/quests/ARCHITECTURE_GATE.md` e, quando `DEC Required: YES`, também em `docs/ATLAS_DECISIONS.md`.
+- Nenhum critério conta como implementado só porque o código existe: precisa ser validado funcionando de verdade (login com credencial real, upload com arquivo real, backup restaurado de verdade).
+
+### UX Constraints
+
+Nenhuma constraint visual nova além do já decidido: rótulo de formatos aceitos no upload (DEC-07: "Anexe uma foto ou documento (PNG, JPG, JPEG, PDF ou DOCX suportados)") e popup de consentimento de dados na primeira nota (DEC-08).
+
+### Non-Goals
+
+- Autenticação/arquitetura multiusuário (Atlas Business).
+- Criptografia ponta a ponta de notas privadas (item futuro do DEC-08).
+- Redesenho de telas existentes.
+- Itens do Bloco 2 do QUEST-009 que dependam de outros DEC-*.
+- Deploy automático a cada merge em `main`.
+
+### Dependencies
+
+DEC-005 (infra provisionada), DEC-06 (banco e limites fechados), DEC-07 (anexos: 10MB, PNG/JPG/JPEG/PDF/DOCX), DEC-08 (retenção de 3 dias após exclusão de conta; popup de consentimento).
+
+### Complexity Budget (LARGE)
+
+Architecture: OPEN · Raf: AS REQUIRED · Documentation: ALLOWED · Refactor: conforme a decisão aprovada em cada Gate · Dependencies: conforme decisão arquitetural.
+
+### Validation
+
+Teste funcional real de login/logout; upload/download real de anexo; isolamento dev/produção; backup + restauração simulada; build final e revisão de diff; cada Gate aberto documentado e, se resolvido, com `Status: RESOLVED`.
+
+### Delivery rules
+
+Sem push direto em `main`; branch própria + Pull Request; o usuário revisa e mescla.
+
+### Gate tracking (um Gate por vez)
+
+- [ ] 1. Autenticação — Gate ABERTO em `docs/quests/ARCHITECTURE_GATE.md`, aguardando decisão do Raf
+- [ ] 2. Storage de anexos — não aberto (aguarda o Gate 1)
+- [ ] 3. Dev/produção — não aberto
+- [ ] 4. Backup — não aberto (avaliar se é decisão arquitetural)
 
 ---
 
