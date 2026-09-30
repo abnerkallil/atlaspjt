@@ -13,6 +13,8 @@
     "paths": {}
   },
   "include": [
+    "lib/auth.ts",
+    "tests/auth.test.ts",
     "lib/atlas-notes-document.ts",
     "lib/atlas-notes-input.ts",
     "tests/atlas-notes-document.test.ts",

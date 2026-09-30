@@ -39,3 +39,6 @@ next-env.d.ts
 /outputs/
 /work/
 /.notes-spike-dist/
+
+# local Worker secrets (DEC-007)
+.dev.vars*

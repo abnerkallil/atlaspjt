@@ -43,7 +43,7 @@ Fechar os 4 itens de infraestrutura ainda em aberto do card DEC-06 (banco e limi
 - Upload de anexo funcional (10MB; PNG/JPG/JPEG/PDF/DOCX), com storage durável — arquivo continua acessível após reload/nova sessão.
 - Ambiente de desenvolvimento comprovadamente isolado de produção (dado de teste enviado em dev não aparece em produção).
 - Rotina de backup documentada e testada ao menos uma vez (executar backup, simular restauração).
-- Toda decisão arquitetural registrada em `docs/quests/ARCHITECTURE_GATE.md` e, quando `DEC Required: YES`, também em `docs/ATLAS_DECISIONS.md`.
+- Toda decisão arquitetural registrada em `docs/quests/ARCHITECTURE_GATE.md` e, quando `DEC Required: YES`, também em `docs/ATLAS_DECISIONS.md`. *(parcial: Gate 1 de 4 registrado — DEC-007; Gate 2 aberto)*
 - Nenhum critério conta como implementado só porque o código existe: precisa ser validado funcionando de verdade (login com credencial real, upload com arquivo real, backup restaurado de verdade).
 
 ### UX Constraints
@@ -76,8 +76,8 @@ Sem push direto em `main`; branch própria + Pull Request; o usuário revisa e m
 
 ### Gate tracking (um Gate por vez)
 
-- [ ] 1. Autenticação — Gate ABERTO em `docs/quests/ARCHITECTURE_GATE.md`, aguardando decisão do Raf
-- [ ] 2. Storage de anexos — não aberto (aguarda o Gate 1)
+- [ ] 1. Autenticação — Gate RESOLVIDO (DEC-007); implementada no PR, pendente configurar Worker secrets e validar em produção (usuário)
+- [ ] 2. Storage de anexos — Gate ABERTO em `docs/quests/ARCHITECTURE_GATE.md` (ATLAS-RAF-GATE-20260929-STORAGE), aguardando decisão do Raf
 - [ ] 3. Dev/produção — não aberto
 - [ ] 4. Backup — não aberto (avaliar se é decisão arquitetural)
 

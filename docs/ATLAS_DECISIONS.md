@@ -499,3 +499,46 @@ Quest: BUG P0 — navegação por clique do menu principal (ATLAS-RAF-GATE-20260
 Supersedes: NONE
 
 Superseded by: NONE
+
+---
+
+## DEC-007 — Autenticação de usuário único: aplicação + cookie assinado stateless
+
+Status: ACCEPTED
+
+Date: 2026-09-29
+
+### Context
+
+As rotas `/api/notes` e `/api/notes/folders` estão completamente públicas em produção: qualquer requisição chega ao D1 sem verificação de identidade. Não existe tabela de usuário, middleware de sessão, nem mecanismo de login. QUEST-010 exige login/logout funcional com sessão persistente entre visitas, para um único usuário (não-goal: multiusuário/Atlas Business), na conta Cloudflare própria do usuário (Worker `atlas-notes`, D1 `atlas-notes-own`, DEC-005).
+
+### Decision
+
+Autenticação implementada na própria aplicação (Worker), não na borda Cloudflare (Access) e sem provedor OAuth de terceiro. Sessão via cookie assinado, HttpOnly, Secure, com expiração/renovação — stateless, sem tabela de sessão no D1. Credencial (hash) e secret de assinatura do cookie vivem apenas como Worker secrets, fora do repositório e fora do D1. Verificação aplicada uniformemente a todas as páginas de `app/(atlas)/` e a todas as rotas `/api/notes*`.
+
+### Rationale
+
+1. Menor mecanismo suficiente para um único usuário: elimina a superfície pública atual sem depender de serviço externo (Access) com disponibilidade/limites não verificados, nem de biblioteca OAuth com compatibilidade não verificada em vinext/Workers.
+2. Cookie assinado stateless satisfaz persistência de sessão sem nova tabela de usuário/sessão no D1 — coerente com o non-goal de multiusuário.
+3. Segredos fora do repo/D1 preserva o padrão já existente no projeto (nenhum secret versionado hoje).
+
+### Constraints for Claude Code
+
+- Nenhuma tabela `user`/`session` nova em `db/schema.ts` para esta decisão.
+- Hash de credencial e secret de assinatura do cookie como Worker secrets; nunca no repositório, nunca no D1.
+- Cookie `HttpOnly`, `Secure`, com expiração e renovação; nenhum token de sessão acessível via JS no cliente.
+- Verificação de sessão obrigatória em todas as páginas de `app/(atlas)/`, `app/notes-spike/` e em todas as rotas `/api/notes*`; nenhuma rota pode depender apenas de checagem client-side.
+- Sem Cloudflare Access, sem provedor OAuth de terceiro.
+- Separação de credencial dev/produção é escopo do Gate de dev/produção (item 3 do QUEST-010), não desta decisão.
+
+### Consequences
+
+Fecha o security boundary do produto: rotas de API e páginas deixam de ser publicamente acessíveis. Desbloqueia os Gates 2 (storage de anexos — "só o próprio usuário consegue acessá-lo"), 3 (dev/produção) e 4 (backup) do QUEST-010, que dependiam desta decisão. Nenhuma migration de schema D1 é necessária para autenticação em si.
+
+### Related
+
+Quest: QUEST-010 — Infraestrutura restante do usuário único, item 1: autenticação (ATLAS-RAF-GATE-20260929-AUTH)
+
+Supersedes: NONE
+
+Superseded by: NONE
