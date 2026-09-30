@@ -39,7 +39,7 @@ Fechar os 4 itens de infraestrutura ainda em aberto do card DEC-06 (banco e limi
 
 ### Acceptance Criteria
 
-- Login/logout funcional, sessão persistente validada manualmente.
+- [x] Login/logout funcional, sessão persistente validada manualmente — validado pelo usuário em produção (`atlas-notes.atlaspjt.workers.dev`, deploy do commit `307e816`, 2026-09-30): login aceita apenas a senha correta; sessão persiste entre navegação de páginas e reload sem novo login.
 - Upload de anexo funcional (10MB; PNG/JPG/JPEG/PDF/DOCX), com storage durável — arquivo continua acessível após reload/nova sessão.
 - Ambiente de desenvolvimento comprovadamente isolado de produção (dado de teste enviado em dev não aparece em produção).
 - Rotina de backup documentada e testada ao menos uma vez (executar backup, simular restauração).
