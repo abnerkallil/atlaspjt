@@ -17,6 +17,8 @@
     "format": "oxfmt",
     "typecheck": "tsc --noEmit",
     "export:data": "node scripts/export-data.mjs",
+    "auth:secrets": "node scripts/hash-password.mjs",
+    "auth:revoke-sessions": "node scripts/hash-password.mjs --only-session",
     "test:notes": "tsc -p tsconfig.notes-spike.json && node --test .notes-spike-dist/tests/*.test.js",
     "test:notes-spike": "pnpm run test:notes"
   },
