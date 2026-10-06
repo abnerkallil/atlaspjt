@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -12,23 +12,31 @@ import { PageHeading } from '@/components/atlas/page-heading';
 import { ProgressBar } from '@/components/atlas/progress-bar';
 import { SessionStartModal } from '@/components/atlas/session-start-modal';
 import { useAtlasShell } from '@/components/atlas/atlas-shell';
-import { dailySummary, learner, todayContinue, todayMetrics, todayRoadmap, todayTasks } from '@/lib/demo/today';
+import { dailySummary, todayContinue, todayMetrics, todayRoadmap, todayTasks } from '@/lib/demo/today';
 
 const taskIcons = { book: BookOpen, brain: BrainCircuit, target: Target, pen: PenLine } as const;
 const metricIcons = { target: Target, brain: BrainCircuit, flame: Flame } as const;
 
+// Data e saudação dependem do relógio de quem acessa: calculadas só no navegador (no servidor ficam vazias),
+// para o fuso do servidor não aparecer na tela nem causar divergência de hidratação.
+const subscribeToClock = () => () => {};
+const todayLabel = () =>
+  new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' }).toUpperCase();
+const greetingNow = () => {
+  const hour = new Date().getHours();
+  return hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite';
+};
+
 export function TodayPage() {
-  const { done, toggleTask, openAssistant } = useAtlasShell();
+  const { done, toggleTask } = useAtlasShell();
   const [sessionOpen, setSessionOpen] = useState(false);
   const router = useRouter();
+  const dateLabel = useSyncExternalStore(subscribeToClock, todayLabel, () => ' ');
+  const greeting = useSyncExternalStore(subscribeToClock, greetingNow, () => 'Olá');
 
   return (
     <>
-      <PageHeading
-        eyebrow={todayContinue.eyebrow}
-        title={`Bom dia, ${learner.name}.`}
-        aside={<div className="streak-pill"><Flame size={17} /> 7 dias de consistência</div>}
-      >
+      <PageHeading eyebrow={dateLabel} title={`${greeting}.`}>
         Seu próximo passo já está preparado. Uma sessão consistente vale mais que uma maratona.
       </PageHeading>
 
@@ -57,20 +65,13 @@ export function TodayPage() {
           <p className="card-kicker">O ATLAS OBSERVOU</p>
           <h3>Seu ritmo está consistente.</h3>
           <p>Você retém melhor quando pratica logo após a teoria. Por isso, incluímos um balancete ao fim da jornada.</p>
-          <button onClick={openAssistant}>Entender recomendação <ChevronRight size={16} /></button>
+          <Link href="/progresso">Entender recomendação <ChevronRight size={16} /></Link>
         </aside>
       </div>
 
-      <section className="metrics-section" aria-label="Indicadores de aprendizagem">
-        {todayMetrics.map((metric) => {
-          const Icon = metricIcons[metric.icon];
-          return <MetricCard key={metric.label} tone={metric.tone} icon={<Icon size={19} />} label={metric.label} value={metric.value} hint={metric.hint} />;
-        })}
-      </section>
-
-      <section className="journey-section">
+      <section className="journey-section" aria-labelledby="today-journey-title">
         <div className="section-heading">
-          <div><p className="eyebrow">SUA JORNADA DE HOJE</p><h2>Quatro passos, um objetivo claro.</h2></div>
+          <div><p className="eyebrow">SUA JORNADA DE HOJE</p><h2 id="today-journey-title">Quatro passos, um objetivo claro.</h2></div>
           <div className="journey-total"><Clock3 size={16} /> {Math.floor(dailySummary.plannedMinutes / 60)}h{String(dailySummary.plannedMinutes % 60).padStart(2, '0')} planejadas</div>
         </div>
 
@@ -93,11 +94,22 @@ export function TodayPage() {
                   <h3>{task.title}</h3>
                   <p>{isDone ? 'Atividade concluída. Bom trabalho.' : task.description}</p>
                 </div>
-                <button className="task-arrow" aria-label={`Abrir ${task.title}`}><ChevronRight size={19} /></button>
+                <Link className="task-arrow" href={task.href} aria-label={`Abrir ${task.title}`}><ChevronRight size={19} /></Link>
               </article>
             );
           })}
         </div>
+      </section>
+
+      <section className="metrics-section today-metrics" aria-labelledby="today-metrics-title">
+        <div className="section-heading">
+          <div><p className="eyebrow">COMO VOCÊ ESTÁ</p><h2 id="today-metrics-title">Seus indicadores</h2></div>
+          <Link className="section-link" href="/progresso">Ver progresso completo <ChevronRight size={16} /></Link>
+        </div>
+        {todayMetrics.map((metric) => {
+          const Icon = metricIcons[metric.icon];
+          return <MetricCard key={metric.label} tone={metric.tone} icon={<Icon size={19} />} label={metric.label} value={metric.value} hint={metric.hint} />;
+        })}
       </section>
 
       <section className="roadmap-card">

@@ -50,3 +50,23 @@ export const recommendations = [
     why: 'Nos últimos 30 dias, você reteve mais quando praticou no mesmo dia da teoria (+6% de retenção).',
     data: 'Consistência 7 dias · retenção geral 82%' },
 ];
+
+// Resumo usado por Hoje e Progresso, para as duas páginas mostrarem os mesmos números.
+const average = (values: number[]) => Math.round(values.reduce((a, b) => a + b, 0) / values.length);
+
+function trailingStreak(days: number[]) {
+  let streak = 0;
+  for (let i = days.length - 1; i >= 0 && days[i] > 0; i -= 1) streak += 1;
+  return streak;
+}
+
+const weeks = WEEK_LABELS.length;
+const retentionAt = (week: number) => average(competencies.map((c) => c.history.retention[week]));
+
+export const progressSummary = {
+  mastery: average(competencies.map((c) => c.mastery)),
+  retention: average(competencies.map((c) => c.retention)),
+  retentionChange: retentionAt(weeks - 1) - retentionAt(0),
+  currentStreak: trailingStreak(consistencyDays),
+  studiedDays: consistencyDays.filter((minutes) => minutes > 0).length,
+};

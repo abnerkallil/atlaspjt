@@ -1,40 +1,50 @@
-// Dados demonstrativos das páginas Hoje e do cabeçalho. Não há backend de estudo ainda.
+// Dados demonstrativos das páginas Hoje e do cabeçalho. Não há backend de estudo ainda (TEC-04).
+// Os números de Hoje vêm das mesmas fontes demonstrativas de Estudar, Roadmap e Progresso, para as páginas não se contradizerem.
+import { progressSummary } from './progress';
+import { roadmapPhases } from './roadmap';
+import { studyCourse, studyLesson } from './study';
 
 export type TaskTone = 'blue' | 'violet' | 'amber' | 'green';
 export type TaskIcon = 'book' | 'brain' | 'target' | 'pen';
 
-export const learner = { name: 'Marcos', initials: 'MS' };
 
+// href: página definitiva onde cada atividade é feita.
 export const todayTasks: {
-  id: number; title: string; description: string; minutes: number; label: string; tone: TaskTone; icon: TaskIcon;
+  id: number; title: string; description: string; minutes: number; label: string; tone: TaskTone; icon: TaskIcon; href: string;
 }[] = [
-  { id: 1, title: 'Regime de competência', description: 'Continue o conteúdo e registre os principais conceitos.', minutes: 35, label: 'Continuar estudo', tone: 'blue', icon: 'book' },
-  { id: 2, title: 'Contas patrimoniais', description: 'Revisão de 7 dias · consolide ativo, passivo e patrimônio líquido.', minutes: 15, label: 'Revisão', tone: 'violet', icon: 'brain' },
-  { id: 3, title: 'Débito e crédito', description: 'Quiz rápido para medir retenção e localizar pontos frágeis.', minutes: 20, label: 'Quiz', tone: 'amber', icon: 'target' },
-  { id: 4, title: 'Construção de balancete', description: 'Aplicação prática com um cenário contábil realista.', minutes: 30, label: 'Prática', tone: 'green', icon: 'pen' },
+  { id: 1, title: 'Regime de competência', description: 'Continue o conteúdo e registre os principais conceitos.', minutes: 35, label: 'Continuar estudo', tone: 'blue', icon: 'book', href: '/estudar' },
+  { id: 2, title: 'Contas patrimoniais', description: 'Revisão de 7 dias · consolide ativo, passivo e patrimônio líquido.', minutes: 15, label: 'Revisão', tone: 'violet', icon: 'brain', href: '/quizzes' },
+  { id: 3, title: 'Débito e crédito', description: 'Quiz rápido para medir retenção e localizar pontos frágeis.', minutes: 20, label: 'Quiz', tone: 'amber', icon: 'target', href: '/quizzes' },
+  { id: 4, title: 'Construção de balancete', description: 'Aplicação prática com um cenário contábil realista.', minutes: 30, label: 'Prática', tone: 'green', icon: 'pen', href: '/estudar' },
 ];
 
-export const dailySummary = { plannedMinutes: 100, scheduledReviews: 2 };
+export const dailySummary = {
+  plannedMinutes: todayTasks.reduce((sum, task) => sum + task.minutes, 0),
+  scheduledReviews: todayTasks.filter((task) => task.label === 'Revisão').length,
+};
 
 export const todayContinue = {
-  eyebrow: 'QUINTA-FEIRA, 3 DE SETEMBRO',
-  subject: 'Contabilidade Geral',
-  title: 'Regime de competência',
-  description: 'Reconhecimento de receitas e despesas no período correto.',
-  progress: 42,
+  subject: studyCourse.name,
+  title: studyLesson.title,
+  description: studyLesson.subtitle,
+  progress: studyCourse.progress,
   lastSession: 'Última sessão há 2 dias',
 };
 
 export const todayMetrics = [
-  { tone: 'gold', icon: 'target', label: 'Domínio atual', value: '74%', hint: 'Proficiência consolidada' },
-  { tone: 'violet', icon: 'brain', label: 'Retenção', value: '82%', hint: '+6% nos últimos 30 dias' },
-  { tone: 'green', icon: 'flame', label: 'Consistência', value: '7 dias', hint: 'Melhor sequência: 12 dias' },
+  { tone: 'gold', icon: 'target', label: 'Domínio geral', value: `${progressSummary.mastery}%`, hint: 'Conhecimento consolidado' },
+  {
+    tone: 'violet', icon: 'brain', label: 'Retenção média', value: `${progressSummary.retention}%`,
+    hint: `${progressSummary.retentionChange >= 0 ? '+' : ''}${progressSummary.retentionChange} pontos em 8 semanas`,
+  },
+  { tone: 'green', icon: 'flame', label: 'Consistência', value: `${progressSummary.currentStreak} dias`, hint: `${progressSummary.studiedDays} de 28 dias com estudo` },
 ] as const;
 
-export const todayRoadmap = { phase: 'Base Contábil', progress: 68 };
+const currentPhase = roadmapPhases.find((phase) => phase.status === 'atual') ?? roadmapPhases[0];
+export const todayRoadmap = { phase: currentPhase.name, progress: currentPhase.raw };
 
 export const assistantDemo = {
-  greeting: 'Bom dia, Marcos. Organizei sua jornada para reforçar o que você estudou e transformar teoria em prática. Em que posso ajudar?',
+  greeting: `Olá. Organizei sua jornada para reforçar o que você estudou e transformar teoria em prática. Em que posso ajudar?`,
   shortcuts: [
     { icon: 'help', text: 'Por que esta ordem de estudos?' },
     { icon: 'brain', text: 'Como está minha retenção?' },
