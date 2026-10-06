@@ -3,8 +3,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ArrowRight, Bell, BrainCircuit, CircleHelp, MessageCircle, Map as MapIcon, Menu, Search, Sparkles, X } from 'lucide-react';
-import { assistantDemo, dailySummary, learner, todayTasks } from '@/lib/demo/today';
+import { ArrowRight, Bell, BrainCircuit, CircleHelp, MessageCircle, Map as MapIcon, Menu, Search, Sparkles, UserRound, X } from 'lucide-react';
+import { assistantDemo, dailySummary, todayTasks } from '@/lib/demo/today';
 
 export const navItems = [
   { label: 'Hoje', href: '/' },
@@ -95,7 +95,7 @@ export function AtlasShell({ children }: { children: ReactNode }) {
                 <span>·</span>
                 <span>{Math.max(0, dailySummary.plannedMinutes - completedMinutes)} min restantes</span>
                 <span className="summary-divider" />
-                <span>{dailySummary.scheduledReviews} revisões programadas</span>
+                <span>{dailySummary.scheduledReviews} {dailySummary.scheduledReviews === 1 ? 'revisão programada' : 'revisões programadas'}</span>
               </div>
               <button className="quiet-button" onClick={openAssistant}>
                 <Sparkles size={15} /> Ver orientação do Atlas
@@ -126,7 +126,7 @@ export function AtlasShell({ children }: { children: ReactNode }) {
                 <div className="header-actions">
                   <button aria-label="Buscar"><Search size={18} /></button>
                   <button aria-label="Notificações" className="notification-button"><Bell size={18} /><span /></button>
-                  <button className="avatar" aria-label="Abrir perfil">{learner.initials}</button>
+                  <button className="avatar" aria-label="Abrir perfil"><UserRound size={18} /></button>
                   <form action="/api/auth/logout" method="post">
                     <button type="submit" className="quiet-button">Sair</button>
                   </form>

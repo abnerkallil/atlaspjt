@@ -102,7 +102,8 @@ button { color: inherit; }
 .atlas-orbit.small { width: 34px; height: 34px; margin: 0; }
 .atlas-observed-card h3 { font-size: 19px; margin: 15px 0 9px; }
 .atlas-observed-card > p:not(.card-kicker) { color: var(--muted); font-size: 13px; line-height: 1.65; margin: 0; }
-.atlas-observed-card > button { display: flex; align-items: center; gap: 3px; border: 0; padding: 0; margin-top: 22px; color: #1d4ed8; background: transparent; cursor: pointer; font-size: 12px; font-weight: 700; }
+.atlas-observed-card > button, .atlas-observed-card > a { text-decoration: none; width: fit-content; }
+.atlas-observed-card > button, .atlas-observed-card > a { display: flex; align-items: center; gap: 3px; border: 0; padding: 0; margin-top: 22px; color: #1d4ed8; background: transparent; cursor: pointer; font-size: 12px; font-weight: 700; }
 
 .metrics-section { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin: 17px 0 58px; }
 .metric-card { min-height: 122px; padding: 21px; display: flex; align-items: center; gap: 17px; border-radius: 15px; }
@@ -135,7 +136,12 @@ button { color: inherit; }
 .task-time { display: flex; gap: 4px; align-items: center; color: #6f6a7c; font-size: 10px; }
 .task-copy h3 { margin: 6px 0 4px; font-size: 16px; }
 .task-copy p { margin: 0; color: var(--muted); font-size: 12px; }
-.task-arrow { width: 34px; height: 34px; border: 0; background: transparent; color: #756f80; cursor: pointer; }
+.task-arrow { width: 34px; height: 34px; display: grid; place-items: center; border: 0; border-radius: 10px; background: transparent; color: #756f80; cursor: pointer; }
+.task-arrow:hover { color: var(--blue); background: #edf4ff; }
+.hero-grid + .journey-section { margin-top: 58px; }
+.today-metrics { margin-top: 58px; }
+.today-metrics > .section-heading { grid-column: 1 / -1; margin-bottom: 4px; }
+.section-link { display: inline-flex; align-items: center; gap: 4px; color: #1d4ed8; font-size: 13px; font-weight: 700; text-decoration: none; }
 
 .roadmap-card { margin-top: 54px; border-radius: 17px; padding: 23px 26px; display: grid; grid-template-columns: 1fr minmax(240px,.8fr) auto; align-items: center; gap: 45px; }
 .roadmap-title { display: flex; align-items: center; gap: 14px; }
@@ -429,6 +435,7 @@ button { color: inherit; }
   .continue-footer { align-items: stretch; flex-direction: column; }
   .continue-footer .primary-button { width: 100%; }
   .metrics-section { margin-bottom: 48px; }
+  .hero-grid + .journey-section, .today-metrics { margin-top: 44px; }
   .section-heading { align-items: start; flex-direction: column; }
   .task-row { grid-template-columns: 32px 1fr 28px; padding: 18px 15px; gap: 11px; }
   .task-icon { display: none; }
