@@ -76,3 +76,26 @@ Leitura: `GET /api/auditoria?entityType=conteudo|disciplina&entityId=...&limit=.
 (mais recente primeiro, até 500; exige sessão como toda a API). Ainda não há
 rota de escrita: quem dispara transições são os cards MVP (sessão, quiz,
 revisão, avaliação).
+
+## Catálogo no D1 (TEC-04)
+
+`drizzle/0005_catalog_seed.sql` carrega o catálogo de `lib/content-catalog.ts` no
+roadmap `atlas-contabil`, com a estrutura escolhida pelo Abner em 2026-10-06:
+
+- uma fase por matéria (Contabilidade Geral, depois Contabilidade Tributária),
+  cada uma com uma disciplina de mesmo nome;
+- os 157 conteúdos na ordem da planilha, com a unidade como agrupamento;
+- pré-requisito em sequência dentro de cada unidade (cada conteúdo depende do
+  anterior da mesma unidade; o primeiro de cada unidade fica livre).
+
+A carga é idempotente: atualiza títulos e ordem, nunca apaga estado, evidência
+ou auditoria. Quando a planilha mudar, atualize `lib/content-catalog.ts`, rode
+`pnpm run db:catalog` e crie uma migration nova com o SQL gerado (a 0005 já
+aplicada não roda de novo). O teste `tests/catalog-roadmap.test.ts` falha se o
+arquivo e o gerador divergirem. Para mudar fases ou pré-requisitos, edite
+`lib/catalog/roadmap-seed.ts`.
+
+Leitura: `GET /api/roadmap` devolve fases → disciplinas → conteúdos com estado
+atual e pré-requisitos (exige sessão). Preferências e tarefas não ganharam
+tabela: nenhuma tela as usa ainda; a primeira preferência real (horário padrão
+da agenda, DEC-09) chega com o MVP-05. Sessões chegam com o MVP-02 (DEC-010).

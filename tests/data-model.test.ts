@@ -56,16 +56,19 @@ void test('TEC-02: hierarquia com chaves estáveis e remoção em cascata', () =
     INSERT INTO atlas_roadmaps (id, title, created_at, updated_at) VALUES ('rm', 'Roadmap', '${now}', '${now}');
     INSERT INTO atlas_phases (id, roadmap_id, position, title) VALUES ('f1', 'rm', 1, 'Base');
     INSERT INTO atlas_disciplines (id, phase_id, position, title) VALUES ('cg', 'f1', 1, 'Contabilidade Geral');
-    INSERT INTO atlas_contents (id, discipline_id, position, title) VALUES ('CG-001', 'cg', 1, 'Conceitos'), ('CG-002', 'cg', 2, 'Patrimônio');
-    INSERT INTO atlas_content_prerequisites (content_id, prerequisite_id) VALUES ('CG-002', 'CG-001');
-    INSERT INTO atlas_subtopics (id, content_id, position, title) VALUES ('CG-002.1', 'CG-002', 1, 'Bens');
-    INSERT INTO atlas_evidences (id, content_id, subtopic_id, kind, summary, recorded_at) VALUES ('ev1', 'CG-002', 'CG-002.1', 'quiz', 'Quiz aprovado', '${now}');
-    INSERT INTO atlas_content_states (content_id, state, updated_at) VALUES ('CG-002', 'concluido', '${now}');
+    INSERT INTO atlas_contents (id, discipline_id, position, title) VALUES ('X-001', 'cg', 1, 'Conceitos'), ('X-002', 'cg', 2, 'Patrimônio');
+    INSERT INTO atlas_content_prerequisites (content_id, prerequisite_id) VALUES ('X-002', 'X-001');
+    INSERT INTO atlas_subtopics (id, content_id, position, title) VALUES ('X-002.1', 'X-002', 1, 'Bens');
+    INSERT INTO atlas_evidences (id, content_id, subtopic_id, kind, summary, recorded_at) VALUES ('ev1', 'X-002', 'X-002.1', 'quiz', 'Quiz aprovado', '${now}');
+    INSERT INTO atlas_content_states (content_id, state, updated_at) VALUES ('X-002', 'concluido', '${now}');
   `);
   assert.throws(() => db.exec("INSERT INTO atlas_contents (id, discipline_id, position, title) VALUES ('X', 'nao-existe', 1, 'X')"));
   db.exec("DELETE FROM atlas_roadmaps WHERE id = 'rm'");
-  for (const table of ['atlas_contents', 'atlas_content_prerequisites', 'atlas_subtopics', 'atlas_evidences', 'atlas_content_states']) {
-    assert.equal((db.prepare(`SELECT count(*) AS n FROM ${table}`).get() as { n: number }).n, 0, table);
+  for (const [table, column] of [
+    ['atlas_contents', 'id'], ['atlas_content_prerequisites', 'content_id'], ['atlas_subtopics', 'content_id'],
+    ['atlas_evidences', 'content_id'], ['atlas_content_states', 'content_id'],
+  ] as const) {
+    assert.equal((db.prepare(`SELECT count(*) AS n FROM ${table} WHERE ${column} LIKE 'X-%'`).get() as { n: number }).n, 0, table);
   }
 });
 
