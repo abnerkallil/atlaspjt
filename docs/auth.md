@@ -11,6 +11,14 @@ dois Worker secrets; não existe tabela de usuário nem de sessão.
 Sem os dois secrets o Worker recusa todo acesso (falha fechada) e a tela de
 login mostra "Autenticação não configurada neste ambiente."
 
+## Limite de tentativas
+
+O login aceita no máximo 10 tentativas por minuto por IP (binding
+`LOGIN_RATE_LIMITER`, Workers Rate Limiting, declarado em `vite.config.ts` e
+copiado para `dist/server/wrangler.json` pelo build). Passado o limite, a tela
+mostra "Muitas tentativas" até o minuto acabar. Sem o binding o login funciona
+sem limite.
+
 ## Comandos
 
 ```bash

@@ -1,5 +1,5 @@
 import { safeNextPath, sessionCookie, createSessionToken, verifyPassword } from '@/lib/auth';
-import { getAuthSecrets } from '@/lib/auth-env';
+import { getAuthSecrets, loginAllowed } from '@/lib/auth-env';
 
 export const runtime = 'edge';
 
@@ -16,6 +16,11 @@ export async function POST(request: Request) {
   const secrets = getAuthSecrets();
 
   if (!secrets) return redirect(request, '/login?error=config');
+  if (!(await loginAllowed(request))) {
+    const limited = new URLSearchParams({ error: 'rate' });
+    if (next !== '/') limited.set('next', next);
+    return redirect(request, `/login?${limited}`);
+  }
 
   if (typeof password === 'string' && password && (await verifyPassword(password, secrets.passwordHash))) {
     const token = await createSessionToken(secrets.sessionSecret, Math.floor(Date.now() / 1000));

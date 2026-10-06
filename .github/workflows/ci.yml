@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+# Só leitura: o CI nunca recebe permissão de escrita nem segredos.
+permissions:
+  contents: read
+
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
