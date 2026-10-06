@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useSyncExternalStore } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -12,7 +12,8 @@ import { PageHeading } from '@/components/atlas/page-heading';
 import { ProgressBar } from '@/components/atlas/progress-bar';
 import { SessionStartModal } from '@/components/atlas/session-start-modal';
 import { useAtlasShell } from '@/components/atlas/atlas-shell';
-import { dailySummary, todayContinue, todayMetrics, todayRoadmap, todayTasks } from '@/lib/demo/today';
+import { dailySummary, todayContinue, todayMetrics, todayTasks } from '@/lib/demo/today';
+import type { RoadmapView } from '@/lib/roadmap-store';
 
 const taskIcons = { book: BookOpen, brain: BrainCircuit, target: Target, pen: PenLine } as const;
 const metricIcons = { target: Target, brain: BrainCircuit, flame: Flame } as const;
@@ -27,8 +28,30 @@ const greetingNow = () => {
   return hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite';
 };
 
+// Fase atual vinda do roadmap real (a mesma leitura da página Roadmap): a primeira
+// fase com conteúdo por concluir.
+function useCurrentPhase() {
+  const [phase, setPhase] = useState<{ title: string; percent: number } | null>(null);
+  useEffect(() => {
+    let active = true;
+    fetch('/api/roadmap')
+      .then((response) => (response.ok ? (response.json() as Promise<{ roadmap: RoadmapView }>) : null))
+      .then((body) => {
+        const phases = body?.roadmap.phases ?? [];
+        const current = phases.find((item) => item.progress.completed < item.progress.total) ?? phases.at(-1);
+        if (active && current) setPhase({ title: current.title, percent: current.progress.percent });
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
+  return phase;
+}
+
 export function TodayPage() {
   const { done, toggleTask } = useAtlasShell();
+  const currentPhase = useCurrentPhase();
   const [sessionOpen, setSessionOpen] = useState(false);
   const router = useRouter();
   const dateLabel = useSyncExternalStore(subscribeToClock, todayLabel, () => ' ');
@@ -113,10 +136,10 @@ export function TodayPage() {
       </section>
 
       <section className="roadmap-card">
-        <div className="roadmap-title"><div className="map-icon"><MapIcon size={19} /></div><div><span>ROADMAP ATUAL</span><h2>{todayRoadmap.phase}</h2></div></div>
+        <div className="roadmap-title"><div className="map-icon"><MapIcon size={19} /></div><div><span>ROADMAP ATUAL</span><h2>{currentPhase?.title ?? 'Carregando…'}</h2></div></div>
         <div className="roadmap-progress">
-          <div><span>Progresso da fase</span><strong>{todayRoadmap.progress}%</strong></div>
-          <ProgressBar value={todayRoadmap.progress} />
+          <div><span>Progresso da fase</span><strong>{currentPhase ? `${currentPhase.percent}%` : '—'}</strong></div>
+          <ProgressBar value={currentPhase?.percent ?? 0} />
         </div>
         <Link href="/roadmap">Ver roadmap completo <ChevronRight size={17} /></Link>
       </section>

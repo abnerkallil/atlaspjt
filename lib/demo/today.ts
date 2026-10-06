@@ -1,7 +1,7 @@
 // Dados demonstrativos das páginas Hoje e do cabeçalho. Não há backend de estudo ainda (TEC-04).
-// Os números de Hoje vêm das mesmas fontes demonstrativas de Estudar, Roadmap e Progresso, para as páginas não se contradizerem.
+// Os números de Hoje vêm das mesmas fontes demonstrativas de Estudar e Progresso, para as páginas não se contradizerem.
+// O cartão de roadmap já lê o roadmap real (GET /api/roadmap, TEC-04/MVP-01).
 import { progressSummary } from './progress';
-import { roadmapPhases } from './roadmap';
 import { studyCourse, studyLesson } from './study';
 
 export type TaskTone = 'blue' | 'violet' | 'amber' | 'green';
@@ -39,9 +39,6 @@ export const todayMetrics = [
   },
   { tone: 'green', icon: 'flame', label: 'Consistência', value: `${progressSummary.currentStreak} dias`, hint: `${progressSummary.studiedDays} de 28 dias com estudo` },
 ] as const;
-
-const currentPhase = roadmapPhases.find((phase) => phase.status === 'atual') ?? roadmapPhases[0];
-export const todayRoadmap = { phase: currentPhase.name, progress: currentPhase.raw };
 
 export const assistantDemo = {
   greeting: `Olá. Organizei sua jornada para reforçar o que você estudou e transformar teoria em prática. Em que posso ajudar?`,
