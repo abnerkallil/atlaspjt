@@ -27,7 +27,11 @@ for (const script of ['prepare-own-deploy.mjs', 'seed-notes.mjs', 'export-data.m
 void test('DEC-009: prepare-own-deploy não tem nome de Worker nem D1 padrão', () => {
   const dir = mkdtempSync(join(tmpdir(), 'atlas-deploy-'));
   const file = join(dir, 'wrangler.json');
-  const original = { name: 'placeholder', d1_databases: [{ binding: 'DB', database_name: 'x', database_id: 'y' }] };
+  const original = {
+    name: 'placeholder',
+    d1_databases: [{ binding: 'DB', database_name: 'x', database_id: 'y' }],
+    r2_buckets: [{ binding: 'ATTACHMENTS', bucket_name: 'site-creator-r2' }],
+  };
   writeFileSync(file, JSON.stringify(original));
 
   const local = run('prepare-own-deploy.mjs', ['--target', 'local', '--id', 'abc', '--file', file]);
@@ -38,13 +42,18 @@ void test('DEC-009: prepare-own-deploy não tem nome de Worker nem D1 padrão', 
   assert.match(missing.output, /--name/);
   assert.deepEqual(JSON.parse(readFileSync(file, 'utf8')), original, 'nada é gravado quando falta argumento');
 
+  const noBucket = run('prepare-own-deploy.mjs', ['--target', 'production', '--name', 'w', '--db', 'd', '--id', 'abc', '--file', file]);
+  assert.equal(noBucket.status, 1, 'o bucket R2 de anexos (DEC-008) também não tem padrão');
+  assert.match(noBucket.output, /--bucket/);
+
   const ok = run('prepare-own-deploy.mjs', [
-    '--target', 'production', '--name', 'w', '--db', 'd', '--id', 'abc', '--file', file,
+    '--target', 'production', '--name', 'w', '--db', 'd', '--id', 'abc', '--bucket', 'b', '--file', file,
   ]);
   assert.equal(ok.status, 0, ok.output);
   const written = JSON.parse(readFileSync(file, 'utf8'));
   assert.equal(written.name, 'w');
   assert.equal(written.d1_databases[0].database_id, 'abc');
+  assert.equal(written.r2_buckets[0].bucket_name, 'b');
 });
 
 void test('DEC-009: seed-notes em produção exige --config; export em produção exige --url', () => {

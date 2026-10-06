@@ -17,7 +17,7 @@ e R2 emulados pelo Miniflare. Não há staging remoto.
 
 | Script | Local | Produção |
 | --- | --- | --- |
-| `prepare-own-deploy.mjs` | não se aplica | `--target production --name <worker> --db <d1> --id <d1-id>` (todos obrigatórios) |
+| `prepare-own-deploy.mjs` | não se aplica | `--target production --name <worker> --db <d1> --id <d1-id> --bucket <r2>` (todos obrigatórios) |
 | `seed-notes.mjs` | `--target local --db <d1> --config wrangler.local.jsonc` | `--target production --db <d1> --config <wrangler.json>` |
 | `export-data.mjs` | `--target local` (padrão `http://localhost:3000`) | `--target production --url <site>` |
 
