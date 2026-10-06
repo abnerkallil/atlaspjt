@@ -112,6 +112,7 @@ Blocos visuais recorrentes, definidos como classes globais em `app/globals.css`:
 | Lista de tarefas | `.task-list`, `.task-row`, `.task-icon`, `.task-label` (tons `blue`, `violet`, `amber`, `green`) |
 | Barra de progresso | `.progress-track` > `span` com `width` em % |
 | Estudo | `.study-view`, `.lesson-card`, `.study-side-card`, `.module-card` (`complete`, `current`, `locked`) |
+| Sessão de estudo | `.ss-session`, `.ss-material`, `.ss-steps`, `.ss-notes`, `.ss-library`, `.ss-close`; cabeçalho em modo de foco (`.atlas-shell.focus-mode`) |
 | Cabeçalho e navegação | `.site-header`, `.main-nav`, `.top-ribbon` |
 | Painel lateral / modal | `.assistant-drawer`, `.drawer-backdrop`, `.start-modal`, `.modal-backdrop` |
 | Notas | `.notes-*`, `.note-*` |

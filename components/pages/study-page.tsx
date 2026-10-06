@@ -1,14 +1,38 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft, Bookmark, Check, ChevronRight, Clock3, ListChecks, LockKeyhole, Play, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SessionStartModal } from '@/components/atlas/session-start-modal';
+import { StudySession } from '@/components/pages/study-session';
 import { sessionSteps, studyCourse, studyLesson, studyModules } from '@/lib/demo/study';
 
 export function StudyPage() {
   const [overview, setOverview] = useState(false);
   const [sessionOpen, setSessionOpen] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  // "Iniciar sessão" em Hoje abre esta página já com a sessão em andamento (/estudar?sessao=iniciar).
+  const [sessionActive, setSessionActive] = useState(() => searchParams.get('sessao') === 'iniciar');
+
+  function startSession() {
+    setSessionOpen(false);
+    setOverview(false);
+    setSessionActive(true);
+    window.scrollTo(0, 0);
+  }
+
+  if (sessionActive) {
+    return (
+      <StudySession
+        onBack={() => {
+          setSessionActive(false);
+          router.replace('/estudar');
+        }}
+      />
+    );
+  }
 
   return (
     <>
@@ -100,7 +124,7 @@ export function StudyPage() {
           </div>
         </section>
       )}
-      {sessionOpen && <SessionStartModal onClose={() => setSessionOpen(false)} />}
+      {sessionOpen && <SessionStartModal onClose={() => setSessionOpen(false)} onStart={startSession} />}
     </>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   ArrowRight, BookOpen, BrainCircuit, Check, ChevronRight, Clock3, Flame, Map as MapIcon, PenLine, Sparkles, Target,
 } from 'lucide-react';
@@ -19,6 +20,7 @@ const metricIcons = { target: Target, brain: BrainCircuit, flame: Flame } as con
 export function TodayPage() {
   const { done, toggleTask, openAssistant } = useAtlasShell();
   const [sessionOpen, setSessionOpen] = useState(false);
+  const router = useRouter();
 
   return (
     <>
@@ -107,7 +109,7 @@ export function TodayPage() {
         <Link href="/roadmap">Ver roadmap completo <ChevronRight size={17} /></Link>
       </section>
 
-      {sessionOpen && <SessionStartModal onClose={() => setSessionOpen(false)} />}
+      {sessionOpen && <SessionStartModal onClose={() => setSessionOpen(false)} onStart={() => router.push('/estudar?sessao=iniciar')} />}
     </>
   );
 }
