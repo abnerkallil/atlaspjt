@@ -243,6 +243,76 @@ YES
 
 ---
 
+# GATE TEC-02 — MODELO DE DADOS CANÔNICO
+
+Status: OPEN — aguardando decisão do Raf
+
+Correlation: ATLAS-RAF-GATE-20261006-DATAMODEL
+
+## Quest
+
+Fora do QUEST-010 (que segue ativo em `docs/quests/ACTIVE.md`, com o Gate 4 ainda por abrir). Card TEC-02 — "Desenhar o modelo de dados" (Trello, P0, áreas Backend e Dados; dependências DEC-03 e DEC-05 do produto, ambas concluídas em 2026-09-29). Este Gate não substitui o QUEST-010 e não autoriza implementação; só registra a pergunta arquitetural que bloqueia o TEC-02 e os cards que dependem dele.
+
+## Architectural question
+
+Qual modelo de dados persistente o Atlas deve adotar para as entidades de estudo do MVP (além de Notas, que já persistem), incluindo onde fica a fonte da verdade de conteúdo e progresso, e como estado pedagógico, histórico e auditoria são representados?
+
+## Gate trigger
+
+"persistent data model change" (item 1), "data migration" (item 5) e "expensive or difficult-to-reverse technical decision" (item 9): define o schema durável de quase todo o produto e a fronteira com a planilha oficial de conteúdo.
+
+## Original requirement
+
+Card TEC-02 (Trello), texto literal: "Entidades: usuário, roadmap, fase, disciplina, conteúdo, subtópico, sessão, nota, anexo, questão, tentativa, revisão, avaliação, evidência, estado e auditoria."
+
+Decisões de produto já tomadas que o modelo precisa suportar (cards do Trello, concluídos em 2026-09-29):
+
+- DEC-05: hierarquia Roadmap → fase → disciplina → conteúdo → subtópico → evidência; no MVP só conteúdo curado manualmente (roadmap personalizado por IA é futuro); exame de proficiência com nota > 85 libera pular a seção.
+- DEC-03: máquina de estados em dois níveis. Conteúdo/subtópico: não iniciado → em estudo → aguardando quiz → concluído (ou bloqueado) → aguardando revisão → concluído/revalidado (ou em revisão ativa). Disciplina: em andamento → exame de meio de curso liberado (50%) → atividade final liberada (100%) → recuperação → concluída. Transições automáticas e transições com confirmação obrigatória (exame, atividade final, recuperação: tentativa única/irreversível).
+- DEC-09: revisões sempre em 24h/7d/30d, contadas da criação da nota, conclusão da aula ou do quiz.
+
+Cards que dependem desta decisão e mostram o uso esperado: TEC-04 (persistir roadmaps, conteúdos, progresso, sessões, tarefas e preferências), TEC-06 (registrar autor, momento, estado anterior, estado novo, motivo e evidência relacionada), MVP-01, MVP-02, MVP-04 a MVP-09, e o item "Histórico" (versionamento de notas) do MVP-03.
+
+## Relevant repository facts
+
+1. `db/schema.ts` em `main` tem 4 tabelas, todas de Notas: `atlas_note_folders`, `atlas_notes` (título, `body`, `content_json` com envelope versionado do DEC-001, `is_private`, pasta, datas), `atlas_note_links` (vínculo nota ↔ conteúdo) e `atlas_sync_operations`. O PR #21 (ainda não mesclado) adiciona `atlas_note_attachments` (DEC-008).
+2. `atlas_note_links.content_id` é texto livre sem chave estrangeira: não existe tabela de conteúdo. Os conteúdos vêm de `lib/content-catalog.ts`, um snapshot estático (2026-09-06) da planilha oficial do Atlas no Google Sheets (41 conteúdos de Contabilidade Geral e 117 de Contabilidade Tributária, campos `id`, `subject`, `unit`, `title`, `keywords`). O comentário do arquivo diz que o snapshot "é só entrada de classificação; progresso, penalidades e estados de estudo continuam sob controle da planilha", e a UI de Notas repete isso ("conclusão continuam sob controle da planilha").
+3. `atlas_sync_operations` é uma fila idempotente de sincronização de metadados de nota para essa planilha; o corpo da nota nunca entra no payload. A escrita real na planilha nunca foi ligada (falta credencial Google), então as operações ficam em `queued`. Não é uma trilha de auditoria: não registra autor, estado anterior/novo nem motivo.
+4. Roadmap, fases, disciplinas, conteúdos com pré-requisitos e penalidades, quiz, sessão de estudo, progresso/competências e a página Hoje existem só como dados demonstrativos em `lib/demo/*.ts` (roadmap, quizzes, study, progress, today), sem persistência. O tipo demonstrativo `PedagogicalState` em `lib/demo/roadmap.ts` (não iniciado, em estudo, praticado, dominado, em revisão, em risco, bloqueado) não coincide com os estados aprovados no DEC-03.
+5. Não há entidade de usuário em nenhuma tabela, nem coluna `user_id`. DEC-007 fixou usuário único com sessão em cookie stateless, sem tabela de usuário/sessão; multiusuário (Atlas Business) é non-goal explícito.
+6. Notas não têm histórico: cada gravação sobrescreve `body`/`content_json` em `atlas_notes`. O envelope do DEC-001 versiona o formato do documento, não as revisões da nota.
+7. Persistência: Cloudflare D1 (SQLite) via binding `DB`, schema em Drizzle (`drizzle-orm` 0.44.6, `drizzle-kit` 0.31.4), 4 migrations em `drizzle/` (0000 a 0003; 0004 no PR #21), aplicadas localmente com `pnpm run db:migrate:local` e em produção manualmente pelo usuário (DEC-005, DEC-009). Limites do D1 Free registrados no card DEC-06: 5 GB, 5 milhões de leituras/dia e 100 mil gravações/dia, aplicados de forma rígida desde 2026-09-01.
+8. DEC-009: dev é só local (Miniflare); produção é o único ambiente remoto. Qualquer migration nova só chega a produção pelo passo manual do usuário. DEC-008: anexos em R2 com metadados no D1.
+
+## Options and trade-offs
+
+Os eixos abaixo são as escolhas reais que o código e os cards de produto expõem; dentro de cada eixo as alternativas são apresentadas sem preferência.
+
+**Eixo 1 — fonte da verdade de conteúdo e progresso.**
+A. O D1 passa a ser a fonte da verdade do catálogo curado e de todo o progresso/estado; a planilha deixa de ser dona do progresso (pode virar só origem de importação ou destino de exportação). Trade-offs: um só lugar para estado e regras do DEC-03; exige migrar o catálogo e reescrever o papel da fila de sincronização e os textos da UI que hoje dizem que a planilha controla a conclusão.
+B. A planilha continua dona do catálogo (e eventualmente do progresso), com o D1 guardando só o que o produto gera (sessões, tentativas, evidências, notas) e referências por id. Trade-offs: preserva o fluxo atual do usuário com a planilha; depende de integração Google ainda não provisionada e mantém duas fontes que precisam ficar consistentes.
+
+**Eixo 2 — representação do estado pedagógico (DEC-03) e da auditoria (TEC-06).**
+A. Estado atual gravado em colunas/tabelas de estado, com uma tabela de auditoria separada registrando cada transição (anterior, novo, motivo, evidência). Trade-offs: leitura simples; duas escritas por transição que precisam ficar coerentes.
+B. Estado derivado de um registro de eventos/evidências (o log é a fonte; o estado é calculado ou materializado a partir dele). Trade-offs: auditoria e progresso determinístico (MVP-07) saem do mesmo registro; leitura mais custosa ou exige materialização, e o consumo de gravações/leituras do D1 Free precisa ser considerado.
+
+**Eixo 3 — escopo e cadência do modelo.**
+A. Desenhar e migrar agora o modelo completo das 16 entidades do card. Trade-offs: relações e chaves estáveis desde o início; schema grande antes de haver telas reais que o usem.
+B. Fixar agora só a espinha (hierarquia do DEC-05, estado, evidência, auditoria) e acrescentar entidades por card do MVP. Trade-offs: migrations menores e ligadas a uso real; risco de retrabalho de chaves/relações nas entidades que entrarem depois.
+
+**Eixo 4 — histórico de notas (MVP-03) e entidade usuário.**
+Histórico: (a) tabela de revisões/snapshots de nota; (b) histórico coberto pelo mesmo mecanismo de auditoria do eixo 2; (c) fora deste Gate, decidido quando o MVP-03 for retomado. Usuário: (a) nenhuma entidade de usuário, coerente com DEC-007; (b) uma linha/tabela mínima de perfil e preferências (TEC-04 cita preferências), sem autenticação nem `user_id` multiusuário.
+
+## Decision required
+
+Qual modelo adotar, respondendo no mínimo: (1) onde fica a fonte da verdade do catálogo de conteúdo e do progresso (D1 ou planilha) e qual o papel de `atlas_sync_operations` daqui em diante; (2) como estado pedagógico e auditoria são representados; (3) se o modelo é fixado por completo agora ou por partes; (4) se histórico de notas e entidade usuário/preferências entram nesta decisão. Nomes de tabelas/colunas, índices e ordem das migrations são detalhe de implementação. Nenhuma implementação do TEC-02 foi iniciada.
+
+## Raf decision
+
+*(pendente — a ser preenchido a partir da decisão do Raf trazida pelo usuário)*
+
+---
+
 # CORE PRINCIPLE
 
 Atlas supplies product requirement. Claude Code supplies evidence. Raf supplies architectural judgment. These responsibilities must remain separate.
