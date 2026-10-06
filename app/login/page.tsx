@@ -13,7 +13,9 @@ export default async function LoginPage({
       ? 'Senha incorreta.'
       : error === 'config'
         ? 'Autenticação não configurada neste ambiente.'
-        : null;
+        : error === 'rate'
+          ? 'Muitas tentativas. Aguarde um minuto e tente de novo.'
+          : null;
 
   return (
     <main style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', padding: 24 }}>

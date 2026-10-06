@@ -32,6 +32,14 @@ const localBindingConfig = {
         },
       ]
     : [],
+  // Limite de tentativas de login: 10 por minuto por IP (lib/auth-env.ts).
+  ratelimits: [
+    {
+      name: 'LOGIN_RATE_LIMITER',
+      namespace_id: '1001',
+      simple: { limit: 10, period: 60 as const },
+    },
+  ],
 };
 
 export default defineConfig(async () => {
