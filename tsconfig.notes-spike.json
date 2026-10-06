@@ -44,7 +44,8 @@
     "lib/pedagogy/prerequisites.ts",
     "tests/prerequisites.test.ts",
     "lib/attachments.ts",
-    "tests/attachments.test.ts"
+    "tests/attachments.test.ts",
+    "tests/deploy-migrations.test.ts"
   ],
   "exclude": [
     "node_modules"

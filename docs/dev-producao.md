@@ -19,6 +19,7 @@ e R2 emulados pelo Miniflare. Não há staging remoto.
 | --- | --- | --- |
 | `prepare-own-deploy.mjs` | não se aplica | `--target production --name <worker> --db <d1> --id <d1-id> --bucket <r2>` (todos obrigatórios) |
 | `seed-notes.mjs` | `--target local --db <d1> --config wrangler.local.jsonc` | `--target production --db <d1> --config <wrangler.json>` |
+| `deploy.mjs` (`pnpm run deploy:atlas`) | não se aplica | `--target production`; nomes em `deploy.local.json` (ignorado pelo git), ver `docs/DEPLOY.md` |
 | `export-data.mjs` | `--target local` (padrão `http://localhost:3000`) | `--target production --url <site>` |
 
 O export abre uma sessão com a senha em `ATLAS_EXPORT_PASSWORD`, definida no
