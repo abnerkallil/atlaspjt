@@ -3,14 +3,19 @@
 // (e seus vínculos) preservando id, title, body, createdAt e updatedAt.
 // Idempotente: notas que já existem (mesmo id) são ignoradas.
 //
+// DEC-009: o destino é sempre explícito. `--target local` grava no D1 emulado
+// (Miniflare); `--target production` grava no D1 remoto e exige `--config`.
+// Sem `--target` o script para sem gerar nem executar nada.
+//
 // Uso:
-//   node scripts/seed-notes.mjs --db <nome-do-d1> --config wrangler.local.jsonc          # D1 local
-//   node scripts/seed-notes.mjs --db <nome-do-d1> --config <wrangler.json> --remote      # D1 na Cloudflare
+//   node scripts/seed-notes.mjs --target local --db <nome-do-d1> --config wrangler.local.jsonc
+//   node scripts/seed-notes.mjs --target production --db <nome-do-d1> --config <wrangler.json>
 import { spawnSync } from 'node:child_process';
 import { mkdtemp, readFile, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { parseArgs } from 'node:util';
+import { requireOption, requireTarget, runCli } from './lib/target-env.mjs';
 
 const { values } = parseArgs({
   args: process.argv.slice(2).filter((arg) => arg !== '--'),
@@ -21,10 +26,17 @@ const { values } = parseArgs({
       type: 'string',
       default: 'scripts/seed-data/atlas-export-production-20260928.json',
     },
-    remote: { type: 'boolean', default: false },
+    target: { type: 'string' },
   },
 });
-if (!values.db) throw new Error('Informe o nome do banco com --db <nome>.');
+let target;
+let db;
+await runCli(() => {
+  target = requireTarget(values.target);
+  db = requireOption(values, 'db', 'o nome do banco');
+  if (target === 'production') requireOption(values, 'config', 'o wrangler.json de produção');
+});
+const remote = target === 'production';
 
 const { notes } = JSON.parse(await readFile(values.file, 'utf8'));
 const q = (value) => `'${String(value).replaceAll("'", "''")}'`;
@@ -45,10 +57,10 @@ const dir = await mkdtemp(join(tmpdir(), 'atlas-seed-'));
 const sqlPath = join(dir, 'seed.sql');
 await writeFile(sqlPath, `${statements.join('\n')}\n`, 'utf8');
 
-const args = ['wrangler', 'd1', 'execute', values.db, '--file', sqlPath];
-args.push(values.remote ? '--remote' : '--local');
+const args = ['wrangler', 'd1', 'execute', db, '--file', sqlPath];
+args.push(remote ? '--remote' : '--local');
 if (values.config) args.push('--config', values.config);
-console.log(`Semeando ${notes.length} notas em "${values.db}" (${values.remote ? 'remoto' : 'local'})...`);
+console.log(`Semeando ${notes.length} notas em "${db}" [${target}]...`);
 
 // No Windows, `npx` é um .cmd e só inicia através de um shell.
 const isWindows = process.platform === 'win32';

@@ -16,6 +16,7 @@
     "lib/auth.ts",
     "tests/auth.test.ts",
     "tests/auth-recovery.test.ts",
+    "tests/dev-prod-isolation.test.ts",
     "lib/atlas-notes-document.ts",
     "lib/atlas-notes-input.ts",
     "tests/atlas-notes-document.test.ts",
