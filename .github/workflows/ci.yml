@@ -30,12 +30,8 @@ jobs:
       - name: Typecheck
         run: pnpm run typecheck
 
-      # Não bloqueante por enquanto: há erros de lint anteriores a este workflow
-      # (primitivos em components/ui, hooks/use-mobile.ts e código do Notes).
-      # Torne bloqueante removendo continue-on-error quando o passivo for zerado.
       - name: Lint
         run: pnpm run lint
-        continue-on-error: true
 
       - name: Tests
         run: pnpm run test:notes

@@ -50,7 +50,7 @@ function Carousel({
   className,
   children,
   ...props
-}: React.ComponentProps<'div'> & CarouselProps) {
+}: React.ComponentProps<'section'> & CarouselProps) {
   const [carouselRef, api] = useEmblaCarousel(
     {
       ...opts,
@@ -95,12 +95,16 @@ function Carousel({
 
   React.useEffect(() => {
     if (!api) return;
-    onSelect(api);
+    // Sincroniza o estado inicial fora do corpo do efeito (evita setState
+    // síncrono dentro do efeito, que causa renderizações em cascata).
+    const frame = requestAnimationFrame(() => onSelect(api));
     api.on('reInit', onSelect);
     api.on('select', onSelect);
 
     return () => {
-      api?.off('select', onSelect);
+      cancelAnimationFrame(frame);
+      api.off('reInit', onSelect);
+      api.off('select', onSelect);
     };
   }, [api, onSelect]);
 
@@ -118,16 +122,15 @@ function Carousel({
         canScrollNext,
       }}
     >
-      <div
+      <section
         onKeyDownCapture={handleKeyDown}
         className={cn('relative', className)}
-        role="region"
         aria-roledescription="carousel"
         data-slot="carousel"
         {...props}
       >
         {children}
-      </div>
+      </section>
     </CarouselContext.Provider>
   );
 }
