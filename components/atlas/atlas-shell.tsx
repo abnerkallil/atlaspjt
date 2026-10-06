@@ -15,8 +15,14 @@ export const navItems = [
   { label: 'Progresso', href: '/progresso' },
 ];
 
-// Único estado compartilhado entre rotas: o resumo diário do cabeçalho depende das tarefas concluídas em Hoje.
-type ShellContextValue = { done: number[]; toggleTask: (id: number) => void; openAssistant: () => void };
+// Estado compartilhado entre rotas: o resumo diário do cabeçalho depende das tarefas concluídas em Hoje, e o modo
+// de foco esconde navegação, perfil e assistente durante uma sessão de estudo ativa (DEC-01, DEC-12).
+type ShellContextValue = {
+  done: number[];
+  toggleTask: (id: number) => void;
+  openAssistant: () => void;
+  setFocusMode: (focus: boolean) => void;
+};
 const ShellContext = createContext<ShellContextValue | null>(null);
 
 export function useAtlasShell() {
@@ -60,33 +66,43 @@ export function AtlasShell({ children }: { children: ReactNode }) {
   const [done, setDone] = useState<number[]>([]);
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [focusMode, setFocusModeState] = useState(false);
 
   const toggleTask = useCallback((id: number) => {
     setDone((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));
   }, []);
   const openAssistant = useCallback(() => setAssistantOpen(true), []);
-  const value = useMemo(() => ({ done, toggleTask, openAssistant }), [done, toggleTask, openAssistant]);
+  const setFocusMode = useCallback((focus: boolean) => {
+    setFocusModeState(focus);
+    if (focus) setMenuOpen(false);
+  }, []);
+  const value = useMemo(
+    () => ({ done, toggleTask, openAssistant, setFocusMode }),
+    [done, toggleTask, openAssistant, setFocusMode],
+  );
 
   const completedMinutes = done.reduce((sum, id) => sum + (todayTasks.find((task) => task.id === id)?.minutes ?? 0), 0);
 
   return (
     <ShellContext.Provider value={value}>
-      <div className="atlas-shell">
-        <div className="top-ribbon">
-          <div className="top-ribbon-inner">
-            <div className="daily-summary">
-              <span className="pulse-dot" />
-              <strong>{todayTasks.length - done.length} atividades</strong>
-              <span>·</span>
-              <span>{Math.max(0, dailySummary.plannedMinutes - completedMinutes)} min restantes</span>
-              <span className="summary-divider" />
-              <span>{dailySummary.scheduledReviews} revisões programadas</span>
+      <div className={focusMode ? 'atlas-shell focus-mode' : 'atlas-shell'}>
+        {!focusMode && (
+          <div className="top-ribbon">
+            <div className="top-ribbon-inner">
+              <div className="daily-summary">
+                <span className="pulse-dot" />
+                <strong>{todayTasks.length - done.length} atividades</strong>
+                <span>·</span>
+                <span>{Math.max(0, dailySummary.plannedMinutes - completedMinutes)} min restantes</span>
+                <span className="summary-divider" />
+                <span>{dailySummary.scheduledReviews} revisões programadas</span>
+              </div>
+              <button className="quiet-button" onClick={openAssistant}>
+                <Sparkles size={15} /> Ver orientação do Atlas
+              </button>
             </div>
-            <button className="quiet-button" onClick={openAssistant}>
-              <Sparkles size={15} /> Ver orientação do Atlas
-            </button>
           </div>
-        </div>
+        )}
 
         <header className="site-header">
           <div className="site-header-inner">
@@ -95,27 +111,33 @@ export function AtlasShell({ children }: { children: ReactNode }) {
               <span>ATLAS</span>
             </Link>
 
-            <nav className="main-nav" aria-label="Navegação principal">
-              {navItems.map((item) => (
-                <Link key={item.href} href={item.href} className={pathname === item.href ? 'active' : ''} aria-current={pathname === item.href ? 'page' : undefined}>
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
+            {focusMode ? (
+              <p className="focus-mode-label">Sessão de estudo em andamento</p>
+            ) : (
+              <>
+                <nav className="main-nav" aria-label="Navegação principal">
+                  {navItems.map((item) => (
+                    <Link key={item.href} href={item.href} className={pathname === item.href ? 'active' : ''} aria-current={pathname === item.href ? 'page' : undefined}>
+                      {item.label}
+                    </Link>
+                  ))}
+                </nav>
 
-            <div className="header-actions">
-              <button aria-label="Buscar"><Search size={18} /></button>
-              <button aria-label="Notificações" className="notification-button"><Bell size={18} /><span /></button>
-              <button className="avatar" aria-label="Abrir perfil">{learner.initials}</button>
-              <form action="/api/auth/logout" method="post">
-                <button type="submit" className="quiet-button">Sair</button>
-              </form>
-              <button className="mobile-menu" aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'} aria-expanded={menuOpen} aria-controls="mobile-nav" onClick={() => setMenuOpen((open) => !open)}>
-                {menuOpen ? <X size={20} /> : <Menu size={20} />}
-              </button>
-            </div>
+                <div className="header-actions">
+                  <button aria-label="Buscar"><Search size={18} /></button>
+                  <button aria-label="Notificações" className="notification-button"><Bell size={18} /><span /></button>
+                  <button className="avatar" aria-label="Abrir perfil">{learner.initials}</button>
+                  <form action="/api/auth/logout" method="post">
+                    <button type="submit" className="quiet-button">Sair</button>
+                  </form>
+                  <button className="mobile-menu" aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'} aria-expanded={menuOpen} aria-controls="mobile-nav" onClick={() => setMenuOpen((open) => !open)}>
+                    {menuOpen ? <X size={20} /> : <Menu size={20} />}
+                  </button>
+                </div>
+              </>
+            )}
           </div>
-          {menuOpen && (
+          {menuOpen && !focusMode && (
             <nav id="mobile-nav" className="mobile-nav" aria-label="Navegação principal (menu)">
               {navItems.map((item) => (
                 <Link key={item.href} href={item.href} className={pathname === item.href ? 'active' : ''} aria-current={pathname === item.href ? 'page' : undefined} onClick={() => setMenuOpen(false)}>
@@ -128,9 +150,11 @@ export function AtlasShell({ children }: { children: ReactNode }) {
 
         <main className="page-wrap">{children}</main>
 
-        <button className="ask-atlas" onClick={openAssistant}>
-          <span><MessageCircle size={19} /></span> Perguntar ao Atlas
-        </button>
+        {!focusMode && (
+          <button className="ask-atlas" onClick={openAssistant}>
+            <span><MessageCircle size={19} /></span> Perguntar ao Atlas
+          </button>
+        )}
 
         {assistantOpen && <AssistantDrawer onClose={() => setAssistantOpen(false)} />}
       </div>

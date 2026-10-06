@@ -5,7 +5,7 @@ import { ArrowRight, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { sessionModal } from '@/lib/demo/study';
 
-export function SessionStartModal({ onClose }: { onClose: () => void }) {
+export function SessionStartModal({ onClose, onStart }: { onClose: () => void; onStart: () => void }) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     const dialog = ref.current;
@@ -28,7 +28,7 @@ export function SessionStartModal({ onClose }: { onClose: () => void }) {
       <p>{sessionModal.description}</p>
       <div className="modal-actions">
         <Button variant="outline" onClick={onClose}>Agora não</Button>
-        <Button className="primary-button" onClick={onClose}>Iniciar sessão <ArrowRight size={17} /></Button>
+        <Button className="primary-button" onClick={onStart}>Iniciar sessão <ArrowRight size={17} /></Button>
       </div>
     </dialog>
   );
