@@ -13,11 +13,8 @@ import { migratedDatabase } from './support/migrated-db.js';
 function seeded() {
   const raw = migratedDatabase();
   const now = '2026-10-06T12:00:00.000Z';
+  // O catálogo (CG-001, contabilidade-geral...) já vem da migration de carga.
   raw.exec(`
-    INSERT INTO atlas_roadmaps (id, title, created_at, updated_at) VALUES ('rm', 'Roadmap', '${now}', '${now}');
-    INSERT INTO atlas_phases (id, roadmap_id, position, title) VALUES ('f1', 'rm', 1, 'Base');
-    INSERT INTO atlas_disciplines (id, phase_id, position, title) VALUES ('cg', 'f1', 1, 'Contabilidade Geral');
-    INSERT INTO atlas_contents (id, discipline_id, position, title) VALUES ('CG-001', 'cg', 1, 'Conceitos');
     INSERT INTO atlas_evidences (id, content_id, kind, summary, recorded_at) VALUES ('ev-quiz', 'CG-001', 'quiz', '9/10', '${now}');
   `);
   return { raw, db: d1(raw) };
@@ -67,20 +64,20 @@ void test('TEC-06: transição recusada não altera estado nem grava auditoria',
 
 void test('DEC-03: exame, atividade final e recuperação só começam com confirmação do usuário', async () => {
   const { db } = seeded();
-  await applyTransition(db, { entityType: 'disciplina', entityId: 'cg', event: 'conteudo-50', actor: 'sistema' });
+  await applyTransition(db, { entityType: 'disciplina', entityId: 'contabilidade-geral', event: 'conteudo-50', actor: 'sistema' });
   for (const request of [
     { actor: 'sistema' as const, confirmed: true },
     { actor: 'usuario' as const, confirmed: false },
     { actor: 'usuario' as const },
   ]) {
     await assert.rejects(
-      applyTransition(db, { entityType: 'disciplina', entityId: 'cg', event: 'iniciar-exame-meio', ...request }),
+      applyTransition(db, { entityType: 'disciplina', entityId: 'contabilidade-geral', event: 'iniciar-exame-meio', ...request }),
       (error: unknown) => error instanceof TransitionError && error.code === 'confirmation',
     );
   }
-  const entry = await applyTransition(db, { entityType: 'disciplina', entityId: 'cg', event: 'iniciar-exame-meio', actor: 'usuario', confirmed: true });
+  const entry = await applyTransition(db, { entityType: 'disciplina', entityId: 'contabilidade-geral', event: 'iniciar-exame-meio', actor: 'usuario', confirmed: true });
   assert.equal(entry.toState, 'exame-meio-em-curso');
-  assert.equal(await currentState(db, 'disciplina', 'cg'), 'exame-meio-em-curso');
+  assert.equal(await currentState(db, 'disciplina', 'contabilidade-geral'), 'exame-meio-em-curso');
 });
 
 void test('TEC-06: quiz aprovado e dispensa por proficiência exigem evidência', () => {
