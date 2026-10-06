@@ -45,6 +45,15 @@ export default async function LoginPage({
         >
           Entrar
         </button>
+        <details style={{ fontSize: 14, color: '#5b5670' }}>
+          <summary style={{ cursor: 'pointer', padding: '4px 0' }}>Esqueci a senha</summary>
+          <p style={{ margin: '8px 0 0', lineHeight: 1.5 }}>
+            O Atlas tem um único usuário e não envia e-mail de recuperação. A senha é
+            redefinida por quem administra a conta Cloudflare do Atlas: gere uma nova com{' '}
+            <code>pnpm run auth:secrets</code> e grave os dois valores como Worker secrets. O
+            passo a passo está em <code>docs/auth.md</code> no repositório.
+          </p>
+        </details>
       </form>
     </main>
   );
