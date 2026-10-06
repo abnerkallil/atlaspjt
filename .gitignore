@@ -42,3 +42,6 @@ next-env.d.ts
 
 # local Worker secrets (DEC-007)
 .dev.vars*
+
+# nomes reais do Worker/D1/R2 de produção para scripts/deploy.mjs (DEC-009)
+/deploy.local.json
