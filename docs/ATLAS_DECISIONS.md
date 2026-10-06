@@ -626,3 +626,47 @@ Quest: QUEST-010 — Infraestrutura restante do usuário único, item 3: dev/pro
 Supersedes: NONE
 
 Superseded by: NONE
+
+---
+
+## DEC-010 — Modelo de dados canônico: D1 como fonte da verdade, estado + auditoria separada, migração por espinha
+
+Status: ACCEPTED
+
+Date: 2026-10-06
+
+### Context
+
+Card TEC-02 exige desenhar o modelo de dados para as entidades de estudo do MVP, suportando a hierarquia do DEC-05, a máquina de estados do DEC-03 e a auditoria do TEC-06. Hoje só Notas persistem no D1; catálogo de conteúdo é um snapshot estático de planilha sem FK; `atlas_sync_operations` é fila nunca conectada à planilha; roadmap/fases/disciplinas/sessões/quiz/progresso existem só como dados demonstrativos sem persistência; não há entidade de usuário (DEC-007) nem histórico de notas.
+
+### Decision
+
+D1 passa a ser a fonte da verdade do catálogo curado e de todo o progresso/estado do produto; a planilha oficial permanece superfície de curadoria do catálogo, não dona do progresso. Estado pedagógico (DEC-03) é representado em colunas/tabela de estado atual, com uma tabela de auditoria separada (autor, momento, estado anterior, estado novo, motivo, evidência relacionada — TEC-06). Migração agora cobre só a espinha: hierarquia do DEC-05, estado do DEC-03 e auditoria do TEC-06; demais entidades (sessão, questão, tentativa, revisão, avaliação) são migradas junto do respectivo card MVP. Histórico de notas (MVP-03) e entidade de usuário/preferências ficam fora desta decisão.
+
+### Rationale
+
+1. DEC-03 exige transições automáticas e com confirmação irreversível avaliadas por código; só D1 como fonte da verdade viabiliza isso — a planilha nunca teve integração de escrita conectada.
+2. TEC-06 já pede literalmente o formato "estado atual + auditoria separada"; event-sourcing resolveria um requisito que nenhum card pede, com custo de leitura adicional no D1 Free.
+3. Fixar só a espinha agora é a menor decisão que destrava TEC-02 e seus dependentes diretos, sem migrar entidades antes de existir uso real.
+
+### Constraints for Claude Code
+
+- D1 é a fonte da verdade de progresso/estado; nenhuma transição de estado depende de leitura síncrona da planilha.
+- `atlas_sync_operations`, se mantida, serve só como import planilha → D1 do catálogo; nunca o caminho inverso para estado/progresso.
+- Migrar agora: hierarquia DEC-05 (roadmap, fase, disciplina, conteúdo, subtópico, evidência) com chaves estáveis, estado atual (DEC-03), tabela de auditoria (TEC-06).
+- Não migrar ainda sessão, questão, tentativa, revisão, avaliação; migrar cada uma junto do card MVP correspondente, respeitando as chaves da espinha.
+- Nenhuma tabela de usuário/autenticação além de DEC-007; preferências (TEC-04) são decisão daquele card.
+- Histórico de notas (MVP-03) não decidido aqui.
+- Nomes de tabelas/colunas, índices, ordem das migrations e forma de importação planilha→D1 são detalhe de implementação.
+
+### Consequences
+
+Desbloqueia TEC-02 e os cards que dele dependem (TEC-04, TEC-06, MVP-01, MVP-02, MVP-04 a MVP-09). A planilha oficial deixa de ser, na arquitetura, a dona do progresso — textos de UI que afirmam o contrário precisarão ser corrigidos na implementação. Entidades fora da espinha (sessão, questão, tentativa, revisão, avaliação) continuam sem schema até o card MVP correspondente ser implementado; histórico de notas e entidade de usuário permanecem decisões futuras, não deste Gate.
+
+### Related
+
+Quest: Card TEC-02 — Desenhar o modelo de dados (ATLAS-RAF-GATE-20261006-DATAMODEL)
+
+Supersedes: NONE
+
+Superseded by: NONE

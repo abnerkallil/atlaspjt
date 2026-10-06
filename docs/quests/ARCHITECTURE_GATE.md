@@ -245,7 +245,7 @@ YES
 
 # GATE TEC-02 — MODELO DE DADOS CANÔNICO
 
-Status: OPEN — aguardando decisão do Raf
+Status: RESOLVED — DEC-010 (ACCEPTED); D1 como fonte da verdade de catálogo/progresso; estado + auditoria separada; só a espinha migrada agora
 
 Correlation: ATLAS-RAF-GATE-20261006-DATAMODEL
 
@@ -309,7 +309,35 @@ Qual modelo adotar, respondendo no mínimo: (1) onde fica a fonte da verdade do 
 
 ## Raf decision
 
-*(pendente — a ser preenchido a partir da decisão do Raf trazida pelo usuário)*
+### Decision
+
+Eixo 1: o D1 passa a ser a fonte da verdade do catálogo curado e de todo o progresso/estado do produto (Opção A). A planilha oficial permanece a superfície de curadoria/edição manual do catálogo (coerente com o non-goal de roadmap por IA), não a dona do progresso. `atlas_sync_operations`, se mantida, passa a servir só como caminho de importação do catálogo curado (planilha → D1); nunca o caminho inverso para estado/progresso.
+
+Eixo 2: estado atual em colunas/tabela de estado + uma tabela de auditoria separada registrando cada transição (autor, momento, estado anterior, estado novo, motivo, evidência relacionada) — Opção A, no formato que TEC-06 já pede literalmente. Não adotar estado derivado de log de eventos (Opção B).
+
+Eixo 3: fixar agora apenas a espinha — hierarquia do DEC-05 (roadmap → fase → disciplina → conteúdo → subtópico → evidência) com chaves estáveis, o modelo de estado do DEC-03 e a tabela de auditoria do TEC-06 (Opção B). As demais entidades do card (sessão, questão, tentativa, revisão, avaliação) são desenhadas e migradas junto do card MVP que as implementa, respeitando as chaves da espinha fixadas agora.
+
+Eixo 4: histórico de notas (MVP-03) fica fora deste Gate — decidido quando o MVP-03 for retomado. Nenhuma entidade de usuário nova é criada (coerente com DEC-007); preferências (TEC-04), se precisarem de persistência, são decisão daquele card.
+
+### Rationale
+
+1. DEC-03 exige transições automáticas e com confirmação irreversível avaliadas por código; isso só é possível com D1 como fonte da verdade de estado/progresso — a planilha nunca teve integração de escrita conectada, e mantê-la como dona do progresso bloquearia indefinidamente MVP-07 e os demais MVP-0X.
+2. TEC-06 já descreve literalmente o formato de auditoria pedido (autor, momento, estado anterior/novo, motivo, evidência) — isso é o modelo "estado atual + tabela de auditoria" (Eixo 2 Opção A); event-sourcing resolveria um requisito que nenhum card pede, com custo de leitura adicional no D1 Free.
+3. Fixar agora só a espinha (hierarquia DEC-05 + estado DEC-03 + auditoria TEC-06) é a menor decisão que destrava TEC-02 e os cards mais diretamente dependentes, sem migrar entidades (sessão, questão, tentativa, avaliação) antes de existir uso real.
+
+### Constraints for Claude Code
+
+- D1 é a fonte da verdade de progresso/estado do produto; nenhuma lógica de transição de estado (DEC-03) pode depender de leitura síncrona da planilha Google (não conectada).
+- `atlas_sync_operations` deixa de ser modelada como "planilha controla progresso"; se mantida, seu papel passa a ser import do catálogo curado (planilha → D1). Atualizar os textos de UI que hoje afirmam que a planilha controla a conclusão é detalhe de implementação, não decisão arquitetural adicional.
+- Migrar agora, como espinha: tabelas para a hierarquia do DEC-05 (roadmap, fase, disciplina, conteúdo, subtópico, evidência) com chaves estáveis, estado atual conforme DEC-03, e uma tabela de auditoria conforme TEC-06 (autor, momento, estado anterior, estado novo, motivo, evidência relacionada).
+- Não migrar ainda sessão, questão, tentativa, revisão, avaliação; cada uma é desenhada/migrada junto do card MVP que a implementa, respeitando as chaves da espinha já fixada (sem redesenho de FK já estabelecida).
+- Nenhuma tabela de usuário/autenticação além do que DEC-007 já decidiu; preferências (TEC-04), se precisarem de persistência, são decisão daquele card.
+- Histórico de notas (MVP-03) não é decidido aqui; não criar tabela de revisão/snapshot de nota como parte do TEC-02.
+- Nome de tabelas/colunas, índices, ordem exata das migrations, e como a importação planilha→D1 é implementada são detalhe de implementação do Claude Code.
+
+### DEC Required
+
+YES
 
 ---
 
