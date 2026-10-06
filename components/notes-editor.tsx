@@ -808,10 +808,10 @@ export function NotesEditor({
       editor.chain().setTextSelection(range).focus().scrollIntoView().run();
     }
     onFocusRequestHandled?.();
-    // Re-run whenever a new focus request comes in (identified by nonce),
-    // even if it targets the same favorite id as before.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editor, focusRequest?.favoriteId, focusRequest?.nonce]);
+    // Re-run whenever a new focus request comes in: the workspace memoizes the
+    // request object, so a new identity (new nonce) means a new request, even
+    // if it targets the same favorite id as before.
+  }, [editor, focusRequest, onFocusRequestHandled]);
 
   if (!editor) {
     return <div className={styles.loading}>Preparando editor…</div>;

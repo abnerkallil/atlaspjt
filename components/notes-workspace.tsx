@@ -199,13 +199,21 @@ export function NotesWorkspace() {
       if (!note) return;
       openNote(note);
     }
-    setFocusRequest({ noteId: entry.noteId, favoriteId: entry.id, nonce: Date.now() });
+    setFocusRequest((previous) => ({
+      noteId: entry.noteId,
+      favoriteId: entry.id,
+      nonce: (previous?.nonce ?? 0) + 1,
+    }));
   }
 
-  const editorFocusRequest: NotesEditorFocusRequest | null =
-    focusRequest && focusRequest.noteId === draftId
-      ? { favoriteId: focusRequest.favoriteId, nonce: focusRequest.nonce }
-      : null;
+  const editorFocusRequest = useMemo<NotesEditorFocusRequest | null>(
+    () =>
+      focusRequest && focusRequest.noteId === draftId
+        ? { favoriteId: focusRequest.favoriteId, nonce: focusRequest.nonce }
+        : null,
+    [focusRequest, draftId],
+  );
+  const handleFocusRequestHandled = useCallback(() => setFocusRequest(null), []);
 
   const suggestions = useMemo(
     () =>
@@ -930,7 +938,7 @@ export function NotesWorkspace() {
             onChange={updateEditor}
             onValidationChange={updateEditorValidation}
             focusRequest={editorFocusRequest}
-            onFocusRequestHandled={() => setFocusRequest(null)}
+            onFocusRequestHandled={handleFocusRequestHandled}
           />
           <div className="note-attachments">
             <div className="note-attachments-heading">
