@@ -11,8 +11,8 @@ export const OFFICIAL_SPREADSHEET_URL =
 
 export const CONTENT_CATALOG_SNAPSHOT_DATE = '2026-09-06';
 
-// Snapshot read from the official Atlas workbook. It is classification input only;
-// progress, penalties and studied states remain owned by the spreadsheet.
+// Snapshot read from the official Atlas workbook. The workbook only curates the
+// catalog; progress, penalties and studied states live in D1 (DEC-010).
 export const contentCatalog: ContentReference[] = [
   {
     id: 'CG-001',
