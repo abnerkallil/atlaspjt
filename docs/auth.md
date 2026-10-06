@@ -19,7 +19,7 @@ pnpm run auth:revoke-sessions  # imprime só um novo ATLAS_SESSION_SECRET
 ```
 
 Nada é gravado em disco. Para gravar no Worker de produção (`atlas-notes`),
-depois de `pnpm run build` e `node scripts/prepare-own-deploy.mjs`:
+depois de `pnpm run build` e `node scripts/prepare-own-deploy.mjs --target production --name <worker> --db <d1> --id <d1-id>` (DEC-009, ver `docs/dev-producao.md`):
 
 ```bash
 npx wrangler secret put ATLAS_PASSWORD_HASH  --config dist/server/wrangler.json
