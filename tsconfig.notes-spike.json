@@ -40,7 +40,9 @@
     "lib/catalog/roadmap-seed.ts",
     "tools/write-catalog-seed.ts",
     "lib/roadmap-store.ts",
-    "tests/catalog-roadmap.test.ts"
+    "tests/catalog-roadmap.test.ts",
+    "lib/pedagogy/prerequisites.ts",
+    "tests/prerequisites.test.ts"
   ],
   "exclude": [
     "node_modules"

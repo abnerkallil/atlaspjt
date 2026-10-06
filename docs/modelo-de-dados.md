@@ -99,3 +99,22 @@ Leitura: `GET /api/roadmap` devolve fases → disciplinas → conteúdos com est
 atual e pré-requisitos (exige sessão). Preferências e tarefas não ganharam
 tabela: nenhuma tela as usa ainda; a primeira preferência real (horário padrão
 da agenda, DEC-09) chega com o MVP-05. Sessões chegam com o MVP-02 (DEC-010).
+
+## Pré-requisitos e bloqueios (MVP-01)
+
+- Um pré-requisito conta como cumprido quando está em `concluido`,
+  `aguardando-revisao` ou `revalidado` (`lib/pedagogy/prerequisites.ts`).
+  `em-revisao-ativa` e `bloqueado` não contam: o DEC-03 reabre o conteúdo.
+- `applyTransition` recusa `abrir-material` de um conteúdo não iniciado com
+  pré-requisito pendente (erro `prerequisite`, nada é gravado). Quem já começou
+  não é travado de novo.
+- Dispensa por proficiência (DEC-05) pula os pré-requisitos, mas exige uma
+  evidência `kind = 'proficiencia'` do próprio conteúdo. O exame que gera essa
+  evidência (nota acima de 85) é do card de avaliações; aqui só a regra.
+- Toda evidência citada numa transição precisa existir e ser do mesmo conteúdo.
+- `GET /api/roadmap` devolve, por conteúdo, `pendingPrerequisites` e `locked`, e
+  por fase/disciplina o progresso bruto (cumpridos / total).
+- `POST /api/roadmap/conteudos/:id/estudar` começa um conteúdo (409 se travado).
+
+A página Roadmap e o cartão de roadmap da página Hoje leem esses dados; o
+registro de mudanças da página Roadmap vem de `GET /api/auditoria`.

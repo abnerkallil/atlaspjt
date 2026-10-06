@@ -2,12 +2,14 @@
 // Toda mudança de estado pedagógico passa por aqui: o estado atual e a linha de
 // auditoria (autor, momento, estado anterior, estado novo, motivo, evidência)
 // são gravados no mesmo batch do D1, que é atômico.
+import { isPrerequisiteMet } from './prerequisites.js';
 import {
   CONTENT_TRANSITIONS,
   DISCIPLINE_TRANSITIONS,
   INITIAL_CONTENT_STATE,
   INITIAL_DISCIPLINE_STATE,
   findTransition,
+  isContentState,
   type Transition,
 } from './states.js';
 
@@ -42,7 +44,7 @@ export type AuditEntry = {
 export class TransitionError extends Error {
   constructor(
     message: string,
-    readonly code: 'invalid' | 'confirmation' | 'evidence' | 'conflict' | 'not-found',
+    readonly code: 'invalid' | 'confirmation' | 'evidence' | 'conflict' | 'not-found' | 'prerequisite',
   ) {
     super(message);
     this.name = 'TransitionError';
@@ -113,6 +115,45 @@ export async function currentState(db: D1Like, entityType: EntityType, entityId:
   return row?.state ?? machine(entityType).initial;
 }
 
+// MVP-01: começar um conteúdo novo exige os pré-requisitos cumpridos. A dispensa
+// por proficiência (DEC-05) é justamente o caminho para pular essa exigência.
+async function assertPrerequisitesMet(db: D1Like, contentId: string) {
+  const { results } = await db
+    .prepare(
+      `SELECT r.prerequisite_id AS id, c.title, s.state FROM atlas_content_prerequisites r
+       JOIN atlas_contents c ON c.id = r.prerequisite_id
+       LEFT JOIN atlas_content_states s ON s.content_id = r.prerequisite_id
+       WHERE r.content_id = ?1 ORDER BY c.position`,
+    )
+    .bind(contentId)
+    .all<{ id: string; title: string; state: string | null }>();
+  const pending = results.filter(
+    (row) => !(row.state && isContentState(row.state) && isPrerequisiteMet(row.state)),
+  );
+  if (pending.length > 0) {
+    throw new TransitionError(
+      `Conclua antes: ${pending.map((row) => `${row.id} ${row.title}`).join('; ')}.`,
+      'prerequisite',
+    );
+  }
+}
+
+// A evidência citada precisa existir e ser do mesmo conteúdo; dispensa exige
+// evidência de proficiência.
+async function assertEvidence(db: D1Like, entry: AuditEntry) {
+  if (!entry.evidenceId) return;
+  const evidence = await db
+    .prepare('SELECT content_id, kind FROM atlas_evidences WHERE id = ?1')
+    .bind(entry.evidenceId)
+    .first<{ content_id: string; kind: string }>();
+  if (!evidence || (entry.entityType === 'conteudo' && evidence.content_id !== entry.entityId)) {
+    throw new TransitionError('A evidência informada não existe para este conteúdo.', 'evidence');
+  }
+  if (entry.event === 'dispensa-proficiencia' && evidence.kind !== 'proficiencia') {
+    throw new TransitionError('A dispensa exige uma evidência de exame de proficiência.', 'evidence');
+  }
+}
+
 export async function applyTransition(
   db: D1Like,
   request: TransitionRequest,
@@ -122,6 +163,10 @@ export async function applyTransition(
   const initial = machine(request.entityType).initial;
   const from = await currentState(db, request.entityType, request.entityId);
   const entry = planTransition(request, from, options.now ?? new Date().toISOString(), options.id ?? crypto.randomUUID());
+  if (entry.entityType === 'conteudo' && entry.event === 'abrir-material' && entry.fromState === INITIAL_CONTENT_STATE) {
+    await assertPrerequisitesMet(db, entry.entityId);
+  }
+  await assertEvidence(db, entry);
 
   // A auditoria só entra se o estado ainda for o lido acima; o estado só muda se
   // a auditoria entrou. Assim uma escrita concorrente não gera estado sem
