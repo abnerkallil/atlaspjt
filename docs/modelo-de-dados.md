@@ -55,3 +55,24 @@ Sessão (MVP-02), questão e tentativa (MVP-04), revisão (MVP-06), avaliação
 (MVP-07/08), preferências (TEC-04), histórico de notas (MVP-03). Não há tabela de
 usuário além do DEC-007. `atlas_sync_operations` continua existindo e, se usada,
 serve só para importar o catálogo da planilha para o D1.
+
+## Trilha de auditoria (TEC-06)
+
+Toda mudança de estado passa por `applyTransition` (`lib/pedagogy/transitions.ts`):
+
+1. lê o estado atual (ou o inicial, se não houver linha);
+2. `planTransition` valida o evento contra a máquina do DEC-03, exige
+   `actor: 'usuario'` + `confirmed: true` nas transições com confirmação e uma
+   evidência em `quiz-aprovado` e `dispensa-proficiencia`;
+3. grava auditoria e estado num único batch do D1. A auditoria só entra se o
+   estado ainda for o lido; o estado só muda se a auditoria entrou. Uma escrita
+   concorrente devolve erro `conflict` e não deixa rastro parcial.
+
+Cada linha de `atlas_state_audit` tem autor (`usuario`/`sistema`), momento,
+estado anterior, estado novo, evento, motivo (o informado ou a descrição da
+regra) e evidência. A tabela só recebe inserções.
+
+Leitura: `GET /api/auditoria?entityType=conteudo|disciplina&entityId=...&limit=...`
+(mais recente primeiro, até 500; exige sessão como toda a API). Ainda não há
+rota de escrita: quem dispara transições são os cards MVP (sessão, quiz,
+revisão, avaliação).

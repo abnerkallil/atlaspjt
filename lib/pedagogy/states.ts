@@ -40,6 +40,8 @@ export type Transition<S extends string> = {
   to: S;
   // DEC-03: tentativa única ou irreversível exige confirmação explícita do usuário.
   requiresConfirmation: boolean;
+  // A transição só vale com uma evidência registrada (TEC-06).
+  requiresEvidence?: boolean;
   description: string;
 };
 
@@ -47,7 +49,7 @@ export const CONTENT_TRANSITIONS: Transition<ContentState>[] = [
   { event: 'abrir-material', from: 'nao-iniciado', to: 'em-estudo', requiresConfirmation: false, description: 'Abriu o material do conteúdo.' },
   { event: 'abrir-material', from: 'bloqueado', to: 'em-estudo', requiresConfirmation: false, description: 'Voltou a estudar um conteúdo bloqueado para refazer o quiz.' },
   { event: 'encerrar-sessao', from: 'em-estudo', to: 'aguardando-quiz', requiresConfirmation: false, description: 'Saiu da sessão de estudo; o quiz do conteúdo foi gerado.' },
-  { event: 'quiz-aprovado', from: 'aguardando-quiz', to: 'concluido', requiresConfirmation: false, description: 'Passou no quiz; evidência registrada.' },
+  { event: 'quiz-aprovado', from: 'aguardando-quiz', to: 'concluido', requiresConfirmation: false, requiresEvidence: true, description: 'Passou no quiz; evidência registrada.' },
   { event: 'quiz-reprovado', from: 'aguardando-quiz', to: 'bloqueado', requiresConfirmation: false, description: 'Reprovou no quiz; a conclusão da matéria fica congelada.' },
   { event: 'revisao-vencida', from: 'concluido', to: 'aguardando-revisao', requiresConfirmation: false, description: 'Chegou o prazo de revisão (24h/7d/30d).' },
   { event: 'revisao-vencida', from: 'revalidado', to: 'aguardando-revisao', requiresConfirmation: false, description: 'Chegou o próximo prazo de revisão (7d/30d).' },
@@ -55,7 +57,7 @@ export const CONTENT_TRANSITIONS: Transition<ContentState>[] = [
   { event: 'revisao-reprovada', from: 'aguardando-revisao', to: 'em-revisao-ativa', requiresConfirmation: false, description: 'Falhou na revisão; o conteúdo foi reaberto.' },
   { event: 'revisao-aprovada', from: 'em-revisao-ativa', to: 'revalidado', requiresConfirmation: false, description: 'Mostrou domínio de novo após a revisão ativa.' },
   // DEC-05: exame de proficiência acima de 85 dispensa o conteúdo sem afetar a nota.
-  { event: 'dispensa-proficiencia', from: 'nao-iniciado', to: 'concluido', requiresConfirmation: false, description: 'Dispensado por proficiência (nota acima de 85).' },
+  { event: 'dispensa-proficiencia', from: 'nao-iniciado', to: 'concluido', requiresConfirmation: false, requiresEvidence: true, description: 'Dispensado por proficiência (nota acima de 85).' },
 ];
 
 export const DISCIPLINE_TRANSITIONS: Transition<DisciplineState>[] = [
