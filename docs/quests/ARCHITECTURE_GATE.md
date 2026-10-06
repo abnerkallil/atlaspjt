@@ -103,7 +103,7 @@ YES
 
 # GATE 2 — STORAGE DE ANEXOS
 
-Status: OPEN — aguardando decisão do Raf (Gate 2 de 4 do QUEST-010: storage de anexos)
+Status: RESOLVED — DEC-008 (ACCEPTED); bytes em R2 + metadados em D1, acesso só via rota autenticada do Worker
 
 Correlation: ATLAS-RAF-GATE-20260929-STORAGE
 
@@ -146,7 +146,100 @@ Qual opção (ou outra) adotar para o storage de anexos, incluindo: onde os byte
 
 ## Raf decision
 
-*(pendente — a ser preenchido a partir da decisão do Raf trazida pelo usuário)*
+### Decision
+
+Bytes dos anexos em bucket Cloudflare R2 (Opção A). Metadados (id, nota associada, nome original, mime type, tamanho em bytes, chave do objeto R2, timestamp) em nova tabela no D1 — sem bytes armazenados nela. O bucket R2 não tem acesso público nem URL assinada (presigned) exposta ao cliente; upload e download acontecem exclusivamente por rotas do Worker, sob a mesma verificação de sessão de DEC-007 (fail-closed via `proxy.ts`).
+
+### Rationale
+
+1. O limite de linha/valor do D1 (~2MB) é menor que os 10MB exigidos pelo DEC-07; guardar bytes no D1 (Opção B) exigiria fragmentar arquivos em múltiplas linhas só para contornar um limite de plataforma, além de inflar o mesmo banco usado pelas notas — não é a menor arquitetura correta.
+2. R2 é o par natural do D1 já em uso, na mesma conta Cloudflare e no mesmo Worker (DEC-005): resolve durabilidade sem depender de serviço ou credencial externos à conta do usuário, tornando a Opção C desnecessária.
+3. DEC-007 protege rotas do Worker, não URLs externas de um serviço de storage (fato #3 do Gate); portanto o requisito "só o próprio usuário consegue acessá-lo" só é satisfeito se os bytes forem servidos exclusivamente por rota do Worker, nunca por link direto/assinado do R2.
+
+### Constraints for Claude Code
+
+- Nova tabela em `db/schema.ts` para metadados do anexo (nome exato da tabela/colunas é detalhe de implementação), sem coluna de bytes; bytes ficam só no R2.
+- Bucket R2 configurado sem acesso público e sem presigned URLs entregues ao cliente; todo upload/download passa por rota própria do Worker.
+- As rotas de upload/download de anexos ficam sob a mesma verificação de sessão de DEC-007 (fail-closed via `proxy.ts`) — não entram na lista de exceções (`/login`, `/api/auth/*`, assets estáticos).
+- O limite de 10MB por arquivo (DEC-07) é validado no Worker no caminho de upload; não depende do limite de linha do D1.
+- Nome de rotas, nome do binding R2, streaming vs. buffer completo, formato de resposta, etc. são decisões de implementação do Claude Code.
+- Backup (Gate 4) passa a precisar cobrir dois locais (D1 + R2) — não decidido aqui, apenas registrado como consequência para aquele Gate.
+- Isolamento dev/produção (Gate 3) precisará decidir se há bucket R2 separado para dev — não decidido aqui.
+
+### DEC Required
+
+YES
+
+---
+
+# GATE 3 — ISOLAMENTO DEV/PRODUÇÃO
+
+Status: RESOLVED — DEC-009 (ACCEPTED); dev isolado localmente (Miniflare), sem staging remoto; credenciais e scripts de deploy/seed separados por restrição explícita
+
+Correlation: ATLAS-RAF-GATE-20260930-DEVPROD
+
+## Quest
+
+QUEST-010 — Infraestrutura restante do usuário único, item 3: desenvolver/testar mudanças sem afetar ou corromper os dados reais de produção.
+
+## Architectural question
+
+Como separar os ambientes de desenvolvimento/teste e de produção — dados (D1 e R2), credenciais/secrets e fluxo de deploy — de modo que dado de teste enviado em dev nunca apareça em produção e que uma credencial/segredo de produção nunca seja necessário localmente?
+
+## Gate trigger
+
+"expensive or difficult-to-reverse technical decision" e "architectural boundary change" (Architecture Gate itens 6 e 9): define a fronteira entre ambientes de dados e de credenciais; afeta bindings de infraestrutura na conta do usuário e o fluxo de deploy.
+
+## Original requirement
+
+Ver `docs/quests/ACTIVE.md`: "É possível desenvolver/testar mudanças sem afetar ou corromper os dados reais de produção." Critério: "Ambiente de desenvolvimento comprovadamente isolado de produção (dado de teste enviado em dev não aparece em produção)."
+
+## Relevant repository facts
+
+1. Desenvolvimento local (`vinext dev`, `wrangler dev`) usa bindings locais emulados (Miniflare) com estado em `.wrangler/state` (ignorado pelo git): D1 local `site-creator-d1` (id placeholder) definido em `vite.config.ts`/`wrangler.local.jsonc`; migrations locais via `pnpm run db:migrate:local`. Nenhum desses caminhos referencia o D1 de produção `atlas-notes-own`.
+2. O build (`pnpm run build`) gera `dist/server/wrangler.json` sempre com o `database_id` de placeholder e o bucket `site-creator-r2`; `scripts/prepare-own-deploy.mjs` substitui o nome do Worker, o D1 (`--id`/`--db`) e o bucket R2 (`--bucket`) de produção antes de `wrangler deploy` (deploy manual, conforme DEC-005; sem deploy automático, conforme Non-Goals do QUEST-010).
+3. Após DEC-008, o binding R2 `ATTACHMENTS` existe: localmente é emulado pelo Miniflare (bucket `site-creator-r2`); em produção aponta para o bucket criado na conta do usuário (nome passado ao `prepare-own-deploy.mjs`). Não existe hoje um segundo bucket/banco remoto dedicado a dev/staging.
+4. Credenciais de autenticação (DEC-007): em produção são Worker secrets (`ATLAS_PASSWORD_HASH`, `ATLAS_SESSION_SECRET`); localmente são lidas de `.dev.vars` (ignorado pelo git). DEC-007 deixou a separação de credencial dev/produção para este Gate.
+5. `scripts/export-data.mjs` e `scripts/seed-notes.mjs` (DEC-004/DEC-005) movem dados entre ambientes; `scripts/seed-data/atlas-export-production-20260928.json` é um export de produção versionado no repositório.
+6. DEC-008 registra como consequência que este Gate deve contemplar se haverá bucket R2 separado para dev, além do D1.
+7. Este ambiente do Claude Code não acessa a conta Cloudflare; criar bancos/buckets/Workers adicionais e validar isolamento em nuvem só pode ser feito pelo usuário.
+
+## Options and trade-offs
+
+A. Dev apenas local (Miniflare para D1 e R2, `.dev.vars` local), sem recursos remotos de dev; produção é o único ambiente remoto. Trade-offs: nenhum recurso novo na conta nem custo adicional; isolamento garantido pelo fato de dev não ter binding remoto; não permite testar em infraestrutura Cloudflare real antes de produção; o isolamento depende de o fluxo de deploy nunca apontar dev para IDs de produção.
+
+B. Ambiente remoto de staging separado (Worker, D1 e bucket R2 próprios na conta do usuário), além do local e da produção. Trade-offs: permite validar em infraestrutura real sem tocar produção; exige criar e manter Worker/D1/R2 adicionais, secrets próprios e migrations em dois ambientes remotos; aumenta consumo das cotas gratuitas e a superfície de configuração.
+
+C. Outra alternativa proposta por Raf. Trade-offs a serem definidos por Raf.
+
+## Decision required
+
+Qual opção (ou outra) adotar para o isolamento dev/produção, incluindo: se há bucket R2 separado para dev (além do D1); como credenciais/secrets de dev e de produção permanecem separados; e quais salvaguardas impedem que o fluxo de deploy ou de seed misture os ambientes. Nenhuma separação dev/produção foi implementada; o Gate 4 (backup) só será aberto após esta decisão.
+
+## Raf decision
+
+### Decision
+
+Opção A: desenvolvimento/teste permanece exclusivamente local (Miniflare para D1 e R2, credenciais de dev em `.dev.vars`), sem ambiente remoto de staging. Produção continua sendo o único ambiente remoto (Worker `atlas-notes`, D1 `atlas-notes-own`, bucket R2 de DEC-008) — nenhum segundo D1 ou bucket R2 remoto é criado para dev. Credenciais de dev e de produção são sempre valores distintos: produção só existe como Worker secret na conta do usuário; nenhum secret de produção é copiado para `.dev.vars` ou para qualquer arquivo versionável. Scripts que podem tocar recursos remotos (`prepare-own-deploy.mjs`, `seed-notes.mjs`, `export-data.mjs`) devem exigir o identificador do ambiente de destino (D1 id / bucket) explicitamente a cada execução, nunca como default apontando para produção.
+
+### Rationale
+
+1. O requisito original só exige que dado de teste em dev não apareça em produção; o isolamento local via Miniflare (fato #1) já satisfaz isso sem nenhum recurso novo — um ambiente remoto de staging (Opção B) resolveria um problema que o requisito não pede, consumindo cota gratuita e superfície de configuração adicionais sem necessidade concreta.
+2. O fluxo de build/deploy já separa dev de produção por construção (fato #2: build sempre gera IDs placeholder; só a substituição manual de `prepare-own-deploy.mjs` injeta produção) — formalizar que essa substituição nunca pode ser default/implícita fecha a lacuna de segurança real sem mudar o fluxo existente.
+3. DEC-007 deixou explicitamente a separação de credencial dev/produção para este Gate; secrets de produção existirem só na conta Cloudflare (nunca em `.dev.vars`) é a menor extensão de DEC-007 que satisfaz "credencial de produção nunca necessária localmente".
+
+### Constraints for Claude Code
+
+- Não criar Worker, D1 ou bucket R2 remotos adicionais de staging/dev; dev permanece exclusivamente local via Miniflare.
+- `.dev.vars` local contém apenas valores de dev (hash de senha e secret de sessão próprios de dev, diferentes dos de produção); nunca os secrets reais de produção.
+- `prepare-own-deploy.mjs`, `seed-notes.mjs`, `export-data.mjs` e qualquer script futuro que grave em D1/R2 remoto devem exigir o identificador de ambiente (D1 id, nome do bucket) explicitamente a cada execução — nunca com default implícito apontando para produção, nunca lido de `.dev.vars`.
+- Nenhum desses scripts deve ser disparado automaticamente pelos comandos padrão de dev (`vinext dev`, `wrangler dev`) ou de build; permanecem passos manuais e separados.
+- `scripts/seed-data/atlas-export-production-20260928.json`, já versionado desde DEC-005, é artefato histórico da migração e não é afetado retroativamente por esta decisão.
+- Nome exato de flags/variáveis de ambiente e forma de invocação dos scripts são detalhe de implementação do Claude Code.
+
+### DEC Required
+
+YES
 
 ---
 

@@ -542,3 +542,87 @@ Quest: QUEST-010 — Infraestrutura restante do usuário único, item 1: autenti
 Supersedes: NONE
 
 Superseded by: NONE
+
+---
+
+## DEC-008 — Storage de anexos: R2 para bytes + metadados no D1, acesso só via Worker
+
+Status: ACCEPTED
+
+Date: 2026-09-30
+
+### Context
+
+QUEST-010 exige anexar imagem/documento até 10MB (DEC-07) de forma durável e acessível só ao usuário autenticado (DEC-007). Hoje não existe armazenamento de bytes (bloco "Anexos" é demonstrativo); único binding de dados em produção é D1 (`atlas-notes-own`, DEC-005), sem R2 configurado. O limite de linha/valor do D1 (~2MB) é menor que os 10MB exigidos. DEC-007 protege rotas do próprio Worker via `proxy.ts`, não URLs externas de um serviço de storage.
+
+### Decision
+
+Bytes dos anexos em bucket Cloudflare R2; metadados (id, nota associada, nome original, mime type, tamanho em bytes, chave do objeto R2, timestamp) em nova tabela no D1, sem bytes na tabela. Upload e download exclusivamente por rotas do Worker, sob a mesma verificação de sessão de DEC-007. O bucket R2 não tem acesso público nem URL assinada exposta ao cliente.
+
+### Rationale
+
+1. O limite de linha do D1 (~2MB) é menor que os 10MB do DEC-07; guardar bytes no D1 exigiria fragmentação artificial só para contornar um limite de plataforma, além de inflar o banco compartilhado com notas.
+2. R2 é o par natural do D1/Worker já provisionados na mesma conta (DEC-005), resolvendo durabilidade sem dependência ou credencial externas à conta do usuário.
+3. DEC-007 só protege rotas do Worker; o requisito de acesso restrito ao próprio usuário só se sustenta se os bytes forem servidos exclusivamente por rota do Worker, nunca por link direto/assinado do R2.
+
+### Constraints for Claude Code
+
+- Nova tabela de metadados em `db/schema.ts`, sem coluna de bytes; bytes só no R2.
+- Bucket R2 sem acesso público e sem presigned URLs entregues ao cliente; todo upload/download passa por rota do Worker.
+- Rotas de upload/download de anexos sob a mesma verificação de sessão de DEC-007 (fail-closed via `proxy.ts`); não entram nas exceções de rota pública.
+- Limite de 10MB por arquivo validado no Worker no caminho de upload, não no D1.
+- Nome de rotas, nome do binding R2, streaming vs. buffer, formato de resposta são decisão de implementação.
+
+### Consequences
+
+Introduz R2 como segundo local de persistência de dados do usuário, além do D1. Backup (Gate 4) precisa cobrir D1 e R2. Isolamento dev/produção (Gate 3) precisa decidir se há bucket R2 separado para dev. Nenhuma mudança em DEC-001/002/003 (documento canônico de notas) nem em DEC-007 (autenticação).
+
+### Related
+
+Quest: QUEST-010 — Infraestrutura restante do usuário único, item 2: storage de anexos (ATLAS-RAF-GATE-20260929-STORAGE)
+
+Supersedes: NONE
+
+Superseded by: NONE
+
+---
+
+## DEC-009 — Isolamento dev/produção: dev exclusivamente local, sem staging remoto
+
+Status: ACCEPTED
+
+Date: 2026-10-06
+
+### Context
+
+QUEST-010 exige desenvolver/testar sem afetar dados reais de produção, com dado de teste em dev nunca aparecendo em produção. Dev local já usa Miniflare (D1 e R2 emulados) sem referenciar os IDs de produção; o build sempre gera `wrangler.json` com IDs placeholder, só substituídos manualmente por `prepare-own-deploy.mjs` no momento do deploy (DEC-005). DEC-007 deferiu a separação de credencial dev/produção para este Gate; DEC-008 deferiu a decisão sobre bucket R2 separado para dev.
+
+### Decision
+
+Dev/teste permanece exclusivamente local (Miniflare para D1 e R2, credenciais em `.dev.vars`); nenhum Worker/D1/R2 remoto de staging é criado. Produção continua sendo o único ambiente remoto. Secrets de produção existem só como Worker secrets na conta do usuário, nunca copiados para `.dev.vars` ou arquivo versionável. Scripts que podem tocar recursos remotos exigem o identificador de ambiente explicitamente a cada execução, nunca como default de produção.
+
+### Rationale
+
+1. O requisito só exige que dado de teste em dev não apareça em produção; isolamento local via Miniflare já satisfaz isso sem recurso novo — staging remoto resolveria um problema não exigido, consumindo cota e configuração adicionais sem necessidade concreta.
+2. O fluxo de build/deploy já separa dev de produção por construção (IDs placeholder no build, substituição manual só no deploy); formalizar que essa substituição nunca é default fecha a lacuna real de segurança sem mudar o fluxo existente.
+3. Secrets de produção existirem só na conta Cloudflare, nunca em `.dev.vars`, é a menor extensão de DEC-007 que satisfaz "credencial de produção nunca necessária localmente".
+
+### Constraints for Claude Code
+
+- Não criar Worker, D1 ou bucket R2 remotos adicionais de staging/dev; dev permanece exclusivamente local via Miniflare.
+- `.dev.vars` contém apenas valores de dev, nunca secrets reais de produção.
+- `prepare-own-deploy.mjs`, `seed-notes.mjs`, `export-data.mjs` e scripts futuros equivalentes exigem identificador de ambiente remoto explícito a cada execução, nunca default implícito de produção, nunca lido de `.dev.vars`.
+- Nenhum desses scripts roda automaticamente via `vinext dev`/`wrangler dev`/build padrão.
+- `scripts/seed-data/atlas-export-production-20260928.json` (histórico de DEC-005) não é afetado retroativamente.
+
+### Consequences
+
+Fecha a separação dev/produção exigida pelo item 3 do QUEST-010 sem novo binding ou custo adicional. Confirma, como consequência registrada em DEC-008, que não haverá bucket R2 remoto separado para dev. Desbloqueia o Gate 4 (backup), que precisará cobrir apenas o único ambiente de produção (D1 + R2).
+
+### Related
+
+Quest: QUEST-010 — Infraestrutura restante do usuário único, item 3: dev/produção (ATLAS-RAF-GATE-20260930-DEVPROD)
+
+Supersedes: NONE
+
+Superseded by: NONE
