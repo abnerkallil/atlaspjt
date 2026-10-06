@@ -535,8 +535,8 @@ export function NotesWorkspace() {
           <p className="eyebrow">ATLAS NOTES</p>
           <h1>Capture agora. Classifique com cuidado.</h1>
           <p>
-            O texto fica no Atlas; a planilha recebe apenas os metadados e
-            vínculos confirmados.
+            Texto e vínculos ficam no Atlas. A planilha oficial só define o
+            catálogo de conteúdos.
           </p>
         </div>
         <Button className="primary-button" onClick={startNewNote}>
@@ -1130,7 +1130,8 @@ export function NotesWorkspace() {
             <span>{LINK_STATUS}</span>
             <p>
               A nota é evidência contextual. Estudo, revisão, proficiência e
-              conclusão continuam sob controle da planilha.
+              conclusão são registrados pelo Atlas, a partir de quizzes e
+              revisões.
             </p>
           </div>
         </aside>
