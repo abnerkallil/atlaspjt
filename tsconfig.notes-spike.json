@@ -42,7 +42,9 @@
     "lib/roadmap-store.ts",
     "tests/catalog-roadmap.test.ts",
     "lib/pedagogy/prerequisites.ts",
-    "tests/prerequisites.test.ts"
+    "tests/prerequisites.test.ts",
+    "lib/attachments.ts",
+    "tests/attachments.test.ts"
   ],
   "exclude": [
     "node_modules"

@@ -60,6 +60,23 @@ export const atlasNoteLinks = sqliteTable(
   ],
 );
 
+// DEC-008: only metadata lives in D1; the bytes live in R2 under `objectKey`.
+export const atlasNoteAttachments = sqliteTable(
+  'atlas_note_attachments',
+  {
+    id: text('id').primaryKey(),
+    noteId: text('note_id')
+      .notNull()
+      .references(() => atlasNotes.id, { onDelete: 'cascade' }),
+    fileName: text('file_name').notNull(),
+    mimeType: text('mime_type').notNull(),
+    sizeBytes: integer('size_bytes').notNull(),
+    objectKey: text('object_key').notNull(),
+    createdAt: text('created_at').notNull(),
+  },
+  (table) => [index('idx_atlas_note_attachments_note_id').on(table.noteId)],
+);
+
 export const atlasSyncOperations = sqliteTable(
   'atlas_sync_operations',
   {
