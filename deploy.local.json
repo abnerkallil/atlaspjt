@@ -1,0 +1,8 @@
+{
+  "production": {
+    "worker": "<atlas-notes>",
+    "d1": "<atlas-notes-own>",
+    "bucket": "<atlas-notes-attachments>",
+    "accountId": ""
+  }
+}
