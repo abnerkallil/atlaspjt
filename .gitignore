@@ -45,3 +45,4 @@ next-env.d.ts
 
 # nomes reais do Worker/D1/R2 de produção para scripts/deploy.mjs (DEC-009)
 /deploy.local.json
+/deploy.json
