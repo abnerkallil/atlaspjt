@@ -1,58 +1,5 @@
-// Dados demonstrativos da página Estudar.
-
-// Progresso zerado: o Atlas começa do zero e o cálculo real ainda não existe (MVP-07).
-export const studyCourse = { name: 'Contabilidade Geral', progress: 0 };
-
-export const studyLesson = {
-  eyebrow: 'CONTABILIDADE GERAL · MÓDULO 2',
-  title: 'Regime de competência',
-  subtitle: 'Conteúdo de demonstração da sessão de estudo.',
-  position: 'AULA 4 DE 9',
-  minutes: 35,
-  heading: 'Reconhecimento de receitas e despesas',
-  description: 'Retome diretamente o conceito que conecta o fato gerador ao período contábil correto.',
-};
-
-type StepStatus = 'done' | 'active' | 'todo';
-
-export const sessionSteps: { title: string; hint: string; status: StepStatus }[] = [
-  { title: 'Material de leitura', hint: 'Começar por aqui', status: 'active' },
-  { title: 'Vídeo ou PDF', hint: 'Aula gravada e apostila', status: 'todo' },
-  { title: 'Atividade prática', hint: '3 lançamentos', status: 'todo' },
-  { title: 'Fixação', hint: '2 questões ao encerrar', status: 'todo' },
-];
-
-type StudyModule = {
-  id: number;
-  status: 'complete' | 'current' | 'locked';
-  kicker: string;
-  title: string;
-  description: string;
-  progress?: string;
-  lessons?: { title: string; hint: string; status: StepStatus }[];
-};
-
-export const studyModules: StudyModule[] = [
-  { id: 1, status: 'current', kicker: 'MÓDULO 1 · NÃO INICIADO', title: 'Fundamentos contábeis', description: 'Patrimônio, equação patrimonial, contas, débito e crédito.', progress: '0%' },
-  {
-    id: 2, status: 'current', kicker: 'MÓDULO 2 · NÃO INICIADO', title: 'Regimes e reconhecimento',
-    description: 'Regime de caixa, regime de competência e ajustes.', progress: '0%',
-    lessons: [
-      { title: 'Regime de caixa', hint: 'Não iniciado', status: 'todo' },
-      { title: 'Regime de competência', hint: 'Sessão de demonstração', status: 'active' },
-      { title: 'Ajustes de competência', hint: 'Próximo conteúdo', status: 'todo' },
-    ],
-  },
-  { id: 3, status: 'locked', kicker: 'MÓDULO 3 · BLOQUEADO', title: 'Fechamento e demonstrações', description: 'Liberado após a conclusão dos regimes e reconhecimento.' },
-];
-
-export const sessionModal = {
-  title: 'Regime de competência',
-  description: '35 minutos · leitura, vídeo ou PDF, atividade prática e notas. Ao encerrar, duas questões de fixação.',
-};
-
-// Sessão de estudo (UX-01). Material, atividade e fixação demonstrativos do
-// conteúdo "Regime de competência", vinculado ao item CG-021 do catálogo.
+// Material demonstrativo da sessão de estudo (UX-01), cadastrado só para o conteúdo
+// "Regime de competência" (CG-021). Os demais conteúdos ainda não têm material no Atlas.
 export const sessionContentId = 'CG-021';
 
 export type SessionStepId = 'leitura' | 'midia' | 'pratica';
@@ -134,9 +81,3 @@ export const sessionFixation = [
   },
 ];
 
-// Intervalos de revisão definidos no DEC-09, contados a partir da conclusão.
-export const reviewIntervals = [
-  { label: '24h', days: 1 },
-  { label: '7 dias', days: 7 },
-  { label: '30 dias', days: 30 },
-];

@@ -51,7 +51,7 @@ Leituras feitas na implementação, onde o DEC-03 não detalha:
 
 ## Fora da espinha (cada uma chega com o seu card)
 
-Sessão (MVP-02), questão e tentativa (MVP-04), revisão (MVP-06), avaliação
+Questão e tentativa (MVP-04), revisão (MVP-06), avaliação
 (MVP-07/08), preferências (TEC-04), histórico de notas (MVP-03). Não há tabela de
 usuário além do DEC-007. `atlas_sync_operations` continua existindo e, se usada,
 serve só para importar o catálogo da planilha para o D1.
@@ -98,7 +98,7 @@ arquivo e o gerador divergirem. Para mudar fases ou pré-requisitos, edite
 Leitura: `GET /api/roadmap` devolve fases → disciplinas → conteúdos com estado
 atual e pré-requisitos (exige sessão). Preferências e tarefas não ganharam
 tabela: nenhuma tela as usa ainda; a primeira preferência real (horário padrão
-da agenda, DEC-09) chega com o MVP-05. Sessões chegam com o MVP-02 (DEC-010).
+da agenda, DEC-09) chega com o MVP-05.
 
 ## Pré-requisitos e bloqueios (MVP-01)
 
@@ -114,7 +114,32 @@ da agenda, DEC-09) chega com o MVP-05. Sessões chegam com o MVP-02 (DEC-010).
 - Toda evidência citada numa transição precisa existir e ser do mesmo conteúdo.
 - `GET /api/roadmap` devolve, por conteúdo, `pendingPrerequisites` e `locked`, e
   por fase/disciplina o progresso bruto (cumpridos / total).
-- `POST /api/roadmap/conteudos/:id/estudar` começa um conteúdo (409 se travado).
+- Começar um conteúdo é abrir uma sessão de estudo (`POST /api/sessoes`, MVP-02;
+  409 se travado).
 
 A página Roadmap e o cartão de roadmap da página Hoje leem esses dados; o
 registro de mudanças da página Roadmap vem de `GET /api/auditoria`.
+
+## Sessões de estudo (MVP-02)
+
+`atlas_study_sessions` (migration 0008): uma linha por sessão, com `status`
+(`em-andamento`, `pausada`, `concluida`), tempo acumulado em `active_seconds` +
+início do trecho em andamento em `last_resumed_at`, ponto atual em
+`checkpoint_json` (até 16KB: etapa, etapas feitas, nota da sessão) e, quando
+concluída, `finished_at` e `evidence_id`. Regras em `lib/study-sessions.ts`:
+
+- Iniciar: no máximo uma sessão aberta por conteúdo (índice único parcial); se
+  já houver, ela é retomada. Se o conteúdo está `nao-iniciado` ou `bloqueado`,
+  dispara `abrir-material` (com a checagem de pré-requisitos do MVP-01).
+- Uma sessão em andamento por vez: começar ou retomar outra pausa a anterior,
+  guardando o tempo.
+- Pausar congela o tempo; retomar volta a contar; salvar ponto atual não mexe
+  em status nem tempo.
+- Concluir registra a evidência `kind = 'sessao'` (`source_ref` = id da sessão)
+  e, se o conteúdo está `em-estudo`, aplica `encerrar-sessao` (→
+  `aguardando-quiz`) citando essa evidência. Estudar de novo um conteúdo já
+  adiante não muda o estado.
+
+API: `GET /api/sessoes?abertas=1`, `GET /api/sessoes?conteudo=ID`,
+`POST /api/sessoes { contentId }`, `GET /api/sessoes/:id` e
+`PATCH /api/sessoes/:id { action: pausar | retomar | salvar-ponto | concluir, checkpoint? }`.

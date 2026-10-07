@@ -12,7 +12,9 @@ import { PageHeading } from '@/components/atlas/page-heading';
 import { ProgressBar } from '@/components/atlas/progress-bar';
 import { SessionStartModal } from '@/components/atlas/session-start-modal';
 import { useAtlasShell } from '@/components/atlas/atlas-shell';
-import { dailySummary, todayContinue, todayMetrics, todayTasks } from '@/lib/demo/today';
+import { dailySummary, todayMetrics, todayTasks } from '@/lib/demo/today';
+import { formatMinutes, startStudySession, useStudyOverview } from '@/components/pages/use-study-overview';
+import { elapsedSeconds } from '@/lib/study-sessions';
 import type { RoadmapView } from '@/lib/roadmap-store';
 
 const taskIcons = { book: BookOpen, brain: BrainCircuit, target: Target, pen: PenLine } as const;
@@ -53,7 +55,37 @@ export function TodayPage() {
   const { done, toggleTask } = useAtlasShell();
   const currentPhase = useCurrentPhase();
   const [sessionOpen, setSessionOpen] = useState(false);
+  const [starting, setStarting] = useState(false);
+  const [startError, setStartError] = useState('');
   const router = useRouter();
+  const { overview } = useStudyOverview();
+  const ready = overview.status === 'ready' ? overview : null;
+  const nextContent = ready?.nextContent ?? null;
+  const openSession = ready?.next?.kind === 'retomar' ? ready.openSessions[0] : undefined;
+  const nextDiscipline = ready?.roadmap?.phases
+    .flatMap((phase) => phase.disciplines)
+    .find((item) => item.id === nextContent?.disciplineId);
+
+  function continueStudy() {
+    if (openSession) router.push(`/estudar?sessao=${encodeURIComponent(openSession.id)}`);
+    else if (nextContent) setSessionOpen(true);
+    else router.push('/roadmap');
+  }
+
+  async function beginSession() {
+    if (!nextContent) return;
+    setStarting(true);
+    setStartError('');
+    try {
+      const session = await startStudySession(nextContent.id);
+      router.push(`/estudar?sessao=${encodeURIComponent(session.id)}`);
+    } catch (error) {
+      setStartError(error instanceof Error ? error.message : 'Não foi possível abrir a sessão.');
+      setSessionOpen(false);
+    } finally {
+      setStarting(false);
+    }
+  }
   const dateLabel = useSyncExternalStore(subscribeToClock, todayLabel, () => ' ');
   const greeting = useSyncExternalStore(subscribeToClock, greetingNow, () => 'Olá');
 
@@ -68,19 +100,33 @@ export function TodayPage() {
           <div className="card-kicker"><BookOpen size={15} /> CONTINUE DE ONDE PAROU</div>
           <div className="continue-content">
             <div>
-              <span className="subject-chip">{todayContinue.subject}</span>
-              <h2>{todayContinue.title}</h2>
-              <p>{todayContinue.description}</p>
+              <span className="subject-chip">{nextContent?.disciplineTitle ?? 'Roadmap'}</span>
+              <h2>{nextContent?.title ?? (ready ? 'Nada pendente agora' : 'Carregando…')}</h2>
+              <p>
+                {openSession
+                  ? `Sessão ${openSession.status === 'pausada' ? 'pausada' : 'em andamento'}: retome de onde parou.`
+                  : ready?.next?.kind === 'iniciar'
+                    ? ready.next.reason
+                    : ready
+                      ? 'Os conteúdos liberados já foram estudados.'
+                      : ''}
+              </p>
             </div>
-            <div className="progress-copy"><strong>{todayContinue.progress}%</strong><span>do conteúdo</span></div>
+            <div className="progress-copy"><strong>{nextDiscipline?.progress.percent ?? 0}%</strong><span>da disciplina</span></div>
           </div>
-          <ProgressBar value={todayContinue.progress} />
+          <ProgressBar value={nextDiscipline?.progress.percent ?? 0} />
           <div className="continue-footer">
-            <span><Clock3 size={15} /> {todayContinue.lastSession}</span>
-            <Button className="primary-button" onClick={() => setSessionOpen(true)}>
-              Continuar estudo <ArrowRight size={17} />
+            <span>
+              <Clock3 size={15} />{' '}
+              {openSession && ready
+                ? `${formatMinutes(elapsedSeconds(openSession, ready.serverNow))} nesta sessão`
+                : 'Nenhuma sessão aberta'}
+            </span>
+            <Button className="primary-button" onClick={continueStudy} disabled={!ready}>
+              {openSession ? 'Retomar sessão' : 'Continuar estudo'} <ArrowRight size={17} />
             </Button>
           </div>
+          {startError && <p className="rm-error" role="alert">{startError}</p>}
         </article>
 
         <aside className="atlas-observed-card">
@@ -144,7 +190,15 @@ export function TodayPage() {
         <Link href="/roadmap">Ver roadmap completo <ChevronRight size={17} /></Link>
       </section>
 
-      {sessionOpen && <SessionStartModal onClose={() => setSessionOpen(false)} onStart={() => router.push('/estudar?sessao=iniciar')} />}
+      {sessionOpen && nextContent && (
+        <SessionStartModal
+          title={nextContent.title}
+          description={`${nextContent.disciplineTitle}${nextContent.estimatedMinutes ? ` · ${nextContent.estimatedMinutes} min estimados` : ''}. Material e notas lado a lado; ao concluir, o quiz do conteúdo fica disponível.`}
+          starting={starting}
+          onClose={() => setSessionOpen(false)}
+          onStart={() => void beginSession()}
+        />
+      )}
     </>
   );
 }

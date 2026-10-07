@@ -48,7 +48,7 @@ function schemaOf(db: DatabaseSync) {
   );
 }
 
-void test('produção atual: 0004 e 0006 aplicadas à mão são só registradas, 0005 (idempotente) e 0007 (nova) rodam', () => {
+void test('produção atual: 0004 e 0006 aplicadas à mão são só registradas, 0005 (idempotente) e as novas (0007+) rodam', () => {
   const db = databaseWith(upTo0006);
   const plan = lib.planMigrations({
     dir: 'drizzle',
@@ -62,6 +62,7 @@ void test('produção atual: 0004 e 0006 aplicadas à mão são só registradas,
   assert.deepEqual(plan.apply, [
     '0005_catalog_seed.sql',
     '0007_note_versions.sql',
+    '0008_study_sessions.sql',
   ]);
   assert.deepEqual(plan.partial, []);
 });
@@ -77,7 +78,7 @@ void test('migration nova ainda não aplicada vai para apply', () => {
   });
   assert.deepEqual(plan, {
     register: [],
-    apply: ['0006_attachments.sql', '0007_note_versions.sql'],
+    apply: ['0006_attachments.sql', '0007_note_versions.sql', '0008_study_sessions.sql'],
     partial: [],
   });
 });

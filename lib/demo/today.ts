@@ -2,7 +2,6 @@
 // Os números de Hoje vêm das mesmas fontes demonstrativas de Estudar e Progresso, para as páginas não se contradizerem.
 // O cartão de roadmap já lê o roadmap real (GET /api/roadmap, TEC-04/MVP-01).
 import { progressSummary } from './progress';
-import { studyCourse, studyLesson } from './study';
 
 export type TaskTone = 'blue' | 'violet' | 'amber' | 'green';
 export type TaskIcon = 'book' | 'brain' | 'target' | 'pen';
@@ -23,13 +22,6 @@ export const dailySummary = {
   scheduledReviews: todayTasks.filter((task) => task.label === 'Revisão').length,
 };
 
-export const todayContinue = {
-  subject: studyCourse.name,
-  title: studyLesson.title,
-  description: studyLesson.subtitle,
-  progress: studyCourse.progress,
-  lastSession: 'Nenhuma sessão ainda',
-};
 
 export const todayMetrics = [
   { tone: 'gold', icon: 'target', label: 'Domínio geral', value: `${progressSummary.mastery}%`, hint: 'Conhecimento consolidado' },
