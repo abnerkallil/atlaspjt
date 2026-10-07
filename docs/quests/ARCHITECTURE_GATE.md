@@ -341,6 +341,72 @@ YES
 
 ---
 
+# GATE 4 — BACKUP E RESTAURAÇÃO
+
+Status: OPEN — aguardando decisão do Raf
+
+Correlation: ATLAS-RAF-GATE-20261007-BACKUP
+
+## Quest
+
+QUEST-010 — Infraestrutura restante do usuário único, item 4: backup. Último Gate do quest; os Gates 1 a 3 já foram resolvidos (DEC-007, DEC-008, DEC-009).
+
+## Architectural question
+
+Qual mecanismo de backup e restauração o Atlas deve adotar para os dados de produção (D1 `atlas-notes-own` e bucket R2 de anexos), definindo o que é copiado, por qual mecanismo, onde as cópias ficam, quem/o que dispara o backup e como a restauração é feita e testada sem violar o isolamento do DEC-009?
+
+## Gate trigger
+
+"expensive or difficult-to-reverse technical decision" (item 9), "authentication or security architecture" (item 4) e "major cross-system change" (item 6): define onde ficam cópias de todos os dados do usuário (inclusive notas privadas) fora do banco de produção, que credencial de produção o processo exige e como D1 e R2 são mantidos consistentes numa restauração.
+
+## Original requirement
+
+Ver `docs/quests/ACTIVE.md`: "Existe uma forma (mesmo manual/documentada) de gerar backup dos dados e restaurá-los em caso de perda." Critério: "Rotina de backup documentada e testada ao menos uma vez (executar backup, simular restauração)." Validação: "backup + restauração simulada"; "nenhum critério conta como implementado só porque o código existe".
+
+Decisões já registradas que restringem a resposta: DEC-008 (consequência: "Backup (Gate 4) precisa cobrir D1 e R2"), DEC-009 (produção é o único ambiente remoto; nenhum D1/R2 remoto de staging; secrets de produção nunca em `.dev.vars`; scripts remotos exigem ambiente explícito; consequência: "o Gate 4 precisará cobrir apenas o único ambiente de produção (D1 + R2)"), DEC-007 (APIs só com sessão) e DEC-010 (D1 é a fonte da verdade de catálogo e progresso).
+
+## Relevant repository facts
+
+1. Produção é o único ambiente remoto (DEC-009): Worker `atlas-notes`, D1 `atlas-notes-own` e o bucket R2 do binding `ATTACHMENTS` (DEC-008). Os nomes ficam em `deploy.local.json` (ignorado pelo git) e são passados a `scripts/deploy.mjs --target production`.
+2. Dados no D1 (`db/schema.ts`, migrations 0000 a 0006): (a) gerados pelo usuário — `atlas_note_folders`, `atlas_notes` (com `content_json` no envelope do DEC-001 e `is_private`), `atlas_note_links`, `atlas_note_attachments` (só metadados e `object_key`), `atlas_content_states`, `atlas_discipline_states`, `atlas_evidences`, `atlas_state_audit` (só inserção) e `atlas_sync_operations`; (b) catálogo curado — `atlas_roadmaps`, `atlas_phases`, `atlas_disciplines`, `atlas_contents`, `atlas_content_prerequisites`, `atlas_subtopics`, semeados pela migration `drizzle/0005_catalog_seed.sql` (idempotente, `ON CONFLICT DO UPDATE`), portanto reproduzíveis a partir do repositório.
+3. Bytes de anexos ficam só no R2 (até 10MB por arquivo, DEC-07); o D1 guarda a referência `object_key`. `readAttachment` devolve `null` se a linha existir sem o objeto, e `deleteAttachment` apaga primeiro o objeto R2 e depois a linha (`lib/attachments-store.ts`). Uma restauração em que D1 e R2 venham de momentos diferentes deixa linhas sem objeto ou objetos órfãos.
+4. `scripts/export-data.mjs` (DEC-004, ajustado ao DEC-009) é o único export existente: lê `GET /api/notes` e `GET /api/notes/folders` com sessão aberta por `ATLAS_EXPORT_PASSWORD`, exige `--target` explícito e grava JSON (`atlas-export` v1) em `outputs/` (ignorado pelo git). Não cobre anexos (bytes nem metadados), estado pedagógico, evidências nem auditoria.
+5. `scripts/seed-notes.mjs` reinsere notas de um export com `INSERT OR IGNORE`, mas grava `content_json = NULL` e `folder_id = NULL`: hoje não existe caminho que restaure o conteúdo estruturado (DEC-001), as pastas ou os anexos.
+6. Não há tarefa agendada: nenhuma Cron Trigger nem handler `scheduled` na configuração do Worker; deploy e migrations em produção são passos manuais do usuário (DEC-005, DEC-009; deploy automático é non-goal do QUEST-010).
+7. Recursos da plataforma, segundo a documentação da Cloudflare (não verificáveis a partir deste ambiente): D1 Time Travel permite restaurar o banco para um ponto no tempo dentro de uma janela de retenção que depende do plano (7 dias no Free, 30 no Paid), sem cópia fora da conta; `wrangler d1 export` gera um dump SQL do banco remoto; R2 não tem versionamento de objetos nativo; o `wrangler` lê objetos R2 um a um, e cópia em massa exige a API compatível com S3 e uma credencial de acesso R2 da conta.
+8. DEC-08 do produto (card concluído): exclusão de anexos e dos dados da conta em até 3 dias. Notas com `is_private = 1` são gravadas em texto no D1 (criptografia ponta a ponta é non-goal do QUEST-010), então qualquer cópia de backup as contém em claro, e cópias retidas por mais de 3 dias guardam dados que o usuário pode ter excluído.
+9. Este ambiente do Claude Code não acessa a conta Cloudflare: executar backup em produção e validar a restauração só pode ser feito pelo usuário, na máquina dele.
+
+## Options and trade-offs
+
+Os eixos abaixo são as escolhas reais expostas pelo código e pelas decisões anteriores; dentro de cada eixo as alternativas são apresentadas sem preferência.
+
+**Eixo 1 — mecanismo de cópia do D1.**
+A. Só D1 Time Travel. Trade-offs: nenhum código nem armazenamento novo; restauração nativa; janela limitada pelo plano; nenhuma cópia fora da conta (não protege contra perda da conta ou exclusão do banco); não cobre R2.
+B. Dump SQL periódico do banco inteiro (`wrangler d1 export --remote`) guardado fora da conta. Trade-offs: cópia completa e independente da conta, inclusive auditoria e estado; restauração direta com `wrangler d1 execute`; exige credencial do wrangler na máquina de quem roda; o dump inclui o catálogo reproduzível e está acoplado à versão do schema.
+C. Export de aplicação via API autenticada (ampliar `export-data.mjs` para todas as entidades do usuário, com restauração equivalente). Trade-offs: formato versionado e independente do schema físico, usa só a senha do Atlas (DEC-007); exige manter export e restauração em sincronia com cada migration nova e escrever o caminho de restauração que hoje não existe (fato 5).
+
+**Eixo 2 — cópia dos anexos (R2).**
+A. Baixar os objetos para o mesmo destino do backup do D1, no mesmo passo. Trade-offs: backup único e coerente entre D1 e R2; volume cresce com os anexos (até 10MB cada); baixar em massa exige API S3 com credencial R2 ou uma rota do Worker que liste/sirva objetos (DEC-008 só permite servir bytes por rota autenticada).
+B. Cópia para um segundo bucket na mesma conta. Trade-offs: sem tráfego para fora da conta; não protege contra perda da conta; é um recurso remoto novo, e o DEC-009 proibiu buckets de staging/dev (não tratou de buckets de backup).
+
+**Eixo 3 — disparo e frequência.**
+A. Manual, pelo usuário, com script e cadência documentados. Trade-offs: nenhuma infraestrutura nova; atende ao "mesmo manual/documentada" do requisito; depende de disciplina do usuário.
+B. Automático, por Cron Trigger de um Worker que grava as cópias no R2 da própria conta. Trade-offs: não depende do usuário lembrar; cópias continuam dentro da conta; nova peça de infraestrutura e consumo de cota; o QUEST-010 só declara non-goal o deploy automático, não o backup automático.
+
+**Eixo 4 — destino, retenção e restauração.**
+Onde as cópias ficam (máquina do usuário, armazenamento externo ou dentro da conta), por quanto tempo são retidas frente à exclusão em 3 dias do DEC-08 e ao conteúdo de notas privadas em claro (fato 8), e se a restauração testada exigida pelo critério é feita no D1/R2 locais do Miniflare (sem tocar produção, coerente com DEC-009) ou num recurso remoto.
+
+## Decision required
+
+Qual mecanismo adotar, respondendo no mínimo: (1) como o D1 é copiado e se o catálogo reproduzível entra na cópia; (2) como os bytes do R2 são copiados e como a consistência D1 ↔ R2 é garantida numa restauração; (3) se o backup é manual ou automático; (4) onde as cópias ficam, qual credencial de produção o processo exige (DEC-009) e como a retenção se relaciona com a exclusão em 3 dias do DEC-08; (5) onde a restauração de teste é executada. Nome de scripts, flags, formato de arquivo e cadência exata são detalhe de implementação. Nenhuma implementação de backup foi iniciada.
+
+## Raf decision
+
+*(pendente)*
+
+---
+
 # CORE PRINCIPLE
 
 Atlas supplies product requirement. Claude Code supplies evidence. Raf supplies architectural judgment. These responsibilities must remain separate.
