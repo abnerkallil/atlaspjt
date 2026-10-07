@@ -1,8 +1,0 @@
-{
-  "production": {
-    "worker": "<nome-do-worker>",
-    "d1": "<nome-do-d1>",
-    "bucket": "<nome-do-bucket-r2-de-anexos>",
-    "accountId": ""
-  }
-}
