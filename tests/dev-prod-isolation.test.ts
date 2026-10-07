@@ -104,3 +104,16 @@ void test('DEC-009: deploy.local.json (nomes reais de produção) é ignorado pe
   const example = JSON.parse(readFileSync('deploy.example.json', 'utf8')) as { production: Record<string, string> };
   for (const key of ['worker', 'd1', 'bucket']) assert.match(example.production[key], /^</, key);
 });
+
+void test('DEC-009: deploy aponta o nome certo quando o arquivo se chama deploy.json', () => {
+  const cwd = mkdtempSync(join(tmpdir(), 'atlas-deploy-'));
+  writeFileSync(join(cwd, 'deploy.json'), '{}');
+  const result = spawnSync(process.execPath, [join(process.cwd(), 'scripts/deploy.mjs'), '--target', 'production'], {
+    cwd,
+    env: { PATH: process.env.PATH ?? '' } as unknown as NodeJS.ProcessEnv,
+    encoding: 'utf8',
+  });
+  assert.equal(result.status, 1);
+  assert.match(`${result.stdout}${result.stderr}`, /Renomeie deploy\.json para deploy\.local\.json/);
+  assert.equal(spawnSync('git', ['check-ignore', '-q', 'deploy.json']).status, 0, 'deploy.json também não vai para o git');
+});

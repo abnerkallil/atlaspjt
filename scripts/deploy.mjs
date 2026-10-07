@@ -85,6 +85,9 @@ function d1Query(db, sql, failure) {
 }
 
 function readLocalConfig(target) {
+  if (!existsSync(LOCAL_CONFIG) && existsSync('deploy.json')) {
+    throw new Error(`Renomeie deploy.json para ${LOCAL_CONFIG}: o script só lê ${LOCAL_CONFIG}, que o git ignora.`);
+  }
   if (!existsSync(LOCAL_CONFIG)) {
     throw new Error(
       `Arquivo ${LOCAL_CONFIG} não encontrado. Copie deploy.example.json para ${LOCAL_CONFIG} ` +
@@ -95,7 +98,7 @@ function readLocalConfig(target) {
   if (!section) throw new Error(`${LOCAL_CONFIG} não tem a seção "${target}".`);
   for (const key of ['worker', 'd1', 'bucket']) {
     if (!section[key] || String(section[key]).startsWith('<')) {
-      throw new Error(`Preencha "${target}.${key}" em ${LOCAL_CONFIG}.`);
+      throw new Error(`Preencha "${target}.${key}" em ${LOCAL_CONFIG} com o nome real, sem os sinais < >.`);
     }
   }
   return section;

@@ -12,6 +12,9 @@ gravado na Cloudflare antes de você confirmar.
    login tiver acesso a mais de uma conta. O `deploy.local.json` é ignorado pelo
    git e nunca vai para o GitHub; o id do D1 não precisa ser copiado, o script
    descobre pelo wrangler.
+   O nome precisa ser exatamente `deploy.local.json` (não `deploy.json`), e os
+   valores vão sem os sinais `< >` do modelo, por exemplo `"worker": "meu-worker"`.
+   Não apague o `deploy.example.json`: ele é o modelo versionado e os testes o usam.
 
 ## Toda vez que quiser publicar
 
@@ -24,6 +27,10 @@ pnpm run deploy:atlas -- --target production
 
 O script mostra o commit, o Worker, o D1, o bucket e as migrations que vai
 aplicar, e só continua se você digitar `PUBLICAR`.
+
+Para só testar a configuração sem publicar, rode o comando e, na confirmação,
+digite qualquer coisa diferente de `PUBLICAR` (ou feche a janela). Até ali ele
+só fez pull, install, build e leituras na Cloudflare.
 
 ## O que o comando faz
 
