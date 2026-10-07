@@ -370,10 +370,12 @@ button { color: inherit; }
 
 .note-attachments { margin-top: 18px; padding-top: 16px; border-top: 1px solid #e9e6ed; }
 .note-attachments-heading { display: flex; align-items: center; gap: 7px; margin-bottom: 10px; color: #4f5663; font-size: 12px; font-weight: 700; }
-.attachments-demo-badge { margin-left: auto; padding: 3px 8px; border-radius: 999px; color: #8d6718; background: #fff9e8; font-size: 10px; font-weight: 700; }
 .attachment-add { display: inline-flex; align-items: center; gap: 6px; height: 40px; padding: 0 12px; border: 1px dashed #c8d3e6; border-radius: 10px; color: #3f587c; background: #f7faff; cursor: pointer; font-size: 12px; font-weight: 700; white-space: nowrap; }
 .attachment-add:hover { border-color: #8db1f5; }
 .attachment-input { display: none; }
+.attachment-link { color: inherit; text-decoration: none; }
+.attachment-link:hover { color: #2463eb; text-decoration: underline; }
+.attachments-error { margin: 10px 0 0; color: #b42318; font-size: 12px; font-weight: 600; }
 .attachments-disclaimer { margin: 10px 0 0; color: #5f6c80; font-size: 11px; line-height: 1.5; }
 
 .ask-atlas { position: fixed; z-index: 15; right: 25px; bottom: 23px; border: 1px solid #2463eb; border-radius: 999px; padding: 7px 16px 7px 7px; display: flex; align-items: center; gap: 9px; color: #fff; background: #2463eb; box-shadow: 0 18px 55px rgba(25,75,171,.25); cursor: pointer; font-size: 12px; font-weight: 700; }
@@ -471,7 +473,6 @@ button { color: inherit; }
   .note-editor-tools { width: 100%; }
   .note-folder-select { max-width: none; }
   .note-attachments-heading { flex-wrap: wrap; }
-  .attachments-demo-badge { margin-left: 0; }
 }
 
 /* Roadmap (UX-02) */

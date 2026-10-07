@@ -9,6 +9,7 @@ import {
   ChevronRight,
   Clock3,
   Cloud,
+  Download,
   FilePenLine,
   FolderTree,
   Link2,
@@ -19,13 +20,14 @@ import {
   Pencil,
   PieChart,
   Plus,
+  RotateCcw,
   Search,
   Sparkles,
   Star,
   Unlink,
   X,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import {
   Attachment,
   AttachmentActions,
@@ -63,6 +65,17 @@ import {
   type NotesPanelSort,
 } from './notes-panel-filters';
 import { computeContentCoverage, computeOverallCoverage } from './notes-coverage';
+import {
+  ATTACHMENT_ACCEPT,
+  attachmentDownloadUrl,
+  deleteAttachment,
+  describeAttachment,
+  fetchNoteAttachments,
+  prepareAttachmentItem,
+  savedAttachmentItem,
+  uploadAttachment,
+  type AttachmentItem,
+} from './notes-attachments';
 
 const LINK_STATUS = 'Anotado — ainda não trabalhado' as const;
 
@@ -91,12 +104,6 @@ type NoteFolder = {
   createdAt: string;
   updatedAt: string;
 };
-
-// Demonstrative only — see the "Anexos" block below. No file bytes are ever
-// read, uploaded or persisted; only the picked file's name/size are kept in
-// memory for the note currently open in the editor (TEC-05, real storage,
-// is out of scope for this quest).
-type DemoAttachment = { id: string; name: string; size: number };
 
 type SidePanel = 'none' | 'favorites' | 'folders' | 'coverage';
 
@@ -178,8 +185,13 @@ export function NotesWorkspace() {
   const [renameDraft, setRenameDraft] = useState('');
   const [folderId, setFolderId] = useState<string | null>(null);
   const [isPrivate, setIsPrivate] = useState(false);
-  const [attachments, setAttachments] = useState<DemoAttachment[]>([]);
+  const [attachments, setAttachments] = useState<AttachmentItem[]>([]);
+  const [attachmentsLoading, setAttachmentsLoading] = useState(false);
+  const [attachmentsError, setAttachmentsError] = useState('');
   const attachmentInputRef = useRef<HTMLInputElement>(null);
+  // Id of the note whose attachments are on screen; responses that arrive
+  // after the user switched notes are dropped.
+  const attachmentsNoteId = useRef<string | null>(null);
 
   const favorites = useMemo<FavoriteEntry[]>(() => {
     const result: FavoriteEntry[] = [];
@@ -414,7 +426,7 @@ export function NotesWorkspace() {
     setSavedMessage('');
     setFolderId(note.folderId);
     setIsPrivate(note.isPrivate);
-    setAttachments([]);
+    loadAttachments(note.id);
     operationId.current = newId();
     bumpRecentNote(note, new Date().toISOString());
     void fetch('/api/notes', {
@@ -437,19 +449,99 @@ export function NotesWorkspace() {
     setSavedMessage('');
     setFolderId(null);
     setIsPrivate(false);
+    attachmentsNoteId.current = null;
     setAttachments([]);
+    setAttachmentsLoading(false);
+    setAttachmentsError('');
     operationId.current = newId();
   }
 
-  function addAttachment(file: File) {
-    setAttachments((current) => [
-      ...current,
-      { id: newId(), name: file.name, size: file.size },
-    ]);
+  function loadAttachments(noteId: string) {
+    attachmentsNoteId.current = noteId;
+    setAttachments([]);
+    setAttachmentsError('');
+    setAttachmentsLoading(true);
+    fetchNoteAttachments(noteId)
+      .then((list) => {
+        if (attachmentsNoteId.current !== noteId) return;
+        setAttachments(list.map(savedAttachmentItem));
+      })
+      .catch((cause: unknown) => {
+        if (attachmentsNoteId.current !== noteId) return;
+        setAttachmentsError(
+          cause instanceof Error
+            ? cause.message
+            : 'Não foi possível carregar os anexos.',
+        );
+      })
+      .finally(() => {
+        if (attachmentsNoteId.current === noteId) setAttachmentsLoading(false);
+      });
   }
 
-  function removeAttachment(id: string) {
-    setAttachments((current) => current.filter((item) => item.id !== id));
+  function patchAttachment(key: string, patch: Partial<AttachmentItem>) {
+    setAttachments((current) =>
+      current.map((item) => (item.key === key ? { ...item, ...patch } : item)),
+    );
+  }
+
+  async function sendAttachment(noteId: string, item: AttachmentItem) {
+    if (!item.file) return;
+    patchAttachment(item.key, { status: 'uploading', error: undefined });
+    try {
+      const meta = await uploadAttachment(noteId, item.file);
+      if (attachmentsNoteId.current !== noteId) return;
+      setAttachments((current) =>
+        current.map((entry) =>
+          entry.key === item.key ? savedAttachmentItem(meta) : entry,
+        ),
+      );
+    } catch (cause) {
+      if (attachmentsNoteId.current !== noteId) return;
+      patchAttachment(item.key, {
+        status: 'error',
+        error:
+          cause instanceof Error ? cause.message : 'Falha no envio do anexo.',
+      });
+    }
+  }
+
+  function addAttachments(files: File[]) {
+    const items = files.map((file) => prepareAttachmentItem(file, newId()));
+    setAttachments((current) => [...current, ...items]);
+    setAttachmentsError('');
+    // A new note only exists on the server after the first save; its files
+    // stay pending until then (see save()).
+    const noteId = selectedId;
+    if (!noteId) return;
+    attachmentsNoteId.current = noteId;
+    for (const item of items) {
+      if (item.status === 'pending') void sendAttachment(noteId, item);
+    }
+  }
+
+  async function removeAttachment(item: AttachmentItem) {
+    if (item.status === 'uploading') return;
+    if (item.status !== 'saved' || !item.id) {
+      setAttachments((current) =>
+        current.filter((entry) => entry.key !== item.key),
+      );
+      return;
+    }
+    if (!window.confirm(`Remover o anexo "${item.name}" desta nota?`)) return;
+    try {
+      await deleteAttachment(item.id);
+      setAttachments((current) =>
+        current.filter((entry) => entry.key !== item.key),
+      );
+      setAttachmentsError('');
+    } catch (cause) {
+      setAttachmentsError(
+        cause instanceof Error
+          ? cause.message
+          : 'Não foi possível remover o anexo.',
+      );
+    }
   }
 
   function confirmLink(reference: ContentReference) {
@@ -495,6 +587,11 @@ export function NotesWorkspace() {
       if (!response.ok || !data.note)
         throw new Error(data.error ?? 'Não foi possível salvar a nota.');
       setSelectedId(data.note.id);
+      attachmentsNoteId.current = data.note.id;
+      for (const item of attachments) {
+        if (item.status === 'pending' || (item.status === 'error' && item.file))
+          void sendAttachment(data.note.id, item);
+      }
       setBody(data.note.body);
       setContent(
         data.note.content ?? legacyTextToAtlasNotesContent(data.note.body),
@@ -944,26 +1041,80 @@ export function NotesWorkspace() {
             <div className="note-attachments-heading">
               <Paperclip size={14} />
               <strong>Anexos</strong>
-              <span className="attachments-demo-badge">
-                Demonstrativo — sem upload real
-              </span>
+              {attachmentsLoading && (
+                <LoaderCircle size={13} className="spin" aria-label="Carregando anexos" />
+              )}
             </div>
             <AttachmentGroup>
               {attachments.map((item) => (
-                <Attachment key={item.id} size="sm">
+                <Attachment
+                  key={item.key}
+                  size="sm"
+                  state={
+                    item.status === 'saved'
+                      ? 'done'
+                      : item.status === 'pending'
+                        ? 'idle'
+                        : item.status
+                  }
+                >
                   <AttachmentMedia>
-                    <Paperclip size={14} />
+                    {item.status === 'uploading' ? (
+                      <LoaderCircle size={14} className="spin" />
+                    ) : item.status === 'error' ? (
+                      <AlertTriangle size={14} />
+                    ) : (
+                      <Paperclip size={14} />
+                    )}
                   </AttachmentMedia>
                   <AttachmentContent>
-                    <AttachmentTitle>{item.name}</AttachmentTitle>
-                    <AttachmentDescription>
-                      {formatFileSize(item.size)}
+                    <AttachmentTitle>
+                      {item.status === 'saved' && item.id ? (
+                        <a
+                          className="attachment-link"
+                          href={attachmentDownloadUrl(item.id)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {item.name}
+                        </a>
+                      ) : (
+                        item.name
+                      )}
+                    </AttachmentTitle>
+                    <AttachmentDescription
+                      title={describeAttachment(item, formatFileSize(item.size))}
+                    >
+                      {describeAttachment(item, formatFileSize(item.size))}
                     </AttachmentDescription>
                   </AttachmentContent>
                   <AttachmentActions>
+                    {item.status === 'saved' && item.id && (
+                      <a
+                        className={buttonVariants({
+                          variant: 'ghost',
+                          size: 'icon-xs',
+                        })}
+                        aria-label={`Baixar anexo ${item.name}`}
+                        title="Baixar"
+                        href={attachmentDownloadUrl(item.id)}
+                        download={item.name}
+                      >
+                        <Download size={13} />
+                      </a>
+                    )}
+                    {item.status === 'error' && item.file && selectedId && (
+                      <AttachmentAction
+                        aria-label={`Tentar enviar de novo ${item.name}`}
+                        onClick={() => void sendAttachment(selectedId, item)}
+                      >
+                        <RotateCcw size={13} />
+                      </AttachmentAction>
+                    )}
                     <AttachmentAction
                       aria-label={`Remover anexo ${item.name}`}
-                      onClick={() => removeAttachment(item.id)}
+                      disabled={item.status === 'uploading'}
+                      onClick={() => void removeAttachment(item)}
                     >
                       <X size={13} />
                     </AttachmentAction>
@@ -981,17 +1132,24 @@ export function NotesWorkspace() {
             <input
               ref={attachmentInputRef}
               type="file"
+              multiple
+              accept={ATTACHMENT_ACCEPT}
               className="attachment-input"
               onChange={(event) => {
-                const file = event.target.files?.[0];
-                if (file) addAttachment(file);
+                const files = Array.from(event.target.files ?? []);
+                if (files.length) addAttachments(files);
                 event.target.value = '';
               }}
             />
+            {attachmentsError && (
+              <p className="attachments-error" role="alert">
+                {attachmentsError}
+              </p>
+            )}
             <p className="attachments-disclaimer">
-              O arquivo não é enviado nem salvo — apenas o nome e o tamanho
-              ficam visíveis enquanto você edita esta nota nesta sessão
-              (armazenamento real de anexos: TEC-05, ainda fora do escopo).
+              PNG, JPG, PDF ou DOCX, até 10MB cada. Os arquivos ficam guardados
+              no Atlas junto desta nota.
+              {!selectedId && ' Numa nota nova, eles são enviados quando você salvar.'}
             </p>
           </div>
           <div className="note-editor-footer">
