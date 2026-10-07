@@ -20,7 +20,7 @@ MVP
 
 ## Active Quest
 
-NONE
+QUEST-010 — Infraestrutura restante do usuário único (só falta o item 4, backup, DEC-011).
 
 The authoritative current Task Contract is:
 
@@ -30,7 +30,7 @@ The authoritative current Task Contract is:
 
 ## Current Priority
 
-NONE
+P0 — backup e restauração (DEC-011).
 
 Project priority order:
 
@@ -74,9 +74,15 @@ Do not describe implementation details.
 - Autenticação de usuário único (DEC-007): login por senha + sessão via cookie assinado (`HttpOnly`, `Secure`, stateless), aplicada a todas as páginas de `app/(atlas)/` e a todas as rotas `/api/notes*`. Publicado em produção em `atlas-notes.atlaspjt.workers.dev` — deploy do commit `307e816` (merge do PR #19), 2026-09-30. Validado pelo usuário em produção com credencial real; o Claude Code não verificou de forma independente (sem acesso à conta Cloudflare).
 - Bloco 1 do QUEST-009 publicado em produção em `atlas-notes.atlaspjt.workers.dev` — commit `1928e10`, 2026-09-29 (deploy executado e conferido pelo usuário; não verificado de forma independente a partir do ambiente do Claude Code, sem acesso à Cloudflare).
 - Fix de navegação client-side (DEC-006, `vinext` 1.0.0 + `@vitejs/plugin-rsc` 0.5.34) publicado em produção em `atlas-notes.atlaspjt.workers.dev` — build a partir de `main` no commit `5c37d0b`, 2026-09-29. Validado pelo usuário: os 6 itens do menu navegam por clique. O Claude Code confirmou pelo código do Worker publicado que o chunk `vinext-*.js` está no manifesto; não verificou a URL nem o console diretamente (sem acesso de rede a ela).
-- Rotas reais (Hoje `/`, Estudar `/estudar`, Roadmap `/roadmap`, Notas `/notas`, Quizzes `/quizzes`, Progresso `/progresso`) com cabeçalho compartilhado; Roadmap, Quizzes e Progresso usam dados de demonstração (`lib/demo/`).
+- Rotas reais (Hoje `/`, Estudar `/estudar`, Roadmap `/roadmap`, Notas `/notas`, Quizzes `/quizzes`, Progresso `/progresso`) com cabeçalho compartilhado. Roadmap lê o D1 (fases, pré-requisitos, bloqueios e registro de mudanças, MVP-01). Hoje, Estudar, Quizzes e Progresso ainda usam dados de demonstração (`lib/demo/`), zerados no PR #29 até existir o cálculo real (MVP-07).
 - CI (`.github/workflows/ci.yml`): em cada push/PR para `main` roda `typecheck`, `lint`, `test:notes` e `build`, todos bloqueantes. Os primitivos genéricos de `components/ui/*` (kit shadcn) têm 5 regras `jsx-a11y` desligadas em `.oxlintrc.json`, porque o rótulo/conteúdo acessível é fornecido por quem usa o componente e a regra não enxerga isso.
 - Validação visual e responsiva (UX-08, todas as 6 rotas): desktop 1920×1080, notebook 1366×768, tablet 768×1024, celular 380×800 e zoom 150%/200% (viewports efetivos de 853 e 640 px) sem rolagem horizontal. Contraste WCAG AA (4,5:1 texto normal, 3:1 texto grande) medido por script em cada rota: corrigidos ~20 textos abaixo do mínimo (rótulos e legendas cinza, módulo bloqueado, contagens, botão "Agora não"). Não medidos por script: texto sobre gradientes (verificado por cálculo no cartão azul de Hoje, cujo gradiente foi levemente escurecido) e botões desabilitados (isentos). Teclado: ordem de tabulação segue a ordem visual (sem `tabindex` positivo) e todo campo tem foco visível (o campo de busca de notas mostra o anel no contêiner). Corrigido: o menu (hambúrguer) não fazia nada, deixando tablet/celular sem navegação entre páginas — agora abre a lista de rotas.
+- Anexos reais nas notas (DEC-008): bytes no R2, metadados no D1, acesso só por rotas autenticadas do Worker; servidor no PR #21 e editor no PR #27. Validado pelo usuário em produção com arquivo real.
+- Histórico de notas (DEC-012, PR #28): cada salvamento guarda a versão anterior; o usuário vê e restaura a versão anterior (mantém atual + anterior).
+- Telas sem números fictícios: os números de demonstração de Hoje, Estudar e Progresso foram zerados (PR #29); o progresso real em produção começa do zero.
+- Recuperação de acesso (TEC-03): troca de senha e encerramento de todas as sessões, roteiro em `docs/auth.md`.
+- Separação dev/produção (DEC-009): dev só no Miniflare local; todo script remoto exige `--target` explícito.
+- Deploy por um comando (`Publicar Atlas.cmd` ou `pnpm run deploy:atlas -- --target production`): pull do `main`, build, migrations e publicação, só depois de digitar `PUBLICAR` (`docs/DEPLOY.md`).
 
 ---
 
@@ -84,9 +90,8 @@ Do not describe implementation details.
 
 Update this section only when an incomplete capability may affect upcoming work.
 
-- Proteção da branch `main`: não configurada (ação manual do usuário, exige admin do repositório). Em GitHub → Settings → Branches → Add branch ruleset/protection rule para `main`: exigir pull request antes do merge; exigir status check `verify` (job do CI) e branch atualizada antes do merge; bloquear force-push e exclusão da branch; (opcional) exigir 1 aprovação.
-
-- To be reviewed.
+- Backup e restauração (DEC-011): decidido, em implementação.
+- Proteção da branch `main`: fora do escopo por decisão do usuário (recurso pago do GitHub para este repositório). O CI continua rodando em todo PR.
 
 ---
 

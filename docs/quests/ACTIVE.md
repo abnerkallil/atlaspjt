@@ -40,10 +40,10 @@ Fechar os 4 itens de infraestrutura ainda em aberto do card DEC-06 (banco e limi
 ### Acceptance Criteria
 
 - [x] Login/logout funcional, sessão persistente validada manualmente — validado pelo usuário em produção (`atlas-notes.atlaspjt.workers.dev`, deploy do commit `307e816`, 2026-09-30): login aceita apenas a senha correta; sessão persiste entre navegação de páginas e reload sem novo login.
-- Upload de anexo funcional (10MB; PNG/JPG/JPEG/PDF/DOCX), com storage durável — arquivo continua acessível após reload/nova sessão.
-- Ambiente de desenvolvimento comprovadamente isolado de produção (dado de teste enviado em dev não aparece em produção).
-- Rotina de backup documentada e testada ao menos uma vez (executar backup, simular restauração).
-- Toda decisão arquitetural registrada em `docs/quests/ARCHITECTURE_GATE.md` e, quando `DEC Required: YES`, também em `docs/ATLAS_DECISIONS.md`. *(parcial: Gates 1 a 4 registrados — DEC-007, DEC-008, DEC-009, DEC-011)*
+- [x] Upload de anexo funcional (10MB; PNG/JPG/JPEG/PDF/DOCX), com storage durável — arquivo continua acessível após reload/nova sessão. Servidor no PR #21 e editor no PR #27, ambos em `main`; validado pelo usuário em produção com arquivo real.
+- [x] Ambiente de desenvolvimento comprovadamente isolado de produção (dado de teste enviado em dev não aparece em produção). Em `main` desde o commit `708e94b` (DEC-009): dev roda só no Miniflare local e todo script remoto exige `--target` explícito, sem valor padrão.
+- [ ] Rotina de backup documentada e testada ao menos uma vez (executar backup, simular restauração). Em implementação (DEC-011).
+- [x] Toda decisão arquitetural registrada em `docs/quests/ARCHITECTURE_GATE.md` e, quando `DEC Required: YES`, também em `docs/ATLAS_DECISIONS.md`. *(Gates 1 a 4 registrados — DEC-007, DEC-008, DEC-009, DEC-011)*
 - Nenhum critério conta como implementado só porque o código existe: precisa ser validado funcionando de verdade (login com credencial real, upload com arquivo real, backup restaurado de verdade).
 
 ### UX Constraints
@@ -77,8 +77,8 @@ Sem push direto em `main`; branch própria + Pull Request; o usuário revisa e m
 ### Gate tracking (um Gate por vez)
 
 - [x] 1. Autenticação — Gate RESOLVIDO (DEC-007); implementada, deployada e validada em produção pelo usuário (`atlas-notes.atlaspjt.workers.dev`)
-- [ ] 2. Storage de anexos — Gate RESOLVIDO (DEC-008: bytes em R2 + metadados em D1, acesso só via Worker); implementação no PR #21, pendente merge e validação com arquivo real (usuário)
-- [ ] 3. Dev/produção — Gate RESOLVIDO (DEC-009: dev exclusivamente local via Miniflare, sem staging remoto; scripts remotos exigem ambiente explícito); implementação pendente
+- [x] 2. Storage de anexos — Gate RESOLVIDO (DEC-008: bytes em R2 + metadados em D1, acesso só via Worker); PR #21 (servidor) e PR #27 (editor) em `main`, validado pelo usuário com arquivo real
+- [x] 3. Dev/produção — Gate RESOLVIDO (DEC-009: dev exclusivamente local via Miniflare, sem staging remoto; scripts remotos exigem ambiente explícito); implementado em `main` (commit `708e94b`), incluindo o comando único de deploy (`docs/DEPLOY.md`)
 - [ ] 4. Backup — Gate RESOLVIDO (DEC-011: dump SQL remoto do D1 + cópia do R2 no mesmo passo, destino fora da conta, disparo manual, restauração de teste no Miniflare); implementado em `scripts/backup.mjs` e `scripts/restore-local.mjs` (docs/BACKUP.md), falta o usuário rodar um backup de produção e a restauração de teste
 
 ---
