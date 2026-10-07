@@ -407,6 +407,68 @@ Qual mecanismo adotar, respondendo no mínimo: (1) como o D1 é copiado e se o c
 
 ---
 
+# GATE MVP-03 — HISTÓRICO DE VERSÕES DAS NOTAS
+
+Status: OPEN — aguardando decisão do Raf
+
+Correlation: ATLAS-RAF-GATE-20261007-NOTEHISTORY
+
+## Quest
+
+Fora do QUEST-010 (que segue ativo em `docs/quests/ACTIVE.md`). Item "Histórico" do card MVP-03 — "Implementar Atlas Notes" (Trello, P0, em andamento). DEC-010 deixou o histórico de notas explicitamente fora do Gate TEC-02, "decidido quando o MVP-03 for retomado". Este Gate não autoriza implementação; só registra a pergunta arquitetural que bloqueia esse item.
+
+## Architectural question
+
+Como o Atlas deve representar e persistir o histórico de versões das notas: o que constitui uma versão, onde e em que forma ela é guardada, quanto é retido e como isso convive com o documento canônico do DEC-001, os limites do D1 e o modelo de dados do DEC-010?
+
+## Gate trigger
+
+"persistent data model change" (item 1) e "expensive or difficult-to-reverse technical decision" (item 9): cria armazenamento durável novo para conteúdo de notas, com crescimento proporcional ao número de gravações, que depois de populado é caro de mudar de forma.
+
+## Original requirement
+
+Card MVP-03 (Trello), checklist: "Pastas ✓, Editor ✓, Salvamento ✓, Anexos, Vínculo com conteúdo ✓, Histórico". Auditoria de 18/09/2026 no card: "Faltam pastas e histórico de versões — nada disso existe no código." Atualização de 23/09/2026: "'Histórico' (versionamento de notas) também não foi tocado pela QUEST-007."
+
+O card não especifica o comportamento observável do histórico (por exemplo: só listar e visualizar versões anteriores, comparar, ou restaurar uma versão). Esse comportamento é decisão de produto do Atlas; o Gate registra a lacuna sem preenchê-la.
+
+## Relevant repository facts
+
+1. `atlas_notes` guarda só o estado atual. `saveNote` (`lib/notes-store.ts`) faz `INSERT ... ON CONFLICT(id) DO UPDATE` sobrescrevendo `title`, `body`, `content_json`, `folder_id` e `is_private`, e recria os vínculos em `atlas_note_links`; nada da versão anterior é preservado.
+2. Hoje a gravação é explícita: `save()` em `components/notes-workspace.tsx` só é chamado pelo botão de salvar (o card menciona "salvamento automático", mas não há gravação por temporizador no código atual). Cada gravação carrega um `operationId` e é idempotente via `atlas-notes:{operationId}` (DEC-001).
+3. `atlas_sync_operations` recebe uma linha por gravação, mas o payload tem só metadados (título, contagem de caracteres, vínculos), nunca o corpo; DEC-010 restringe essa tabela ao papel de importação do catálogo. `atlas_state_audit` (DEC-010/TEC-06) é só inserção e registra transições de estado pedagógico, não conteúdo.
+4. DEC-001: o conteúdo estruturado vive em `content_json` no envelope `atlas-notes` (leitores aceitam versões 1 e 2; escritores gravam 2; sem reescrita na leitura); `body` é a projeção derivada. Limites: 1 MiB estruturado e 1,25 MiB por requisição. Uma versão antiga pode estar no envelope v1, em v2 ou ser legada (`content_json` NULL).
+5. Anexos (DEC-008) ficam em tabela própria com FK para a nota e bytes no R2; são enviados por rota separada, depois da gravação da nota, e podem ser excluídos individualmente (`deleteAttachment`). Hoje não existe rota de exclusão de nota.
+6. Persistência em D1 Free: 5 GB de armazenamento e 100 mil gravações/dia (card DEC-06); o limite de linha/valor (~2MB, citado no DEC-008) comporta uma cópia integral de uma nota no limite do DEC-001.
+7. Notas privadas (`is_private`) ficam em texto no D1; DEC-08 do produto define exclusão de dados em 3 dias. Versões anteriores de uma nota privada, ou de uma nota que deixou de ser privada, também ficariam guardadas.
+8. Gate 4 (backup, `ATLAS-RAF-GATE-20261007-BACKUP`) está aberto em paralelo; o que for decidido aqui passa a fazer parte dos dados que o backup precisa cobrir.
+
+## Options and trade-offs
+
+Os eixos abaixo são as escolhas reais expostas pelo código; dentro de cada eixo as alternativas são apresentadas sem preferência.
+
+**Eixo 1 — forma de guardar uma versão.**
+A. Snapshot integral por versão (título, `body`, `content_json` com seu envelope) numa tabela de versões no D1. Trade-offs: leitura e restauração triviais, cada versão é autossuficiente e preserva o envelope original; armazenamento cresce com o tamanho integral da nota a cada versão.
+B. Diferenças entre versões (patch sobre o documento). Trade-offs: menos armazenamento; reconstruir uma versão exige aplicar uma cadeia de patches, e o formato de patch fica acoplado ao envelope do DEC-001 e às suas evoluções.
+C. Snapshot integral como objeto no R2, com só metadados da versão no D1 (mesmo padrão do DEC-008). Trade-offs: tira o volume do D1; cada leitura de versão passa a depender de D1 e R2 coerentes, e o backup do Gate 4 precisa cobrir esses objetos.
+
+**Eixo 2 — quando uma versão é criada.**
+A. A cada gravação. Trade-offs: histórico completo e simples de explicar; volume proporcional ao número de gravações (fato 2: hoje só pelo botão; mudaria se o salvamento automático citado no card voltar).
+B. Agrupada (no máximo uma versão por intervalo ou por sessão de edição). Trade-offs: menos volume; versões intermediárias se perdem e a regra de agrupamento precisa ser definida.
+C. Só por ação explícita do usuário ("salvar versão"). Trade-offs: volume mínimo; histórico só existe se o usuário lembrar de criá-lo; muda a interação, o que é decisão de produto.
+
+**Eixo 3 — escopo e retenção.**
+Escopo: (a) só conteúdo (título, `body`, `content_json`); (b) também metadados que a gravação altera (pasta, privacidade, vínculos); (c) também anexos (exigiria preservar objetos R2 excluídos). Retenção: (a) ilimitada; (b) limitada por quantidade ou idade, frente aos limites do fato 6 e à exclusão em 3 dias do DEC-08 (fato 7).
+
+## Decision required
+
+Qual representação adotar, respondendo no mínimo: (1) a forma de guardar uma versão (eixo 1); (2) quando uma versão é criada (eixo 2); (3) o que entra numa versão e por quanto tempo é retida (eixo 3); (4) se alguma dessas escolhas depende de o Atlas definir antes o comportamento observável do histórico (visualizar, comparar, restaurar). Nomes de tabelas/colunas, índices e ordem das migrations são detalhe de implementação. Nenhuma implementação do histórico foi iniciada.
+
+## Raf decision
+
+*(pendente)*
+
+---
+
 # CORE PRINCIPLE
 
 Atlas supplies product requirement. Claude Code supplies evidence. Raf supplies architectural judgment. These responsibilities must remain separate.
