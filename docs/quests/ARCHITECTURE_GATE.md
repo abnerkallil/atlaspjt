@@ -343,7 +343,7 @@ YES
 
 # GATE 4 — BACKUP E RESTAURAÇÃO
 
-Status: OPEN — aguardando decisão do Raf
+Status: RESOLVED — DEC-011 (ACCEPTED); dump SQL remoto do D1 + cópia dos objetos R2 no mesmo passo, destino fora da conta Cloudflare, disparo manual, restauração de teste só no Miniflare local
 
 Correlation: ATLAS-RAF-GATE-20261007-BACKUP
 
@@ -403,13 +403,43 @@ Qual mecanismo adotar, respondendo no mínimo: (1) como o D1 é copiado e se o c
 
 ## Raf decision
 
-*(pendente)*
+### Decision
+
+Backup manual, disparado pelo usuário, cobrindo D1 e R2 no mesmo passo, para que as duas cópias representem o mesmo instante.
+
+- **D1**: dump SQL completo e remoto (`wrangler d1 export --remote` ou equivalente nativo) — Eixo 1, Opção B. Não Opção A (D1 Time Travel isolado) nem Opção C (export de aplicação).
+- **R2**: bytes dos anexos baixados para o mesmo destino do dump do D1, na mesma execução — Eixo 2, Opção A. Não Opção B (bucket espelho na mesma conta).
+- **Disparo**: manual (Eixo 3, Opção A). Nenhum Cron Trigger/Worker agendado é criado para este Gate.
+- **Destino**: fora da conta Cloudflare que hospeda produção (máquina do usuário ou qualquer local que ele controle independentemente dessa conta) — nunca um segundo recurso dentro da mesma conta.
+- **Retenção**: limitada/rotativa, nunca indefinida.
+- **Restauração de teste**: executada só no D1/R2 locais do Miniflare (dev), nunca em produção.
+
+### Rationale
+
+1. O requisito original aceita explicitamente "mesmo manual/documentada" (`ACTIVE.md`) e o QUEST-010 já tem como non-goal deploy automático; um backup automático (Cron Trigger) resolveria um problema que o requisito não pede, criando infraestrutura nova sem necessidade — manual é o mecanismo mínimo suficiente.
+2. Um dump SQL remoto completo captura todas as tabelas do D1 (inclusive estado e auditoria do DEC-010, e o catálogo reproduzível) num comando nativo único, sem exigir construir e manter em sincronia com cada migration futura um caminho de export/restore de aplicação (Opção C) que hoje não existe. D1 Time Travel fica descartado como mecanismo único porque nunca sai da conta — não é "cópia fora do banco de produção" exigida pela própria pergunta do Gate, não protege contra perda da conta.
+3. DEC-08 já compromete a exclusão de dados do usuário em até 3 dias; retenção de backup indefinida violaria esse compromisso silenciosamente para qualquer dado capturado numa cópia — retenção limitada/rotativa é a menor restrição necessária para preservar DEC-08 sem reabri-lo.
+
+### Constraints for Claude Code
+
+- Backup permanece processo manual, disparado pelo usuário (script/passos documentados); nenhum Cron Trigger ou Worker agendado é criado para este Gate.
+- Cópia do D1 = dump SQL remoto completo (`wrangler d1 export --remote` ou export nativo equivalente); não é export de aplicação tabela-a-tabela, e D1 Time Travel não substitui essa cópia (pode continuar existindo como recuperação nativa complementar dentro da conta, mas não atende a este Gate isoladamente).
+- Bytes do R2 copiados para o mesmo destino do dump do D1, na mesma execução de backup, para que D1 e R2 representem o mesmo instante; nenhum segundo bucket R2 é criado dentro da conta Cloudflare de produção como destino de backup.
+- Destino do backup é sempre fora da conta Cloudflare que hospeda produção (máquina do usuário ou local externo equivalente) — nunca um recurso remoto adicional dentro dessa mesma conta.
+- Qualquer credencial exigida pelo processo (acesso Cloudflare/D1, token de API R2) segue a regra já em vigor do DEC-009: explícita a cada execução, nunca default, nunca gravada em `.dev.vars` ou arquivo versionável.
+- Retenção das cópias de backup deve ser limitada/rotativa (cópias antigas eventualmente removidas), nunca "guardar para sempre", para permanecer compatível com a exclusão em 3 dias do DEC-08. Quantidade exata de cópias retidas/janela de dias é detalhe de implementação.
+- A restauração de teste exigida pelo critério de aceite é feita no D1/R2 locais do Miniflare (ambiente de dev do DEC-009), nunca em produção.
+- Nome de scripts, flags exatas, formato do arquivo de dump e cadência exata da execução manual são detalhe de implementação do Claude Code.
+
+### DEC Required
+
+YES
 
 ---
 
 # GATE MVP-03 — HISTÓRICO DE VERSÕES DAS NOTAS
 
-Status: OPEN — aguardando decisão do Raf
+Status: RESOLVED — DEC-012 (ACCEPTED); snapshot integral por gravação explícita, só conteúdo, retenção limitada (nunca ilimitada); comportamento observável (visualizar/comparar/restaurar) fica pendente de definição do Atlas
 
 Correlation: ATLAS-RAF-GATE-20261007-NOTEHISTORY
 
@@ -465,7 +495,33 @@ Qual representação adotar, respondendo no mínimo: (1) a forma de guardar uma 
 
 ## Raf decision
 
-*(pendente)*
+### Decision
+
+- **Eixo 1 (forma):** snapshot integral por versão — título, `body` e `content_json` com o envelope exatamente como persistido — em nova tabela no D1 (Opção A). Não diff/patch (Opção B) e não objeto R2 com metadados no D1 (Opção C).
+- **Eixo 2 (quando):** uma versão é criada a cada gravação explícita da nota, o mesmo evento que já dispara `saveNote`/idempotência hoje (Opção A). Nenhuma regra de agrupamento (Opção B) nem interação nova de "salvar versão" (Opção C) é adotada.
+- **Eixo 3 (escopo):** a versão cobre só conteúdo — título, `body`, `content_json`. Pasta, privacidade e vínculos não entram na versão; anexos não são versionados.
+- **Eixo 3 (retenção):** deve ser limitada (por quantidade e/ou idade), nunca ilimitada. O valor exato não é fixado aqui — depende de o Atlas definir o comportamento observável do histórico (quantas versões o usuário pode ver/restaurar) e está sujeito ao piso do DEC-08 (nunca reter versão de nota privada além do compromisso de exclusão em 3 dias).
+- **Comportamento observável (visualizar, comparar, restaurar):** não decidido aqui — é decisão de produto do Atlas, como o próprio card já registra. Em particular, se e como "restaurar uma versão" funciona (nova versão vs. sobrescrita) não está resolvido e não deve ser implementado até essa definição existir.
+
+### Rationale
+
+1. Snapshot integral no D1 é a menor forma que preserva o envelope original do DEC-001 sem acoplar o histórico à evolução futura do formato (diff) e sem criar um segundo local de consistência D1↔R2 para um dado que já cabe inteiro numa linha do D1 dentro do limite estrutural de 1 MiB do próprio DEC-001.
+2. Versionar a cada gravação explícita reaproveita o único evento de escrita que já existe hoje (botão salvar); qualquer outra cadência (agrupada ou "salvar versão" explícito) exigiria uma regra ou interação de produto que o card declara não especificada.
+3. DEC-08 já compromete exclusão de dados em até 3 dias; retenção ilimitada de versões de notas privadas reabriria esse compromisso silenciosamente — por isso o piso "limitada, nunca ilimitada" é exigido já, independente de o Atlas ainda não ter definido quantas versões mostrar.
+
+### Constraints for Claude Code
+
+- Nova tabela no D1 guarda snapshots integrais de versão (título, `body`, `content_json` tal como persistido, sem reescrita/migração do envelope na captura); nenhum diff/patch, nenhum objeto R2.
+- Uma versão é criada no mesmo evento que hoje dispara `saveNote` (gravação explícita via botão); nenhuma heurística de agrupamento por tempo/sessão é implementada nesta decisão. Se salvamento automático for reintroduzido no produto, a cadência de versionamento precisa ser revisitada — não decidida aqui.
+- Escopo da versão é só título + `body` + `content_json`; pasta, `is_private` e `atlas_note_links` não entram na versão; anexos (DEC-008) não são versionados e nenhum objeto R2 excluído precisa ser preservado por causa disto.
+- Retenção deve ser limitada (quantidade e/ou idade), nunca ilimitada, e nunca reter versão de nota privada além do que o compromisso de exclusão em 3 dias do DEC-08 permite. O número exato de versões/dias retidos não deve ser fixado sem antes checar com o Atlas o comportamento observável desejado do histórico — mas também não deve ficar "ilimitado" enquanto essa definição não existe.
+- Nenhuma rota de restauração/reversão de versão deve ser implementada como parte desta decisão: se e como restaurar (nova versão vs. sobrescrita da atual) depende de o Atlas definir o comportamento observável do histórico (visualizar, comparar, restaurar), ainda pendente.
+- Esta nova tabela passa a fazer parte do escopo de dados que o Gate 4 (backup) precisa cobrir, se/quando resolvido — registrado como consequência, não reabre aquele Gate.
+- Nome de tabela/colunas, índices e ordem da migration são detalhe de implementação do Claude Code.
+
+### DEC Required
+
+YES
 
 ---
 

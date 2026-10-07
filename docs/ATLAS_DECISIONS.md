@@ -670,3 +670,92 @@ Quest: Card TEC-02 — Desenhar o modelo de dados (ATLAS-RAF-GATE-20261006-DATAM
 Supersedes: NONE
 
 Superseded by: NONE
+
+---
+
+## DEC-011 — Backup e restauração: dump remoto D1 + cópia R2 no mesmo passo, destino fora da conta, disparo manual
+
+Status: ACCEPTED
+
+Date: 2026-10-07
+
+### Context
+
+QUEST-010 exige uma forma, mesmo manual/documentada, de gerar backup dos dados de produção e restaurá-los em caso de perda, testada ao menos uma vez. Produção é o único ambiente remoto (DEC-009): D1 `atlas-notes-own` e o bucket R2 de anexos (DEC-008). Hoje não existe nenhuma rotina de backup: `scripts/export-data.mjs` cobre só notas/pastas via API, não cobre anexos, estado pedagógico, evidências nem auditoria (DEC-010); `scripts/seed-notes.mjs` não restaura conteúdo estruturado nem pastas; não há Cron Trigger no Worker. D1 Time Travel e dump via `wrangler d1 export` são nativos da plataforma; R2 não tem versionamento nativo. DEC-08 (produto) exige exclusão de dados em até 3 dias, incluindo notas privadas gravadas em texto no D1.
+
+### Decision
+
+Backup manual, disparado pelo usuário, cobrindo D1 e R2 na mesma execução, para que as duas cópias representem o mesmo instante. D1 é copiado por dump SQL remoto completo (`wrangler d1 export --remote` ou export nativo equivalente) — não por D1 Time Travel isolado, não por export de aplicação tabela-a-tabela. Bytes do R2 são copiados para o mesmo destino do dump do D1, na mesma execução — não para um segundo bucket na mesma conta Cloudflare. O destino do backup fica fora da conta Cloudflare que hospeda produção. Retenção das cópias é limitada/rotativa, nunca indefinida. A restauração de teste exigida pelo critério de aceite é executada no D1/R2 locais do Miniflare (dev, DEC-009), nunca em produção.
+
+### Rationale
+
+1. O requisito aceita explicitamente backup manual/documentado, e o QUEST-010 já trata deploy automático como non-goal; backup automático (Cron Trigger) resolveria um problema não exigido, com infraestrutura nova desnecessária.
+2. Dump SQL remoto completo captura todas as tabelas do D1 (incluindo estado/auditoria do DEC-010) num comando nativo único, sem exigir manter um caminho de export/restore de aplicação sincronizado com cada migration futura; D1 Time Travel isolado não produz cópia fora da conta, não atendendo ao requisito de proteção contra perda do próprio ambiente/conta.
+3. DEC-08 compromete exclusão de dados do usuário em até 3 dias; retenção de backup indefinida violaria esse compromisso para qualquer dado capturado numa cópia — retenção limitada é a menor restrição que preserva DEC-08 sem reabri-lo.
+
+### Constraints for Claude Code
+
+- Backup permanece processo manual; nenhum Cron Trigger/Worker agendado é criado para este Gate.
+- D1: dump SQL remoto completo via `wrangler d1 export --remote` (ou export nativo equivalente); D1 Time Travel não substitui essa cópia; nenhum export de aplicação tabela-a-tabela como mecanismo primário.
+- R2: bytes copiados para o mesmo destino do dump do D1, na mesma execução; nenhum segundo bucket R2 criado na conta de produção como destino de backup.
+- Destino do backup sempre fora da conta Cloudflare de produção.
+- Credenciais do processo seguem a regra do DEC-009: explícitas a cada execução, nunca default, nunca em `.dev.vars` ou arquivo versionável.
+- Retenção limitada/rotativa, nunca indefinida, compatível com a exclusão em 3 dias do DEC-08; quantidade exata é detalhe de implementação.
+- Restauração de teste só no D1/R2 locais do Miniflare; nunca em produção.
+- Nome de scripts, flags, formato de arquivo de dump e cadência exata são detalhe de implementação.
+
+### Consequences
+
+Fecha o último item do QUEST-010 (os 4 Gates de infraestrutura de usuário único ficam todos resolvidos: DEC-007, DEC-008, DEC-009, DEC-011). Nenhuma mudança em DEC-007/008/009/010; a restrição de retenção limitada passa a se aplicar também a qualquer cópia de dados de usuário gerada por este processo, não só ao D1/R2 de produção em si.
+
+### Related
+
+Quest: QUEST-010 — Infraestrutura restante do usuário único, item 4: backup (ATLAS-RAF-GATE-20261007-BACKUP)
+
+Supersedes: NONE
+
+Superseded by: NONE
+
+---
+
+## DEC-012 — Histórico de notas: snapshot integral por gravação, só conteúdo, retenção limitada
+
+Status: ACCEPTED
+
+Date: 2026-10-07
+
+### Context
+
+Card MVP-03 pede o item "Histórico" (versionamento de notas), deixado explicitamente fora do modelo canônico pelo DEC-010 ("decidido quando o MVP-03 for retomado"). Hoje `atlas_notes` guarda só o estado atual: `saveNote` sobrescreve `title`/`body`/`content_json`/`folder_id`/`is_private` a cada gravação (`INSERT ... ON CONFLICT DO UPDATE`), sem preservar nada da versão anterior. O conteúdo estruturado vive no envelope versionado do DEC-001 (limite 1 MiB estruturado); anexos (DEC-008) têm ciclo de vida próprio em R2+D1; notas privadas (`is_private`) ficam em texto no D1 e DEC-08 compromete exclusão de dados em até 3 dias. O card não especifica o comportamento observável do histórico (visualizar, comparar, restaurar) — isso permanece decisão de produto do Atlas.
+
+### Decision
+
+Uma versão é um snapshot integral (título, `body`, `content_json` com o envelope exatamente como persistido) guardado em nova tabela no D1, criado a cada gravação explícita da nota (mesmo evento que hoje dispara `saveNote`). O escopo da versão é só conteúdo — pasta, privacidade, vínculos e anexos não são versionados. A retenção deve ser limitada (por quantidade e/ou idade), nunca ilimitada, e nunca pode reter versão de nota privada além do compromisso de exclusão em 3 dias do DEC-08. O comportamento observável do histórico (visualizar, comparar, restaurar, e a semântica exata de uma eventual restauração) não é decidido por este Gate — permanece decisão de produto do Atlas, ainda pendente.
+
+### Rationale
+
+1. Snapshot integral preserva o envelope original do DEC-001 sem acoplar o histórico à evolução do formato (diff) e sem criar um segundo local de consistência D1↔R2 para um dado que já cabe numa linha do D1 dentro do limite de 1 MiB do próprio DEC-001.
+2. Versionar a cada gravação explícita reaproveita o único evento de escrita já existente hoje, sem inventar regra de agrupamento nem nova interação de produto.
+3. DEC-08 já compromete exclusão de dados em até 3 dias; retenção ilimitada de versões de nota privada reabriria esse compromisso — o piso "limitada, nunca ilimitada" é necessário independente de o número exato ainda depender de definição de produto.
+
+### Constraints for Claude Code
+
+- Nova tabela no D1 com snapshots integrais (título, `body`, `content_json` tal como persistido, sem reescrita de envelope na captura); nenhum diff/patch, nenhum objeto R2.
+- Versão criada no mesmo evento de `saveNote`; nenhuma heurística de agrupamento por tempo/sessão nesta decisão; cadência a revisitar se auto-save for reintroduzido.
+- Escopo = título + `body` + `content_json` apenas; pasta, `is_private`, vínculos e anexos fora do escopo da versão.
+- Retenção limitada (quantidade e/ou idade), nunca ilimitada; nunca além do compromisso de 3 dias do DEC-08 para notas privadas; número exato depende de definição de produto do Atlas sobre o comportamento observável do histórico.
+- Nenhuma rota de restauração/reversão de versão implementada até o Atlas definir o comportamento observável do histórico.
+- Tabela de versões passa a integrar o escopo de dados do Gate 4 (backup), quando resolvido.
+- Nome de tabela/colunas, índices e ordem de migration são detalhe de implementação.
+
+### Consequences
+
+Destrava o item "Histórico" do card MVP-03 para implementação da camada de persistência (captura de snapshot a cada gravação), mas não autoriza ainda a implementação de UI de histórico (listar/visualizar/comparar/restaurar), que depende de definição de produto do Atlas. Aumenta o volume de dados do D1 proporcionalmente ao número de gravações, mitigado pelo piso de retenção limitada exigido aqui. Nenhuma mudança em DEC-001, DEC-008 ou DEC-010.
+
+### Related
+
+Quest: Card MVP-03 — Implementar Atlas Notes, item "Histórico" (ATLAS-RAF-GATE-20261007-NOTEHISTORY)
+
+Supersedes: NONE
+
+Superseded by: NONE

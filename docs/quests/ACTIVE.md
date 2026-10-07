@@ -43,7 +43,7 @@ Fechar os 4 itens de infraestrutura ainda em aberto do card DEC-06 (banco e limi
 - Upload de anexo funcional (10MB; PNG/JPG/JPEG/PDF/DOCX), com storage durável — arquivo continua acessível após reload/nova sessão.
 - Ambiente de desenvolvimento comprovadamente isolado de produção (dado de teste enviado em dev não aparece em produção).
 - Rotina de backup documentada e testada ao menos uma vez (executar backup, simular restauração).
-- Toda decisão arquitetural registrada em `docs/quests/ARCHITECTURE_GATE.md` e, quando `DEC Required: YES`, também em `docs/ATLAS_DECISIONS.md`. *(parcial: Gates 1 a 3 de 4 registrados — DEC-007, DEC-008, DEC-009; Gate 4 aberto, aguardando o Raf)*
+- Toda decisão arquitetural registrada em `docs/quests/ARCHITECTURE_GATE.md` e, quando `DEC Required: YES`, também em `docs/ATLAS_DECISIONS.md`. *(parcial: Gates 1 a 4 registrados — DEC-007, DEC-008, DEC-009, DEC-011)*
 - Nenhum critério conta como implementado só porque o código existe: precisa ser validado funcionando de verdade (login com credencial real, upload com arquivo real, backup restaurado de verdade).
 
 ### UX Constraints
@@ -79,7 +79,7 @@ Sem push direto em `main`; branch própria + Pull Request; o usuário revisa e m
 - [x] 1. Autenticação — Gate RESOLVIDO (DEC-007); implementada, deployada e validada em produção pelo usuário (`atlas-notes.atlaspjt.workers.dev`)
 - [ ] 2. Storage de anexos — Gate RESOLVIDO (DEC-008: bytes em R2 + metadados em D1, acesso só via Worker); implementação no PR #21, pendente merge e validação com arquivo real (usuário)
 - [ ] 3. Dev/produção — Gate RESOLVIDO (DEC-009: dev exclusivamente local via Miniflare, sem staging remoto; scripts remotos exigem ambiente explícito); implementação pendente
-- [ ] 4. Backup — Gate ABERTO (`ATLAS-RAF-GATE-20261007-BACKUP`), aguardando decisão do Raf
+- [ ] 4. Backup — Gate RESOLVIDO (DEC-011: dump SQL remoto do D1 + cópia do R2 no mesmo passo, destino fora da conta, disparo manual, restauração de teste no Miniflare); implementação pendente
 
 ---
 
