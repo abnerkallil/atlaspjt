@@ -79,7 +79,7 @@ Sem push direto em `main`; branch própria + Pull Request; o usuário revisa e m
 - [x] 1. Autenticação — Gate RESOLVIDO (DEC-007); implementada, deployada e validada em produção pelo usuário (`atlas-notes.atlaspjt.workers.dev`)
 - [x] 2. Storage de anexos — Gate RESOLVIDO (DEC-008: bytes em R2 + metadados em D1, acesso só via Worker); PR #21 (servidor) e PR #27 (editor) em `main`, validado pelo usuário com arquivo real
 - [x] 3. Dev/produção — Gate RESOLVIDO (DEC-009: dev exclusivamente local via Miniflare, sem staging remoto; scripts remotos exigem ambiente explícito); implementado em `main` (commit `708e94b`), incluindo o comando único de deploy (`docs/DEPLOY.md`)
-- [ ] 4. Backup — Gate RESOLVIDO (DEC-011: dump SQL remoto do D1 + cópia do R2 no mesmo passo, destino fora da conta, disparo manual, restauração de teste no Miniflare); em implementação
+- [ ] 4. Backup — Gate RESOLVIDO (DEC-011: dump SQL remoto do D1 + cópia do R2 no mesmo passo, destino fora da conta, disparo manual, restauração de teste no Miniflare); implementado em `scripts/backup.mjs` e `scripts/restore-local.mjs` (docs/BACKUP.md), falta o usuário rodar um backup de produção e a restauração de teste
 
 ---
 

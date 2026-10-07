@@ -70,6 +70,11 @@ O HTML raiz é servido com `s-maxage` longo, então uma aba aberta antes do depl
 pode mostrar a versão antiga até ser recarregada. Se precisar que todos vejam a
 versão nova na hora, purgue o cache do domínio no painel da Cloudflare.
 
+## Backup
+
+Backup de produção e restauração de teste ficam em `docs/BACKUP.md`
+(`Backup Atlas.cmd`, DEC-011). Usam o mesmo `deploy.local.json`.
+
 ## Histórico
 
 - 2026-10-06: deploy manual (pull, install, build, `prepare-own-deploy`,
