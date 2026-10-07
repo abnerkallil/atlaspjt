@@ -47,7 +47,10 @@
     "tests/attachments.test.ts",
     "tests/deploy-migrations.test.ts",
     "components/notes-attachments.ts",
-    "tests/notes-attachments.test.ts"
+    "tests/notes-attachments.test.ts",
+    "lib/note-versions.ts",
+    "components/notes-history.ts",
+    "tests/note-history.test.ts"
   ],
   "exclude": [
     "node_modules"

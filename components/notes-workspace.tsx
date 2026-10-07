@@ -12,6 +12,7 @@ import {
   Download,
   FilePenLine,
   FolderTree,
+  History,
   Link2,
   LoaderCircle,
   Lock,
@@ -76,6 +77,11 @@ import {
   uploadAttachment,
   type AttachmentItem,
 } from './notes-attachments';
+import {
+  fetchPreviousVersion,
+  restorePreviousVersion,
+  type PreviousNoteVersion,
+} from './notes-history';
 
 const LINK_STATUS = 'Anotado — ainda não trabalhado' as const;
 
@@ -188,6 +194,19 @@ export function NotesWorkspace() {
   const [attachments, setAttachments] = useState<AttachmentItem[]>([]);
   const [attachmentsLoading, setAttachmentsLoading] = useState(false);
   const [attachmentsError, setAttachmentsError] = useState('');
+  // MVP-03 "Histórico" (DEC-012): só a versão anterior, para ver e restaurar.
+  const [historyStatus, setHistoryStatus] = useState<
+    'closed' | 'loading' | 'open' | 'restoring'
+  >('closed');
+  const [previousVersion, setPreviousVersion] =
+    useState<PreviousNoteVersion | null>(null);
+  const [historyError, setHistoryError] = useState('');
+  // Nota cujo histórico está aberto; resposta que chega depois de trocar de
+  // nota é descartada.
+  const historyNoteId = useRef<string | null>(null);
+  // O editor só lê initialContent ao montar; restaurar troca o conteúdo sem
+  // trocar de nota, então remonta o editor por esta contagem.
+  const [editorRevision, setEditorRevision] = useState(0);
   const attachmentInputRef = useRef<HTMLInputElement>(null);
   // Id of the note whose attachments are on screen; responses that arrive
   // after the user switched notes are dropped.
@@ -413,7 +432,75 @@ export function NotesWorkspace() {
     );
   }
 
+  function closeHistory() {
+    historyNoteId.current = null;
+    setHistoryStatus('closed');
+    setPreviousVersion(null);
+    setHistoryError('');
+  }
+
+  async function openHistory() {
+    if (!selectedId) return;
+    const noteId = selectedId;
+    historyNoteId.current = noteId;
+    setHistoryStatus('loading');
+    setHistoryError('');
+    try {
+      const version = await fetchPreviousVersion(noteId);
+      if (historyNoteId.current !== noteId) return;
+      setPreviousVersion(version);
+    } catch (cause) {
+      if (historyNoteId.current !== noteId) return;
+      setPreviousVersion(null);
+      setHistoryError(
+        cause instanceof Error
+          ? cause.message
+          : 'Não foi possível carregar a versão anterior.',
+      );
+    }
+    setHistoryStatus('open');
+  }
+
+  async function restoreHistory() {
+    if (!selectedId || !previousVersion) return;
+    if (
+      !window.confirm(
+        'Restaurar a versão anterior? O conteúdo atual passa a ser a versão anterior, e alterações não salvas no editor são descartadas.',
+      )
+    )
+      return;
+    setHistoryStatus('restoring');
+    setHistoryError('');
+    try {
+      const note = await restorePreviousVersion<AtlasNote>(selectedId);
+      setTitle(note.title);
+      setBody(note.body);
+      setContent(note.content ?? legacyTextToAtlasNotesContent(note.body));
+      setEditorRevision((current) => current + 1);
+      setEditorError('');
+      setError('');
+      setNotes((current) => [
+        note,
+        ...current.filter((entry) => entry.id !== note.id),
+      ]);
+      bumpRecentNote(note, note.lastInteractedAt);
+      operationId.current = newId();
+      closeHistory();
+      setSavedMessage(
+        'Versão anterior restaurada. O conteúdo que estava salvo virou a versão anterior.',
+      );
+    } catch (cause) {
+      setHistoryError(
+        cause instanceof Error
+          ? cause.message
+          : 'Não foi possível restaurar a versão anterior.',
+      );
+      setHistoryStatus('open');
+    }
+  }
+
   function openNote(note: AtlasNote) {
+    closeHistory();
     setSelectedId(note.id);
     setDraftId(note.id);
     setTitle(note.title);
@@ -437,6 +524,7 @@ export function NotesWorkspace() {
   }
 
   function startNewNote() {
+    closeHistory();
     setSelectedId(null);
     setDraftId(newId());
     setTitle('');
@@ -604,6 +692,7 @@ export function NotesWorkspace() {
         ...current.filter((note) => note.id !== data.note!.id),
       ]);
       bumpRecentNote(data.note, data.note.lastInteractedAt);
+      closeHistory();
       setSavedMessage(
         'Nota salva. Os vínculos aguardam sincronização de metadados.',
       );
@@ -1029,7 +1118,7 @@ export function NotesWorkspace() {
             }}
           />
           <NotesEditor
-            key={draftId}
+            key={`${draftId}:${editorRevision}`}
             initialContent={content}
             noteTitle={title}
             onChange={updateEditor}
@@ -1159,6 +1248,24 @@ export function NotesWorkspace() {
                 <Check size={13} /> Salvar não altera progresso
               </span>
             </div>
+            {selectedId && (
+              <button
+                type="button"
+                className="history-toggle"
+                aria-expanded={historyStatus !== 'closed'}
+                aria-controls="note-history-panel"
+                disabled={
+                  historyStatus === 'loading' || historyStatus === 'restoring'
+                }
+                onClick={() =>
+                  historyStatus === 'closed'
+                    ? void openHistory()
+                    : closeHistory()
+                }
+              >
+                <History size={14} /> Versão anterior
+              </button>
+            )}
             <Button
               className="primary-button"
               onClick={() => void save()}
@@ -1174,6 +1281,68 @@ export function NotesWorkspace() {
               {saving ? 'Salvando…' : 'Salvar nota'}
             </Button>
           </div>
+          {historyStatus !== 'closed' && (
+            <section
+              id="note-history-panel"
+              className="note-history"
+              aria-label="Versão anterior da nota"
+            >
+              {historyStatus === 'loading' ? (
+                <p className="note-history-empty">
+                  <LoaderCircle size={14} className="spin" /> Carregando a
+                  versão anterior…
+                </p>
+              ) : previousVersion ? (
+                <>
+                  <div className="note-history-heading">
+                    <div>
+                      <p className="eyebrow">VERSÃO ANTERIOR</p>
+                      <strong>{previousVersion.title}</strong>
+                      <span>
+                        Salva em {formatDate(previousVersion.savedAt)} ·
+                        substituída em {formatDate(previousVersion.replacedAt)}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      className="note-history-close"
+                      aria-label="Fechar versão anterior"
+                      onClick={closeHistory}
+                    >
+                      <X size={15} />
+                    </button>
+                  </div>
+                  <pre className="note-history-body">{previousVersion.body}</pre>
+                  <Button
+                    className="primary-button"
+                    onClick={() => void restoreHistory()}
+                    disabled={historyStatus === 'restoring'}
+                  >
+                    {historyStatus === 'restoring' ? (
+                      <LoaderCircle size={16} className="spin" />
+                    ) : (
+                      <RotateCcw size={16} />
+                    )}
+                    {historyStatus === 'restoring'
+                      ? 'Restaurando…'
+                      : 'Restaurar esta versão'}
+                  </Button>
+                </>
+              ) : (
+                !historyError && (
+                  <p className="note-history-empty">
+                    Esta nota ainda não tem versão anterior. Ela aparece aqui
+                    depois que você salvar uma alteração.
+                  </p>
+                )
+              )}
+              {historyError && (
+                <p className="attachments-error" role="alert">
+                  {historyError}
+                </p>
+              )}
+            </section>
+          )}
           {(error || savedMessage) && (
             <output
               className={

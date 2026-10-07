@@ -287,6 +287,19 @@ button { color: inherit; }
 .note-editor-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 17px; border-top: 1px solid #e9e6ed; }
 .note-editor-footer > div { display: flex; align-items: center; flex-wrap: wrap; gap: 9px 13px; color: #626b7b; font-size: 12px; }
 .progress-safety { display: inline-flex; align-items: center; gap: 5px; color: #247052; }
+.history-toggle { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 40px; margin-left: auto; padding: 0 12px; border: 1px solid #c8d3e6; border-radius: 10px; color: #3f587c; background: #f7faff; cursor: pointer; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.history-toggle:hover { border-color: #8db1f5; }
+.history-toggle:disabled { opacity: .6; cursor: default; }
+.note-history { display: grid; gap: 12px; margin-top: 13px; padding: 14px; border: 1px solid #dbe3f0; border-radius: 12px; background: #f9fbff; }
+.note-history-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.note-history-heading strong, .note-history-heading span { display: block; }
+.note-history-heading strong { margin-top: 3px; font-size: 14px; }
+.note-history-heading span { margin-top: 2px; color: #5f6c80; font-size: 11px; }
+.note-history-close { display: grid; place-items: center; width: 28px; height: 28px; flex: none; border: 0; border-radius: 8px; color: #5f6c80; background: transparent; cursor: pointer; }
+.note-history-close:hover { background: #eef2f9; }
+.note-history-body { max-height: 260px; overflow: auto; margin: 0; padding: 12px; border: 1px solid #e3e8f1; border-radius: 10px; background: #fff; font-family: inherit; font-size: 13px; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }
+.note-history > button { justify-self: start; }
+.note-history-empty { display: flex; align-items: center; gap: 7px; margin: 0; color: #5f6c80; font-size: 12px; }
 .note-feedback { display: flex; align-items: center; gap: 7px; margin-top: 13px; padding: 10px 12px; border-radius: 10px; font-size: 13px; }
 .note-feedback.success { color: #17674f; background: #e9f8f3; }
 .note-feedback.error { color: #a14d27; background: #fff0e7; }

@@ -31,6 +31,14 @@ O corpo da nota não entra no payload. Estados previstos: `queued`, `processing`
 - Downgrade: uma nota que já possui `content_json` não aceita atualização apenas textual.
 - Idempotência: a primeira escrita vence; um mesmo `operationId` não pode ser reutilizado em outra nota.
 
+## Histórico de versões (MVP-03, DEC-012)
+
+- Definição do Atlas (Abner, 2026-10-07): o histórico só permite ver e restaurar, e guarda duas versões, a atual e a imediatamente anterior.
+- A atual é a linha de `atlas_notes`; a anterior fica em `atlas_note_versions` (uma linha por nota, snapshot de título, `body` e `content_json` como estavam gravados). Pasta, privacidade, vínculos e anexos não são versionados.
+- Cada gravação que muda título ou conteúdo copia a versão atual para a anterior no mesmo batch. Salvar sem mudança não mexe na anterior.
+- Restaurar troca as duas: a anterior volta a ser a atual (regravada como envelope v2, inclusive quando era legada ou v1) e a que estava atual vira a anterior, então restaurar de novo desfaz.
+- Rotas: `GET /api/notes/{id}/previous-version` e `POST /api/notes/{id}/previous-version`, sob a mesma sessão do DEC-007.
+
 ## Integração pendente
 
 A interface e a persistência não exigem segredo externo. O consumo real da fila e a escrita de metadados na planilha exigem uma credencial Google restrita, armazenada como segredo do ambiente hospedado, além de uma decisão explícita sobre a aba/range de destino. Como a planilha não define hoje uma tabela de notas do Atlas, esta versão não cria uma silenciosamente e mantém as operações em `queued`.
