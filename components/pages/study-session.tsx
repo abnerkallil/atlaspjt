@@ -111,7 +111,7 @@ function SessionLibrary({ onClose }: { onClose: () => void }) {
       </section>
       <section aria-label="Anexos" className="ss-library-section">
         <h3>Anexos</h3>
-        <p className="ss-muted">Seus PDFs e imagens aparecerão aqui quando o armazenamento de anexos for ativado.</p>
+        <p className="ss-muted">Seus PDFs e imagens ficam nos anexos de cada nota. Abra a nota em Notas para consultá-los.</p>
       </section>
     </aside>
   );

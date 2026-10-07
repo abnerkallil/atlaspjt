@@ -45,7 +45,9 @@
     "tests/prerequisites.test.ts",
     "lib/attachments.ts",
     "tests/attachments.test.ts",
-    "tests/deploy-migrations.test.ts"
+    "tests/deploy-migrations.test.ts",
+    "components/notes-attachments.ts",
+    "tests/notes-attachments.test.ts"
   ],
   "exclude": [
     "node_modules"
