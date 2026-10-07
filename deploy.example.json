@@ -3,6 +3,7 @@
     "worker": "<nome-do-worker>",
     "d1": "<nome-do-d1>",
     "bucket": "<nome-do-bucket-r2-de-anexos>",
-    "accountId": ""
+    "accountId": "",
+    "backupDir": "<pasta-completa-do-backup, ex.: C:\\Users\\voce\\Atlas\\backup>"
   }
 }
