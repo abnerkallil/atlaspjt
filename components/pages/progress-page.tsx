@@ -5,7 +5,7 @@ import { AlertTriangle, BrainCircuit, Flame, Lightbulb, RotateCcw, Target, Trend
 import { MetricCard } from '@/components/atlas/metric-card';
 import { PageHeading } from '@/components/atlas/page-heading';
 import {
-  atRisk, competencies, consistencyDays, recommendations, recoveryPlan, WEEK_LABELS,
+  atRisk, competencies, consistencyDays, progressSummary, recommendations, recoveryPlan, WEEK_LABELS,
 } from '@/lib/demo/progress';
 
 type Metric = 'proficiency' | 'retention';
@@ -64,7 +64,7 @@ export function ProgressPage() {
       <section className="metrics-section" aria-label="Resumo">
         <MetricCard tone="gold" icon={<Target size={19} />} label="Domínio geral" value={`${avg(competencies.map((c) => c.mastery))}%`} hint="Conhecimento consolidado" />
         <MetricCard tone="violet" icon={<BrainCircuit size={19} />} label="Retenção média" value={`${avg(competencies.map((c) => c.retention))}%`} hint="Estimada por revisão espaçada" />
-        <MetricCard tone="green" icon={<Flame size={19} />} label="Consistência" value="7 dias" hint="Melhor sequência: 12 dias" />
+        <MetricCard tone="green" icon={<Flame size={19} />} label="Consistência" value={`${progressSummary.currentStreak} dias`} hint={`${studiedDays} de 28 dias com estudo`} />
       </section>
 
       <div className="pg-grid">
@@ -129,6 +129,7 @@ export function ProgressPage() {
         <article className="pg-card" aria-labelledby="pg-risk-title">
           <p className="eyebrow">CONTEÚDOS EM RISCO</p>
           <h2 id="pg-risk-title">Precisam de atenção</h2>
+          {atRisk.length === 0 && <p className="pg-muted">Nenhum conteúdo em risco por enquanto.</p>}
           <ul className="pg-risk">
             {atRisk.map((item) => (
               <li key={item.id}>
@@ -154,12 +155,15 @@ export function ProgressPage() {
               </li>
             ))}
           </ul>
-          <p className="pg-muted">{done.length} de {recoveryPlan.length} passos concluídos.</p>
+          <p className="pg-muted">
+            {recoveryPlan.length === 0 ? 'Sem plano de recuperação: ainda não há nada para recuperar.' : `${done.length} de ${recoveryPlan.length} passos concluídos.`}
+          </p>
         </article>
 
         <article className="pg-card" aria-labelledby="pg-why-title">
           <p className="eyebrow">EXPLICAÇÃO DAS RECOMENDAÇÕES</p>
           <h2 id="pg-why-title">Por que o Atlas sugere isso</h2>
+          {recommendations.length === 0 && <p className="pg-muted">As recomendações aparecem depois das primeiras sessões de estudo.</p>}
           <ul className="pg-recs">
             {recommendations.map((rec) => (
               <li key={rec.id}>
