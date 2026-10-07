@@ -1,37 +1,50 @@
 // Dados demonstrativos da página Estudar.
 
-export const studyCourse = { name: 'Contabilidade Geral', progress: 42 };
+// Progresso zerado: o Atlas começa do zero e o cálculo real ainda não existe (MVP-07).
+export const studyCourse = { name: 'Contabilidade Geral', progress: 0 };
 
 export const studyLesson = {
   eyebrow: 'CONTABILIDADE GERAL · MÓDULO 2',
   title: 'Regime de competência',
-  subtitle: 'Você parou em reconhecimento de receitas e despesas.',
+  subtitle: 'Conteúdo de demonstração da sessão de estudo.',
   position: 'AULA 4 DE 9',
   minutes: 35,
   heading: 'Reconhecimento de receitas e despesas',
   description: 'Retome diretamente o conceito que conecta o fato gerador ao período contábil correto.',
 };
 
-export const sessionSteps = [
-  { title: 'Material de leitura', hint: 'Concluído', status: 'done' },
-  { title: 'Vídeo ou PDF', hint: 'Retomar agora', status: 'active' },
+type StepStatus = 'done' | 'active' | 'todo';
+
+export const sessionSteps: { title: string; hint: string; status: StepStatus }[] = [
+  { title: 'Material de leitura', hint: 'Começar por aqui', status: 'active' },
+  { title: 'Vídeo ou PDF', hint: 'Aula gravada e apostila', status: 'todo' },
   { title: 'Atividade prática', hint: '3 lançamentos', status: 'todo' },
   { title: 'Fixação', hint: '2 questões ao encerrar', status: 'todo' },
-] as const;
+];
 
-export const studyModules = [
-  { id: 1, status: 'complete', kicker: 'MÓDULO 1 · CONCLUÍDO', title: 'Fundamentos contábeis', description: 'Patrimônio, equação patrimonial, contas, débito e crédito.', progress: '100%' },
+type StudyModule = {
+  id: number;
+  status: 'complete' | 'current' | 'locked';
+  kicker: string;
+  title: string;
+  description: string;
+  progress?: string;
+  lessons?: { title: string; hint: string; status: StepStatus }[];
+};
+
+export const studyModules: StudyModule[] = [
+  { id: 1, status: 'current', kicker: 'MÓDULO 1 · NÃO INICIADO', title: 'Fundamentos contábeis', description: 'Patrimônio, equação patrimonial, contas, débito e crédito.', progress: '0%' },
   {
-    id: 2, status: 'current', kicker: 'MÓDULO 2 · EM ANDAMENTO', title: 'Regimes e reconhecimento',
-    description: 'Regime de caixa, regime de competência e ajustes.', progress: '42%',
+    id: 2, status: 'current', kicker: 'MÓDULO 2 · NÃO INICIADO', title: 'Regimes e reconhecimento',
+    description: 'Regime de caixa, regime de competência e ajustes.', progress: '0%',
     lessons: [
-      { title: 'Regime de caixa', hint: 'Concluído', status: 'done' },
-      { title: 'Regime de competência', hint: 'Continuar de onde parou', status: 'active' },
+      { title: 'Regime de caixa', hint: 'Não iniciado', status: 'todo' },
+      { title: 'Regime de competência', hint: 'Sessão de demonstração', status: 'active' },
       { title: 'Ajustes de competência', hint: 'Próximo conteúdo', status: 'todo' },
     ],
   },
   { id: 3, status: 'locked', kicker: 'MÓDULO 3 · BLOQUEADO', title: 'Fechamento e demonstrações', description: 'Liberado após a conclusão dos regimes e reconhecimento.' },
-] as const;
+];
 
 export const sessionModal = {
   title: 'Regime de competência',

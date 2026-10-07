@@ -60,7 +60,7 @@ export function StudyPage() {
                   <span>{module.kicker}</span>
                   <h2>{module.title}</h2>
                   <p>{module.description}</p>
-                  {'lessons' in module && (
+                  {module.lessons && (
                     <div className="lesson-list">
                       {module.lessons.map((lesson) => (
                         <button key={lesson.title} className={lesson.status === 'active' ? 'active' : ''} onClick={lesson.status === 'active' ? () => setOverview(false) : undefined}>
@@ -72,7 +72,7 @@ export function StudyPage() {
                     </div>
                   )}
                 </div>
-                {'progress' in module ? <strong>{module.progress}</strong> : <span className="prerequisite">Pré-requisito</span>}
+                {module.progress ? <strong>{module.progress}</strong> : <span className="prerequisite">Pré-requisito</span>}
               </article>
             ))}
           </div>

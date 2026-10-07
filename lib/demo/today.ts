@@ -28,7 +28,7 @@ export const todayContinue = {
   title: studyLesson.title,
   description: studyLesson.subtitle,
   progress: studyCourse.progress,
-  lastSession: 'Última sessão há 2 dias',
+  lastSession: 'Nenhuma sessão ainda',
 };
 
 export const todayMetrics = [

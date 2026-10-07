@@ -86,8 +86,8 @@ export function TodayPage() {
         <aside className="atlas-observed-card">
           <div className="atlas-orbit"><Sparkles size={19} /></div>
           <p className="card-kicker">O ATLAS OBSERVOU</p>
-          <h3>Seu ritmo está consistente.</h3>
-          <p>Você retém melhor quando pratica logo após a teoria. Por isso, incluímos um balancete ao fim da jornada.</p>
+          <h3>Ainda sem histórico.</h3>
+          <p>Depois das primeiras sessões, o Atlas mostra aqui o que observou sobre o seu ritmo e a sua retenção.</p>
           <Link href="/progresso">Entender recomendação <ChevronRight size={16} /></Link>
         </aside>
       </div>
