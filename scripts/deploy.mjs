@@ -40,7 +40,9 @@ function run(command, args, failure, { capture = false } = {}) {
   const result = spawnSync(command, args, {
     env,
     encoding: 'utf8',
-    shell: isWindows && command !== process.execPath,
+    // No Windows só o pnpm (um .cmd) precisa do shell; git e node rodam direto,
+    // senão o cmd quebra argumentos com espaço ou % (ex.: --format=%h %s).
+    shell: isWindows && command === 'pnpm',
     // stdin fora do terminal: o wrangler não pergunta de novo o que já foi confirmado aqui.
     stdio: capture
       ? ['ignore', 'pipe', 'pipe']
