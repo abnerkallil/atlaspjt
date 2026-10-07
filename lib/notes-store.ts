@@ -10,6 +10,12 @@ import {
   assertAtlasNotesStructuredWrite,
   type AtlasNotesSaveInput,
 } from '@/lib/atlas-notes-input';
+import {
+  capturePreviousVersion,
+  getPreviousVersion,
+  noteContentChanged,
+  restorePreviousVersion,
+} from '@/lib/note-versions';
 
 export const NOTE_LINK_STATUS = 'Anotado — ainda não trabalhado' as const;
 
@@ -203,9 +209,16 @@ export async function saveNote(input: AtlasNotesSaveInput) {
   }
 
   const existing = await db
-    .prepare('SELECT created_at, content_json FROM atlas_notes WHERE id = ?1')
+    .prepare(
+      'SELECT created_at, title, body, content_json FROM atlas_notes WHERE id = ?1',
+    )
     .bind(input.id)
-    .first<{ created_at: string; content_json: string | null }>();
+    .first<{
+      created_at: string;
+      title: string;
+      body: string;
+      content_json: string | null;
+    }>();
   if (input.mode === 'update' && !existing)
     throw new Error('Nota não encontrada.');
   if (existing)
@@ -230,7 +243,20 @@ export async function saveNote(input: AtlasNotesSaveInput) {
     if (!folder) throw new Error('Pasta não encontrada.');
   }
 
+  // DEC-012: o conteúdo que está sendo substituído vira a versão anterior.
+  const contentChanged =
+    existing !== null &&
+    noteContentChanged(
+      {
+        title: existing.title,
+        body: existing.body,
+        contentJson: existing.content_json,
+      },
+      { title: input.title, body: input.body, contentJson: input.contentJson },
+    );
+
   const statements = [
+    ...(contentChanged ? [capturePreviousVersion(db, input.id, now)] : []),
     db
       .prepare(
         `INSERT INTO atlas_notes (id, title, body, content_json, created_at, updated_at, last_interacted_at, folder_id, is_private)
@@ -297,6 +323,19 @@ export async function saveNote(input: AtlasNotesSaveInput) {
 
   await db.batch(statements);
   return { note: await getNote(input.id), deduplicated: false };
+}
+
+export async function getNotePreviousVersion(id: string) {
+  return getPreviousVersion(database(), id);
+}
+
+export async function restoreNotePreviousVersion(id: string) {
+  const restored = await restorePreviousVersion(
+    database(),
+    id,
+    new Date().toISOString(),
+  );
+  return restored ? getNote(id) : null;
 }
 
 function mapFolder(row: FolderRow): NoteFolder {

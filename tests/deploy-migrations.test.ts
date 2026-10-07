@@ -26,6 +26,8 @@ const lib = (await import(
   pathToFileURL(join(process.cwd(), 'scripts/lib/d1-migrations.mjs')).href
 )) as MigrationsModule;
 const files = lib.listMigrationFiles('drizzle');
+// Produção como estava antes do deploy de 2026-10-07: só até a 0006.
+const upTo0006 = files.slice(0, files.indexOf('0006_attachments.sql') + 1);
 
 function databaseWith(migrations: string[]) {
   const db = new DatabaseSync(':memory:');
@@ -46,8 +48,8 @@ function schemaOf(db: DatabaseSync) {
   );
 }
 
-void test('produção atual: 0004 e 0006 aplicadas à mão são só registradas, 0005 (idempotente) roda', () => {
-  const db = databaseWith(files);
+void test('produção atual: 0004 e 0006 aplicadas à mão são só registradas, 0005 (idempotente) e 0007 (nova) rodam', () => {
+  const db = databaseWith(upTo0006);
   const plan = lib.planMigrations({
     dir: 'drizzle',
     applied: files.slice(0, 4),
@@ -57,13 +59,16 @@ void test('produção atual: 0004 e 0006 aplicadas à mão são só registradas,
     '0004_canonical_spine.sql',
     '0006_attachments.sql',
   ]);
-  assert.deepEqual(plan.apply, ['0005_catalog_seed.sql']);
+  assert.deepEqual(plan.apply, [
+    '0005_catalog_seed.sql',
+    '0007_note_versions.sql',
+  ]);
   assert.deepEqual(plan.partial, []);
 });
 
 void test('migration nova ainda não aplicada vai para apply', () => {
   const db = databaseWith(
-    files.filter((name) => name !== '0006_attachments.sql'),
+    upTo0006.filter((name) => name !== '0006_attachments.sql'),
   );
   const plan = lib.planMigrations({
     dir: 'drizzle',
@@ -72,7 +77,7 @@ void test('migration nova ainda não aplicada vai para apply', () => {
   });
   assert.deepEqual(plan, {
     register: [],
-    apply: ['0006_attachments.sql'],
+    apply: ['0006_attachments.sql', '0007_note_versions.sql'],
     partial: [],
   });
 });

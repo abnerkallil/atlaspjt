@@ -77,6 +77,23 @@ export const atlasNoteAttachments = sqliteTable(
   (table) => [index('idx_atlas_note_attachments_note_id').on(table.noteId)],
 );
 
+// DEC-012 (MVP-03 "Histórico"): guarda só a versão anterior de cada nota; a
+// atual é a própria linha de atlas_notes. Snapshot integral do conteúdo (título,
+// body e content_json como estava gravado), sem pasta, privacidade, vínculos
+// nem anexos. Sai junto com a nota (cascade).
+export const atlasNoteVersions = sqliteTable('atlas_note_versions', {
+  noteId: text('note_id')
+    .primaryKey()
+    .references(() => atlasNotes.id, { onDelete: 'cascade' }),
+  title: text('title').notNull(),
+  body: text('body').notNull(),
+  contentJson: text('content_json'),
+  // updated_at da nota quando esta versão era a atual.
+  savedAt: text('saved_at').notNull(),
+  // Momento em que deixou de ser a atual (gravação ou restauração).
+  replacedAt: text('replaced_at').notNull(),
+});
+
 export const atlasSyncOperations = sqliteTable(
   'atlas_sync_operations',
   {
