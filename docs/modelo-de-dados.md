@@ -181,6 +181,17 @@ API: `GET /api/quizzes` (liberados e tentativas), `POST /api/quizzes { contentId
 `GET /api/quizzes/:id` e `POST /api/quizzes/:id { action: travar | enviar, answers?, selfAssessments? }`.
 Importação de questões: `docs/QUESTOES.md`.
 
+## Material de estudo (UX-01)
+
+`atlas_content_materials` (migration 0012): material que o usuário anexa a um
+conteúdo, mostrado em toda sessão desse conteúdo. `kind` é `texto` (até 20.000
+caracteres em `body`), `link` (http/https em `url`, ex.: videoaula) ou
+`arquivo` (mesmas regras dos anexos de notas, DEC-07: PNG/JPG/JPEG/PDF/DOCX até
+10MB; bytes no R2 em `materials/<conteúdo>/<id>`, metadados no D1, DEC-008).
+Até 30 por conteúdo. Regras em `lib/materials.ts`; API `GET/POST
+/api/materiais?conteudo=` e `GET/DELETE /api/materiais/:id`. O backup copia
+esses arquivos junto com os anexos.
+
 ## Agenda interna (MVP-05)
 
 `atlas_agenda_items` (migration 0011): um compromisso por linha, com `kind`

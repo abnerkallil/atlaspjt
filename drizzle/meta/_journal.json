@@ -85,6 +85,13 @@
       "when": 1791420640685,
       "tag": "0011_agenda",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1791437508108,
+      "tag": "0012_content_materials",
+      "breakpoints": true
     }
   ]
 }

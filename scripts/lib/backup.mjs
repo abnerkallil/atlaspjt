@@ -76,8 +76,18 @@ export function countRowsSql(tables) {
   return `SELECT ${tables.map((name) => `(SELECT COUNT(*) FROM ${ident(name)}) AS ${ident(name)}`).join(', ')}`;
 }
 
-export const ATTACHMENTS_SQL =
-  'SELECT id, object_key, mime_type, size_bytes FROM atlas_note_attachments ORDER BY id';
+// Todos os objetos do R2 que o D1 referencia: anexos de notas e arquivos de
+// material de estudo (UX-01), conforme as tabelas que existem no banco.
+const OBJECT_SOURCES = [
+  "SELECT id, object_key, mime_type, size_bytes FROM atlas_note_attachments",
+  "SELECT id, object_key, mime_type, size_bytes FROM atlas_content_materials WHERE object_key IS NOT NULL",
+];
+const OBJECT_TABLES = ['atlas_note_attachments', 'atlas_content_materials'];
+
+export function objectsSql(tables) {
+  const parts = OBJECT_SOURCES.filter((_, index) => tables.includes(OBJECT_TABLES[index]));
+  return parts.length ? `${parts.join(' UNION ALL ')} ORDER BY id` : null;
+}
 
 export function rowCounts(rows) {
   return Object.fromEntries(Object.entries(rows[0] ?? {}).map(([name, count]) => [name, Number(count)]));

@@ -13,11 +13,11 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 import {
-  ATTACHMENTS_SQL,
   MANIFEST_FILE,
   TABLES_SQL,
   compareCounts,
   countRowsSql,
+  objectsSql,
   parseBackupName,
   restoreOrder,
   rowCounts,
@@ -117,7 +117,8 @@ await runCli(async () => {
   console.log('OK: todos os anexos relidos do R2 local batem byte a byte.');
 
   step('4/4 Conferindo D1 e R2 juntos');
-  const rows = tables.includes('atlas_note_attachments') ? d1Rows(d1Args, ATTACHMENTS_SQL, 'Não consegui ler os anexos restaurados.') : [];
+  const objectsQuery = objectsSql(tables);
+  const rows = objectsQuery ? d1Rows(d1Args, objectsQuery, 'Não consegui ler os anexos restaurados.') : [];
   const restored = new Set(manifest.r2.objects.map((object) => object.key));
   const orphanRows = rows.filter((row) => !restored.has(row.object_key));
   const known = new Set(manifest.r2.missing ?? []);
