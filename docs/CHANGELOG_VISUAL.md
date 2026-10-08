@@ -70,3 +70,24 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
     questões cadastradas" até você importar questões (`docs/QUESTOES.md`).
 - Se algo der errado: quiz que não abre, nota estranha, conteúdo que não vira
   concluído/bloqueado depois do quiz, ou texto de questão errado vêm deste PR.
+
+## PR #33 — Agenda interna real em Hoje (MVP-05, ATLAS-ESC-15)
+
+- Ponto de restauração: branch `restore/pre-mvp-05` (commit `c178fd0`, main antes do merge).
+- Migration nova: `0011_agenda` (tabela `atlas_agenda_items`). O
+  `Publicar Atlas.cmd` aplica sozinho.
+- O que muda no site:
+  - **Cabeçalho** (faixa do topo): "N atividades · N min restantes · N revisões
+    programadas" passa a contar a agenda real do dia, em todas as páginas.
+  - **Hoje → Sua jornada de hoje**: as quatro tarefas de demonstração sumiram.
+    Os passos vêm do roadmap: recuperação urgente (vermelho) para conteúdo
+    bloqueado, quiz para conteúdo com sessão concluída e o próximo estudo
+    liberado. Cada passo mostra horário (a partir das 7h), duração, prioridade e
+    o motivo de estar ali.
+  - O círculo numerado conclui o passo à mão; ele também se conclui sozinho
+    quando a sessão ou o quiz é feito. "Reagendar ou ajustar" abre um diálogo
+    para mudar dia, horário, duração, prioridade e escrever o motivo.
+  - Passos não feitos passam para o dia seguinte com "Não foi feita em DD/MM";
+    passos reagendados aparecem em **Próximos dias**.
+- Se algo der errado: passos repetidos, horários estranhos, contagem errada no
+  cabeçalho ou um passo que não some depois de feito vêm deste PR.
