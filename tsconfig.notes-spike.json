@@ -98,7 +98,8 @@
     "tests/apolo-item-stats.test.ts",
     "tests/apolo-plans.test.ts",
     "tests/apolo-selector.test.ts",
-    "tests/apolo-corrector.test.ts"
+    "tests/apolo-corrector.test.ts",
+    "tests/apolo-quiz-integration.test.ts"
   ],
   "exclude": [
     "node_modules"

@@ -16,11 +16,16 @@
 // por prova. Evita repetir o que está em `recentlySeen`; só volta a
 // considerar essas questões se não der para completar o plano sem elas —
 // nunca falta questão por causa da regra de não repetição.
-import type { QuestionKind } from '../quizzes.js';
-import { QUESTION_KINDS } from '../quizzes.js';
 import { allocateCounts, type ExamPlan } from './plans.js';
 import type { StudentProfile } from './profile.js';
-import { DIFFICULTY_LEVELS, type BloomLevel, type DifficultyLevel, type LifecycleState } from './types.js';
+import {
+  DIFFICULTY_LEVELS,
+  QUESTION_KINDS,
+  type BloomLevel,
+  type DifficultyLevel,
+  type LifecycleState,
+  type QuestionKind,
+} from './types.js';
 
 export type CandidateQuestion = {
   id: string;

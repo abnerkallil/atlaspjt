@@ -199,3 +199,50 @@ fica fora do escopo mínimo deste card (nenhuma rota ou tela pede isso
 ainda) e é uma decisão disponível para um card futuro, não deste.
 
 Gate: DEC-016, já ACEITO (PR #42) — nenhum Raf Gate novo para este card.
+
+## Quiz do conteúdo pelo Apolo (APO-14)
+
+Primeiro uso real do seletor (APO-12) e do corretor (APO-13) no quiz que o
+Abner já faz todo dia (`startQuiz`, `lib/quizzes.ts`) — mas **ligado por
+conteúdo**, não para todo mundo de uma vez: um conteúdo só passa a usar o
+Apolo quando o banco já tem tema classificado (`atlas_questions.theme`) em
+quantidade suficiente para o plano de hoje (DEC-10, 10 questões ativas e
+classificadas). Essa é a mitigação que o próprio card pede para o risco já
+conhecido ("banco pequeno repete questão" — depende do APO-08, carga
+inicial, e do APO-16, moldes, nenhum dos dois terminado ainda). Sem isso,
+o conteúdo continua exatamente no sorteio local de sempre
+(`selectQuestions`/`directedSelection`, MVP-08) — nada muda até o Abner
+classificar o banco daquele conteúdo.
+
+Quando ligado: `resolvePlan('quiz')` (APO-11, mesmo tamanho/tempo/corte de
+hoje) + `getStudentProfile` (APO-09) alimentam `selectQuestions` do Apolo
+(APO-12), que prioriza recuperação vencida, depois subtópico fraco, depois
+cobertura do plano — e nunca seleciona questão fora de `lifecycle_state =
+'ativa'` (DEC-014), ao contrário do sorteio local (que só olha `active =
+1`; as duas colunas deveriam estar sempre em sincronia, mas só o Apolo
+checa a canônica).
+
+**Quiz dirigido (MVP-08) preservado, não substituído:** o FSRS do Apolo
+(`lib/apolo/skill.ts`) só marca uma questão errada como "vencida" depois de
+meia estabilidade mínima (12h) — então, sozinho, não traria de volta as
+erradas no mesmo dia como o quiz dirigido sempre trouxe. Por isso as
+erradas da última reprovação (`recoveryStatus`) entram forçadas na fila de
+recuperação do seletor como "vencidas agora", além da fila real do FSRS
+(que pode trazer de volta questões de outras reprovações mais antigas,
+inclusive de outros conteúdos). `QuizAttempt.directed` continua contando
+só as forçadas (o mesmo significado de sempre: "quantas erradas da última
+reprovação voltaram").
+
+Nenhuma migration nova. O formato gravado na tentativa (`questions_json`)
+não muda — a seleção decide quais `Question` da `listQuestions` de sempre
+entram na prova, não troca o formato delas.
+
+**Nota de implementação:** mover `resolvePlan`/`selectQuestions`(Apolo)
+para dentro de `startQuiz` criou um ciclo de import em runtime
+(`lib/quizzes.ts` → `lib/apolo/plans.ts`/`lib/apolo/selector.ts` → de volta
+para `lib/quizzes.ts`, que já emprestava `QUESTION_KINDS`/`QUIZ_SIZE`/
+`QUESTION_SECONDS` a eles). Essas três constantes mudaram de casa para
+`lib/apolo/types.ts` (sem depender de nada que crie ciclo), e
+`lib/quizzes.ts` as reexporta com os mesmos nomes — nenhum chamador mudou.
+
+Gate: não (o card não pede um Raf Gate novo).

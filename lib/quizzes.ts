@@ -22,30 +22,28 @@ import {
   VERIFICATION_MINIMUM,
 } from './apolo/corrector.js';
 export { gradeQuestion, scoreResults, PASSING_SCORE, VERIFICATION_MINIMUM };
+import {
+  QUESTION_KINDS,
+  QUIZ_SIZE,
+  QUESTION_SECONDS,
+  isLifecycleState,
+  type QuestionKind,
+  type BloomLevel,
+  type DifficultyLevel,
+} from './apolo/types.js';
+export { QUESTION_KINDS, QUIZ_SIZE, QUESTION_SECONDS };
+export type { QuestionKind };
+import { resolvePlan } from './apolo/plans.js';
+import {
+  selectQuestions as selectApoloQuestions,
+  type CandidateQuestion,
+} from './apolo/selector.js';
+import { getStudentProfile } from './apolo/profile.js';
 
 // APO-03: "certo_errado" é julgamento binário (como múltipla com 2
 // alternativas fixas); "lacuna_numerica" é valor numérico simples, sem as 5
 // verificações de raciocínio que o cálculo exige (DEC-10) — por isso tem
 // correção própria em gradeQuestion, não reaproveita a de "calculo".
-export const QUESTION_KINDS = [
-  'multipla',
-  'dissertativa',
-  'calculo',
-  'certo_errado',
-  'lacuna_numerica',
-] as const;
-export type QuestionKind = (typeof QUESTION_KINDS)[number];
-
-// DEC-10: quiz de nota com 10 questões; 1 min por múltipla escolha; até 5 min
-// por dissertativa; cálculo sem limite, com 5 verificações e mínimo de 3 acertos.
-export const QUIZ_SIZE = 10;
-export const QUESTION_SECONDS: Record<QuestionKind, number | null> = {
-  multipla: 60,
-  dissertativa: 300,
-  calculo: null,
-  certo_errado: 60,
-  lacuna_numerica: null,
-};
 export const VERIFICATION_SIZE = 5;
 // VERIFICATION_MINIMUM e PASSING_SCORE moraram aqui; a partir do APO-13 vivem
 // em lib/apolo/corrector.ts (DEC-016) e são só reexportados acima.
@@ -323,6 +321,67 @@ export async function listQuestions(
   return results.map(questionFromRow);
 }
 
+type CandidateQuestionRow = {
+  id: string;
+  content_id: string;
+  kind: QuestionKind;
+  theme: string | null;
+  subtopic_id: string | null;
+  bloom_level: string | null;
+  difficulty_nominal: string | null;
+  lifecycle_state: string;
+  item_model_id: string | null;
+};
+
+function candidateFromRow(row: CandidateQuestionRow): CandidateQuestion {
+  return {
+    id: row.id,
+    contentId: row.content_id,
+    kind: row.kind,
+    theme: row.theme,
+    subtopicId: row.subtopic_id,
+    bloomLevel: row.bloom_level as BloomLevel | null,
+    difficultyNominal: row.difficulty_nominal as DifficultyLevel | null,
+    lifecycleState: isLifecycleState(row.lifecycle_state)
+      ? row.lifecycle_state
+      : 'ativa',
+    itemModelId: row.item_model_id,
+  };
+}
+
+// APO-14: as mesmas questões de `listQuestions`, com os campos que o Apolo
+// acrescentou (tema, subtópico, Bloom, dificuldade, ciclo de vida, molde) —
+// só para alimentar o seletor (lib/apolo/selector.ts); a prova em si continua
+// vindo de `listQuestions`/`Question`, sem mudar o formato gravado na
+// tentativa.
+async function listCandidateQuestions(
+  db: D1Like,
+  contentId: string,
+): Promise<CandidateQuestion[]> {
+  const { results } = await db
+    .prepare(
+      `SELECT id, content_id, kind, theme, subtopic_id, bloom_level, difficulty_nominal, lifecycle_state, item_model_id
+       FROM atlas_questions WHERE content_id = ?1 AND active = 1`,
+    )
+    .bind(contentId)
+    .all<CandidateQuestionRow>();
+  return results.map(candidateFromRow);
+}
+
+// APO-14: um conteúdo só usa o seletor do Apolo quando o banco já tem tema
+// classificado em quantidade suficiente para o plano de hoje (DEC-10, 10
+// questões) — ligação por conteúdo, a mitigação que o próprio card pede
+// (banco pequeno/sem classificação repete questão). Sem isso, nada muda:
+// segue o sorteio local de sempre (`selectQuestions`/`directedSelection`).
+// Content classificado pelo APO-08 (carga inicial) e sem alerta do APO-10
+// passa a usar o Apolo sozinho, sem precisar de outro código aqui.
+function isApoloReady(candidates: CandidateQuestion[], size: number): boolean {
+  return (
+    candidates.filter((q) => q.lifecycleState === 'ativa' && q.theme !== null)
+      .length >= size
+  );
+}
+
 type AttemptRow = {
   id: string;
   content_id: string;
@@ -511,14 +570,49 @@ export async function startQuiz(
   // MVP-08: depois de uma reprovação, as questões erradas voltam (quiz dirigido).
   const recovery = await recoveryStatus(db, contentId);
   const missedIds = recovery?.missed.map((item) => item.id) ?? [];
-  const drawn = selectQuestions(bank, id);
-  const picked = new Set(
-    directedSelection(missedIds, bank, drawn, QUIZ_SIZE).map((item) => item.id),
-  );
-  const chosen = missedIds.length
-    ? bank.filter((item) => picked.has(item.id))
-    : drawn;
-  const directed = missedIds.filter((questionId) => picked.has(questionId)).length;
+  const plan = resolvePlan('quiz');
+  const candidates = await listCandidateQuestions(db, contentId);
+  let chosen: Question[];
+  let directed: number;
+  if (purpose === 'quiz' && isApoloReady(candidates, plan.size)) {
+    // APO-14: seletor do Apolo (APO-12) — recuperação vencida > subtópico
+    // fraco (APO-09) > cobertura do plano (APO-11). As erradas da última
+    // reprovação (MVP-08) entram forçadas como "vencidas agora": o FSRS do
+    // Apolo (lib/apolo/skill.ts) só vence depois de meio dia de estabilidade
+    // mínima, e aqui elas precisam voltar na hora, igual sempre foi.
+    const profile = await getStudentProfile(db);
+    const forcedDue = new Set(missedIds);
+    const filaRecuperacao = [
+      ...profile.filaRecuperacao.filter((item) => !forcedDue.has(item.questionId)),
+      ...missedIds.map((questionId) => ({
+        questionId,
+        difficulty: 5,
+        stability: 0.5,
+        reviewedAt: now,
+        dueAt: now,
+      })),
+    ];
+    const selection = selectApoloQuestions({
+      plan,
+      profile: { ...profile, filaRecuperacao },
+      bank: candidates,
+      recentlySeen: [],
+      seed: id,
+      now,
+    });
+    const pickedIds = new Set(selection.map((item) => item.questionId));
+    chosen = bank.filter((item) => pickedIds.has(item.id));
+    directed = selection.filter(
+      (item) => item.reason === 'recuperacao-vencida' && forcedDue.has(item.questionId),
+    ).length;
+  } else {
+    const drawn = selectQuestions(bank, id);
+    const picked = new Set(
+      directedSelection(missedIds, bank, drawn, QUIZ_SIZE).map((item) => item.id),
+    );
+    chosen = missedIds.length ? bank.filter((item) => picked.has(item.id)) : drawn;
+    directed = missedIds.filter((questionId) => picked.has(questionId)).length;
+  }
   if (chosen.length === 0) {
     throw new QuizError(
       'Este conteúdo ainda não tem questões cadastradas.',

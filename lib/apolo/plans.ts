@@ -13,13 +13,15 @@
 // espinha" hoje, só existem como estado da FSM em `lib/pedagogy/states.ts`)
 // são a primeira definição deles: um ponto de partida documentado, não uma
 // decisão de produto fechada. Ver `docs/APOLO.md`.
+import { PASSING_SCORE } from './corrector.js';
 import {
-  PASSING_SCORE,
   QUESTION_SECONDS,
   QUIZ_SIZE,
+  DIFFICULTY_LEVELS,
   type QuestionKind,
-} from '../quizzes.js';
-import { DIFFICULTY_LEVELS, type BloomLevel, type DifficultyLevel } from './types.js';
+  type BloomLevel,
+  type DifficultyLevel,
+} from './types.js';
 
 export const INSTRUMENTS = [
   'quiz',
