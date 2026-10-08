@@ -326,3 +326,23 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
   grava nada no D1 nem muda nenhuma tela.
 - Se algo der errado: só poderia afetar uma extração futura de rascunhos
   (`pnpm run apolo:extrair`), nunca o site em produção.
+
+## PR #49 — Curadoria de rascunhos de questão (APO-07)
+
+- Ponto de restauração: branch `restore/pre-apo-07` (commit `cba7da4`, main antes do merge).
+- Migration nova: `0017_rascunhos_apo07` (tabela nova `atlas_question_drafts`:
+  rascunho pendente, com FKs para fonte, conteúdo, subtópico e a questão
+  aprovada). O `Publicar Atlas.cmd` aplica sozinho; nenhuma tabela existente
+  muda.
+- O que muda no site: nova tela **Rascunhos** no menu principal — a fila de
+  curadoria. Todo rascunho (vindo do extrator do APO-06 ou cadastrado à mão)
+  fica pendente até um humano escolher conteúdo, tema, nível de Bloom e
+  escrever a explicação; só então aprovar (vira questão de verdade, já ativa
+  no próximo quiz do conteúdo) ou descartar (definitivo). A tela mostra o PDF
+  da fonte ao lado, quando o rascunho veio de uma.
+- Também: `pnpm run apolo:extrair` passa a gravar os rascunhos extraídos
+  direto nessa fila (como "pendente") quando `--target` é informado; antes só
+  gerava um JSON em disco.
+- Se algo der errado: só poderia afetar a tela Rascunhos e o banco de
+  questões do Apolo (ainda em construção); nenhuma tela de estudo do aluno é
+  tocada. Nenhum rascunho foi aprovado em produção por este PR.
