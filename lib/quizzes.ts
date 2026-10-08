@@ -570,11 +570,19 @@ export async function startQuiz(
   // MVP-08: depois de uma reprovação, as questões erradas voltam (quiz dirigido).
   const recovery = await recoveryStatus(db, contentId);
   const missedIds = recovery?.missed.map((item) => item.id) ?? [];
-  const plan = resolvePlan('quiz');
+  // APO-15: revisão tem plano próprio por etapa (24h/7d/30d, tamanho 10→30/60
+  // confirmado pelo Abner); quiz e corretivo seguem com o de sempre.
+  const instrument =
+    purpose === 'revisao' && stage
+      ? (`revisao_${stage}` as 'revisao_24h' | 'revisao_7d' | 'revisao_30d')
+      : purpose === 'corretivo'
+        ? 'corretivo'
+        : 'quiz';
+  const plan = resolvePlan(instrument);
   const candidates = await listCandidateQuestions(db, contentId);
   let chosen: Question[];
   let directed: number;
-  if (purpose === 'quiz' && isApoloReady(candidates, plan.size)) {
+  if (isApoloReady(candidates, plan.size)) {
     // APO-14: seletor do Apolo (APO-12) — recuperação vencida > subtópico
     // fraco (APO-09) > cobertura do plano (APO-11). As erradas da última
     // reprovação (MVP-08) entram forçadas como "vencidas agora": o FSRS do
@@ -606,9 +614,9 @@ export async function startQuiz(
       (item) => item.reason === 'recuperacao-vencida' && forcedDue.has(item.questionId),
     ).length;
   } else {
-    const drawn = selectQuestions(bank, id);
+    const drawn = selectQuestions(bank, id, plan.size);
     const picked = new Set(
-      directedSelection(missedIds, bank, drawn, QUIZ_SIZE).map((item) => item.id),
+      directedSelection(missedIds, bank, drawn, plan.size).map((item) => item.id),
     );
     chosen = missedIds.length ? bank.filter((item) => picked.has(item.id)) : drawn;
     directed = missedIds.filter((questionId) => picked.has(questionId)).length;

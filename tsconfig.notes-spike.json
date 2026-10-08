@@ -99,7 +99,8 @@
     "tests/apolo-plans.test.ts",
     "tests/apolo-selector.test.ts",
     "tests/apolo-corrector.test.ts",
-    "tests/apolo-quiz-integration.test.ts"
+    "tests/apolo-quiz-integration.test.ts",
+    "tests/apolo-recovery-queue.test.ts"
   ],
   "exclude": [
     "node_modules"
