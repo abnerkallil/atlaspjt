@@ -13,7 +13,6 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, s
 import { isAbsolute, join, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 import {
-  ATTACHMENTS_SQL,
   DUMP_FILE,
   MANIFEST_FILE,
   OBJECTS_DIR,
@@ -22,6 +21,7 @@ import {
   backupName,
   countRowsSql,
   isInside,
+  objectsSql,
   objectFileName,
   planRotation,
   rowCounts,
@@ -135,8 +135,9 @@ await runCli(async () => {
   const counts = tables.length
     ? rowCounts(d1Rows([d1, where, '--config', d1Config], countRowsSql(tables), 'Não consegui contar as linhas do D1.'))
     : {};
-  const attachments = tables.includes('atlas_note_attachments')
-    ? d1Rows([d1, where, '--config', d1Config], ATTACHMENTS_SQL, 'Não consegui ler a lista de anexos do D1.')
+  const objectsQuery = objectsSql(tables);
+  const attachments = objectsQuery
+    ? d1Rows([d1, where, '--config', d1Config], objectsQuery, 'Não consegui ler a lista de anexos do D1.')
     : [];
 
   step(`3/4 Copiando ${attachments.length} anexo(s) do R2`);

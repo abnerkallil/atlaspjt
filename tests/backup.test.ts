@@ -16,6 +16,7 @@ type BackupModule = {
   planRotation(names: string[], target: string, now: Date, options?: { keep?: number; maxAgeDays?: number }): Rotation;
   isInside(child: string, parent: string): boolean;
   countRowsSql(tables: string[]): string;
+  objectsSql(tables: string[]): string | null;
   rowCounts(rows: Record<string, unknown>[]): Record<string, number>;
   compareCounts(expected: Record<string, number>, actual: Record<string, number>): string[];
   restoreOrder(sql: string): string;
@@ -104,6 +105,19 @@ void test('DEC-011: dump reordenado restaura com chaves estrangeiras ligadas', (
   db.exec(`BEGIN;\n${lib.restoreOrder(dump)}COMMIT;`);
   assert.deepEqual({ ...db.prepare('SELECT body, folder_id FROM notes').get() }, { body: 'a;\nb', folder_id: 'f1' });
   assert.equal(db.prepare("SELECT COUNT(*) AS n FROM sqlite_master WHERE type = 'index' AND name = 'idx_notes_folder'").get()?.n, 1);
+});
+
+void test('DEC-011/UX-01: backup copia do R2 os anexos de notas e os arquivos de material', () => {
+  assert.equal(lib.objectsSql(['atlas_notes']), null);
+  const db = new DatabaseSync(':memory:');
+  db.exec(`CREATE TABLE atlas_note_attachments (id TEXT, object_key TEXT, mime_type TEXT, size_bytes INTEGER);
+    CREATE TABLE atlas_content_materials (id TEXT, object_key TEXT, mime_type TEXT, size_bytes INTEGER);
+    INSERT INTO atlas_note_attachments VALUES ('b', 'attachments/n/b', 'image/png', 3);
+    INSERT INTO atlas_content_materials VALUES ('a', 'materials/c/a', 'application/pdf', 5), ('c', NULL, NULL, NULL);`);
+  const both = lib.objectsSql(['atlas_note_attachments', 'atlas_content_materials'])!;
+  assert.deepEqual(db.prepare(both).all().map((row) => row.object_key), ['materials/c/a', 'attachments/n/b']);
+  const notesOnly = lib.objectsSql(['atlas_note_attachments'])!;
+  assert.deepEqual(db.prepare(notesOnly).all().map((row) => row.id), ['b']);
 });
 
 void test('DEC-009/DEC-011: backup e restauração param sem ambiente explícito', () => {

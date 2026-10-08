@@ -35,7 +35,8 @@ O que ele faz, só com leituras na Cloudflare:
 2. `wrangler d1 export --remote` grava o dump completo em `d1.sql` e conta as
    linhas de cada tabela. Durante o export o D1 pode ficar indisponível por
    alguns segundos, então não use o Atlas enquanto o backup roda.
-3. Copia do R2 o arquivo de cada anexo listado no D1 para `r2/`.
+3. Copia do R2 o arquivo de cada anexo listado no D1 para `r2/` (anexos de
+   notas e arquivos de material de estudo).
 4. Grava `manifest.json` (data, commit, contagens, nome e hash de cada arquivo)
    e só então renomeia a pasta de `...parcial` para o nome final. Uma execução
    interrompida não deixa backup pela metade com cara de completo.

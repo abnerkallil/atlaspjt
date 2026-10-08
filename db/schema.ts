@@ -454,3 +454,31 @@ export const atlasAgendaItems = sqliteTable(
       .where(sql`status = 'pendente'`),
   ],
 );
+
+// Material de estudo de cada conteúdo (UX-01, DEC-01): o que o usuário anexa
+// para estudar na sessão. Texto e link ficam no D1; arquivo segue o DEC-008
+// (bytes no R2, só metadados aqui, acesso só pelas rotas do Worker).
+export const atlasContentMaterials = sqliteTable(
+  'atlas_content_materials',
+  {
+    id: text('id').primaryKey(),
+    contentId: text('content_id')
+      .notNull()
+      .references(() => atlasContents.id, { onDelete: 'cascade' }),
+    // "texto", "link" ou "arquivo".
+    kind: text('kind').notNull(),
+    title: text('title').notNull(),
+    // Texto do material (kind = texto).
+    body: text('body'),
+    // Endereço http(s) (kind = link), ex.: vídeo da aula.
+    url: text('url'),
+    // Arquivo (kind = arquivo), validado pelo DEC-07.
+    fileName: text('file_name'),
+    mimeType: text('mime_type'),
+    sizeBytes: integer('size_bytes'),
+    objectKey: text('object_key'),
+    position: integer('position').notNull().default(0),
+    createdAt: text('created_at').notNull(),
+  },
+  (table) => [index('idx_atlas_content_materials_content').on(table.contentId, table.position)],
+);

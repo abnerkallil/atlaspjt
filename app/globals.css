@@ -846,6 +846,28 @@ a.rm-start { display: inline-flex; align-items: center; gap: 6px; text-decoratio
 .ss-step h2 svg { flex: none; color: var(--blue); }
 .ss-step > p { max-width: 68ch; margin: 0 0 14px; color: #3f3c49; font-size: 15px; line-height: 1.75; }
 .ss-key { padding: 13px 15px; border-left: 4px solid #d3b76b; border-radius: 4px 12px 12px 4px; color: #4f4214 !important; background: #fffbec; font-weight: 600; }
+.cm { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line); }
+.cm-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.cm-head .eyebrow { margin: 0; }
+.cm-add { min-height: 36px; display: inline-flex; gap: 6px; font-size: 13px; }
+.cm-empty { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+.cm-list { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.cm-item { min-width: 0; padding: 14px 16px; border: 1px solid var(--line); border-radius: 14px; background: #faf9fc; }
+.cm-item-head { display: flex; align-items: center; gap: 10px; }
+.cm-item-head strong { min-width: 0; flex: 1; overflow-wrap: anywhere; font-size: 15px; }
+.cm-kind { flex: none; display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 999px; color: #1d4ed8; background: #eaf2ff; font-size: 11px; font-weight: 750; text-transform: uppercase; letter-spacing: .04em; }
+.cm-remove { width: 32px; height: 32px; flex: none; display: grid; place-items: center; border: 0; border-radius: 8px; color: var(--muted); background: transparent; cursor: pointer; }
+.cm-remove:hover { color: #b42318; background: #fdecea; }
+.cm-text { margin: 10px 0 0; color: #3f3c49; font-size: 15px; line-height: 1.75; white-space: pre-wrap; overflow-wrap: anywhere; }
+.cm-link { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; margin-top: 8px; color: #1d4ed8; font-size: 14px; font-weight: 600; overflow-wrap: anywhere; }
+.cm-link small { color: var(--muted); font-weight: 500; }
+.cm-image { display: block; max-width: 100%; max-height: 420px; margin-top: 10px; border-radius: 10px; }
+.cm-form { display: grid; gap: 12px; margin-top: 12px; padding: 16px; border: 1px solid var(--line); border-radius: 14px; }
+.cm-form .ss-tabs { margin: 0; justify-self: start; }
+.cm-field { display: grid; gap: 6px; font-size: 13px; font-weight: 650; color: #3f3c49; }
+.cm-field input, .cm-field textarea { width: 100%; padding: 10px 12px; border: 1px solid #c9c5d3; border-radius: 10px; color: var(--ink); background: #fff; font: inherit; font-weight: 400; font-size: 14px; }
+.cm-field textarea { resize: vertical; line-height: 1.6; }
+.cm-form-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
 .ss-tabs { display: inline-flex; gap: 4px; margin-bottom: 14px; padding: 4px; border: 1px solid var(--line); border-radius: 12px; background: #faf9fc; }
 .ss-tabs button { min-height: 36px; display: inline-flex; align-items: center; gap: 7px; padding: 0 14px; border: 0; border-radius: 9px; color: #4d4957; background: transparent; cursor: pointer; font-size: 13px; font-weight: 700; }
 .ss-tabs button[aria-selected='true'] { color: #fff; background: var(--blue); }

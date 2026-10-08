@@ -9,6 +9,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useAtlasShell } from '@/components/atlas/atlas-shell';
 import { updateStudySession } from '@/components/pages/use-study-overview';
+import { ContentMaterials } from '@/components/pages/content-materials';
 import { DirectedStudy } from '@/components/pages/directed-study';
 import {
   sessionContentId, sessionFixation, sessionMedia, sessionPlan, sessionPractice, sessionReading, type SessionStepId,
@@ -666,12 +667,13 @@ export function StudySession({
             <div className="ss-step">
               <h2><BookOpen size={18} aria-hidden="true" /> {session.contentTitle}</h2>
               <p>
-                O material deste conteúdo ainda não está cadastrado no Atlas. Estude pela sua aula ou apostila e registre ao lado,
-                com suas palavras, o que aprendeu: a nota fica vinculada a este conteúdo.
+                Estude pelo material abaixo (ou pela sua aula e apostila) e registre ao lado, com suas palavras, o que aprendeu:
+                a nota fica vinculada a este conteúdo.
               </p>
               <p className="ss-key">
                 Pause quando precisar parar: o tempo para de contar e o ponto atual fica salvo. Ao concluir, o quiz do conteúdo é liberado.
               </p>
+              <ContentMaterials contentId={session.contentId} />
             </div>
           )}
         </article>
