@@ -1,0 +1,37 @@
+CREATE TABLE `atlas_question_drafts` (
+	`id` text PRIMARY KEY NOT NULL,
+	`source_id` text,
+	`content_id` text,
+	`subtopic_id` text,
+	`theme` text,
+	`kind` text NOT NULL,
+	`prompt` text NOT NULL,
+	`context` text,
+	`options_json` text,
+	`correct_option` integer,
+	`model_answer` text,
+	`expected_value` real,
+	`tolerance` real,
+	`verification_json` text,
+	`bloom_level` text,
+	`knowledge_type` text,
+	`origin` text DEFAULT 'oficial' NOT NULL,
+	`exam_board` text,
+	`exam_org` text,
+	`exam_year` integer,
+	`explanation` text,
+	`option_explanations_json` text,
+	`text_hash` text,
+	`lint_warnings_json` text,
+	`status` text DEFAULT 'pendente' NOT NULL,
+	`approved_question_id` text,
+	`created_at` text NOT NULL,
+	`reviewed_at` text,
+	FOREIGN KEY (`source_id`) REFERENCES `atlas_question_sources`(`id`) ON UPDATE no action ON DELETE set null,
+	FOREIGN KEY (`content_id`) REFERENCES `atlas_contents`(`id`) ON UPDATE no action ON DELETE set null,
+	FOREIGN KEY (`subtopic_id`) REFERENCES `atlas_subtopics`(`id`) ON UPDATE no action ON DELETE set null,
+	FOREIGN KEY (`approved_question_id`) REFERENCES `atlas_questions`(`id`) ON UPDATE no action ON DELETE set null
+);
+--> statement-breakpoint
+CREATE INDEX `idx_atlas_question_drafts_status` ON `atlas_question_drafts` (`status`);--> statement-breakpoint
+CREATE INDEX `idx_atlas_question_drafts_content` ON `atlas_question_drafts` (`content_id`);

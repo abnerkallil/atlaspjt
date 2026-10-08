@@ -502,6 +502,52 @@ export const atlasQuestionSources = sqliteTable(
   ],
 );
 
+// Curadoria de rascunhos (APO-07): questão extraída (APO-06) ou proposta à
+// mão, pendente até um humano aprovar — nunca entra sozinha no banco
+// ("precisamos de curadoria se quisermos um desenvolvimento sério" — Abner,
+// 2026-10-08). Aprovar grava a linha em atlas_questions; descartar não volta.
+export const atlasQuestionDrafts = sqliteTable(
+  'atlas_question_drafts',
+  {
+    id: text('id').primaryKey(),
+    sourceId: text('source_id').references(() => atlasQuestionSources.id, { onDelete: 'set null' }),
+    // Preenchidos na curadoria, não na extração — por isso nulos até revisão.
+    contentId: text('content_id').references(() => atlasContents.id, { onDelete: 'set null' }),
+    subtopicId: text('subtopic_id').references(() => atlasSubtopics.id, { onDelete: 'set null' }),
+    theme: text('theme'),
+    kind: text('kind').notNull(),
+    prompt: text('prompt').notNull(),
+    context: text('context'),
+    optionsJson: text('options_json'),
+    correctOption: integer('correct_option'),
+    modelAnswer: text('model_answer'),
+    expectedValue: real('expected_value'),
+    tolerance: real('tolerance'),
+    verificationJson: text('verification_json'),
+    bloomLevel: text('bloom_level'),
+    knowledgeType: text('knowledge_type'),
+    origin: text('origin').notNull().default('oficial'),
+    examBoard: text('exam_board'),
+    examOrg: text('exam_org'),
+    examYear: integer('exam_year'),
+    explanation: text('explanation'),
+    optionExplanationsJson: text('option_explanations_json'),
+    textHash: text('text_hash'),
+    // Avisos do linter de Haladyna (APO-04), calculados na extração; só para
+    // mostrar na tela — a curadoria decide o que fazer com cada um.
+    lintWarningsJson: text('lint_warnings_json'),
+    // "pendente", "aprovado" ou "descartado".
+    status: text('status').notNull().default('pendente'),
+    approvedQuestionId: text('approved_question_id').references(() => atlasQuestions.id, { onDelete: 'set null' }),
+    createdAt: text('created_at').notNull(),
+    reviewedAt: text('reviewed_at'),
+  },
+  (table) => [
+    index('idx_atlas_question_drafts_status').on(table.status),
+    index('idx_atlas_question_drafts_content').on(table.contentId),
+  ],
+);
+
 export const atlasQuizAttempts = sqliteTable(
   'atlas_quiz_attempts',
   {

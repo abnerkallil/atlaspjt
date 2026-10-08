@@ -52,9 +52,38 @@ pnpm run apolo:extrair -- --target local --fonte <id-da-fonte> --saida rascunhos
 ```
 
 O gabarito é um arquivo de texto, um item por linha (`1 C`, `2 ERRADO`,
-`3 anulada`). O resultado é só um JSON de rascunhos em disco — **nada é
-gravado no D1** por este comando; a curadoria decide o que vira questão de
-verdade.
+`3 anulada`). Sempre grava um JSON de rascunhos em disco; com `--target`,
+também insere cada rascunho em `atlas_question_drafts` como `"pendente"`
+(linter de Haladyna, APO-04, roda aqui só para gerar os avisos mostrados na
+curadoria — nenhum erro bloqueia a extração). Sem `--target`, é só ensaio:
+nada entra na fila.
+
+## Curadoria de rascunhos (APO-07)
+
+`/rascunhos` é a fila de revisão: todo rascunho — vindo do extrator ou
+cadastrado à mão — fica `"pendente"` até um humano aprovar ou descartar.
+Nunca é seleção automática ("precisamos de curadoria se quisermos um
+desenvolvimento sério", Abner, 2026-10-08).
+
+A tela mostra a fila (rascunho sem conteúdo definido primeiro, depois mais
+antigo primeiro), um formulário de edição e, quando o rascunho veio de uma
+fonte, o PDF de origem ao lado. Aprovar exige conteúdo, nível de Bloom e
+explicação preenchidos; grava a questão em `atlas_questions`, já ativa
+(aparece no próximo quiz do conteúdo), e marca o rascunho como `"aprovado"`.
+Descartar é definitivo — o rascunho não volta para a fila.
+
+Tema é criado só aqui (`POST /api/apolo/temas`), nunca pelo extrator.
+
+**Duas simplificações de escopo assumidas nesta entrega** (Abner pode pedir
+a versão completa depois):
+
+- O card pedia o rascunho "ao lado da página do PDF" de origem. Rastrear a
+  página exata exigiria reabrir o extrator (APO-06, já mergeado) para marcar
+  fronteiras de página texto a texto. A tela mostra o PDF inteiro da fonte,
+  sem pular automaticamente para a página do item.
+- A fila não prioriza "conteúdo com menos questões primeiro" — o conteúdo só
+  é escolhido durante a própria curadoria, então a ordem é por ausência de
+  conteúdo e data de criação.
 
 ## Exclusão e backup
 
