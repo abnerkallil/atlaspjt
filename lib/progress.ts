@@ -9,6 +9,7 @@ import { PREREQUISITE_MET_STATES } from './pedagogy/prerequisites.js';
 import type { ContentState } from './pedagogy/states.js';
 import type { D1Like } from './pedagogy/transitions.js';
 import { getRoadmap } from './roadmap-store.js';
+import { failureStreak } from './recovery.js';
 import { REVIEW_STAGES, localDateOf } from './reviews.js';
 
 export const FORMULA_VERSION = 'v1';
@@ -68,6 +69,8 @@ export type DisciplineProgress = {
   retention: number;
   reviewsTaken: number;
   history: { proficiency: number[]; retention: number[] };
+  // DEC-03: conteúdo bloqueado ou em revisão ativa congela a conclusão da disciplina.
+  frozenBy: string[];
 };
 
 export type ProgressReport = {
@@ -80,7 +83,18 @@ export type ProgressReport = {
   atRisk: AtRiskContent[];
 };
 
-export type AtRiskContent = { id: string; title: string; discipline: string; state: ContentState; reason: string; action: string };
+export type AtRiskContent = {
+  id: string;
+  title: string;
+  discipline: string;
+  state: ContentState;
+  reason: string;
+  action: string;
+  // Reprovações seguidas desde a última aprovação (MVP-08).
+  failures: number;
+};
+
+const FREEZING_STATES: readonly ContentState[] = ['bloqueado', 'em-revisao-ativa'];
 
 // Conteúdos que pedem atenção, pelo estado atual (DEC-03).
 const RISK: Partial<Record<ContentState, { reason: string; action: string }>> = {
@@ -210,6 +224,7 @@ export function computeProgress(
       retention: percent(retention.rate),
       reviewsTaken: retention.taken,
       history: { proficiency: proficiencyHistory, retention: retentionHistory },
+      frozenBy: discipline.contents.filter((content) => FREEZING_STATES.includes(content.state)).map((content) => content.title),
     };
   });
 
@@ -253,7 +268,14 @@ export function computeProgress(
     atRisk: input.disciplines.flatMap((discipline) =>
       discipline.contents.flatMap((content) => {
         const risk = RISK[content.state];
-        return risk ? [{ id: content.id, title: content.title, discipline: discipline.title, state: content.state, ...risk }] : [];
+        if (!risk) return [];
+        const failures = failureStreak(
+          input.attempts
+            .filter((item) => item.contentId === content.id)
+            .sort((a, b) => b.submittedAt.localeCompare(a.submittedAt)),
+        );
+        const reason = failures >= 2 ? `${risk.reason} Reincidência: ${failures} reprovações seguidas.` : risk.reason;
+        return [{ id: content.id, title: content.title, discipline: discipline.title, state: content.state, ...risk, reason, failures }];
       }),
     ),
   };

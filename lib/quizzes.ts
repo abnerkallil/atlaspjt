@@ -15,6 +15,7 @@ import {
   type ReviewStage,
   type ReviewSummary,
 } from './reviews.js';
+import { directedSelection, recoveryStatus } from './recovery.js';
 
 export const QUESTION_KINDS = ['multipla', 'dissertativa', 'calculo'] as const;
 export type QuestionKind = (typeof QUESTION_KINDS)[number];
@@ -105,6 +106,8 @@ export type QuizAttempt = {
   stage: ReviewStage | null;
   // Resumo da revisão depois do envio.
   review: ReviewSummary | null;
+  // Quiz dirigido (MVP-08): quantas questões erradas na última reprovação voltaram.
+  directed: number;
   status: AttemptStatus;
   startedAt: string;
   deadlineAt: string | null;
@@ -372,6 +375,8 @@ type AttemptRow = {
   stage: ReviewStage | null;
   // Resumo da revisão depois do envio.
   review: ReviewSummary | null;
+  // Quiz dirigido (MVP-08): quantas questões erradas na última reprovação voltaram.
+  directed: number;
   status: AttemptStatus;
   started_at: string;
   deadline_at: string | null;
@@ -391,6 +396,7 @@ function attemptFromRow(row: AttemptRow): QuizAttempt {
   const stored = parseJson<{
     questions: PublicQuestion[];
     stage?: ReviewStage | null;
+    directed?: number;
   }>(row.questions_json);
   const results = parseJson<{
     results?: QuestionResult[];
@@ -405,6 +411,7 @@ function attemptFromRow(row: AttemptRow): QuizAttempt {
     purpose: row.purpose,
     stage: stored?.stage ?? null,
     review: results?.review ?? null,
+    directed: stored?.directed ?? 0,
     status: row.status,
     startedAt: row.started_at,
     deadlineAt: row.deadline_at,
@@ -550,7 +557,18 @@ export async function startQuiz(
   }
   const stage = purpose === 'quiz' ? null : await reviewStageFor(db, contentId);
   const id = options.id ?? crypto.randomUUID();
-  const chosen = selectQuestions(await listQuestions(db, contentId), id);
+  const bank = await listQuestions(db, contentId);
+  // MVP-08: depois de uma reprovação, as questões erradas voltam (quiz dirigido).
+  const recovery = await recoveryStatus(db, contentId);
+  const missedIds = recovery?.missed.map((item) => item.id) ?? [];
+  const drawn = selectQuestions(bank, id);
+  const picked = new Set(
+    directedSelection(missedIds, bank, drawn, QUIZ_SIZE).map((item) => item.id),
+  );
+  const chosen = missedIds.length
+    ? bank.filter((item) => picked.has(item.id))
+    : drawn;
+  const directed = missedIds.filter((questionId) => picked.has(questionId)).length;
   if (chosen.length === 0) {
     throw new QuizError(
       'Este conteúdo ainda não tem questões cadastradas.',
@@ -586,6 +604,7 @@ export async function startQuiz(
           optionOrders,
           questions: shown.map(publicQuestion),
           stage,
+          directed,
         }),
         purpose,
       ),

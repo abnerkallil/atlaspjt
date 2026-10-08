@@ -64,6 +64,8 @@
     "tests/reviews.test.ts",
     "lib/progress.ts",
     "tests/progress.test.ts",
+    "lib/recovery.ts",
+    "tests/recovery.test.ts",
     "tests/agenda.test.ts"
   ],
   "exclude": [
