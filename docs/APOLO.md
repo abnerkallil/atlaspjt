@@ -101,15 +101,30 @@ linguagens ficam mistas. "Biológicas" (uma das 6 áreas já presentes no schema
 mas que o card não listava) foi tratada como mista, igual sociais aplicadas,
 até o Abner revisar.
 
-**Pendência disclosed:** o card cita "Gate: não (implementa o DEC-10)", mas
-o DEC-10 do kanban pessoal ("Definir a composição das avaliações", P0,
-Pedagogia/Produto) segue sem decisão formal registrada em
-`docs/ATLAS_DECISIONS.md` — só existe como comportamento de fato já
-implementado em `lib/quizzes.ts`. Este card não fecha o DEC-10: só expressa
-esse comportamento de hoje como um plano versionado e propõe, como primeiro
-rascunho, os perfis por área e os planos dos instrumentos que ainda não têm
-motor próprio (atividade, exame de meio de curso, atividade final,
-recuperação, proficiência — todos "fora da espinha", só existem como estado
-da FSM em `lib/pedagogy/states.ts`, DEC-018). Nenhum desses planos está
-ligado à seleção real de questão ainda — isso é o APO-12 (seletor
+**DEC-10 confirmado pelo Abner em 2026-10-08:** o card cita "Gate: não
+(implementa o DEC-10)", e o DEC-10 do kanban pessoal ("Definir a composição
+das avaliações", P0, Pedagogia/Produto) não tinha decisão formal registrada
+em `docs/ATLAS_DECISIONS.md` até este card ser implementado. Pergunta feita
+ao Abner no chat do projeto às 15:58 (`cmsg_015thNCrpovZtKsRcfQ4RaQBX9VTDhqU89TeJfXPPP7AgC`,
+item 2: "Confirma o DEC-10 das Avaliações (exame de meio com 60 questões,
+final 50/50, cascata)?") e resposta às 16:08
+(`cmsg_015thNCrpovZtKsRcfQ4RaQBHJC7stLu1MZeGbV69v51i8`, "2 -> Sim."):
+exame de meio de curso tem 60 questões; atividade final e exame de meio
+pesam 50/50 na nota da disciplina (já documentado em
+`docs/modelo-de-dados.md` linha 56); e a "cascata" (ordem de liberação
+atividade → exame de meio → atividade final → recuperação, DEC-018) foi
+confirmada em princípio — a fórmula exata de como a nota cascateia entre
+essas etapas ainda não foi detalhada por ele, então continua sendo decisão
+do card APO-19 quando chegar a vez.
+
+Isso fixa o tamanho de `exame_meio` e `atividade_final` neste plano em 60
+questões (antes um rascunho com 20, só palpite). O peso 50/50 é uma regra de
+nota da disciplina, não de composição de prova — fica fora do escopo de
+`ExamPlan` aqui, para o card que calcular a nota final da disciplina
+decidir. Os perfis por área de conhecimento do tema e os planos dos
+instrumentos sem motor próprio (atividade, recuperação, proficiência —
+"fora da espinha", só existem como estado da FSM em
+`lib/pedagogy/states.ts`) seguem como primeiro rascunho deste card, não uma
+decisão fechada. Nenhum desses planos está ligado à seleção real de questão
+ainda — isso é o APO-12 (seletor
 adaptativo), que depende deste card.

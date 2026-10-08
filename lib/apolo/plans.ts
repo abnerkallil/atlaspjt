@@ -107,9 +107,10 @@ function quizLikePlan(instrument: Instrument): ExamPlan {
 // Planos dos instrumentos sem motor próprio ainda (DEC-018: atividade, exame
 // de meio de curso, atividade final, recuperação, proficiência existem só
 // como estado da FSM, `lib/pedagogy/states.ts` — nenhum código monta essas
-// provas hoje). Valores abaixo são ponto de partida razoável, não uma
-// decisão fechada; cada um ganha motor e revisão própria num card futuro
-// (APO-17 em diante).
+// provas hoje). Tamanho de exame_meio/atividade_final (60 questões) é DEC-10
+// confirmado pelo Abner em 2026-10-08 (ver docs/APOLO.md); o resto é ponto de
+// partida razoável, não uma decisão fechada — cada um ganha motor e revisão
+// própria num card futuro (APO-17 em diante).
 const DRAFT_PLANS: Record<
   'atividade' | 'exame_meio' | 'atividade_final' | 'recuperacao' | 'proficiencia',
   ExamPlan
@@ -120,12 +121,12 @@ const DRAFT_PLANS: Record<
     secondsByKind: QUESTION_SECONDS, passingScore: PASSING_SCORE,
   },
   exame_meio: {
-    instrument: 'exame_meio', version: 1, size: 20, kindMix: NEUTRAL_KIND_MIX,
+    instrument: 'exame_meio', version: 1, size: 60, kindMix: NEUTRAL_KIND_MIX,
     bloomMix: {}, difficultyMix: { facil: 0.2, media: 0.5, dificil: 0.3 },
     interleaving: true, secondsByKind: QUESTION_SECONDS, passingScore: PASSING_SCORE,
   },
   atividade_final: {
-    instrument: 'atividade_final', version: 1, size: 20, kindMix: NEUTRAL_KIND_MIX,
+    instrument: 'atividade_final', version: 1, size: 60, kindMix: NEUTRAL_KIND_MIX,
     bloomMix: {}, difficultyMix: { facil: 0.2, media: 0.5, dificil: 0.3 },
     interleaving: true, secondsByKind: QUESTION_SECONDS, passingScore: PASSING_SCORE,
   },
