@@ -242,3 +242,17 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
   demonstração (dependem das regras de Atividades).
 - Se algo der errado: material que não salva, não abre ou não some ao remover
   vem deste PR.
+
+## PR #43 — Fundação do Apolo: moldes e campos de tema/dificuldade/ciclo de vida (APO-01, DEC-014)
+
+- Ponto de restauração: branch `restore/pre-apo-01` (commit `83ea67b`, main antes do merge).
+- Migration nova: `0013_apolo_base` (4 colunas aditivas em `atlas_questions` —
+  `theme`, `bloom_level`, `difficulty_nominal`, `lifecycle_state` — mais nova
+  tabela `atlas_item_models`). O `Publicar Atlas.cmd` aplica sozinho; as 60
+  questões já cadastradas continuam exatamente como estavam.
+- O que muda no site: nada visível. Nenhuma tela, quiz, nota ou número muda —
+  é só a fundação de dados e o módulo `lib/apolo/` por trás do Apolo. Nenhum
+  questionário é montado nem nota é emitida ainda pelo Apolo.
+- Se algo der errado: só poderia afetar o banco de questões (tema, dificuldade
+  ou ciclo de vida de uma questão); nenhuma tela do Atlas lê esses campos
+  ainda.
