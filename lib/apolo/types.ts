@@ -2,7 +2,33 @@
 // o banco de questões é universal, DEC-014 Eixo 2); dificuldade e Bloom usam
 // conjuntos fixos pequenos porque são taxonomias externas conhecidas, não
 // "universais/abertas por definição" como tema.
-import type { QuestionKind } from '../quizzes.js';
+//
+// QUESTION_KINDS/QuestionKind e QUIZ_SIZE/QUESTION_SECONDS (DEC-10) moram
+// aqui desde o APO-14: `lib/quizzes.ts` precisou passar a importar
+// `lib/apolo/plans.ts` e `lib/apolo/selector.ts` (para usar o seletor no
+// startQuiz), e esses dois já importavam essas constantes de volta de
+// `lib/quizzes.ts` — um ciclo de import em runtime. Aqui nenhum dos dois
+// lados do ciclo depende do outro; `lib/quizzes.ts` as reexporta com os
+// mesmos nomes, então nenhum chamador existente mudou.
+export const QUESTION_KINDS = [
+  'multipla',
+  'dissertativa',
+  'calculo',
+  'certo_errado',
+  'lacuna_numerica',
+] as const;
+export type QuestionKind = (typeof QUESTION_KINDS)[number];
+
+// DEC-10: quiz de nota com 10 questões; 1 min por múltipla escolha; até 5 min
+// por dissertativa; cálculo sem limite.
+export const QUIZ_SIZE = 10;
+export const QUESTION_SECONDS: Record<QuestionKind, number | null> = {
+  multipla: 60,
+  dissertativa: 300,
+  calculo: null,
+  certo_errado: 60,
+  lacuna_numerica: null,
+};
 
 export const BLOOM_LEVELS = [
   'lembrar',
