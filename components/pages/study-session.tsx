@@ -1,17 +1,18 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import {
-  ArrowLeft, ArrowRight, BookOpen, CalendarClock, Check, CircleCheck, CircleX, Clock3, FileText, Library, PenLine,
+  ArrowLeft, ArrowRight, BookOpen, Check, CircleCheck, CircleX, Clock3, FileText, Library, Pause, PenLine, Play,
   PlayCircle, Search, Target, X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAtlasShell } from '@/components/atlas/atlas-shell';
+import { updateStudySession } from '@/components/pages/use-study-overview';
 import {
-  reviewIntervals, sessionContentId, sessionFixation, sessionMedia, sessionPlan, sessionPractice, sessionReading,
-  studyLesson, type SessionStepId,
+  sessionContentId, sessionFixation, sessionMedia, sessionPlan, sessionPractice, sessionReading, type SessionStepId,
 } from '@/lib/demo/study';
+import { elapsedSeconds, type StudySession as StudySessionData } from '@/lib/study-sessions';
 
 type Stage = 'sessao' | 'encerramento' | 'fixacao' | 'concluida';
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
@@ -22,8 +23,33 @@ const LETTERS = ['A', 'B', 'C', 'D'];
 const formatElapsed = (total: number) =>
   `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
 
-const formatDate = (date: Date) =>
-  date.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short' });
+// Ponto atual salvo na sessão (MVP-02). O rascunho da nota só vai junto quando é curto;
+// rascunhos longos são salvos em Notas antes de pausar.
+type Checkpoint = {
+  step?: SessionStepId;
+  stepTitle?: string;
+  completed?: SessionStepId[];
+  noteId?: string | null;
+  noteTitle?: string;
+  noteDraft?: string;
+  // O rascunho guardado é igual ao que está salvo em Notas.
+  noteSaved?: boolean;
+};
+const MAX_DRAFT_CHARS = 4000;
+
+function readCheckpoint(session: StudySessionData): Checkpoint {
+  const raw = session.checkpoint ?? {};
+  const steps = sessionPlan.map((step) => step.id);
+  const isStep = (value: unknown): value is SessionStepId => steps.includes(value as SessionStepId);
+  return {
+    step: isStep(raw.step) ? raw.step : undefined,
+    completed: Array.isArray(raw.completed) ? raw.completed.filter(isStep) : undefined,
+    noteId: typeof raw.noteId === 'string' ? raw.noteId : null,
+    noteTitle: typeof raw.noteTitle === 'string' ? raw.noteTitle : undefined,
+    noteDraft: typeof raw.noteDraft === 'string' ? raw.noteDraft : undefined,
+    noteSaved: raw.noteSaved === true,
+  };
+}
 
 function newId() {
   if (typeof crypto.randomUUID === 'function') return crypto.randomUUID();
@@ -118,19 +144,35 @@ function SessionLibrary({ onClose }: { onClose: () => void }) {
 }
 
 // Sessão ativa (UX-01): só material + notas na tela (DEC-01); a navegação do site volta ao concluir.
-export function StudySession({ onBack }: { onBack: () => void }) {
+export function StudySession({
+  session,
+  serverNow,
+  onBack,
+}: {
+  session: StudySessionData;
+  serverNow: string;
+  onBack: () => void;
+}) {
+  // O material de leitura/vídeo/prática só existe cadastrado para o conteúdo de demonstração do UX-01.
+  const hasMaterial = session.contentId === sessionContentId;
+  const [initial] = useState(() => readCheckpoint(session));
   const [stage, setStage] = useState<Stage>('sessao');
-  const [activeStep, setActiveStep] = useState<SessionStepId>('midia');
-  const [completed, setCompleted] = useState<SessionStepId[]>(['leitura']);
+  const [running, setRunning] = useState(session.status === 'em-andamento');
+  const [busy, setBusy] = useState(false);
+  const [sessionError, setSessionError] = useState('');
+  const [activeStep, setActiveStep] = useState<SessionStepId>(initial.step ?? 'leitura');
+  const [completed, setCompleted] = useState<SessionStepId[]>(initial.completed ?? []);
   const [mediaTab, setMediaTab] = useState<'video' | 'pdf'>('video');
-  const [elapsed, setElapsed] = useState(0);
+  const [elapsed, setElapsed] = useState(() => elapsedSeconds(session, serverNow));
   const [practice, setPractice] = useState<Record<string, number>>({});
   const [practiceChecked, setPracticeChecked] = useState(false);
   const [libraryOpen, setLibraryOpen] = useState(false);
-  const [noteTitle, setNoteTitle] = useState(`Sessão · ${studyLesson.title}`);
-  const [noteBody, setNoteBody] = useState('');
-  const [noteId, setNoteId] = useState<string | null>(null);
-  const [savedSnapshot, setSavedSnapshot] = useState('');
+  const [noteTitle, setNoteTitle] = useState(initial.noteTitle ?? `Sessão · ${session.contentTitle}`);
+  const [noteBody, setNoteBody] = useState(initial.noteDraft ?? '');
+  const [noteId, setNoteId] = useState<string | null>(initial.noteId ?? null);
+  const [savedSnapshot, setSavedSnapshot] = useState(() =>
+    initial.noteSaved && initial.noteDraft !== undefined ? `${initial.noteTitle ?? ''}\n${initial.noteDraft}` : '',
+  );
   const [saveState, setSaveState] = useState<SaveState>('idle');
   const [saveError, setSaveError] = useState('');
   const [fixation, setFixation] = useState<Record<string, number>>({});
@@ -148,10 +190,29 @@ export function StudySession({ onBack }: { onBack: () => void }) {
   }, [focus, setFocusMode]);
 
   useEffect(() => {
-    if (stage !== 'sessao') return;
+    if (stage !== 'sessao' || !running) return;
     const timer = setInterval(() => setElapsed((value) => value + 1), 1000);
     return () => clearInterval(timer);
-  }, [stage]);
+  }, [stage, running]);
+
+  // Rascunho longo não vai no ponto atual: ao retomar, a nota é lida de Notas.
+  useEffect(() => {
+    if (!initial.noteId || initial.noteDraft !== undefined) return;
+    let alive = true;
+    fetch('/api/notes')
+      .then((response) => (response.ok ? (response.json() as Promise<{ notes: LibraryNote[] }>) : null))
+      .then((data) => {
+        const note = data?.notes.find((item) => item.id === initial.noteId);
+        if (!alive || !note) return;
+        setNoteTitle(note.title);
+        setNoteBody(note.body);
+        setSavedSnapshot(`${note.title}\n${note.body}`);
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, [initial]);
 
   // Leva o foco ao título de cada etapa, para teclado e leitor de tela acompanharem a mudança.
   useEffect(() => {
@@ -160,6 +221,85 @@ export function StudySession({ onBack }: { onBack: () => void }) {
 
   const stepIndex = sessionPlan.findIndex((step) => step.id === activeStep);
   const notesDirty = `${noteTitle}\n${noteBody}` !== savedSnapshot && noteBody.trim() !== '';
+  const checkpoint = useMemo<Checkpoint>(
+    () => ({
+      ...(hasMaterial
+        ? { step: activeStep, stepTitle: sessionPlan[stepIndex]?.title, completed }
+        : { stepTitle: 'Notas da sessão' }),
+      noteId,
+      noteTitle,
+      ...(noteBody.length <= MAX_DRAFT_CHARS ? { noteDraft: noteBody, noteSaved: !notesDirty } : {}),
+    }),
+    [hasMaterial, activeStep, stepIndex, completed, noteId, noteTitle, noteBody, notesDirty],
+  );
+  const checkpointJson = JSON.stringify(checkpoint);
+  const savedCheckpoint = useRef(JSON.stringify(readCheckpoint(session)));
+  const latestCheckpoint = useRef(checkpointJson);
+
+  // Salvar ponto atual (MVP-02): poucos segundos depois de cada mudança, e ao sair da página.
+  useEffect(() => {
+    latestCheckpoint.current = checkpointJson;
+    if (stage !== 'sessao' || checkpointJson === savedCheckpoint.current) return;
+    const timer = setTimeout(() => {
+      savedCheckpoint.current = checkpointJson;
+      void updateStudySession(session.id, 'salvar-ponto', JSON.parse(checkpointJson)).catch(() => {
+        savedCheckpoint.current = '';
+      });
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, [checkpointJson, stage, session.id]);
+
+  useEffect(() => {
+    if (stage !== 'sessao') return;
+    const flush = () => {
+      if (latestCheckpoint.current === savedCheckpoint.current) return;
+      savedCheckpoint.current = latestCheckpoint.current;
+      void updateStudySession(session.id, 'salvar-ponto', JSON.parse(latestCheckpoint.current), { keepalive: true }).catch(() => {});
+    };
+    window.addEventListener('pagehide', flush);
+    return () => window.removeEventListener('pagehide', flush);
+  }, [stage, session.id]);
+
+  async function pauseOrResume() {
+    setBusy(true);
+    setSessionError('');
+    try {
+      if (running) {
+        // Rascunho longo demais para o ponto atual vai para Notas antes de pausar.
+        if (notesDirty && noteBody.length > MAX_DRAFT_CHARS) await saveNote();
+        const { session: updated } = await updateStudySession(session.id, 'pausar', checkpoint);
+        savedCheckpoint.current = checkpointJson;
+        setElapsed(updated.activeSeconds);
+        setRunning(false);
+      } else {
+        await updateStudySession(session.id, 'retomar');
+        setRunning(true);
+      }
+    } catch (error) {
+      setSessionError(error instanceof Error ? error.message : 'Não foi possível atualizar a sessão.');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  // Concluir (MVP-02): congela o tempo, registra a evidência e libera o quiz do conteúdo (DEC-03).
+  async function concludeSession() {
+    setBusy(true);
+    setSessionError('');
+    try {
+      if (notesDirty) await saveNote();
+      const { session: updated } = await updateStudySession(session.id, 'concluir', checkpoint);
+      savedCheckpoint.current = checkpointJson;
+      setElapsed(updated.activeSeconds);
+      setRunning(false);
+      if (hasMaterial) setStage('fixacao');
+      else finishSession();
+    } catch (error) {
+      setSessionError(error instanceof Error ? error.message : 'Não foi possível concluir a sessão.');
+    } finally {
+      setBusy(false);
+    }
+  }
   const practiceScore = sessionPractice.items.filter((item) => practice[item.id] === item.answer).length;
   const fixationScore = sessionFixation.filter((item) => fixation[item.id] === item.answer).length;
 
@@ -187,7 +327,7 @@ export function StudySession({ onBack }: { onBack: () => void }) {
           operationId: newId(),
           title: noteTitle,
           body: noteBody,
-          contentIds: [sessionContentId],
+          contentIds: [session.contentId],
         }),
       });
       if (!response.ok) {
@@ -217,14 +357,19 @@ export function StudySession({ onBack }: { onBack: () => void }) {
     return (
       <section className="study-view ss-close" aria-labelledby="ss-stage-title">
         <p className="eyebrow">ENCERRAMENTO DA SESSÃO</p>
-        <h1 id="ss-stage-title" ref={headingRef} tabIndex={-1}>Encerrar {studyLesson.title.toLowerCase()}?</h1>
-        <p className="ss-lead">Ao encerrar, o Atlas gera a fixação deste conteúdo. Você pode voltar e continuar se ainda não terminou.</p>
+        <h1 id="ss-stage-title" ref={headingRef} tabIndex={-1}>Concluir {session.contentTitle}?</h1>
+        <p className="ss-lead">
+          Ao concluir, o Atlas registra a sessão como evidência e libera o quiz deste conteúdo. Se ainda não terminou, pause e
+          retome depois: seu ponto atual fica salvo.
+        </p>
         <ul className="ss-summary">
           <li><Clock3 size={17} aria-hidden="true" /><span><strong>{formatElapsed(elapsed)}</strong><small>tempo de sessão</small></span></li>
-          <li><Check size={17} aria-hidden="true" /><span><strong>{completed.length} de {sessionPlan.length}</strong><small>etapas concluídas</small></span></li>
+          {hasMaterial && (
+            <li><Check size={17} aria-hidden="true" /><span><strong>{completed.length} de {sessionPlan.length}</strong><small>etapas concluídas</small></span></li>
+          )}
           <li><PenLine size={17} aria-hidden="true" /><span><strong>{noteId ? 'Salva em Notas' : 'Sem nota salva'}</strong><small>nota da sessão</small></span></li>
         </ul>
-        {completed.length < sessionPlan.length && (
+        {hasMaterial && completed.length < sessionPlan.length && (
           <p className="ss-warning" role="note">
             Faltam: {sessionPlan.filter((step) => !completed.includes(step.id)).map((step) => step.title).join(', ')}.
           </p>
@@ -238,9 +383,12 @@ export function StudySession({ onBack }: { onBack: () => void }) {
           </div>
         )}
         {saveState === 'error' && <p className="ss-error" role="alert">{saveError}</p>}
+        {sessionError && <p className="ss-error" role="alert">{sessionError}</p>}
         <div className="ss-actions">
           <Button variant="outline" className="ss-outline" onClick={() => setStage('sessao')}><ArrowLeft size={16} /> Voltar à sessão</Button>
-          <Button className="primary-button" onClick={() => setStage('fixacao')}>Encerrar e gerar fixação <ArrowRight size={16} /></Button>
+          <Button className="primary-button" onClick={() => void concludeSession()} disabled={busy}>
+            {busy ? 'Concluindo…' : hasMaterial ? 'Concluir e gerar fixação' : 'Concluir sessão'} <ArrowRight size={16} />
+          </Button>
         </div>
       </section>
     );
@@ -251,7 +399,7 @@ export function StudySession({ onBack }: { onBack: () => void }) {
       <section className="study-view ss-close" aria-labelledby="ss-stage-title">
         <p className="eyebrow">FIXAÇÃO GERADA · {sessionFixation.length} QUESTÕES</p>
         <h1 id="ss-stage-title" ref={headingRef} tabIndex={-1}>Fixe o que acabou de estudar</h1>
-        <p className="ss-lead">Questões curtas sobre {studyLesson.title.toLowerCase()}, respondidas logo após a sessão.</p>
+        <p className="ss-lead">Questões curtas sobre {session.contentTitle}, respondidas logo após a sessão.</p>
         <div className="ss-questions">
           {sessionFixation.map((item, number) => {
             const chosen = fixation[item.id];
@@ -310,28 +458,22 @@ export function StudySession({ onBack }: { onBack: () => void }) {
   }
 
   if (stage === 'concluida') {
-    const base = finishedAt ?? new Date();
     return (
       <section className="study-view ss-close" aria-labelledby="ss-stage-title">
         <div className="modal-symbol"><CircleCheck size={24} /></div>
         <p className="eyebrow">SESSÃO CONCLUÍDA</p>
-        <h1 id="ss-stage-title" ref={headingRef} tabIndex={-1}>Bom trabalho. {studyLesson.title} foi registrado.</h1>
+        <h1 id="ss-stage-title" ref={headingRef} tabIndex={-1}>Bom trabalho. {session.contentTitle} foi registrado.</h1>
         <ul className="ss-summary">
           <li><Clock3 size={17} aria-hidden="true" /><span><strong>{formatElapsed(elapsed)}</strong><small>tempo de sessão</small></span></li>
-          <li><Target size={17} aria-hidden="true" /><span><strong>{fixationChecked ? `${fixationScore}/${sessionFixation.length}` : 'Pendente'}</strong><small>fixação</small></span></li>
+          {hasMaterial && (
+            <li><Target size={17} aria-hidden="true" /><span><strong>{fixationChecked ? `${fixationScore}/${sessionFixation.length}` : 'Pendente'}</strong><small>fixação</small></span></li>
+          )}
           <li><PenLine size={17} aria-hidden="true" /><span><strong>{noteId ? 'Salva em Notas' : 'Sem nota'}</strong><small>nota da sessão</small></span></li>
         </ul>
-        <div className="ss-reviews">
-          <h2><CalendarClock size={17} aria-hidden="true" /> Revisões programadas</h2>
-          <ul>
-            {reviewIntervals.map((interval) => (
-              <li key={interval.label}>
-                <strong>{interval.label}</strong>
-                <span>{formatDate(new Date(base.getTime() + interval.days * 86_400_000))}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <p className="ss-lead">
+          A sessão ficou registrada como evidência do conteúdo{finishedAt ? ` às ${finishedAt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}` : ''}.
+          O próximo passo é o quiz de {session.contentTitle}.
+        </p>
         <div className="ss-actions">
           {noteId && <Link className="ss-link" href="/notas">Abrir minhas notas</Link>}
           <Button variant="outline" className="ss-outline" onClick={onBack}>Voltar ao Estudar</Button>
@@ -345,13 +487,16 @@ export function StudySession({ onBack }: { onBack: () => void }) {
     <section className="ss-session" aria-labelledby="ss-stage-title">
       <div className="ss-toolbar">
         <div>
-          <p className="eyebrow">{studyLesson.eyebrow}</p>
-          <h1 id="ss-stage-title" ref={headingRef} tabIndex={-1}>{studyLesson.title}</h1>
+          <p className="eyebrow">{session.disciplineTitle.toUpperCase()} · {session.contentId}</p>
+          <h1 id="ss-stage-title" ref={headingRef} tabIndex={-1}>{session.contentTitle}</h1>
         </div>
         <div className="ss-toolbar-actions">
-          <span className="ss-clock" role="timer" aria-label={`Tempo de sessão ${formatElapsed(elapsed)}`}>
-            <Clock3 size={15} aria-hidden="true" /> {formatElapsed(elapsed)}
+          <span className={`ss-clock${running ? '' : ' paused'}`} role="timer" aria-label={`Tempo de sessão ${formatElapsed(elapsed)}${running ? '' : ', pausada'}`}>
+            <Clock3 size={15} aria-hidden="true" /> {formatElapsed(elapsed)}{running ? '' : ' · pausada'}
           </span>
+          <Button variant="outline" className="ss-outline" onClick={() => void pauseOrResume()} disabled={busy}>
+            {running ? <><Pause size={16} /> Pausar</> : <><Play size={16} /> Retomar</>}
+          </Button>
           <Button
             ref={libraryButtonRef}
             variant="outline"
@@ -362,12 +507,22 @@ export function StudySession({ onBack }: { onBack: () => void }) {
           >
             <Library size={16} /> Biblioteca
           </Button>
-          <Button className="primary-button" onClick={() => setStage('encerramento')}>Encerrar sessão</Button>
+          <Button className="primary-button" onClick={() => setStage('encerramento')}>Concluir sessão</Button>
         </div>
       </div>
+      {sessionError && <p className="ss-error" role="alert">{sessionError}</p>}
+      {!running && (
+        <div className="ss-paused" aria-live="polite">
+          <span>Sessão pausada. O tempo não conta e o seu ponto atual está salvo.</span>
+          <Button variant="outline" className="ss-outline" onClick={() => void pauseOrResume()} disabled={busy}><Play size={16} /> Retomar</Button>
+          <Button variant="outline" className="ss-outline" onClick={onBack}>Sair e voltar depois</Button>
+        </div>
+      )}
 
       <div className="ss-layout">
         <article className="ss-material">
+          {hasMaterial ? (
+          <>
           <nav className="ss-steps" aria-label="Etapas da sessão">
             <ol>
               {sessionPlan.map((step, index) => {
@@ -502,6 +657,19 @@ export function StudySession({ onBack }: { onBack: () => void }) {
               </Button>
             )}
           </div>
+          </>
+          ) : (
+            <div className="ss-step">
+              <h2><BookOpen size={18} aria-hidden="true" /> {session.contentTitle}</h2>
+              <p>
+                O material deste conteúdo ainda não está cadastrado no Atlas. Estude pela sua aula ou apostila e registre ao lado,
+                com suas palavras, o que aprendeu: a nota fica vinculada a este conteúdo.
+              </p>
+              <p className="ss-key">
+                Pause quando precisar parar: o tempo para de contar e o ponto atual fica salvo. Ao concluir, o quiz do conteúdo é liberado.
+              </p>
+            </div>
+          )}
         </article>
 
         <div className="ss-side">

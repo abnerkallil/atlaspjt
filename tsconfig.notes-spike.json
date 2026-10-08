@@ -51,7 +51,11 @@
     "lib/note-versions.ts",
     "components/notes-history.ts",
     "tests/note-history.test.ts",
-    "tests/backup.test.ts"
+    "tests/backup.test.ts",
+    "lib/study-sessions.ts",
+    "tests/study-sessions.test.ts",
+    "lib/study-plan.ts",
+    "tests/study-plan.test.ts"
   ],
   "exclude": [
     "node_modules"

@@ -3,9 +3,20 @@
 import { useEffect, useRef } from 'react';
 import { ArrowRight, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { sessionModal } from '@/lib/demo/study';
 
-export function SessionStartModal({ onClose, onStart }: { onClose: () => void; onStart: () => void }) {
+export function SessionStartModal({
+  title,
+  description,
+  onClose,
+  onStart,
+  starting = false,
+}: {
+  title: string;
+  description: string;
+  onClose: () => void;
+  onStart: () => void;
+  starting?: boolean;
+}) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     const dialog = ref.current;
@@ -24,11 +35,13 @@ export function SessionStartModal({ onClose, onStart }: { onClose: () => void; o
     >
       <div className="modal-symbol"><BookOpen size={24} /></div>
       <p className="eyebrow">SESSÃO PREPARADA</p>
-      <h2 id="session-modal-title">{sessionModal.title}</h2>
-      <p>{sessionModal.description}</p>
+      <h2 id="session-modal-title">{title}</h2>
+      <p>{description}</p>
       <div className="modal-actions">
         <Button variant="outline" onClick={onClose}>Agora não</Button>
-        <Button className="primary-button" onClick={onStart}>Iniciar sessão <ArrowRight size={17} /></Button>
+        <Button className="primary-button" onClick={onStart} disabled={starting}>
+          {starting ? 'Abrindo…' : 'Iniciar sessão'} <ArrowRight size={17} />
+        </Button>
       </div>
     </dialog>
   );

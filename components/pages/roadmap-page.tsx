@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { AlertTriangle, Check, LockKeyhole, Map as MapIcon, Play, Route } from 'lucide-react';
 import { PageHeading } from '@/components/atlas/page-heading';
 import { ProgressBar } from '@/components/atlas/progress-bar';
@@ -8,6 +9,10 @@ import { CONTENT_STATE_META, LOCKED_META } from '@/lib/pedagogy/state-labels';
 import { isPrerequisiteMet } from '@/lib/pedagogy/prerequisites';
 import type { AuditEntry } from '@/lib/pedagogy/transitions';
 import type { RoadmapContentView, RoadmapView } from '@/lib/roadmap-store';
+import type { ContentState } from '@/lib/pedagogy/states';
+
+// Estados em que dá para abrir uma sessão de estudo do conteúdo (MVP-02).
+const STUDYABLE = new Set<ContentState>(['nao-iniciado', 'em-estudo', 'bloqueado', 'em-revisao-ativa']);
 
 type LoadState =
   | { status: 'loading' }
@@ -54,6 +59,7 @@ export function RoadmapPage() {
   const [disciplineId, setDisciplineId] = useState<string | null>(null);
   const [contentId, setContentId] = useState<string | null>(null);
   const [starting, setStarting] = useState(false);
+  const router = useRouter();
   const [actionError, setActionError] = useState<string | null>(null);
   const detailRef = useRef<HTMLElement>(null);
 
@@ -118,8 +124,15 @@ export function RoadmapPage() {
     setStarting(true);
     setActionError(null);
     try {
-      await readJson(await fetch(`/api/roadmap/conteudos/${encodeURIComponent(content.id)}/estudar`, { method: 'POST' }));
-      setData(await fetchRoadmapData());
+      // MVP-02: começar a estudar abre uma sessão (ou retoma a aberta) e leva para ela.
+      const { session } = await readJson<{ session: { id: string } }>(
+        await fetch('/api/sessoes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contentId: content.id }),
+        }),
+      );
+      router.push(`/estudar?sessao=${encodeURIComponent(session.id)}`);
     } catch (error) {
       setActionError(error instanceof Error ? error.message : 'Não foi possível começar.');
     } finally {
@@ -256,9 +269,10 @@ export function RoadmapPage() {
             </div>
           )}
 
-          {content.state === 'nao-iniciado' && !content.locked && (
+          {!content.locked && STUDYABLE.has(content.state) && (
             <button className="primary-button rm-start" onClick={() => void start()} disabled={starting}>
-              <Play size={15} /> {starting ? 'Começando…' : 'Começar a estudar'}
+              <Play size={15} />{' '}
+              {starting ? 'Abrindo sessão…' : content.state === 'nao-iniciado' ? 'Começar a estudar' : 'Estudar'}
             </button>
           )}
           {actionError && <p className="rm-error" role="alert">{actionError}</p>}

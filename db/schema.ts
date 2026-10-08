@@ -6,6 +6,7 @@ import {
   text,
   uniqueIndex,
 } from 'drizzle-orm/sqlite-core';
+import { sql } from 'drizzle-orm';
 
 export const atlasNoteFolders = sqliteTable('atlas_note_folders', {
   id: text('id').primaryKey(),
@@ -282,5 +283,45 @@ export const atlasStateAudit = sqliteTable(
   (table) => [
     index('idx_atlas_state_audit_entity').on(table.entityType, table.entityId, table.occurredAt),
     index('idx_atlas_state_audit_occurred').on(table.occurredAt),
+  ],
+);
+
+// ---------------------------------------------------------------------------
+// Sessões de estudo (MVP-02, migradas junto do card como manda o DEC-010).
+// Uma sessão é um período de estudo de um conteúdo: começa, pausa, retoma e é
+// concluída; guarda o ponto atual (checkpoint) para retomar de onde parou e,
+// ao concluir, registra uma evidência (TEC-06) e leva o conteúdo de
+// "em estudo" para "aguardando quiz" (DEC-03).
+// ---------------------------------------------------------------------------
+
+export const atlasStudySessions = sqliteTable(
+  'atlas_study_sessions',
+  {
+    id: text('id').primaryKey(),
+    contentId: text('content_id')
+      .notNull()
+      .references(() => atlasContents.id, { onDelete: 'cascade' }),
+    // "em-andamento", "pausada" ou "concluida" (lib/study-sessions.ts).
+    status: text('status').notNull(),
+    startedAt: text('started_at').notNull(),
+    updatedAt: text('updated_at').notNull(),
+    // Início do trecho em andamento; nulo quando pausada ou concluída.
+    lastResumedAt: text('last_resumed_at'),
+    // Tempo de estudo acumulado até o último pause, em segundos.
+    activeSeconds: integer('active_seconds').notNull().default(0),
+    // Ponto atual para retomar (etapa, etapas feitas, nota da sessão), em JSON.
+    checkpointJson: text('checkpoint_json'),
+    finishedAt: text('finished_at'),
+    evidenceId: text('evidence_id').references(() => atlasEvidences.id, {
+      onDelete: 'set null',
+    }),
+  },
+  (table) => [
+    index('idx_atlas_study_sessions_content').on(table.contentId, table.startedAt),
+    index('idx_atlas_study_sessions_updated').on(table.status, table.updatedAt),
+    // No máximo uma sessão aberta (não concluída) por conteúdo.
+    uniqueIndex('uq_atlas_study_sessions_open_content')
+      .on(table.contentId)
+      .where(sql`status <> 'concluida'`),
   ],
 );
