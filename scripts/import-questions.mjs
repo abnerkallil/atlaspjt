@@ -19,7 +19,9 @@ import {
 } from 'node:fs';
 import { parseArgs } from 'node:util';
 import {
+  lintQuestions,
   parseCsv,
+  parseJsonV2,
   questionsSql,
   rowsToQuestions,
 } from './lib/question-bank.mjs';
@@ -56,14 +58,29 @@ await runCli(async () => {
       'seed-migration': { type: 'string' },
     },
   });
-  const file = requireOption(values, 'file', 'o arquivo CSV');
+  const file = requireOption(values, 'file', 'o arquivo CSV ou JSON v2');
   if (!existsSync(file)) throw new Error(`Arquivo não encontrado: ${file}`);
-  const questions = rowsToQuestions(parseCsv(readFileSync(file, 'utf8')));
+  const text = readFileSync(file, 'utf8');
+  const rows = file.endsWith('.json') ? parseJsonV2(text) : parseCsv(text);
+  const questions = rowsToQuestions(rows);
   if (questions.length === 0)
     throw new Error('O arquivo não tem nenhuma questão.');
   console.log(
     `${questions.length} questão(ões) válidas (${summary(questions)}).`,
   );
+
+  const issues = lintQuestions(questions);
+  if (issues.length > 0) {
+    for (const issue of issues) {
+      console.log(`Linha ${issue.line} (${issue.id}) [${issue.severity}]: ${issue.message}`);
+    }
+    const errors = issues.filter((issue) => issue.severity === 'erro');
+    if (errors.length > 0) {
+      throw new Error(
+        `${errors.length} erro(s) de linter — corrija antes de importar.`,
+      );
+    }
+  }
 
   if (values.check) return;
   if (values['seed-migration']) {
