@@ -8,6 +8,13 @@ import {
   currentState,
   type D1Like,
 } from './pedagogy/transitions.js';
+import {
+  correctiveReady,
+  reviewStageFor,
+  reviewSummary,
+  type ReviewStage,
+  type ReviewSummary,
+} from './reviews.js';
 
 export const QUESTION_KINDS = ['multipla', 'dissertativa', 'calculo'] as const;
 export type QuestionKind = (typeof QUESTION_KINDS)[number];
@@ -85,13 +92,19 @@ export type QuestionResult = {
 
 // em-andamento → (com dissertativas) autoavaliacao → enviado.
 export type AttemptStatus = 'em-andamento' | 'autoavaliacao' | 'enviado';
-export type QuizPurpose = 'quiz';
+// "quiz" do conteúdo (MVP-04); "revisao" 24h/7d/30d e "corretivo" depois de
+// falhar a revisão (MVP-06).
+export type QuizPurpose = 'quiz' | 'revisao' | 'corretivo';
 
 export type QuizAttempt = {
   id: string;
   contentId: string;
   contentTitle: string;
   purpose: QuizPurpose;
+  // Etapa da revisão (24h, 7d, 30d) em revisão e corretivo.
+  stage: ReviewStage | null;
+  // Resumo da revisão depois do envio.
+  review: ReviewSummary | null;
   status: AttemptStatus;
   startedAt: string;
   deadlineAt: string | null;
@@ -355,6 +368,10 @@ type AttemptRow = {
   content_id: string;
   content_title: string;
   purpose: QuizPurpose;
+  // Etapa da revisão (24h, 7d, 30d) em revisão e corretivo.
+  stage: ReviewStage | null;
+  // Resumo da revisão depois do envio.
+  review: ReviewSummary | null;
   status: AttemptStatus;
   started_at: string;
   deadline_at: string | null;
@@ -371,19 +388,23 @@ const SELECT_ATTEMPT = `SELECT a.*, c.title AS content_title FROM atlas_quiz_att
   JOIN atlas_contents c ON c.id = a.content_id`;
 
 function attemptFromRow(row: AttemptRow): QuizAttempt {
-  const stored = parseJson<{ questions: PublicQuestion[]; late?: boolean }>(
-    row.questions_json,
-  );
+  const stored = parseJson<{
+    questions: PublicQuestion[];
+    stage?: ReviewStage | null;
+  }>(row.questions_json);
   const results = parseJson<{
     results?: QuestionResult[];
     late?: boolean;
     modelAnswers?: Record<string, string>;
+    review?: ReviewSummary;
   }>(row.result_json);
   return {
     id: row.id,
     contentId: row.content_id,
     contentTitle: row.content_title,
     purpose: row.purpose,
+    stage: stored?.stage ?? null,
+    review: results?.review ?? null,
     status: row.status,
     startedAt: row.started_at,
     deadlineAt: row.deadline_at,
@@ -426,47 +447,71 @@ export async function listAttempts(
   return results.map(attemptFromRow);
 }
 
-// Conteúdos com quiz liberado (estado "aguardando quiz", DEC-03), com o
-// tamanho do banco e a tentativa em andamento, se houver.
+// Quizzes liberados: quiz do conteúdo ("aguardando quiz"), revisão
+// ("aguardando revisão") e corretivo ("em revisão ativa"), com o tamanho do
+// banco e a tentativa em andamento, se houver.
 export type QuizQueueItem = {
   contentId: string;
   contentTitle: string;
   disciplineTitle: string;
+  purpose: QuizPurpose;
+  stage: ReviewStage | null;
+  // Corretivo antes de uma nova sessão de estudo: aparece, mas não abre.
+  ready: boolean;
   questionCount: number;
   openAttemptId: string | null;
   attempts: number;
 };
 
+const PURPOSE_BY_STATE: Record<string, QuizPurpose> = {
+  'aguardando-quiz': 'quiz',
+  'aguardando-revisao': 'revisao',
+  'em-revisao-ativa': 'corretivo',
+};
+
 export async function listQuizQueue(db: D1Like): Promise<QuizQueueItem[]> {
   const { results } = await db
     .prepare(
-      `SELECT c.id, c.title, d.title AS discipline_title,
+      `SELECT c.id, c.title, d.title AS discipline_title, s.state,
               (SELECT COUNT(*) FROM atlas_questions q WHERE q.content_id = c.id AND q.active = 1) AS question_count,
-              (SELECT a.id FROM atlas_quiz_attempts a WHERE a.content_id = c.id AND a.purpose = 'quiz' AND a.status <> 'enviado') AS open_attempt,
-              (SELECT COUNT(*) FROM atlas_quiz_attempts a WHERE a.content_id = c.id AND a.purpose = 'quiz' AND a.status = 'enviado') AS attempts
+              (SELECT a.id FROM atlas_quiz_attempts a WHERE a.content_id = c.id AND a.status <> 'enviado') AS open_attempt
        FROM atlas_content_states s
        JOIN atlas_contents c ON c.id = s.content_id
        JOIN atlas_disciplines d ON d.id = c.discipline_id
        JOIN atlas_phases p ON p.id = d.phase_id
-       WHERE s.state = 'aguardando-quiz'
+       WHERE s.state IN ('aguardando-quiz', 'aguardando-revisao', 'em-revisao-ativa')
        ORDER BY s.updated_at, p.position, d.position, c.position`,
     )
     .all<{
       id: string;
       title: string;
       discipline_title: string;
+      state: string;
       question_count: number;
       open_attempt: string | null;
-      attempts: number;
     }>();
-  return results.map((row) => ({
-    contentId: row.id,
-    contentTitle: row.title,
-    disciplineTitle: row.discipline_title,
-    questionCount: Number(row.question_count),
-    openAttemptId: row.open_attempt,
-    attempts: Number(row.attempts),
-  }));
+  const queue: QuizQueueItem[] = [];
+  for (const row of results) {
+    const purpose = PURPOSE_BY_STATE[row.state];
+    const attempts = await db
+      .prepare(
+        `SELECT COUNT(*) AS n FROM atlas_quiz_attempts WHERE content_id = ?1 AND purpose = ?2 AND status = 'enviado'`,
+      )
+      .bind(row.id, purpose)
+      .first<{ n: number }>();
+    queue.push({
+      contentId: row.id,
+      contentTitle: row.title,
+      disciplineTitle: row.discipline_title,
+      purpose,
+      stage: purpose === 'quiz' ? null : await reviewStageFor(db, row.id),
+      ready: purpose !== 'corretivo' || (await correctiveReady(db, row.id)),
+      questionCount: Number(row.question_count),
+      openAttemptId: row.open_attempt,
+      attempts: Number(attempts?.n ?? 0),
+    });
+  }
+  return queue;
 }
 
 function addSeconds(iso: string, seconds: number) {
@@ -483,19 +528,27 @@ export async function startQuiz(
   const now = options.now ?? new Date().toISOString();
   const open = await db
     .prepare(
-      `SELECT id FROM atlas_quiz_attempts WHERE content_id = ?1 AND purpose = 'quiz' AND status <> 'enviado'`,
+      `SELECT id FROM atlas_quiz_attempts WHERE content_id = ?1 AND status <> 'enviado'`,
     )
     .bind(contentId)
     .first<{ id: string }>();
   if (open) return (await getAttempt(db, open.id))!;
 
   const state = await currentState(db, 'conteudo', contentId);
-  if (state !== 'aguardando-quiz') {
+  const purpose = PURPOSE_BY_STATE[state];
+  if (!purpose) {
     throw new QuizError(
       'O quiz deste conteúdo é liberado ao concluir uma sessão de estudo.',
       409,
     );
   }
+  if (purpose === 'corretivo' && !(await correctiveReady(db, contentId))) {
+    throw new QuizError(
+      'Estude o conteúdo de novo antes do quiz corretivo: conclua uma sessão de estudo.',
+      409,
+    );
+  }
+  const stage = purpose === 'quiz' ? null : await reviewStageFor(db, contentId);
   const id = options.id ?? crypto.randomUUID();
   const chosen = selectQuestions(await listQuestions(db, contentId), id);
   if (chosen.length === 0) {
@@ -521,7 +574,7 @@ export async function startQuiz(
     db
       .prepare(
         `INSERT INTO atlas_quiz_attempts (id, content_id, purpose, status, started_at, deadline_at, questions_json)
-         VALUES (?1, ?2, 'quiz', 'em-andamento', ?3, ?4, ?5)`,
+         VALUES (?1, ?2, ?6, 'em-andamento', ?3, ?4, ?5)`,
       )
       .bind(
         id,
@@ -532,7 +585,9 @@ export async function startQuiz(
           questionIds: chosen.map((item) => item.id),
           optionOrders,
           questions: shown.map(publicQuestion),
+          stage,
         }),
+        purpose,
       ),
   ]);
   return (await getAttempt(db, id))!;
@@ -674,16 +729,21 @@ export async function submitQuiz(
     : null;
   const late = locked ? lockInfo?.late === true : isLate(row, now);
   const evidenceId = options.evidenceId ?? crypto.randomUUID();
-  const summary = `Quiz ${passed ? 'aprovado' : 'reprovado'}: ${correct}/${counted} (${score}%).`;
+  const stage = parseJson<{ stage?: ReviewStage | null }>(row.questions_json)?.stage ?? null;
+  const label =
+    row.purpose === 'quiz' ? 'Quiz' : row.purpose === 'revisao' ? `Revisão de ${stage ?? '?'}` : `Quiz corretivo (${stage ?? '?'})`;
+  const verdict = row.purpose === 'revisao' ? (passed ? 'aprovada' : 'reprovada') : passed ? 'aprovado' : 'reprovado';
+  const summary = `${label} ${verdict}: ${correct}/${counted} (${score}%).`;
+  const evidenceKind = row.purpose === 'quiz' ? 'quiz' : 'revisao';
 
   const [, updated] = await db.batch([
     db
       .prepare(
         `INSERT INTO atlas_evidences (id, content_id, subtopic_id, kind, source_ref, summary, recorded_at)
-         SELECT ?1, ?2, NULL, 'quiz', ?3, ?4, ?5
+         SELECT ?1, ?2, NULL, ?7, ?3, ?4, ?5
          WHERE EXISTS (SELECT 1 FROM atlas_quiz_attempts WHERE id = ?3 AND status = ?6)`,
       )
-      .bind(evidenceId, row.content_id, attemptId, summary, now, row.status),
+      .bind(evidenceId, row.content_id, attemptId, summary, now, row.status, evidenceKind),
     db
       .prepare(
         `UPDATE atlas_quiz_attempts
@@ -704,21 +764,36 @@ export async function submitQuiz(
   if (!updated || updated.meta.changes !== 1)
     throw new QuizError('Esta tentativa já foi enviada.', 409);
 
-  if (
-    row.purpose === 'quiz' &&
-    (await currentState(db, 'conteudo', row.content_id)) === 'aguardando-quiz'
-  ) {
+  const state = await currentState(db, 'conteudo', row.content_id);
+  const minimum = `(mínimo ${PASSING_SCORE}%)`;
+  const transition =
+    row.purpose === 'quiz' && state === 'aguardando-quiz'
+      ? {
+          event: passed ? 'quiz-aprovado' : 'quiz-reprovado',
+          reason: passed
+            ? `Quiz aprovado com ${score}% ${minimum}.`
+            : `Quiz reprovado com ${score}% ${minimum}; estude de novo para refazer.`,
+        }
+      : row.purpose === 'revisao' && state === 'aguardando-revisao'
+        ? {
+            event: passed ? 'revisao-aprovada' : 'revisao-reprovada',
+            reason: passed
+              ? `Revisão de ${stage} aprovada com ${score}% ${minimum}.`
+              : `Revisão de ${stage} reprovada com ${score}% ${minimum}; o conteúdo foi reaberto.`,
+          }
+        : row.purpose === 'corretivo' && state === 'em-revisao-ativa' && passed
+          ? { event: 'revisao-aprovada', reason: `Quiz corretivo aprovado com ${score}% ${minimum}: domínio mostrado de novo.` }
+          : null;
+  if (transition) {
     try {
       await applyTransition(
         db,
         {
           entityType: 'conteudo',
           entityId: row.content_id,
-          event: passed ? 'quiz-aprovado' : 'quiz-reprovado',
+          event: transition.event,
           actor: 'sistema',
-          reason: passed
-            ? `Quiz aprovado com ${score}% (mínimo ${PASSING_SCORE}%).`
-            : `Quiz reprovado com ${score}% (mínimo ${PASSING_SCORE}%); estude de novo para refazer.`,
+          reason: transition.reason,
           evidenceId,
         },
         { now },
@@ -727,6 +802,17 @@ export async function submitQuiz(
       if (!(error instanceof TransitionError && error.code === 'conflict'))
         throw error;
     }
+  }
+  if (row.purpose !== 'quiz' && stage) {
+    const review = await reviewSummary(db, row.content_id, stage, passed);
+    await db.batch([
+      db
+        .prepare('UPDATE atlas_quiz_attempts SET result_json = ?2 WHERE id = ?1')
+        .bind(
+          attemptId,
+          JSON.stringify({ results, late, modelAnswers: lockInfo?.modelAnswers, review }),
+        ),
+    ]);
   }
   return (await getAttempt(db, attemptId))!;
 }

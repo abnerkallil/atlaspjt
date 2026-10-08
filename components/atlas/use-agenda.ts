@@ -22,7 +22,7 @@ async function readJson<T>(response: Response): Promise<T> {
 async function loadAgenda(): Promise<AgendaState> {
   try {
     const body = await readJson<{ today: string; items: AgendaItem[] }>(
-      await fetch(`/api/agenda?hoje=${localDate()}&dias=7`),
+      await fetch(`/api/agenda?hoje=${localDate()}&fuso=${new Date().getTimezoneOffset()}&dias=7`),
     );
     return { status: 'ready', today: body.today, items: body.items };
   } catch (error) {
