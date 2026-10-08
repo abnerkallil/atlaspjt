@@ -16,3 +16,4 @@ export * from './item-stats.js';
 export * from './item-audit.js';
 export * from './plans.js';
 export * from './selector.js';
+export * from './corrector.js';

@@ -170,3 +170,32 @@ por último.
 Ainda não tem rota própria nem está ligado a `startQuiz`
 (`lib/quizzes.ts`) — isso fica para quando um card ligar o seletor à tela de
 verdade.
+
+## Corretor e boletim (APO-13, DEC-016)
+
+A correção que já existia em `lib/quizzes.ts` (`gradeQuestion`,
+`scoreResults`) mudou de casa para `lib/apolo/corrector.ts`, **sem mudar
+nenhuma regra**: mesma lógica, função por função, só realocada — o critério
+de aceite do card é que toda tentativa antiga, recorrigida com o código
+novo, dê exatamente a mesma nota de antes (conferido pelos testes que já
+existiam em `tests/quizzes.test.ts`, incluindo os do PR #38/#39 de refazer
+quiz sem mudar nota). `lib/quizzes.ts` agora importa essas funções do Apolo
+e as reexporta com os mesmos nomes (`gradeQuestion`, `scoreResults`,
+`PASSING_SCORE`, `VERIFICATION_MINIMUM`), então nenhum chamador precisou
+mudar.
+
+**Boletim** (`buildBoletim`): empacota um resultado já calculado — não é um
+novo estado gravado nem recalcula nada; o resultado de uma tentativa já é
+imutável desde o envio (`atlas_quiz_attempts.result_json` nunca é
+reescrito, DEC-04/DEC-10). O boletim soma a versão do corretor
+(`APOLO_CORRECTOR_VERSION`), a versão do plano (APO-11, quando aplicável) e,
+por questão, o motivo (`correta`/`incorreta`/`anulada`) — pronto para
+exibir ou auditar depois.
+
+**Gabarito comentado por alternativa:** o schema já tem o campo
+`optionExplanations`/`option_explanations_json` (APO-03), mas ele continua
+sem ser lido em nenhum lugar — ligar essa leitura ao resultado do quiz
+fica fora do escopo mínimo deste card (nenhuma rota ou tela pede isso
+ainda) e é uma decisão disponível para um card futuro, não deste.
+
+Gate: DEC-016, já ACEITO (PR #42) — nenhum Raf Gate novo para este card.
