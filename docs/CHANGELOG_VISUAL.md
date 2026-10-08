@@ -439,3 +439,21 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 - Se algo der errado: reverter para `restore/pre-apo-13` traz a correção de
   volta a `lib/quizzes.ts` sem perder nenhuma nota já gravada (o resultado
   de cada tentativa enviada é imutável e não muda com este PR).
+
+## PR #56 — Quiz do conteúdo pelo Apolo (APO-14)
+
+- Ponto de restauração: branch `restore/pre-apo-14` (commit `f032cb6`, main antes do merge).
+- Sem migration nova. Sem rota nova. Formato gravado na tentativa não muda.
+- O que muda no site: **nada, por enquanto** — o quiz passa a pedir a
+  prova ao seletor do Apolo (APO-12) só quando o conteúdo já tem banco
+  classificado por tema o bastante (10 questões, DEC-10); como nenhum
+  conteúdo real foi classificado ainda (falta o APO-08, carga inicial, que
+  é trabalho humano do Abner), todo quiz de hoje continua exatamente no
+  sorteio local de sempre. Quando um conteúdo for classificado, o quiz
+  dele passa a priorizar recuperação vencida, depois subtópico fraco,
+  depois cobertura do plano — mas a nota mínima (70%), o quiz dirigido
+  (as erradas voltam na hora ao refazer) e o próximo conteúdo travado até
+  passar continuam exatamente iguais.
+- Se algo der errado: reverter para `restore/pre-apo-14` traz o sorteio
+  local de volta para todo conteúdo, sem perder nenhuma tentativa ou nota
+  já gravada.
