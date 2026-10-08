@@ -266,7 +266,7 @@ void test('aprovado: grava evidência, nota e leva o conteúdo a "concluído"', 
   );
 });
 
-void test('reprovado: abaixo do mínimo bloqueia o conteúdo (DEC-04) e a próxima tentativa exige estudar de novo', async () => {
+void test('reprovado: abaixo do mínimo bloqueia o conteúdo (DEC-04) e o quiz se refaz direto até passar', async () => {
   const { db } = await readyForQuiz();
   await startQuiz(db, 'CG-001', { now: at(100), id: 'a1' });
   const failed = await submitQuiz(db, 'a1', {}, { now: at(200) });
@@ -274,10 +274,12 @@ void test('reprovado: abaixo do mínimo bloqueia o conteúdo (DEC-04) e a próxi
   assert.ok((failed.score ?? 100) < PASSING_SCORE);
   assert.equal(await currentState(db, 'conteudo', 'CG-001'), 'bloqueado');
   assert.equal((await listAudit(db))[0].event, 'quiz-reprovado');
-  await assert.rejects(
-    startQuiz(db, 'CG-001', { now: at(300) }),
-    /liberado ao concluir uma sessão/,
-  );
+  // Refaz direto, sem nova sessão: reprovar de novo continua bloqueado.
+  const retry = await startQuiz(db, 'CG-001', { now: at(300), id: 'a2' });
+  assert.equal(retry.purpose, 'quiz');
+  await submitQuiz(db, 'a2', {}, { now: at(400) });
+  assert.equal(await currentState(db, 'conteudo', 'CG-001'), 'bloqueado');
+  assert.equal((await listAudit(db))[0].event, 'quiz-reprovado');
 });
 
 void test('envio depois do prazo é aceito e marcado como atrasado', async () => {

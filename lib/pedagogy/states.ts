@@ -51,6 +51,7 @@ export const CONTENT_TRANSITIONS: Transition<ContentState>[] = [
   { event: 'encerrar-sessao', from: 'em-estudo', to: 'aguardando-quiz', requiresConfirmation: false, description: 'Saiu da sessão de estudo; o quiz do conteúdo foi gerado.' },
   { event: 'quiz-aprovado', from: 'aguardando-quiz', to: 'concluido', requiresConfirmation: false, requiresEvidence: true, description: 'Passou no quiz; evidência registrada.' },
   { event: 'quiz-reprovado', from: 'aguardando-quiz', to: 'bloqueado', requiresConfirmation: false, description: 'Reprovou no quiz; a conclusão da matéria fica congelada.' },
+  { event: 'quiz-aprovado', from: 'bloqueado', to: 'concluido', requiresConfirmation: false, requiresEvidence: true, description: 'Passou ao refazer o quiz; evidência registrada.' },
   { event: 'revisao-vencida', from: 'concluido', to: 'aguardando-revisao', requiresConfirmation: false, description: 'Chegou o prazo de revisão (24h/7d/30d).' },
   { event: 'revisao-vencida', from: 'revalidado', to: 'aguardando-revisao', requiresConfirmation: false, description: 'Chegou o próximo prazo de revisão (7d/30d).' },
   { event: 'revisao-aprovada', from: 'aguardando-revisao', to: 'revalidado', requiresConfirmation: false, description: 'Passou na revisão.' },

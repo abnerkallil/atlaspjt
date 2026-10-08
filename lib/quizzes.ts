@@ -9,7 +9,6 @@ import {
   type D1Like,
 } from './pedagogy/transitions.js';
 import {
-  correctiveReady,
   reviewStageFor,
   reviewSummary,
   type ReviewStage,
@@ -463,8 +462,6 @@ export type QuizQueueItem = {
   disciplineTitle: string;
   purpose: QuizPurpose;
   stage: ReviewStage | null;
-  // Corretivo antes de uma nova sessão de estudo: aparece, mas não abre.
-  ready: boolean;
   questionCount: number;
   openAttemptId: string | null;
   attempts: number;
@@ -472,6 +469,8 @@ export type QuizQueueItem = {
 
 const PURPOSE_BY_STATE: Record<string, QuizPurpose> = {
   'aguardando-quiz': 'quiz',
+  // Reprovado: refaz o quiz direto (ou revisa antes) até passar com 70%.
+  bloqueado: 'quiz',
   'aguardando-revisao': 'revisao',
   'em-revisao-ativa': 'corretivo',
 };
@@ -486,7 +485,7 @@ export async function listQuizQueue(db: D1Like): Promise<QuizQueueItem[]> {
        JOIN atlas_contents c ON c.id = s.content_id
        JOIN atlas_disciplines d ON d.id = c.discipline_id
        JOIN atlas_phases p ON p.id = d.phase_id
-       WHERE s.state IN ('aguardando-quiz', 'aguardando-revisao', 'em-revisao-ativa')
+       WHERE s.state IN ('aguardando-quiz', 'bloqueado', 'aguardando-revisao', 'em-revisao-ativa')
        ORDER BY s.updated_at, p.position, d.position, c.position`,
     )
     .all<{
@@ -512,7 +511,6 @@ export async function listQuizQueue(db: D1Like): Promise<QuizQueueItem[]> {
       disciplineTitle: row.discipline_title,
       purpose,
       stage: purpose === 'quiz' ? null : await reviewStageFor(db, row.id),
-      ready: purpose !== 'corretivo' || (await correctiveReady(db, row.id)),
       questionCount: Number(row.question_count),
       openAttemptId: row.open_attempt,
       attempts: Number(attempts?.n ?? 0),
@@ -546,12 +544,6 @@ export async function startQuiz(
   if (!purpose) {
     throw new QuizError(
       'O quiz deste conteúdo é liberado ao concluir uma sessão de estudo.',
-      409,
-    );
-  }
-  if (purpose === 'corretivo' && !(await correctiveReady(db, contentId))) {
-    throw new QuizError(
-      'Estude o conteúdo de novo antes do quiz corretivo: conclua uma sessão de estudo.',
       409,
     );
   }
@@ -786,12 +778,12 @@ export async function submitQuiz(
   const state = await currentState(db, 'conteudo', row.content_id);
   const minimum = `(mínimo ${PASSING_SCORE}%)`;
   const transition =
-    row.purpose === 'quiz' && state === 'aguardando-quiz'
+    row.purpose === 'quiz' && (state === 'aguardando-quiz' || (state === 'bloqueado' && passed))
       ? {
           event: passed ? 'quiz-aprovado' : 'quiz-reprovado',
           reason: passed
-            ? `Quiz aprovado com ${score}% ${minimum}.`
-            : `Quiz reprovado com ${score}% ${minimum}; estude de novo para refazer.`,
+            ? `Quiz aprovado com ${score}% ${minimum}${state === 'bloqueado' ? ' ao refazer' : ''}.`
+            : `Quiz reprovado com ${score}% ${minimum}; refaça o quiz (revise as notas antes, se quiser) até passar.`,
         }
       : row.purpose === 'revisao' && state === 'aguardando-revisao'
         ? {

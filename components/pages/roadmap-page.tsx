@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { AlertTriangle, Check, LockKeyhole, Map as MapIcon, Play, Route } from 'lucide-react';
+import { AlertTriangle, Check, LockKeyhole, Map as MapIcon, Play, RotateCcw, Route } from 'lucide-react';
 import { PageHeading } from '@/components/atlas/page-heading';
 import { ProgressBar } from '@/components/atlas/progress-bar';
 import { CONTENT_STATE_META, LOCKED_META } from '@/lib/pedagogy/state-labels';
@@ -101,6 +101,8 @@ export function RoadmapPage() {
   const discipline = phase.disciplines.find((item) => item.id === disciplineId) ?? phase.disciplines[0];
   const nextUp = discipline.contents.find((item) => !item.locked && !isPrerequisiteMet(item.state));
   const content = discipline.contents.find((item) => item.id === contentId) ?? nextUp ?? discipline.contents[0];
+  // Reprovou no quiz (ou na revisão): o quiz se refaz direto até passar.
+  const retake = content.state === 'bloqueado' || content.state === 'em-revisao-ativa';
   const available = phase.disciplines
     .flatMap((item) => item.contents)
     .filter((item) => !item.locked && !isPrerequisiteMet(item.state)).length;
@@ -270,10 +272,15 @@ export function RoadmapPage() {
             </div>
           )}
 
+          {retake && (
+            <Link className="primary-button rm-start" href={`/quizzes?conteudo=${encodeURIComponent(content.id)}`}>
+              <RotateCcw size={15} /> {content.state === 'bloqueado' ? 'Refazer o quiz' : 'Fazer o quiz corretivo'}
+            </Link>
+          )}
           {!content.locked && STUDYABLE.has(content.state) && (
-            <button className="primary-button rm-start" onClick={() => void start()} disabled={starting}>
+            <button className={retake ? 'qz-outline rm-start rm-start-alt' : 'primary-button rm-start'} onClick={() => void start()} disabled={starting}>
               <Play size={15} />{' '}
-              {starting ? 'Abrindo sessão…' : content.state === 'nao-iniciado' ? 'Começar a estudar' : 'Estudar'}
+              {starting ? 'Abrindo sessão…' : content.state === 'nao-iniciado' ? 'Começar a estudar' : retake ? 'Revisar as notas antes' : 'Estudar'}
             </button>
           )}
           {actionError && <p className="rm-error" role="alert">{actionError}</p>}

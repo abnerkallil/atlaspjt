@@ -12,7 +12,7 @@ export type NextStudy =
 
 const NEEDS_ATTENTION: { state: ContentState; reason: string }[] = [
   { state: 'em-revisao-ativa', reason: 'Reaberto após falhar na revisão.' },
-  { state: 'bloqueado', reason: 'Bloqueado pelo quiz: estude de novo para refazer.' },
+  { state: 'bloqueado', reason: 'Bloqueado pelo quiz: revise as notas e refaça o quiz até passar.' },
   { state: 'em-estudo', reason: 'Você começou este conteúdo e ainda não encerrou.' },
 ];
 

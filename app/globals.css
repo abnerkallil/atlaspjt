@@ -569,6 +569,8 @@ button { color: inherit; }
 .rm-state.tone-purple { color: #5b21b6; background: #f2ecff; }
 .rm-state.tone-neutral { color: #4d4957; background: #ece9f1; }
 .rm-start { margin-top: 18px; }
+.rm-start-alt { display: flex; align-items: center; gap: 6px; margin-top: 10px; }
+a.rm-start { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
 .rm-error { margin: 10px 0 0; color: #9a3d0b; font-size: 12px; }
 .rm-changes { margin-top: 40px; padding: 22px 24px; }
 .rm-changes ul { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }

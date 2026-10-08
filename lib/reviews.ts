@@ -5,7 +5,7 @@
 // aprovada (revisao-aprovada no histórico, inclusive pelo quiz corretivo) avança
 // uma etapa. Ao chegar o prazo da próxima etapa, o conteúdo vai para
 // "aguardando revisão"; falhar o reabre ("em revisão ativa") até o usuário
-// estudar de novo e passar no quiz corretivo.
+// passar no quiz corretivo (pode refazer direto ou revisar antes).
 import { TransitionError, applyTransition, type D1Like } from './pedagogy/transitions.js';
 
 export const REVIEW_STAGES = [
@@ -57,30 +57,6 @@ export async function reviewCycle(db: D1Like, contentId: string): Promise<Review
     .bind(contentId, anchor.occurred_at)
     .first<{ n: number }>();
   return { anchor: anchor.occurred_at, passed: Math.min(Number(passed?.n ?? 0), REVIEW_STAGES.length) };
-}
-
-// Último envio reprovado de revisão ou quiz corretivo do conteúdo.
-export async function lastReviewFailure(db: D1Like, contentId: string) {
-  const row = await db
-    .prepare(
-      `SELECT submitted_at FROM atlas_quiz_attempts
-       WHERE content_id = ?1 AND purpose IN ('revisao', 'corretivo') AND status = 'enviado' AND passed = 0
-       ORDER BY submitted_at DESC LIMIT 1`,
-    )
-    .bind(contentId)
-    .first<{ submitted_at: string }>();
-  return row?.submitted_at ?? null;
-}
-
-// Corretivo (DEC-03): depois de falhar, o quiz só volta após uma nova sessão de estudo.
-export async function correctiveReady(db: D1Like, contentId: string) {
-  const failure = await lastReviewFailure(db, contentId);
-  if (!failure) return true;
-  const session = await db
-    .prepare(`SELECT 1 AS found FROM atlas_evidences WHERE content_id = ?1 AND kind = 'sessao' AND recorded_at > ?2 LIMIT 1`)
-    .bind(contentId, failure)
-    .first<{ found: number }>();
-  return Boolean(session);
 }
 
 export type UpcomingReview = { contentId: string; stage: ReviewStage; dueAt: string; dueDate: string; anchor: string };

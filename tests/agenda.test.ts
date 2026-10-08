@@ -78,7 +78,7 @@ void test('sessão concluída conclui o estudo por evidência e agenda o quiz co
   assert.equal(quiz?.durationMinutes, 18, '8 múltipla + 2 dissertativas do banco inicial');
 });
 
-void test('reprovar no quiz agenda recuperação urgente na frente do dia', async () => {
+void test('reprovar no quiz agenda o quiz de novo, urgente, na frente do dia', async () => {
   const db = setup();
   await startSession(db, 'CG-001', { now: t(7), id: 's1' });
   await concludeSession(db, 's1', { now: t(8) });
@@ -87,11 +87,12 @@ void test('reprovar no quiz agenda recuperação urgente na frente do dia', asyn
   await submitQuiz(db, 'a1', {}, { now: t(11) });
   await syncAgenda(db, { today, now: t(12) });
   const open = pending(await day(db));
-  assert.equal(open[0].kind, 'recuperacao');
+  assert.equal(open[0].kind, 'quiz');
   assert.equal(open[0].priority, 'urgente');
   assert.equal(open[0].startsAt, '07:00');
-  assert.match(open[0].reason, /Reprovado no quiz/);
-  const quiz = (await day(db)).find((item) => item.kind === 'quiz');
+  assert.match(open[0].reason, /Reprovado no quiz: refaça até passar com 70%/);
+  assert.ok(!open.some((item) => item.kind === 'estudo'), 'o Atlas não propõe conteúdo novo enquanto há reprovação');
+  const quiz = (await day(db)).find((item) => item.kind === 'quiz' && item.status === 'concluido');
   assert.equal(quiz?.status, 'concluido', 'o quiz feito conclui o item, mesmo reprovado');
 });
 

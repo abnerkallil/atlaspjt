@@ -62,7 +62,7 @@ void test('regras puras: reprovações seguidas, questões erradas e seleção d
   );
 });
 
-void test('reprovar, estudo dirigido, quiz dirigido, reincidência e desbloqueio', async () => {
+void test('reprovar, estudo dirigido, quiz dirigido, reincidência e desbloqueio ao refazer', async () => {
   const raw = migratedDatabase();
   const db = d1(raw);
   growBank(raw);
@@ -81,15 +81,16 @@ void test('reprovar, estudo dirigido, quiz dirigido, reincidência e desbloqueio
 
   await syncAgenda(db, { today: day, now: at(9) });
   const [urgent] = (await listAgenda(db, { from: day, to: addDays(day, 7) })).filter((item) => item.status === 'pendente');
-  assert.equal(urgent.kind, 'recuperacao');
-  assert.match(urgent.reason, new RegExp(`${wrong.length} questões erradas voltam no estudo dirigido`));
+  assert.deepEqual([urgent.kind, urgent.priority], ['quiz', 'urgente']);
+  assert.match(urgent.reason, new RegExp(`${wrong.length} questões erradas voltam no quiz`));
 
-  // Estudou de novo: o quiz é dirigido (as erradas voltam todas).
+  // Revisou as notas numa sessão: o quiz é dirigido (as erradas voltam todas).
   await studyAgain(db, 's2', 10);
   assert.equal(await currentState(db, 'conteudo', 'CG-001'), 'aguardando-quiz');
   await syncAgenda(db, { today: day, now: at(11) });
   const quizItem = (await listAgenda(db, { from: day, to: addDays(day, 7) })).find((item) => item.kind === 'quiz' && item.status === 'pendente');
-  assert.match(quizItem?.reason ?? '', /Quiz dirigido/);
+  // O item urgente continua até passar (as erradas voltam no quiz).
+  assert.match(quizItem?.reason ?? '', /questões erradas voltam no quiz/);
   const second = await takeQuiz(raw, db, 'q2', at(12), 0);
   assert.equal(second.attempt.directed, wrong.length);
   for (const id of wrong) assert.ok(second.questionIds.includes(id), `questão ${id} voltou`);
@@ -97,15 +98,15 @@ void test('reprovar, estudo dirigido, quiz dirigido, reincidência e desbloqueio
   // 2ª reprovação seguida: reincidência na agenda e em Progresso.
   assert.equal((await recoveryStatus(db, 'CG-001'))?.failures, 2);
   await syncAgenda(db, { today: day, now: at(13) });
-  const again = (await listAgenda(db, { from: day, to: addDays(day, 7) })).find((item) => item.kind === 'recuperacao' && item.status === 'pendente');
+  const again = (await listAgenda(db, { from: day, to: addDays(day, 7) })).find((item) => item.kind === 'quiz' && item.status === 'pendente');
   assert.match(again?.reason ?? '', /Reincidência: 2ª reprovação seguida/);
   const progress = computeProgress(await loadProgressInput(db), { now: at(13), today: day, tzOffsetMinutes: 0 });
   assert.equal(progress.atRisk[0]?.failures, 2);
   assert.match(progress.atRisk[0]?.reason ?? '', /Reincidência/);
   assert.equal(progress.disciplines.find((item) => item.frozenBy.length)?.frozenBy.length, 1);
 
-  // Estudou e passou: desbloqueado, sem recuperação pendente.
-  await studyAgain(db, 's3', 14);
+  // Refez o quiz direto (sem nova sessão) e passou: concluído e desbloqueado.
+  assert.equal(await currentState(db, 'conteudo', 'CG-001'), 'bloqueado');
   const third = await takeQuiz(raw, db, 'q3', at(16), 10);
   assert.equal(third.done.passed, true);
   assert.equal(await currentState(db, 'conteudo', 'CG-001'), 'concluido');

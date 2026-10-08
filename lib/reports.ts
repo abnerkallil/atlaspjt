@@ -8,7 +8,7 @@ import { listAudit, type AuditEntry, type D1Like } from './pedagogy/transitions.
 import { COVERED_STATES, computeProgress, loadProgressInput, reviewTally, type ProgressComponent } from './progress.js';
 import { listAttempts, type QuizAttempt } from './quizzes.js';
 import { recoveryStatus, type RecoveryStatus } from './recovery.js';
-import { correctiveReady, nextReview, reviewCycle, localDateOf, type NextReview } from './reviews.js';
+import { nextReview, reviewCycle, localDateOf, type NextReview } from './reviews.js';
 import { getRoadmap } from './roadmap-store.js';
 import { listSessions, type StudySession } from './study-sessions.js';
 
@@ -66,7 +66,6 @@ export type ReportFacts = {
   pendingTitles: string[];
   recovery: RecoveryStatus | null;
   next: NextReview;
-  correctiveReady: boolean;
   hasOpenSession: boolean;
   now: string;
   tzOffsetMinutes: number;
@@ -125,13 +124,15 @@ export function nextAction(facts: ReportFacts, contentId: string): NextAction {
         href: quiz,
       };
     case 'bloqueado':
-      return { label: 'Estudar de novo', detail: 'A sessão mostra o estudo dirigido com o que você errou; depois o quiz é liberado.', href: study };
+      return {
+        label: 'Refazer o quiz',
+        detail: 'As questões que você errou voltam; passe com 70% para concluir e liberar o próximo conteúdo. Se quiser, revise as notas antes.',
+        href: quiz,
+      };
     case 'aguardando-revisao':
       return { label: `Fazer a revisão${facts.next ? ` de ${facts.next.stage}` : ''}`, detail: 'Aprovada, o conteúdo fica revalidado.', href: quiz };
     case 'em-revisao-ativa':
-      return facts.correctiveReady
-        ? { label: 'Fazer o quiz corretivo', detail: 'Aprovado, o conteúdo volta a revalidado e o ciclo continua.', href: quiz }
-        : { label: 'Estudar de novo', detail: 'O quiz corretivo é liberado depois de uma nova sessão de estudo.', href: study };
+      return { label: 'Fazer o quiz corretivo', detail: 'Aprovado, o conteúdo volta a revalidado e o ciclo continua. Se quiser, revise as notas antes.', href: quiz };
     default:
       return facts.next
         ? { label: `Revisão de ${facts.next.stage} em ${dayMonth(facts.next.dueAt, facts.tzOffsetMinutes)}`, detail: 'Nada a fazer até lá; ela aparece em Hoje no dia.', href: '/' }
@@ -179,14 +180,13 @@ export async function contentReport(
   if (!discipline || !content) return null;
   const titleOf = new Map(disciplines.flatMap((item) => item.contents).map((item) => [item.id, item.title]));
 
-  const [input, changes, attempts, sessions, recovery, cycle, ready] = await Promise.all([
+  const [input, changes, attempts, sessions, recovery, cycle] = await Promise.all([
     loadProgressInput(db),
     listAudit(db, { entityType: 'conteudo', entityId: contentId, limit: 100 }),
     listAttempts(db, { contentId, limit: 100 }),
     listSessions(db, { contentId, limit: 100 }),
     recoveryStatus(db, contentId),
     reviewCycle(db, contentId),
-    correctiveReady(db, contentId),
   ]);
   const progress = computeProgress(input, { now, today: options.today, tzOffsetMinutes: options.tzOffsetMinutes });
   const disciplineProgress = progress.disciplines.find((item) => item.id === discipline.id);
@@ -197,7 +197,6 @@ export async function contentReport(
     pendingTitles: content.pendingPrerequisites.map((id) => titleOf.get(id) ?? id),
     recovery,
     next: nextReview(cycle),
-    correctiveReady: ready,
     hasOpenSession: sessions.some((item) => item.status !== 'concluida'),
     now,
     tzOffsetMinutes: options.tzOffsetMinutes,
