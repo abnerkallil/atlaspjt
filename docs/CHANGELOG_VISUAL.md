@@ -184,3 +184,22 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
     Cobertura.
 - Se algo der errado: nota de disciplina que caiu depois de um quiz reprovado,
   ou cobertura que não conta um conteúdo já estudado vêm deste PR.
+
+## PR #39 — Quiz reprovado trava o conteúdo até passar (ATLAS-ESC-21)
+
+- Ponto de restauração: branch `restore/pre-quiz-refazer` (commit `c63fdf5`, main antes do merge).
+- Sem migration nova.
+- O que muda no site:
+  - **Resultado do quiz reprovado**: botões "Refazer o quiz" (principal) e
+    "Revisar as notas antes"; o texto diz que o conteúdo, e o próximo, ficam
+    travados até passar com 70%.
+  - **Quizzes**: conteúdo bloqueado aparece na lista para refazer na hora; o
+    quiz corretivo também abre direto (sem exigir nova sessão de estudo).
+  - **Hoje/agenda**: reprovação vira um quiz urgente ("refaça até passar com
+    70%"), não mais uma "recuperação" de estudo; enquanto há reprovação, o
+    Atlas não sugere conteúdo novo.
+  - **Roadmap**: conteúdo bloqueado ou em revisão ativa mostra "Refazer o
+    quiz" / "Fazer o quiz corretivo" e "Revisar as notas antes".
+  - **Relatório**: próxima ação de conteúdo bloqueado é "Refazer o quiz".
+- Se algo der errado: quiz que não reabre depois de reprovar, conteúdo que não
+  desbloqueia ao passar, ou agenda sem sugestão de estudo vêm deste PR.
