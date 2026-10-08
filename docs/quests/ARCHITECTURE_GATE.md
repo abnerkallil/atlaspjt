@@ -527,7 +527,7 @@ YES
 
 # GATE MVP-07 — GATILHO DO AJUSTE ADAPTATIVO DE PESOS
 
-Status: OPEN — não bloqueia o MVP-07; a fórmula v1 roda com os pesos padrão do DEC-02 até a decisão
+Status: RESOLVED — DEC-013 (ACCEPTED); gatilho manual por configuração explícita (sem regra automática agora); vigência via recompute on read; registro durável exigido só a partir da primeira mudança real
 
 Correlation: ATLAS-RAF-GATE-20261008-001
 
@@ -573,7 +573,30 @@ B. Fixado por período (semana, fase). Trade-offs: notas estáveis; exige guarda
 
 ## Raf decision
 
-Pendente.
+### Decision
+
+- **Eixo 1 (gatilho):** nenhum ajuste automático agora. Os pesos continuam nos padrões do DEC-02 e só mudam por configuração explícita/manual (curso ou disciplina) — Opção A. Opções B e C não são adotadas nem descartadas definitivamente: ficam em aberto para quando existir um sinal de produto real e aprovado que as justifique (hoje não existe: Avaliações/Atividades ainda não existem, e reprovação de quiz foi explicitamente excluída como gatilho pelo Atlas em 2026-10-08).
+- **Eixo 2 (vigência):** quando um peso for alterado manualmente, a mudança vale a partir da alteração e é aplicada no recálculo em cada leitura — mesma arquitetura já em uso em `lib/progress.ts` (Opção A). Não é criado um mecanismo de vigência fixada por período (Opção B) sem caso de uso real.
+- **Eixo 3 (registro):** nenhuma tabela de histórico de pesos é criada agora — não há hoje nenhuma mudança de peso para registrar. A partir da primeira mudança manual que afastar os pesos do padrão do DEC-02, essa mudança deve ficar registrada de forma durável (conjunto de pesos + timestamp de vigência), para que o MVP-09 continue explicando notas calculadas sob pesos diferentes. Isso é uma pré-condição para a primeira mudança, não um artefato a construir nesta tarefa.
+
+### Rationale
+
+1. Os dois sinais mais prováveis para um gatilho automático hoje são imaturos ou já descartados: Avaliações/Atividades (50 dos 100 pontos) não existem, e o Atlas já decidiu que reprovação em quiz não altera a nota — não resta sinal de produto aprovado que justifique uma regra adaptativa real agora; escolher B ou C sem esse sinal seria arquitetura especulativa.
+2. Fixar o gatilho como "só manual" formaliza o comportamento que já roda em produção-candidata (pesos padrão, sem mecanismo automático), em vez de inventar um mecanismo novo sem necessidade concreta.
+3. Exigir registro só a partir da primeira mudança real evita uma tabela sem uso agora, mas preserva a explicabilidade do MVP-09 que o próprio Gate trigger (item 9) aponta como o risco caro de reverter depois que notas diferentes já existirem.
+
+### Constraints for Claude Code
+
+- Nenhum gatilho automático/algorítmico de ajuste de pesos é implementado por esta decisão; pesos permanecem em `DEFAULT_WEIGHTS` (DEC-02) até configuração manual explícita.
+- Qualquer mudança de peso só pode ocorrer por configuração explícita por disciplina/curso, nunca por reação automática a quiz, revisão, sessão ou disponibilidade de componente.
+- Reprovação em quiz não altera peso nem nota (regra de produto de 2026-10-08, já vigente); nenhuma lógica de ajuste de peso pode usar reprovação de quiz como gatilho.
+- Mudança de peso, quando ocorrer, vale a partir do momento da alteração e é aplicada no recálculo em cada leitura (mesmo padrão atual de `lib/progress.ts`); não implementar vigência fixada por período sem necessidade concreta.
+- Antes de permitir a primeira mudança de peso diferente do padrão do DEC-02, deve existir um registro durável mínimo (peso vigente + timestamp de vigência, versionado) para que `lib/reports.ts` (MVP-09) consiga explicar notas calculadas sob pesos diferentes. Nome de tabela/coluna é detalhe de implementação.
+- Esta decisão não impede revisitar os Eixos 1/2 quando Avaliações/Atividades existirem ou quando o Atlas definir uma regra adaptativa concreta — isso é uma nova pergunta, a trazer como Gate específico quando houver sinal real, não decidida especulativamente aqui.
+
+### DEC Required
+
+YES
 
 ---
 

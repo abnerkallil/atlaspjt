@@ -238,8 +238,10 @@ a partir de estados, `atlas_quiz_attempts` enviados, `atlas_state_audit` e
 Domínio é a nota da disciplina; proficiência é a média das últimas 5
 tentativas (quiz, revisão, corretivo); retenção é revisões aprovadas sobre
 revisões feitas. Consistência soma `active_seconds` por dia local nos últimos
-28 dias. O gatilho do ajuste adaptativo dos pesos (±10 pp) aguarda o Gate
-`ATLAS-RAF-GATE-20261008-001`.
+28 dias. Gatilho do ajuste dos pesos (DEC-013, Gate
+`ATLAS-RAF-GATE-20261008-001`): só manual, por configuração explícita; vale a
+partir da alteração no recálculo a cada leitura; antes da primeira mudança fora
+do padrão do DEC-02 é preciso um registro durável dos pesos com vigência.
 
 ## Recuperação e bloqueios (MVP-08)
 
