@@ -105,6 +105,14 @@ void test('ciclo completo: revisão, falha, recuperação urgente, corretivo e r
   const { attempt: c0 } = await takeQuiz(raw, db, 'c0', at(day7, 11), false);
   assert.equal(c0.purpose, 'corretivo');
   assert.equal(await currentState(db, 'conteudo', 'CG-001'), 'em-revisao-ativa');
+  await syncAgenda(db, { today: day7, now: at(day7, 11) });
+  const items = (await listAgenda(db, { from: day7, to: day7 })).filter((item) => item.kind === 'quiz');
+  assert.deepEqual(
+    items.map((item) => item.status).sort((a, b) => a.localeCompare(b)),
+    ['concluido', 'pendente'],
+    'o corretivo feito conclui o item e o Atlas agenda outro',
+  );
+  assert.match(items.find((item) => item.status === 'pendente')?.reason ?? '', /Reincidência: 2ª reprovação seguida/);
   const { attempt: c1, done: c1done } = await takeQuiz(raw, db, 'c1', at(day7, 15), true);
   assert.deepEqual([c1.purpose, c1.stage], ['corretivo', '7d']);
   assert.equal(await currentState(db, 'conteudo', 'CG-001'), 'revalidado');

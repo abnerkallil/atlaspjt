@@ -4,7 +4,6 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ArrowRight, Bell, BrainCircuit, CircleHelp, MessageCircle, Map as MapIcon, Menu, Search, Sparkles, UserRound, X } from 'lucide-react';
-import { assistantDemo } from '@/lib/demo/today';
 import { daySummary, useAgendaData, type AgendaState } from '@/components/atlas/use-agenda';
 
 export const navItems = [
@@ -32,7 +31,13 @@ export function useAtlasShell() {
   return value;
 }
 
-const shortcutIcons = { help: CircleHelp, brain: BrainCircuit, map: MapIcon } as const;
+// Conversa livre com o Atlas é da fase de IA (IA-*). Até lá, o painel leva às
+// respostas que o Atlas já calcula por regra fixa.
+const assistantShortcuts = [
+  { icon: CircleHelp, text: 'Por que esta ordem de estudos?', href: '/roadmap' },
+  { icon: BrainCircuit, text: 'Como está minha retenção?', href: '/progresso' },
+  { icon: MapIcon, text: 'Por que cada conteúdo está onde está?', href: '/relatorio' },
+] as const;
 
 function AssistantDrawer({ onClose }: { onClose: () => void }) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -51,13 +56,13 @@ function AssistantDrawer({ onClose }: { onClose: () => void }) {
         <button onClick={onClose} aria-label="Fechar"><X size={20} /></button>
       </div>
       <div className="drawer-body">
-        <div className="atlas-message">{assistantDemo.greeting}</div>
-        {assistantDemo.shortcuts.map((item) => {
-          const Icon = shortcutIcons[item.icon];
-          return <button key={item.text}><Icon size={16} /> {item.text}</button>;
-        })}
+        <div className="atlas-message">
+          Perguntas livres chegam com a fase de IA do Atlas. Por enquanto, estes atalhos levam às respostas que o Atlas já calcula.
+        </div>
+        {assistantShortcuts.map(({ icon: Icon, text, href }) => (
+          <Link key={text} href={href} onClick={onClose}><Icon size={16} /> {text} <ArrowRight size={14} /></Link>
+        ))}
       </div>
-      <div className="drawer-input"><input placeholder="Escreva sua pergunta..." aria-label="Pergunta ao Atlas" /><button aria-label="Enviar"><ArrowRight size={18} /></button></div>
     </dialog>
   );
 }
