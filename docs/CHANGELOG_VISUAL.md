@@ -284,3 +284,15 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
   quizzes de múltipla escolha, dissertativa e cálculo continuam idênticos.
 - Se algo der errado: só poderia afetar uma questão cadastrada com um dos
   tipos novos; os quizzes já existentes não usam nenhum campo novo.
+
+## PR #46 — Importador v2 e linter de itens (APO-04)
+
+- Ponto de restauração: branch `restore/pre-apo-04` (commit `851443b`, main antes do merge).
+- Sem migration nova (só muda `scripts/lib/question-bank.mjs`, usado fora do
+  site, e `docs/QUESTOES.md`).
+- O que muda no site: nada. A importação de questões passa a aceitar também
+  JSON v2 (além do CSV) e a recusar automaticamente um arquivo com
+  alternativas repetidas ou enunciado duplicado; avisos de estilo de questão
+  aparecem no terminal de quem importa, nunca no site.
+- Se algo der errado: só poderia afetar uma importação futura de questões
+  (`pnpm run questoes:importar`), nunca o site em produção.
