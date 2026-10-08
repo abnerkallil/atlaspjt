@@ -107,8 +107,10 @@ function quizLikePlan(instrument: Instrument): ExamPlan {
 // Planos dos instrumentos sem motor próprio ainda (DEC-018: atividade, exame
 // de meio de curso, atividade final, recuperação, proficiência existem só
 // como estado da FSM, `lib/pedagogy/states.ts` — nenhum código monta essas
-// provas hoje). Tamanho de exame_meio/atividade_final (60 questões) é DEC-10
-// confirmado pelo Abner em 2026-10-08 (ver docs/APOLO.md); o resto é ponto de
+// provas hoje). Tamanho de exame_meio (60 questões) é DEC-10 confirmado pelo
+// Abner em 2026-10-08 (ver docs/APOLO.md) — o peso 50/50 que ele confirmou
+// junto é entre exame_meio e atividade_final na nota da disciplina, não o
+// tamanho da atividade_final, que segue sem confirmação. O resto é ponto de
 // partida razoável, não uma decisão fechada — cada um ganha motor e revisão
 // própria num card futuro (APO-17 em diante).
 const DRAFT_PLANS: Record<
@@ -126,7 +128,11 @@ const DRAFT_PLANS: Record<
     interleaving: true, secondsByKind: QUESTION_SECONDS, passingScore: PASSING_SCORE,
   },
   atividade_final: {
-    instrument: 'atividade_final', version: 1, size: 60, kindMix: NEUTRAL_KIND_MIX,
+    // Tamanho NÃO confirmado pelo DEC-10: a resposta do Abner ("final 50/50")
+    // falava do peso da nota entre exame de meio e atividade final, não da
+    // quantidade de questões da atividade final — só exame_meio teve
+    // tamanho confirmado (60). Rascunho igual ao de antes, até revisão.
+    instrument: 'atividade_final', version: 1, size: 20, kindMix: NEUTRAL_KIND_MIX,
     bloomMix: {}, difficultyMix: { facil: 0.2, media: 0.5, dificil: 0.3 },
     interleaving: true, secondsByKind: QUESTION_SECONDS, passingScore: PASSING_SCORE,
   },

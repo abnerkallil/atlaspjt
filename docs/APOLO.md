@@ -117,14 +117,15 @@ confirmada em princípio — a fórmula exata de como a nota cascateia entre
 essas etapas ainda não foi detalhada por ele, então continua sendo decisão
 do card APO-19 quando chegar a vez.
 
-Isso fixa o tamanho de `exame_meio` e `atividade_final` neste plano em 60
-questões (antes um rascunho com 20, só palpite). O peso 50/50 é uma regra de
-nota da disciplina, não de composição de prova — fica fora do escopo de
-`ExamPlan` aqui, para o card que calcular a nota final da disciplina
-decidir. Os perfis por área de conhecimento do tema e os planos dos
-instrumentos sem motor próprio (atividade, recuperação, proficiência —
-"fora da espinha", só existem como estado da FSM em
-`lib/pedagogy/states.ts`) seguem como primeiro rascunho deste card, não uma
-decisão fechada. Nenhum desses planos está ligado à seleção real de questão
-ainda — isso é o APO-12 (seletor
+Isso fixa o tamanho de `exame_meio` neste plano em 60 questões (antes um
+rascunho com 20, só palpite). O peso 50/50 é uma regra de nota da
+disciplina (entre exame de meio e atividade final), não de composição de
+prova — fica fora do escopo de `ExamPlan` aqui, para o card que calcular a
+nota final da disciplina decidir; **não confirma quantas questões a
+atividade final tem** (continua rascunho de 20, sem decisão). Os perfis por
+área de conhecimento do tema e os planos dos instrumentos sem motor próprio
+(atividade, atividade_final, recuperação, proficiência — "fora da espinha",
+só existem como estado da FSM em `lib/pedagogy/states.ts`) seguem como
+primeiro rascunho deste card, não uma decisão fechada. Nenhum desses planos
+está ligado à seleção real de questão ainda — isso é o APO-12 (seletor
 adaptativo), que depende deste card.
