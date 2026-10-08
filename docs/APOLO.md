@@ -129,3 +129,44 @@ só existem como estado da FSM em `lib/pedagogy/states.ts`) seguem como
 primeiro rascunho deste card, não uma decisão fechada. Nenhum desses planos
 está ligado à seleção real de questão ainda — isso é o APO-12 (seletor
 adaptativo), que depende deste card.
+
+## Seletor adaptativo (APO-12, DEC-017)
+
+Monta a lista de questões de uma prova a partir do plano (APO-11), do perfil
+do aluno (APO-09) e do histórico recente — `lib/apolo/selector.ts`,
+`selectQuestions(plano, perfil, banco, histórico, semente)`, função pura, sem
+I/O: mesma entrada, sempre a mesma prova. Nunca seleciona questão fora de
+`lifecycleState: 'ativa'` (DEC-014) — rascunho, curadoria (inclusive a que o
+APO-10 acabou de aposentar) e aposentada nunca saem daqui.
+
+Prioridade, nessa ordem, cada questão ganha um motivo (`recuperacao-vencida`,
+`subtopico-fraco`, `cobertura-do-plano`):
+
+1. **Recuperação vencida** (`dueAt` já passou, fila do APO-09) — mais
+   atrasada primeiro.
+2. **Subtópico fraco** — grupo tema×conteúdo×subtópico com Elo de habilidade
+   abaixo de 1150 (mesmo valor usado como oponente "média" em
+   `lib/apolo/skill.ts`).
+3. **Cobertura do plano** — o resto, respeitando a mistura de tipo e
+   dificuldade do plano (`allocateCounts`, mesma conta do APO-11); escolhe
+   sempre o tipo/faixa que o plano ainda mais precisa.
+
+Em (1), (2) e na cobertura normal de (3), quando há mais de uma opção válida,
+sorteia-se (com semente) entre as 5 melhores — evita expor sempre a mesma
+questão. Nunca mais de uma questão por família de molde (`itemModelId`) na
+mesma prova. Tenta não repetir o que está em `recentlySeen`; só volta a
+considerar essas questões se não der para completar o plano sem elas (nunca
+falta questão só pela regra de não repetição).
+
+**Modo adaptativo** (`adaptive: true`, para prática e proficiência):
+substitui a cobertura por tipo/dificuldade por um critério de Rasch de 1
+parâmetro — escolhe sempre o item cuja dificuldade (Elo do item, APO-10) está
+mais perto da habilidade do aluno no tema (mais informativo, ~50% de chance
+de acerto), e aí **não** sorteia entre os 5 melhores: escolhe o mais próximo
+diretamente, como um CAT (computerized adaptive testing) clássico — só
+prioriza, nunca afeta nota (DEC-017). Item sem Elo/habilidade conhecida fica
+por último.
+
+Ainda não tem rota própria nem está ligado a `startQuiz`
+(`lib/quizzes.ts`) — isso fica para quando um card ligar o seletor à tela de
+verdade.

@@ -15,3 +15,4 @@ export * from './profile.js';
 export * from './item-stats.js';
 export * from './item-audit.js';
 export * from './plans.js';
+export * from './selector.js';
