@@ -86,6 +86,7 @@
     "lib/apolo/item-audit.ts",
     "lib/apolo/plans.ts",
     "lib/apolo/selector.ts",
+    "lib/apolo/corrector.ts",
     "lib/apolo/index.ts",
     "tests/apolo.test.ts",
     "tests/apolo-themes.test.ts",
@@ -96,7 +97,8 @@
     "tests/apolo-skill.test.ts",
     "tests/apolo-item-stats.test.ts",
     "tests/apolo-plans.test.ts",
-    "tests/apolo-selector.test.ts"
+    "tests/apolo-selector.test.ts",
+    "tests/apolo-corrector.test.ts"
   ],
   "exclude": [
     "node_modules"

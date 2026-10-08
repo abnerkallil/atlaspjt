@@ -15,6 +15,13 @@ import {
   type ReviewSummary,
 } from './reviews.js';
 import { directedSelection, recoveryStatus } from './recovery.js';
+import {
+  gradeQuestion,
+  scoreResults,
+  PASSING_SCORE,
+  VERIFICATION_MINIMUM,
+} from './apolo/corrector.js';
+export { gradeQuestion, scoreResults, PASSING_SCORE, VERIFICATION_MINIMUM };
 
 // APO-03: "certo_errado" é julgamento binário (como múltipla com 2
 // alternativas fixas); "lacuna_numerica" é valor numérico simples, sem as 5
@@ -40,10 +47,8 @@ export const QUESTION_SECONDS: Record<QuestionKind, number | null> = {
   lacuna_numerica: null,
 };
 export const VERIFICATION_SIZE = 5;
-export const VERIFICATION_MINIMUM = 3;
-// Nota mínima para aprovar o quiz do conteúdo. O DEC-10 não fixa o número; 70%
-// é o valor que a tela de quiz já anunciava (UX-04).
-export const PASSING_SCORE = 70;
+// VERIFICATION_MINIMUM e PASSING_SCORE moraram aqui; a partir do APO-13 vivem
+// em lib/apolo/corrector.ts (DEC-016) e são só reexportados acima.
 // Folga para o envio automático que chega logo depois do fim do tempo.
 const DEADLINE_GRACE_SECONDS = 30;
 
@@ -252,80 +257,9 @@ export function publicQuestion(question: Question): PublicQuestion {
   };
 }
 
-export function gradeQuestion(
-  question: Question,
-  answer: Answer | undefined,
-): QuestionResult {
-  const base = {
-    questionId: question.id,
-    kind: question.kind,
-    explanation: question.explanation,
-    modelAnswer: question.modelAnswer,
-    correctOption: question.correctOption,
-    expectedValue: question.expectedValue,
-  };
-  if (question.kind === 'multipla' || question.kind === 'certo_errado') {
-    return {
-      ...base,
-      correct: answer?.option === question.correctOption,
-      voided: false,
-    };
-  }
-  if (question.kind === 'dissertativa') {
-    const wrote =
-      typeof answer?.text === 'string' && answer.text.trim().length > 0;
-    return {
-      ...base,
-      correct: wrote && answer?.selfAssessment === 'certa',
-      voided: false,
-    };
-  }
-  if (question.kind === 'lacuna_numerica') {
-    // Lacuna numérica (APO-03): valor simples contra o gabarito, sem as
-    // verificações de raciocínio do cálculo (DEC-10) — nunca anulada.
-    const value =
-      typeof answer?.value === 'number' && Number.isFinite(answer.value)
-        ? answer.value
-        : null;
-    const expected = question.expectedValue ?? Number.NaN;
-    const correct =
-      value !== null && Math.abs(value - expected) <= (question.tolerance ?? 0);
-    return { ...base, correct, voided: false };
-  }
-  // Cálculo: a questão só vale se o raciocínio for confirmado (≥3 de 5).
-  const verification = question.verification ?? [];
-  const verificationCorrect = verification.filter(
-    (item, index) => answer?.verification?.[index] === item.correct,
-  ).length;
-  const value =
-    typeof answer?.value === 'number' && Number.isFinite(answer.value)
-      ? answer.value
-      : null;
-  const expected = question.expectedValue ?? Number.NaN;
-  const correct =
-    value !== null && Math.abs(value - expected) <= (question.tolerance ?? 0);
-  return {
-    ...base,
-    correct,
-    voided: verificationCorrect < VERIFICATION_MINIMUM,
-    verificationCorrect,
-  };
-}
-
-// Cada questão vale 100/N, sem contar as anuladas (DEC-10).
-export function scoreResults(results: QuestionResult[]) {
-  const counted = results.filter((item) => !item.voided);
-  const correct = counted.filter((item) => item.correct).length;
-  const score = counted.length
-    ? Math.round((correct / counted.length) * 1000) / 10
-    : 0;
-  return {
-    correct,
-    counted: counted.length,
-    score,
-    passed: score >= PASSING_SCORE,
-  };
-}
+// gradeQuestion e scoreResults moraram aqui; a partir do APO-13 vivem em
+// lib/apolo/corrector.ts (DEC-016, mesma lógica, reexportadas acima) junto
+// com buildBoletim.
 
 // ---------------------------------------------------------------------------
 // Banco e tentativas no D1
