@@ -378,3 +378,23 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
   uma questão desativada por engano pode ser reativada manualmente no banco.
   Uma falha na auditoria nunca derruba a resposta de um quiz já corrigido
   (está em `try/catch` isolado).
+
+## PR #52 — Planos de prova por instrumento e perfil por área de conhecimento (APO-11)
+
+- Ponto de restauração: branch `restore/pre-apo-11` (commit `d2ed0d7`, main antes do merge).
+- Sem migration nova. Nenhum estado novo é gravado no banco — plano é uma
+  função pura em código, sem leitura/escrita no D1.
+- O que muda no site: nada visível ainda — este PR só adiciona
+  `lib/apolo/plans.ts`, que define a composição de cada instrumento (quiz,
+  revisão, corretivo, atividade, exame de meio de curso, atividade final,
+  recuperação, proficiência) e um perfil por área de conhecimento do tema,
+  sem ligar isso à seleção real de questão de nenhuma tela ainda (isso é o
+  próximo card, APO-12). O plano do quiz continua sendo exatamente o mesmo
+  de hoje (10 questões, mesmo tempo, corte de 70%).
+- Também formaliza o DEC-10 (composição das avaliações), confirmado pelo
+  Abner no chat do projeto: exame de meio de curso e atividade final passam
+  a ter 60 questões no plano (documentado em `docs/APOLO.md`); isso só
+  afeta o plano em código, nenhuma tela de exame de meio/atividade final
+  existe ainda para usar esse número.
+- Se algo der errado: só poderia afetar `lib/apolo/plans.ts`, que nenhuma
+  tela ou rota usa ainda; nenhuma tela de estudo do aluno é tocada.
