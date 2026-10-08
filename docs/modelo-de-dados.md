@@ -197,3 +197,21 @@ Importação de questões: `docs/QUESTOES.md`.
 
 API: `GET /api/agenda?hoje=AAAA-MM-DD&dias=7` e
 `PATCH /api/agenda/:id { action: concluir | reagendar (hoje, date, time?, reason?) | ajustar (durationMinutes?, priority?) }`.
+
+## Revisões 24h/7d/30d (MVP-06)
+
+Sem tabela nova: reaproveita `atlas_quiz_attempts.purpose` (`revisao`,
+`corretivo`), `atlas_agenda_items` (`kind = 'revisao'`, `source_ref` = etapa)
+e o histórico de estados. Regras em `lib/reviews.ts` (DEC-09 e DEC-03):
+
+- O ciclo começa no último `quiz-aprovado` (ou `dispensa-proficiencia`) do
+  conteúdo; as etapas vencem 1, 7 e 30 dias depois desse momento. Cada
+  `revisao-aprovada` desde então conta uma etapa.
+- A sincronização da agenda aplica `revisao-vencida` (→ `aguardando-revisao`)
+  quando o dia local chega à data da etapa e agenda a próxima revisão com
+  antecedência.
+- Revisão aprovada → `revalidado`; reprovada → `em-revisao-ativa`, com
+  recuperação urgente na agenda. O quiz corretivo só abre depois de uma nova
+  sessão concluída; aprovado, aplica `revisao-aprovada` e o ciclo segue.
+- Evidência `kind = 'revisao'` para revisão e corretivo. O resultado guarda o
+  resumo (`review`: etapa, próxima revisão, ciclo concluído após os 30d).

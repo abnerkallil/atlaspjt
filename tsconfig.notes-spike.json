@@ -60,6 +60,8 @@
     "tests/quizzes.test.ts",
     "tests/question-bank.test.ts",
     "lib/agenda.ts",
+    "lib/reviews.ts",
+    "tests/reviews.test.ts",
     "tests/agenda.test.ts"
   ],
   "exclude": [

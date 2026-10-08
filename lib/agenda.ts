@@ -8,7 +8,8 @@
 import type { D1Like } from './pedagogy/transitions.js';
 import { getRoadmap } from './roadmap-store.js';
 import { listOpenSessions } from './study-sessions.js';
-import { pickNextStudy } from './study-plan.js';
+import { roadmapContents } from './study-plan.js';
+import { correctiveReady, syncReviews } from './reviews.js';
 import { QUESTION_SECONDS, QUIZ_SIZE, type QuestionKind } from './quizzes.js';
 
 export const AGENDA_KINDS = ['estudo', 'quiz', 'revisao', 'recuperacao'] as const;
@@ -203,6 +204,9 @@ export async function getAgendaItem(db: D1Like, id: string): Promise<AgendaItem 
 type NewItem = {
   kind: AgendaKind;
   contentId: string;
+  sourceRef?: string;
+  // Padrão: hoje.
+  dueDate?: string;
   durationMinutes: number;
   priority: AgendaPriority;
   reason: string;
@@ -213,14 +217,24 @@ function insertItem(db: D1Like, item: NewItem, today: string, now: string) {
   return db
     .prepare(
       `INSERT INTO atlas_agenda_items (id, kind, content_id, source_ref, due_date, duration_minutes, priority, status, reason, created_at, updated_at)
-       SELECT ?1, ?2, ?3, '', ?4, ?5, ?6, 'pendente', ?7, ?8, ?8
+       SELECT ?1, ?2, ?3, ?9, ?4, ?5, ?6, 'pendente', ?7, ?8, ?8
        WHERE NOT EXISTS (
          SELECT 1 FROM atlas_agenda_items
-         WHERE kind = ?2 AND content_id = ?3 AND due_date = ?4 AND status = 'concluido' AND completion = 'manual'
+         WHERE kind = ?2 AND content_id = ?3 AND source_ref = ?9 AND due_date = ?4 AND status = 'concluido' AND completion = 'manual'
        )
        ON CONFLICT DO NOTHING`,
     )
-    .bind(crypto.randomUUID(), item.kind, item.contentId, today, item.durationMinutes, item.priority, item.reason, now);
+    .bind(
+      crypto.randomUUID(),
+      item.kind,
+      item.contentId,
+      item.dueDate ?? today,
+      item.durationMinutes,
+      item.priority,
+      item.reason,
+      now,
+      item.sourceRef ?? '',
+    );
 }
 
 // Evidência que conclui cada tipo de item (registrada depois de o item existir).
@@ -232,15 +246,26 @@ const MATCHING_EVIDENCE = `FROM atlas_evidences e
   ORDER BY e.recorded_at LIMIT 1`;
 
 // Estados em que cada tipo de item ainda faz sentido.
-const STILL_VALID: Record<Exclude<AgendaKind, 'revisao'>, string[]> = {
-  estudo: ['nao-iniciado', 'em-estudo', 'em-revisao-ativa'],
-  quiz: ['aguardando-quiz'],
-  recuperacao: ['bloqueado', 'em-estudo'],
+const STILL_VALID: Record<AgendaKind, string[]> = {
+  estudo: ['nao-iniciado', 'em-estudo'],
+  quiz: ['aguardando-quiz', 'em-revisao-ativa'],
+  recuperacao: ['bloqueado', 'em-estudo', 'em-revisao-ativa'],
+  revisao: ['concluido', 'revalidado', 'aguardando-revisao'],
 };
 
-export async function syncAgenda(db: D1Like, options: { today: string; now?: string }) {
+async function questionKinds(db: D1Like, contentId: string) {
+  const { results } = await db
+    .prepare('SELECT kind FROM atlas_questions WHERE content_id = ?1 AND active = 1 ORDER BY position, id')
+    .bind(contentId)
+    .all<{ kind: QuestionKind }>();
+  return results.map((row) => row.kind);
+}
+
+export async function syncAgenda(db: D1Like, options: { today: string; tzOffsetMinutes?: number; now?: string }) {
   const { today } = options;
   const now = options.now ?? new Date().toISOString();
+  // 0. Revisões 24h/7d/30d (MVP-06): prazos vencidos viram "aguardando revisão".
+  const reviews = await syncReviews(db, { today, tzOffsetMinutes: options.tzOffsetMinutes ?? 0, now });
 
   // 1. Conclusão por evidência (DEC-09): sessão para estudo e recuperação, quiz para quiz.
   await db.batch([
@@ -290,54 +315,94 @@ export async function syncAgenda(db: D1Like, options: { today: string; now?: str
     );
   }
 
-  // 4. Cria o que falta: recuperação urgente, quiz liberado e o próximo estudo.
+  // 4. Cria o que falta: recuperação urgente, quiz liberado (ou corretivo),
+  //    revisões e o próximo estudo.
   const { results: states } = await db
     .prepare(
-      `SELECT s.content_id, s.state, c.estimated_minutes,
-              (SELECT group_concat(kind) FROM (SELECT q.kind FROM atlas_questions q
-                 WHERE q.content_id = s.content_id AND q.active = 1 ORDER BY q.position, q.id)) AS question_kinds
+      `SELECT s.content_id, s.state, c.estimated_minutes
        FROM atlas_content_states s JOIN atlas_contents c ON c.id = s.content_id
-       WHERE s.state IN ('bloqueado', 'aguardando-quiz')`,
+       WHERE s.state IN ('bloqueado', 'aguardando-quiz', 'em-revisao-ativa')`,
     )
-    .all<{ content_id: string; state: string; estimated_minutes: number | null; question_kinds: string | null }>();
-  const inserts = states.map((row) =>
-    row.state === 'bloqueado'
-      ? insertItem(
+    .all<{ content_id: string; state: string; estimated_minutes: number | null }>();
+  const inserts: ReturnType<typeof insertItem>[] = [];
+  for (const row of states) {
+    const studyMinutes = Number(row.estimated_minutes ?? DEFAULT_STUDY_MINUTES);
+    const corrective = row.state === 'em-revisao-ativa';
+    if (row.state === 'bloqueado' || (corrective && !(await correctiveReady(db, row.content_id)))) {
+      inserts.push(
+        insertItem(
           db,
           {
             kind: 'recuperacao',
             contentId: row.content_id,
-            durationMinutes: Number(row.estimated_minutes ?? DEFAULT_STUDY_MINUTES),
+            durationMinutes: studyMinutes,
             priority: 'urgente',
-            reason: 'Reprovado no quiz: estude de novo para liberar outra tentativa (DEC-04).',
-          },
-          today,
-          now,
-        )
-      : insertItem(
-          db,
-          {
-            kind: 'quiz',
-            contentId: row.content_id,
-            durationMinutes: quizMinutes((row.question_kinds?.split(',') ?? []) as QuestionKind[]),
-            priority: 'alta',
-            reason: 'Sessão concluída: o quiz confirma o conteúdo e o leva a concluído.',
+            reason: corrective
+              ? 'Falhou na revisão: estude de novo para liberar o quiz corretivo (DEC-03).'
+              : 'Reprovado no quiz: estude de novo para liberar outra tentativa (DEC-04).',
           },
           today,
           now,
         ),
-  );
+      );
+      continue;
+    }
+    inserts.push(
+      insertItem(
+        db,
+        {
+          kind: 'quiz',
+          contentId: row.content_id,
+          durationMinutes: quizMinutes(await questionKinds(db, row.content_id)),
+          priority: corrective ? 'urgente' : 'alta',
+          reason: corrective
+            ? 'Quiz corretivo: passe para revalidar o conteúdo depois da revisão que falhou.'
+            : 'Sessão concluída: o quiz confirma o conteúdo e o leva a concluído.',
+        },
+        today,
+        now,
+      ),
+    );
+  }
+  const { results: reviewStates } = await db
+    .prepare(`SELECT content_id, state FROM atlas_content_states WHERE state IN ('concluido', 'revalidado', 'aguardando-revisao')`)
+    .all<{ content_id: string; state: string }>();
+  const reviewable = new Set(reviewStates.map((row) => row.content_id));
+  for (const review of reviews) {
+    if (!reviewable.has(review.contentId)) continue;
+    inserts.push(
+      insertItem(
+        db,
+        {
+          kind: 'revisao',
+          contentId: review.contentId,
+          sourceRef: review.stage,
+          dueDate: review.dueDate < today ? today : review.dueDate,
+          durationMinutes: quizMinutes(await questionKinds(db, review.contentId)),
+          priority: 'alta',
+          reason: `Revisão de ${review.stage}: contada a partir da conclusão do conteúdo em ${formatDay(review.anchor.slice(0, 10))} (DEC-09).`,
+        },
+        today,
+        now,
+      ),
+    );
+  }
 
   const pendingStudy = await db
     .prepare(`SELECT 1 AS found FROM atlas_agenda_items WHERE status = 'pendente' AND kind IN ('estudo', 'recuperacao') LIMIT 1`)
     .first<{ found: number }>();
   if (!pendingStudy) {
-    const roadmap = await getRoadmap(db);
-    const next = pickNextStudy(roadmap, await listOpenSessions(db));
-    const content = roadmap?.phases
-      .flatMap((phase) => phase.disciplines.flatMap((discipline) => discipline.contents))
-      .find((item) => item.id === next?.contentId);
-    if (next && content && STILL_VALID.estudo.includes(content.state)) {
+    // Próximo estudo: sessão aberta, conteúdo em estudo ou o primeiro liberado do
+    // roadmap. Recuperação e corretivo já têm seus próprios itens.
+    const contents = roadmapContents(await getRoadmap(db));
+    const [open] = (await listOpenSessions(db)).filter((session) =>
+      STILL_VALID.estudo.includes(contents.find((item) => item.id === session.contentId)?.state ?? ''),
+    );
+    const content = open
+      ? contents.find((item) => item.id === open.contentId)
+      : (contents.find((item) => item.state === 'em-estudo') ??
+        contents.find((item) => item.state === 'nao-iniciado' && !item.locked));
+    if (content) {
       inserts.push(
         insertItem(
           db,
@@ -345,8 +410,12 @@ export async function syncAgenda(db: D1Like, options: { today: string; now?: str
             kind: 'estudo',
             contentId: content.id,
             durationMinutes: content.estimatedMinutes ?? DEFAULT_STUDY_MINUTES,
-            priority: content.state === 'em-revisao-ativa' ? 'alta' : 'normal',
-            reason: next.kind === 'retomar' ? 'Você tem uma sessão aberta deste conteúdo: retome de onde parou.' : next.reason,
+            priority: 'normal',
+            reason: open
+              ? 'Você tem uma sessão aberta deste conteúdo: retome de onde parou.'
+              : content.state === 'em-estudo'
+                ? 'Você começou este conteúdo e ainda não encerrou.'
+                : 'Próximo conteúdo liberado do roadmap.',
           },
           today,
           now,

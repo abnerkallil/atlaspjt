@@ -69,6 +69,16 @@ const formatDate = (iso: string) =>
     minute: '2-digit',
   });
 
+// Rótulo do quiz pela finalidade (MVP-06).
+function purposeLabel(item: { purpose: QuizAttempt['purpose']; stage: QuizAttempt['stage'] }) {
+  if (item.purpose === 'revisao') return `Revisão de ${item.stage ?? ''}`.trim();
+  if (item.purpose === 'corretivo') return `Quiz corretivo${item.stage ? ` (${item.stage})` : ''}`;
+  return 'Quiz do conteúdo';
+}
+
+const dayMonth = (iso: string) =>
+  new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+
 function isAnswered(question: PublicQuestion, answer: Answer | undefined) {
   if (!answer) return false;
   if (question.kind === 'multipla') return typeof answer.option === 'number';
@@ -331,18 +341,21 @@ function QuizList(props: {
                   <li key={item.contentId}>
                     <div>
                       <small>
-                        {item.disciplineTitle} · {item.contentId}
+                        {purposeLabel(item)} · {item.disciplineTitle} ·{' '}
+                        {item.contentId}
                       </small>
                       <strong>{item.contentTitle}</strong>
                       <span>
                         {item.questionCount === 0
                           ? 'Ainda sem questões cadastradas.'
-                          : `${Math.min(item.questionCount, QUIZ_SIZE)} questões${item.attempts ? ` · ${item.attempts} tentativa(s) antes` : ''}`}
+                          : !item.ready
+                            ? 'Estude o conteúdo de novo (conclua uma sessão) para liberar o quiz corretivo.'
+                            : `${Math.min(item.questionCount, QUIZ_SIZE)} questões${item.attempts ? ` · ${item.attempts} tentativa(s) antes` : ''}`}
                       </span>
                     </div>
                     <Button
                       className="primary-button"
-                      disabled={item.questionCount === 0}
+                      disabled={item.questionCount === 0 || !item.ready}
                       onClick={() => props.onPick(item)}
                     >
                       {item.openAttemptId ? (
@@ -373,7 +386,8 @@ function QuizList(props: {
                   <li key={attempt.id}>
                     <div>
                       <small>
-                        {formatDate(attempt.startedAt)} · {attempt.contentId}
+                        {formatDate(attempt.startedAt)} · {purposeLabel(attempt)}{' '}
+                        · {attempt.contentId}
                       </small>
                       <strong>{attempt.contentTitle}</strong>
                       <span>
@@ -422,11 +436,15 @@ function QuizPrep(props: {
   return (
     <section className="qz-view" aria-labelledby="qz-title">
       <PageHeading
-        eyebrow={`QUIZ · ${item.disciplineTitle.toUpperCase()}`}
+        eyebrow={`${purposeLabel(item).toUpperCase()} · ${item.disciplineTitle.toUpperCase()}`}
         title={item.contentTitle}
         titleId="qz-title"
       >
-        Confira as regras antes de começar: o tempo começa a contar ao iniciar.
+        {item.purpose === 'revisao'
+          ? `Revisão de ${item.stage} do conteúdo (DEC-09): aprovada, o conteúdo fica revalidado; reprovada, ele é reaberto até você estudar de novo e passar no quiz corretivo.`
+          : item.purpose === 'corretivo'
+            ? 'Quiz corretivo depois da revisão que falhou: aprovado, o conteúdo volta a revalidado e o ciclo de revisões continua.'
+            : 'Confira as regras antes de começar: o tempo começa a contar ao iniciar.'}
       </PageHeading>
       {props.error && (
         <div className="rm-callout qz-alert">
@@ -465,7 +483,7 @@ function QuizPrep(props: {
             onClick={props.onStart}
           >
             <Play size={17} fill="currentColor" />{' '}
-            {props.busy ? 'Abrindo…' : 'Iniciar quiz'}
+            {props.busy ? 'Abrindo…' : `Iniciar ${item.purpose === 'revisao' ? 'revisão' : 'quiz'}`}
           </Button>
           <Button
             variant="outline"
@@ -675,6 +693,7 @@ function QuizRunner({
       <div className="qz-topbar">
         <div>
           <p className="eyebrow">
+            {purposeLabel(attempt).toUpperCase()} ·{' '}
             {attempt.contentTitle.toUpperCase()} · QUESTÃO {index + 1} DE{' '}
             {questions.length}
           </p>
@@ -984,12 +1003,42 @@ function QuizResult(props: {
   const wrong = (attempt.results ?? []).filter(
     (item) => !item.correct && !item.voided,
   ).length;
+  const review = attempt.review;
+  // Próximo passo pela finalidade; a revisão fecha com o resumo do ciclo (MVP-06).
+  const nextStep =
+    attempt.purpose === 'quiz'
+      ? passed
+        ? {
+            title: 'Conteúdo concluído',
+            text: `${attempt.contentTitle} foi marcado como concluído no roadmap. A revisão de 24h já está na agenda.`,
+          }
+        : {
+            title: 'Conteúdo bloqueado',
+            text: `${wrong} questão(ões) erradas. O conteúdo ficou bloqueado até você estudar de novo; ao concluir a nova sessão, o quiz é liberado outra vez.`,
+          }
+      : review?.cycleDone
+        ? {
+            title: 'Ciclo de revisões concluído',
+            text: `Revisões de 24h, 7d e 30d aprovadas: ${attempt.contentTitle} está consolidado e não tem mais revisões agendadas.`,
+          }
+        : passed
+          ? {
+              title: 'Conteúdo revalidado',
+              text: review?.next
+                ? `Próxima: revisão de ${review.next.stage} em ${dayMonth(review.next.dueAt)}, já na agenda.`
+                : 'O conteúdo foi revalidado.',
+            }
+          : {
+              title: 'Conteúdo reaberto',
+              text: `${wrong} questão(ões) erradas. ${attempt.contentTitle} está em revisão ativa: estude de novo (recuperação urgente na agenda) e faça o quiz corretivo.`,
+            };
   return (
     <section className="qz-view" aria-labelledby="qz-title">
       <div className="page-heading">
         <div>
           <p className="eyebrow">
-            RESULTADO · {attempt.contentTitle.toUpperCase()}
+            RESULTADO · {purposeLabel(attempt).toUpperCase()} ·{' '}
+            {attempt.contentTitle.toUpperCase()}
           </p>
           <h1 id="qz-title">
             {passed
@@ -1118,24 +1167,10 @@ function QuizResult(props: {
           <RotateCcw size={18} />
           <div>
             <p className="eyebrow">PRÓXIMO PASSO</p>
-            <h2 id="qz-recovery-title">
-              {passed ? 'Conteúdo concluído' : 'Conteúdo bloqueado'}
-            </h2>
+            <h2 id="qz-recovery-title">{nextStep.title}</h2>
           </div>
         </div>
-        {passed ? (
-          <p>
-            {attempt.contentTitle} foi marcado como concluído no roadmap. Os
-            conteúdos que dependem dele passam a contar com este pré-requisito
-            cumprido.
-          </p>
-        ) : (
-          <p>
-            {wrong} questão(ões) erradas. O conteúdo ficou bloqueado até você
-            estudar de novo; ao concluir a nova sessão, o quiz é liberado outra
-            vez.
-          </p>
-        )}
+        <p>{nextStep.text}</p>
         {props.error && (
           <div className="rm-callout qz-alert">
             <AlertTriangle size={16} />
