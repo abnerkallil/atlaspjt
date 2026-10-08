@@ -296,3 +296,20 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
   aparecem no terminal de quem importa, nunca no site.
 - Se algo der errado: só poderia afetar uma importação futura de questões
   (`pnpm run questoes:importar`), nunca o site em produção.
+
+## PR #47 — Acervo de fontes no R2 (APO-05, DEC-015)
+
+- Ponto de restauração: branch `restore/pre-apo-05` (commit `2d61bd9`, main antes do merge).
+- Migration nova: `0016_fontes_apo05` (tabela nova `atlas_question_sources`:
+  título, tema, tipo de fonte, banca/órgão/ano, arquivo, hash e chave no R2).
+  O `Publicar Atlas.cmd` aplica sozinho; nenhuma tabela existente muda.
+- O que muda no site: nova tela **Fontes** no menu principal, para cadastrar,
+  listar (por tema) e remover o PDF de prova de concurso/apostila/lista que
+  alimenta o banco de questões do Apolo. O download só funciona autenticado,
+  pelo próprio site — sem link público. Nenhuma fonte foi cadastrada em
+  produção por este PR.
+- Também: script `pnpm run apolo:fonte` (upload em lote fora da tela) e o
+  backup manual (`pnpm run backup:atlas`) passa a copiar o acervo de fontes
+  junto com os demais anexos do R2.
+- Se algo der errado: só poderia afetar a tela Fontes e o banco de questões
+  do Apolo (ainda em construção); nenhuma tela de estudo do aluno é tocada.
