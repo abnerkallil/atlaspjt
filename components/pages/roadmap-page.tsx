@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AlertTriangle, Check, LockKeyhole, Map as MapIcon, Play, Route } from 'lucide-react';
 import { PageHeading } from '@/components/atlas/page-heading';
@@ -179,7 +180,7 @@ export function RoadmapPage() {
           <span>Conteúdos concluídos</span>
           <strong>{phase.progress.completed} de {phase.progress.total}</strong>
           <ProgressBar value={phase.progress.percent} />
-          <small>Concluído, aguardando revisão ou revalidado. Pesos e penalidades entram com o cálculo de progresso.</small>
+          <small>Concluído, aguardando revisão ou revalidado. A nota com pesos fica em Progresso.</small>
         </article>
         <article className="rm-progress-card">
           <span>Liberados para estudar</span>
@@ -276,6 +277,11 @@ export function RoadmapPage() {
             </button>
           )}
           {actionError && <p className="rm-error" role="alert">{actionError}</p>}
+          {content.state !== 'nao-iniciado' && (
+            <Link className="rm-report-link" href={`/relatorio?conteudo=${encodeURIComponent(content.id)}`}>
+              Ver relatório do conteúdo
+            </Link>
+          )}
         </aside>
       </div>
 
