@@ -346,3 +346,16 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 - Se algo der errado: só poderia afetar a tela Rascunhos e o banco de
   questões do Apolo (ainda em construção); nenhuma tela de estudo do aluno é
   tocada. Nenhum rascunho foi aprovado em produção por este PR.
+
+## PR #50 — Modelo do aluno: Elo e memória por questão (APO-09)
+
+- Ponto de restauração: branch `restore/pre-apo-09` (commit `a2d9a71`, main antes do merge).
+- Sem migration nova. Nenhum estado novo é gravado no banco — o modelo é
+  recalculado do zero a partir do histórico de tentativas de quiz já
+  existente a cada leitura.
+- O que muda no site: nada visível — este PR só adiciona uma rota nova,
+  `GET /api/apolo/perfil`, que calcula a habilidade do aluno por tema e a
+  fila de recuperação por questão (dificuldade/estabilidade), sem tela
+  própria ainda e sem afetar nota, quiz ou qualquer outra tela.
+- Se algo der errado: só poderia afetar essa rota nova, que nada mais do
+  site usa ainda; nenhuma tela de estudo do aluno é tocada.
