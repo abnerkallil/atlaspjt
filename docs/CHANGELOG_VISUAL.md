@@ -155,3 +155,19 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 - Se algo der errado: quiz que repete questões demais, faixa de estudo
   dirigido que aparece sem ter reprovado, ou aviso de congelamento errado vêm
   deste PR.
+
+## PR #37 — Relatórios explicáveis (MVP-09, ATLAS-ESC-19)
+
+- Ponto de restauração: branch `restore/pre-mvp-09` (commit `2c175d4`, main antes do merge).
+- Sem migration nova.
+- O que muda no site:
+  - **Página nova `/relatorio`**: lista os conteúdos já estudados; cada um abre
+    um relatório com Próxima ação (com botão), Risco, Origem da nota, Mudanças
+    de estado e Histórico (sessões e quizzes).
+  - **Progresso**: link "Relatórios por conteúdo" no subtítulo e "Ver
+    relatório" em cada conteúdo em risco.
+  - **Roadmap**: "Ver relatório do conteúdo" no painel do conteúdo escolhido
+    (só para conteúdos já iniciados); o texto do cartão "Conteúdos concluídos"
+    passou a dizer "A nota com pesos fica em Progresso."
+- Se algo der errado: relatório que não abre, risco ou próxima ação que não
+  batem com o estado do conteúdo, ou histórico incompleto vêm deste PR.
