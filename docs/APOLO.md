@@ -75,3 +75,41 @@ O corte roda sozinho a cada quiz enviado (`app/api/quizzes/[id]/route.ts`,
 depois que a nota já foi gravada; uma falha na auditoria nunca derruba a
 resposta do quiz). `GET /api/apolo/estatisticas` expõe tudo isso para leitura
 (`{ items, instruments, alerts }`), sem aplicar nenhum corte por si só.
+
+## Planos de prova (APO-11)
+
+Cada instrumento (quiz, revisão 24h/7d/30d, corretivo, atividade, exame de
+meio de curso, atividade final, recuperação, proficiência) tem uma regra fixa
+e visível de composição: tamanho, mistura de tipo de questão, mistura de
+Bloom, mistura de dificuldade, intercalação, tempo por tipo (reaproveita
+`QUESTION_SECONDS` de `lib/quizzes.ts`) e corte de aprovação. Tudo em
+`lib/apolo/plans.ts` (funções puras, sem I/O): `resolvePlan(instrumento,
+áreaDeConhecimento?, overrides?)` monta o plano, `allocateCounts` converte uma
+mistura de pesos em contagens inteiras que somam o tamanho do plano (maior
+resto/Hamilton, determinístico), e `applyDifficultyFallback` resolve o risco
+do card — quando o banco não tem questões suficientes numa faixa de
+dificuldade, o excedente vai para a faixa vizinha (fácil-média-difícil) com
+sobra, e um aviso é reportado; nenhuma questão é inventada.
+
+O plano de `quiz` sem área de conhecimento é, de propósito, idêntico ao que
+`lib/quizzes.ts` já faz hoje (`QUIZ_SIZE`, `QUESTION_SECONDS`,
+`PASSING_SCORE`) — nada muda na prova atual. O perfil por área de
+conhecimento do tema (`atlas_themes.knowledge_area`, APO-02) só ajusta a
+mistura de tipo de questão: exatas prioriza cálculo/lacuna numérica; humanas
+prioriza dissertativa; jurídico prioriza certo/errado; sociais aplicadas e
+linguagens ficam mistas. "Biológicas" (uma das 6 áreas já presentes no schema,
+mas que o card não listava) foi tratada como mista, igual sociais aplicadas,
+até o Abner revisar.
+
+**Pendência disclosed:** o card cita "Gate: não (implementa o DEC-10)", mas
+o DEC-10 do kanban pessoal ("Definir a composição das avaliações", P0,
+Pedagogia/Produto) segue sem decisão formal registrada em
+`docs/ATLAS_DECISIONS.md` — só existe como comportamento de fato já
+implementado em `lib/quizzes.ts`. Este card não fecha o DEC-10: só expressa
+esse comportamento de hoje como um plano versionado e propõe, como primeiro
+rascunho, os perfis por área e os planos dos instrumentos que ainda não têm
+motor próprio (atividade, exame de meio de curso, atividade final,
+recuperação, proficiência — todos "fora da espinha", só existem como estado
+da FSM em `lib/pedagogy/states.ts`, DEC-018). Nenhum desses planos está
+ligado à seleção real de questão ainda — isso é o APO-12 (seletor
+adaptativo), que depende deste card.
