@@ -475,6 +475,7 @@ export function StudySession({
           O próximo passo é o quiz de {session.contentTitle}.
         </p>
         <div className="ss-actions">
+          <Link className="ss-link" href={`/quizzes?conteudo=${encodeURIComponent(session.contentId)}`}>Fazer o quiz</Link>
           {noteId && <Link className="ss-link" href="/notas">Abrir minhas notas</Link>}
           <Button variant="outline" className="ss-outline" onClick={onBack}>Voltar ao Estudar</Button>
           <Link className="ss-link" href="/">Ir para Hoje</Link>

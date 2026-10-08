@@ -143,3 +143,32 @@ concluída, `finished_at` e `evidence_id`. Regras em `lib/study-sessions.ts`:
 API: `GET /api/sessoes?abertas=1`, `GET /api/sessoes?conteudo=ID`,
 `POST /api/sessoes { contentId }`, `GET /api/sessoes/:id` e
 `PATCH /api/sessoes/:id { action: pausar | retomar | salvar-ponto | concluir, checkpoint? }`.
+
+## Quizzes (MVP-04)
+
+`atlas_questions` (migration 0009): banco de questões por conteúdo. `kind`
+`multipla` (alternativas em `options_json`, certa em `correct_option`),
+`dissertativa` (`model_answer`) ou `calculo` (`expected_value` ± `tolerance` e 5
+perguntas de verificação em `verification_json`). `source` diz se veio do banco
+inicial (`curado`, migration 0010) ou de importação (`importado`); `active = 0`
+tira a questão dos próximos sorteios sem quebrar tentativas antigas.
+
+`atlas_quiz_attempts` (migration 0009): uma linha por tentativa, com as questões
+sorteadas e a ordem embaralhada das alternativas (`questions_json`), prazo
+(`deadline_at`), respostas, correção (`result_json`), nota, aprovação e a
+evidência. `status`: `em-andamento` → (com dissertativas) `autoavaliacao` →
+`enviado`; no máximo uma tentativa aberta por conteúdo e finalidade. Regras em
+`lib/quizzes.ts` (DEC-04 e DEC-10):
+
+- Libera só com o conteúdo em `aguardando-quiz`; até 10 questões; tempo total =
+  1 min por múltipla + 5 min por dissertativa; cálculo sem limite.
+- Correção determinística: múltipla pela alternativa; dissertativa pela
+  autoavaliação depois de travar as respostas e ver o gabarito; cálculo pelo
+  valor, anulado com menos de 3 das 5 verificações. Cada questão vale 100/N
+  sem contar as anuladas; aprova com 70%.
+- Envio grava a evidência `kind = 'quiz'` e aplica `quiz-aprovado` (→
+  `concluido`) ou `quiz-reprovado` (→ `bloqueado`).
+
+API: `GET /api/quizzes` (liberados e tentativas), `POST /api/quizzes { contentId }`,
+`GET /api/quizzes/:id` e `POST /api/quizzes/:id { action: travar | enviar, answers?, selfAssessments? }`.
+Importação de questões: `docs/QUESTOES.md`.

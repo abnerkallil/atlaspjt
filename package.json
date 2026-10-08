@@ -13,6 +13,7 @@
     "deploy:atlas": "node scripts/deploy.mjs",
     "backup:atlas": "node scripts/backup.mjs",
     "backup:restore-local": "node scripts/restore-local.mjs",
+    "questoes:importar": "node scripts/import-questions.mjs",
     "db:generate": "drizzle-kit generate",
     "db:catalog": "tsc -p tsconfig.notes-spike.json && node .notes-spike-dist/tools/write-catalog-seed.js",
     "db:migrate:local": "wrangler d1 migrations apply site-creator-d1 --local --config wrangler.local.jsonc",
