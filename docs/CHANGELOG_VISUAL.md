@@ -398,3 +398,16 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
   existe ainda para usar esse número.
 - Se algo der errado: só poderia afetar `lib/apolo/plans.ts`, que nenhuma
   tela ou rota usa ainda; nenhuma tela de estudo do aluno é tocada.
+
+## PR #53 — Correção: atividade_final não teve tamanho confirmado pelo DEC-10
+
+- Ponto de restauração: branch `restore/pre-apo-11-fix` (commit `dadfaf0`, main antes do merge).
+- Sem migration nova.
+- O que muda no site: nada visível — corrige só um comentário/valor em
+  `lib/apolo/plans.ts` (nenhuma tela usa esse plano ainda). O PR #52 tinha
+  registrado por engano que o DEC-10 confirmava 60 questões também para a
+  atividade final; na verdade só o exame de meio teve esse número
+  confirmado, e a atividade final volta a ser rascunho (20 questões, sem
+  decisão).
+- Se algo der errado: só poderia afetar `lib/apolo/plans.ts`, que nenhuma
+  tela ou rota usa ainda.
