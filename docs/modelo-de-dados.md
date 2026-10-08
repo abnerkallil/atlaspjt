@@ -237,3 +237,27 @@ tentativas (quiz, revisão, corretivo); retenção é revisões aprovadas sobre
 revisões feitas. Consistência soma `active_seconds` por dia local nos últimos
 28 dias. O gatilho do ajuste adaptativo dos pesos (±10 pp) aguarda o Gate
 `ATLAS-RAF-GATE-20261008-001`.
+
+## Recuperação e bloqueios (MVP-08)
+
+Sem tabela nova: `lib/recovery.ts` lê `atlas_quiz_attempts` (resultado por
+questão em `result_json`) e `atlas_questions`. O desbloqueio continua sendo a
+transição do DEC-03 ao passar; o MVP-08 não cria estado novo.
+
+- Reprovações seguidas: tentativas enviadas reprovadas desde a última aprovada
+  (quiz, revisão ou corretivo). Duas ou mais aparecem como reincidência na
+  agenda e em Progresso.
+- Estudo dirigido (`GET /api/recuperacao?conteudo=`): as questões erradas na
+  última reprovação, com a resposta certa e a explicação, no topo da sessão de
+  estudo.
+- Quiz dirigido: enquanto há reprovação sem aprovação depois, o próximo quiz (o
+  quiz do conteúdo bloqueado ou o corretivo) traz primeiro as questões erradas
+  e completa com o sorteio normal; `questions_json.directed` guarda quantas
+  voltaram.
+- Conclusão congelada (DEC-03): disciplina com conteúdo bloqueado ou em revisão
+  ativa mostra o aviso em Progresso; a cobertura já não conta esses conteúdos.
+- Penalidade numérica: nenhuma decisão aprovada define um desconto em pontos
+  por reprovação (a única redução aprovada é a da atividade final pelo exame de
+  meio de curso, DEC-10, que depende das avaliações). Hoje a reprovação pesa só
+  pelo que a fórmula do MVP-07 já mede (revisão aprovada sobre vencida e
+  cobertura).

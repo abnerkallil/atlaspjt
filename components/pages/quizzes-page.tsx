@@ -703,6 +703,14 @@ function QuizRunner({
         </div>
         {timer}
       </div>
+      {attempt.directed > 0 && (
+        <p className="qz-directed">
+          Quiz dirigido:{' '}
+          {attempt.directed === 1
+            ? 'a questão que você errou na última tentativa voltou.'
+            : `as ${attempt.directed} questões que você errou na última tentativa voltaram.`}
+        </p>
+      )}
 
       <nav className="qz-steps" aria-label="Navegação entre questões">
         {questions.map((item, i) => {

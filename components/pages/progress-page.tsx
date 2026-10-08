@@ -126,6 +126,11 @@ export function ProgressPage() {
           <article className="pg-card" aria-labelledby="pg-trend-title">
             <p className="eyebrow">HISTÓRICO E TENDÊNCIA</p>
             <h2 id="pg-trend-title">{selected.title}</h2>
+            {selected.frozenBy.length > 0 && (
+              <p className="pg-frozen" role="note">
+                Conclusão da disciplina congelada até você passar de novo em: {selected.frozenBy.join(', ')}.
+              </p>
+            )}
             <fieldset className="pg-segmented">
               <legend className="sr-only">Métrica do gráfico</legend>
               {(Object.keys(METRIC_LABEL) as Metric[]).map((key) => (

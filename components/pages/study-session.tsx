@@ -9,6 +9,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useAtlasShell } from '@/components/atlas/atlas-shell';
 import { updateStudySession } from '@/components/pages/use-study-overview';
+import { DirectedStudy } from '@/components/pages/directed-study';
 import {
   sessionContentId, sessionFixation, sessionMedia, sessionPlan, sessionPractice, sessionReading, type SessionStepId,
 } from '@/lib/demo/study';
@@ -519,6 +520,8 @@ export function StudySession({
           <Button variant="outline" className="ss-outline" onClick={onBack}>Sair e voltar depois</Button>
         </div>
       )}
+
+      <DirectedStudy contentId={session.contentId} />
 
       <div className="ss-layout">
         <article className="ss-material">

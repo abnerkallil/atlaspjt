@@ -11,6 +11,7 @@ import { listOpenSessions } from './study-sessions.js';
 import { roadmapContents } from './study-plan.js';
 import { correctiveReady, syncReviews } from './reviews.js';
 import { QUESTION_SECONDS, QUIZ_SIZE, type QuestionKind } from './quizzes.js';
+import { recoveryReason, recoveryStatus } from './recovery.js';
 
 export const AGENDA_KINDS = ['estudo', 'quiz', 'revisao', 'recuperacao'] as const;
 export type AgendaKind = (typeof AGENDA_KINDS)[number];
@@ -328,6 +329,7 @@ export async function syncAgenda(db: D1Like, options: { today: string; tzOffsetM
   for (const row of states) {
     const studyMinutes = Number(row.estimated_minutes ?? DEFAULT_STUDY_MINUTES);
     const corrective = row.state === 'em-revisao-ativa';
+    const recovery = await recoveryStatus(db, row.content_id);
     if (row.state === 'bloqueado' || (corrective && !(await correctiveReady(db, row.content_id)))) {
       inserts.push(
         insertItem(
@@ -337,9 +339,12 @@ export async function syncAgenda(db: D1Like, options: { today: string; tzOffsetM
             contentId: row.content_id,
             durationMinutes: studyMinutes,
             priority: 'urgente',
-            reason: corrective
-              ? 'Falhou na revisão: estude de novo para liberar o quiz corretivo (DEC-03).'
-              : 'Reprovado no quiz: estude de novo para liberar outra tentativa (DEC-04).',
+            reason: recoveryReason(
+              recovery,
+              corrective
+                ? 'Falhou na revisão: estude de novo para liberar o quiz corretivo (DEC-03).'
+                : 'Reprovado no quiz: estude de novo para liberar outra tentativa (DEC-04).',
+            ),
           },
           today,
           now,
@@ -356,8 +361,10 @@ export async function syncAgenda(db: D1Like, options: { today: string; tzOffsetM
           durationMinutes: quizMinutes(await questionKinds(db, row.content_id)),
           priority: corrective ? 'urgente' : 'alta',
           reason: corrective
-            ? 'Quiz corretivo: passe para revalidar o conteúdo depois da revisão que falhou.'
-            : 'Sessão concluída: o quiz confirma o conteúdo e o leva a concluído.',
+            ? 'Quiz corretivo: as questões erradas na revisão voltam; passe para revalidar o conteúdo.'
+            : recovery
+              ? 'Quiz dirigido: as questões que você errou voltam; passe para desbloquear o conteúdo.'
+              : 'Sessão concluída: o quiz confirma o conteúdo e o leva a concluído.',
         },
         today,
         now,
