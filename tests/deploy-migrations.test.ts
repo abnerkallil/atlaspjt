@@ -72,6 +72,7 @@ void test('produção atual: 0004 e 0006 aplicadas à mão são só registradas,
     '0015_banco_questoes_v2.sql',
     '0016_fontes_apo05.sql',
     '0017_rascunhos_apo07.sql',
+    '0018_moldes_apo16.sql',
   ]);
   assert.deepEqual(plan.partial, []);
 });
@@ -100,6 +101,7 @@ void test('migration nova ainda não aplicada vai para apply', () => {
       '0015_banco_questoes_v2.sql',
       '0016_fontes_apo05.sql',
       '0017_rascunhos_apo07.sql',
+      '0018_moldes_apo16.sql',
     ],
     partial: [],
   });

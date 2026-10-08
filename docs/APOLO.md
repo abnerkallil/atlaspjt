@@ -289,3 +289,50 @@ Nenhuma migration nova; nenhuma tela usa a rota nova ainda — fica para
 quando um card ligar a agenda (MVP-05) a ela.
 
 Gate: não.
+
+## Modelos de item (APO-16)
+
+Primeiro card que define geradores de verdade (o registro em si já existia
+desde o APO-01) — 5 funções puras em `lib/apolo/generators.ts`, uma por
+**categoria estrutural**: `calculo_percentual`, `equacao_linear`,
+`lacuna_numerica_formula`, `certo_errado_regra`, `interpretacao_texto`. A
+categoria estrutural é o próprio `generatorKey` do molde — já vinha separado
+do `theme` desde o desenho original (DEC-014): o mesmo gerador serve moldes
+de temas diferentes, só os `params` curados mudam. Isso é o que o card pede
+com "um molde de índice financeiro de Contabilidade Geral empresta a
+estrutura a um molde de alíquota de Direito Tributário" — `CG-MOD-01`/`02` e
+`DT-MOD-01` reaproveitam `calculo_percentual` com parâmetros próprios de
+cada tema (migração `0018_moldes_apo16.sql`, 10 moldes de Contabilidade
+Geral + 1 de Direito Tributário, todos nascendo `rascunho`, como todo molde
+desde o APO-01 — precisam de ativação explícita).
+
+Cada gerador é construído para nunca produzir versão inválida, qualquer que
+seja a semente — a garantia vem da aritmética do próprio gerador (sem laço
+que possa não terminar, sem divisão por zero, sem valor negativo onde não
+faz sentido), não de sorte com os parâmetros curados: `calculo_percentual`
+sempre sorteia uma base múltipla de 100 (a parte sai de divisão exata, sem
+arredondamento); `lacuna_numerica_formula` nunca deixa o caixa líquido
+negativo (pagamento é sempre limitado ao disponível) nem divide por vida
+útil zero; `equacao_linear` nunca sorteia coeficiente zero. `tests/apolo-
+generators.test.ts` expande cada um dos 11 moldes com 10 mil sementes
+diferentes e confere, em toda versão: resposta certa presente, distratores
+distintos dela e entre si (para `multipla`/`certo_errado`), valor numérico
+finito dentro do que o gerador garante (para `lacuna_numerica`), e resposta-
+modelo não vazia (para `dissertativa`) — mais um teste de determinismo
+(mesma semente, mesma versão) e um confirmando o reaproveitamento entre
+temas.
+
+**Simplificação assumida (disclosed):** "interpretação de texto curado" não
+gera texto novo — sorteia entre algumas variantes de texto+pergunta já
+escritas à mão nos `params` do molde. Um gerador que "interpreta" e produz
+pergunta nova sobre um texto arbitrário exigiria compreensão de linguagem,
+que o Apolo não tem por desenho (determinístico, sem IA, DEC-014). Isso é
+reaproveitar o mesmo princípio do APO-07 (fila de rascunhos: toda questão
+nasce curada por um humano antes de valer) aplicado a moldes.
+
+Nenhuma migration grava questão em `atlas_questions` a partir destes
+moldes — essa ligação (gerar sob demanda ou materializar no banco) é
+decisão de um card futuro; este card só entrega o gerador+verificador e os
+moldes em rascunho. Gate: não (coberto pelo DEC-014). Próximo passo antes de
+qualquer um destes moldes valer em produção: Abner revisa 20 versões de
+cada um e ativa (`setItemModelLifecycle`) — nenhum dos 11 está ativo ainda.
