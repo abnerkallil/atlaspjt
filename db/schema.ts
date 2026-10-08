@@ -169,6 +169,29 @@ export const atlasDisciplines = sqliteTable(
   (table) => [index('idx_atlas_disciplines_phase').on(table.phaseId, table.position)],
 );
 
+// Taxonomia aberta de tema (APO-02, DEC-014): sem enum fixo, hierarquia
+// opcional (um tema pode ter um tema pai), e área de conhecimento usada pelo
+// APO-11 para o perfil padrão da prova. Só o Abner cria tema novo, na tela de
+// curadoria (APO-07) — mitigação do risco de taxonomia virar bagunça sem dono.
+export const atlasThemes = sqliteTable(
+  'atlas_themes',
+  {
+    id: text('id').primaryKey(),
+    title: text('title').notNull(),
+    // Nullable: tema de topo não tem pai.
+    parentId: text('parent_id'),
+    // "exatas" | "humanas" | "sociais_aplicadas" | "juridico" | "biologicas" | "linguagens".
+    // Texto livre (não enum) pelo mesmo princípio de tema em atlas_questions.
+    knowledgeArea: text('knowledge_area'),
+    createdAt: text('created_at').notNull(),
+    updatedAt: text('updated_at').notNull(),
+  },
+  (table) => [
+    index('idx_atlas_themes_parent').on(table.parentId),
+    index('idx_atlas_themes_knowledge_area').on(table.knowledgeArea),
+  ],
+);
+
 export const atlasContents = sqliteTable(
   'atlas_contents',
   {
@@ -182,8 +205,13 @@ export const atlasContents = sqliteTable(
     title: text('title').notNull(),
     keywords: text('keywords'),
     estimatedMinutes: integer('estimated_minutes'),
+    // Tema do Apolo (APO-02). Nullable: conteúdo sem tema ainda cadastrado não quebra nada.
+    themeId: text('theme_id').references(() => atlasThemes.id, { onDelete: 'set null' }),
   },
-  (table) => [index('idx_atlas_contents_discipline').on(table.disciplineId, table.position)],
+  (table) => [
+    index('idx_atlas_contents_discipline').on(table.disciplineId, table.position),
+    index('idx_atlas_contents_theme').on(table.themeId),
+  ],
 );
 
 // Dependências entre conteúdos (DEC-05). Fundamentos compartilhados são

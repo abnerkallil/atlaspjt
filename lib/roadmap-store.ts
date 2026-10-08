@@ -18,6 +18,9 @@ export type RoadmapContentView = {
   // MVP-01: pré-requisitos ainda não cumpridos; "locked" quando isso impede começar.
   pendingPrerequisites: string[];
   locked: boolean;
+  // Tema do Apolo (APO-02). Nullable: conteúdo sem tema cadastrado ainda não quebra nada.
+  themeId: string | null;
+  themeTitle: string | null;
 };
 
 export type RoadmapProgress = { total: number; completed: number; percent: number };
@@ -54,6 +57,8 @@ type ContentRow = {
   estimated_minutes: number | null;
   state: string | null;
   state_updated_at: string | null;
+  theme_id: string | null;
+  theme_title: string | null;
 };
 
 // MVP: um único roadmap curado (DEC-05); devolve o mais antigo se houver mais.
@@ -69,11 +74,13 @@ export async function getRoadmap(db: D1Like): Promise<RoadmapView | null> {
         `SELECT c.id, p.id AS phase_id, p.position AS phase_position, p.title AS phase_title, p.summary AS phase_summary,
                 d.id AS discipline_id, d.position AS discipline_position, d.title AS discipline_title,
                 c.position, c.unit, c.title, c.keywords, c.estimated_minutes,
-                s.state, s.updated_at AS state_updated_at
+                s.state, s.updated_at AS state_updated_at,
+                c.theme_id, t.title AS theme_title
          FROM atlas_phases p
          JOIN atlas_disciplines d ON d.phase_id = p.id
          JOIN atlas_contents c ON c.discipline_id = d.id
          LEFT JOIN atlas_content_states s ON s.content_id = c.id
+         LEFT JOIN atlas_themes t ON t.id = c.theme_id
          WHERE p.roadmap_id = ?1
          ORDER BY p.position, d.position, c.position`,
       )
@@ -134,6 +141,8 @@ export async function getRoadmap(db: D1Like): Promise<RoadmapView | null> {
       prerequisites: prerequisites.get(row.id) ?? [],
       pendingPrerequisites: [],
       locked: false,
+      themeId: row.theme_id,
+      themeTitle: row.theme_title,
     });
   }
 
