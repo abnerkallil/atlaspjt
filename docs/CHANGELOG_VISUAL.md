@@ -134,3 +134,24 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
   - Saíram o "Plano da semana" de exemplo e o aviso "Dados de demonstração".
 - Se algo der errado: nota de disciplina ou indicador estranho, gráfico ou
   consistência que não bate com o que você estudou vêm deste PR.
+
+## PR #36 — Recuperação e bloqueios (MVP-08, ATLAS-ESC-18)
+
+- Ponto de restauração: branch `restore/pre-mvp-08` (commit `fb7af78`, main antes do merge).
+- Sem migration nova.
+- O que muda no site:
+  - **Sessão de estudo** de um conteúdo reprovado (bloqueado ou reaberto pela
+    revisão): faixa vermelha **Estudo dirigido** no topo, com as questões
+    erradas na última reprovação, a resposta certa e a explicação (fechada
+    quando são mais de 3; clique para abrir).
+  - **Quizzes**: o quiz seguinte a uma reprovação é dirigido. Aparece a faixa
+    "Quiz dirigido: as N questões que você errou voltaram" e elas estão entre
+    as 10 questões.
+  - **Hoje**: a recuperação urgente diz quantas questões erradas voltam e,
+    a partir da 2ª reprovação seguida, "Reincidência". O quiz depois do estudo
+    aparece como "Quiz dirigido".
+  - **Progresso**: conteúdos em risco mostram a reincidência, e a disciplina
+    com conteúdo bloqueado mostra "Conclusão da disciplina congelada".
+- Se algo der errado: quiz que repete questões demais, faixa de estudo
+  dirigido que aparece sem ter reprovado, ou aviso de congelamento errado vêm
+  deste PR.
