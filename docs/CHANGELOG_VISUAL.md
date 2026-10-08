@@ -475,3 +475,18 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 - Se algo der errado: reverter para `restore/pre-apo-15` remove a rota
   nova e volta os planos de revisão/corretivo ao tamanho único de antes,
   sem perder nenhuma tentativa ou nota já gravada.
+
+## PR #58 — Modelos de item: moldes transferíveis entre temas (APO-16)
+
+- Ponto de restauração: branch `restore/pre-apo-16` (commit `edf85ff`, main antes do merge).
+- Sem migration que mude tabela existente — só insere 11 linhas novas em
+  `atlas_item_models` (5 geradores reais + 11 moldes: 10 de Contabilidade
+  Geral, 1 de Direito Tributário).
+- O que muda no site: **nada** — todo molde nasce "rascunho" e precisa de
+  ativação manual depois que o Abner revisar 20 versões de cada um. Nenhuma
+  migration liga esses moldes a `atlas_questions`; nenhuma tela usa isso
+  ainda. Enquanto nenhum molde for ativado, nada no quiz, revisão ou
+  corretivo muda.
+- Se algo der errado: reverter para `restore/pre-apo-16` remove os 11
+  moldes e os 5 geradores novos, sem afetar nenhum quiz, nota ou tentativa
+  já gravada.
