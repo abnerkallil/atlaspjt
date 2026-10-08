@@ -2,6 +2,7 @@ import {
   index,
   integer,
   primaryKey,
+  real,
   sqliteTable,
   text,
   uniqueIndex,
@@ -323,5 +324,84 @@ export const atlasStudySessions = sqliteTable(
     uniqueIndex('uq_atlas_study_sessions_open_content')
       .on(table.contentId)
       .where(sql`status <> 'concluida'`),
+  ],
+);
+
+// Quizzes pré-cadastrados (MVP-04, DEC-10/DEC-04). Questões curadas por
+// conteúdo e tentativas com respostas, correção e resultado. Uma tentativa
+// aprovada ou reprovada registra evidência "quiz" e move o estado do conteúdo
+// (DEC-03) pela trilha de auditoria (TEC-06).
+// ---------------------------------------------------------------------------
+
+export const atlasQuestions = sqliteTable(
+  'atlas_questions',
+  {
+    id: text('id').primaryKey(),
+    contentId: text('content_id')
+      .notNull()
+      .references(() => atlasContents.id, { onDelete: 'cascade' }),
+    position: integer('position').notNull(),
+    // "multipla", "dissertativa" ou "calculo" (lib/quizzes.ts).
+    kind: text('kind').notNull(),
+    prompt: text('prompt').notNull(),
+    // Enunciado de apoio (caso prático, dados do cálculo).
+    context: text('context'),
+    // Múltipla escolha: alternativas em JSON e índice da correta.
+    optionsJson: text('options_json'),
+    correctOption: integer('correct_option'),
+    // Dissertativa/cálculo: gabarito comparado pelo próprio usuário (DEC-04, sem IA).
+    modelAnswer: text('model_answer'),
+    // Cálculo: valor esperado e tolerância absoluta.
+    expectedValue: real('expected_value'),
+    tolerance: real('tolerance'),
+    // Cálculo: 5 perguntas de verificação do raciocínio (DEC-10), em JSON.
+    verificationJson: text('verification_json'),
+    explanation: text('explanation').notNull(),
+    // "curado" (banco inicial) ou "importado" (planilha/CSV).
+    source: text('source').notNull().default('curado'),
+    active: integer('active').notNull().default(1),
+    updatedAt: text('updated_at').notNull(),
+  },
+  (table) => [
+    index('idx_atlas_questions_content').on(table.contentId, table.position),
+  ],
+);
+
+export const atlasQuizAttempts = sqliteTable(
+  'atlas_quiz_attempts',
+  {
+    id: text('id').primaryKey(),
+    contentId: text('content_id')
+      .notNull()
+      .references(() => atlasContents.id, { onDelete: 'cascade' }),
+    // "quiz" (quiz do conteúdo); as revisões do MVP-06 usam o mesmo registro.
+    purpose: text('purpose').notNull().default('quiz'),
+    // "em-andamento", "autoavaliacao" (respostas travadas, falta comparar as
+    // dissertativas com o gabarito) ou "enviado".
+    status: text('status').notNull(),
+    startedAt: text('started_at').notNull(),
+    // Fim do tempo total (soma dos tempos por questão); nulo sem limite.
+    deadlineAt: text('deadline_at'),
+    submittedAt: text('submitted_at'),
+    // Questões sorteadas, na ordem apresentada, com o tempo de cada uma.
+    questionsJson: text('questions_json').notNull(),
+    answersJson: text('answers_json'),
+    // Correção por questão (acerto, anulada, explicação).
+    resultJson: text('result_json'),
+    score: real('score'),
+    passed: integer('passed'),
+    evidenceId: text('evidence_id').references(() => atlasEvidences.id, {
+      onDelete: 'set null',
+    }),
+  },
+  (table) => [
+    index('idx_atlas_quiz_attempts_content').on(
+      table.contentId,
+      table.startedAt,
+    ),
+    // No máximo uma tentativa em andamento por conteúdo e finalidade.
+    uniqueIndex('uq_atlas_quiz_attempts_open')
+      .on(table.contentId, table.purpose)
+      .where(sql`status <> 'enviado'`),
   ],
 );

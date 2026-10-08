@@ -64,6 +64,20 @@
       "when": 1791409882743,
       "tag": "0008_study_sessions",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1791419512075,
+      "tag": "0009_quizzes",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1791419861808,
+      "tag": "0010_question_bank",
+      "breakpoints": true
     }
   ]
 }

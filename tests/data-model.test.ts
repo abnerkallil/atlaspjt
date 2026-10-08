@@ -44,7 +44,11 @@ void test('TEC-02: a espinha do DEC-05 existe no banco migrado, com estado e aud
     assert.ok(tables.has(name), `falta a tabela ${name}`);
   }
   // DEC-010: sessão, questão, tentativa, revisão e avaliação só chegam com o card MVP.
-  const byCard: Record<string, string> = { atlas_study_sessions: 'MVP-02' };
+  const byCard: Record<string, string> = {
+    atlas_study_sessions: 'MVP-02',
+    atlas_questions: 'MVP-04',
+    atlas_quiz_attempts: 'MVP-04',
+  };
   for (const name of tables) {
     if (byCard[name]) continue;
     assert.doesNotMatch(name, /session|question|attempt|review|assessment|user/, `tabela fora da espinha: ${name}`);

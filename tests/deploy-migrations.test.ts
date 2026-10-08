@@ -63,6 +63,8 @@ void test('produção atual: 0004 e 0006 aplicadas à mão são só registradas,
     '0005_catalog_seed.sql',
     '0007_note_versions.sql',
     '0008_study_sessions.sql',
+    '0009_quizzes.sql',
+    '0010_question_bank.sql',
   ]);
   assert.deepEqual(plan.partial, []);
 });
@@ -78,7 +80,13 @@ void test('migration nova ainda não aplicada vai para apply', () => {
   });
   assert.deepEqual(plan, {
     register: [],
-    apply: ['0006_attachments.sql', '0007_note_versions.sql', '0008_study_sessions.sql'],
+    apply: [
+      '0006_attachments.sql',
+      '0007_note_versions.sql',
+      '0008_study_sessions.sql',
+      '0009_quizzes.sql',
+      '0010_question_bank.sql',
+    ],
     partial: [],
   });
 });

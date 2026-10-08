@@ -670,6 +670,23 @@ button { color: inherit; }
 .qz-outline:hover { background: #f4f1ff; }
 .qz-outline:disabled { opacity: .5; cursor: default; }
 .qz-review .qz-outline { height: 34px; }
+.qz-alert { color: #9a3d0b; background: #fff1df; }
+.qz-note { color: #1d4ed8; background: #edf4ff; }
+.qz-alert p, .qz-note p { margin: 0; }
+.qz-block { margin-top: 16px; }
+.qz-list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.qz-list li { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-top: 1px solid #eeecf2; }
+.qz-list li:first-child { border-top: 0; padding-top: 0; }
+.qz-list li > div { flex: 1; min-width: 0; }
+.qz-list small, .qz-list strong, .qz-list span { display: block; }
+.qz-list small { color: var(--muted); font-size: 11px; }
+.qz-list strong { margin: 2px 0; font-size: 15px; }
+.qz-list li > div > span { color: #4d4957; font-size: 12px; }
+.qz-list .qz-verdict { display: inline-flex; flex: none; }
+.qz-calc { display: grid; gap: 14px; }
+.qz-calc > label { font-size: 12px; font-weight: 700; color: #4d4957; }
+.qz-calc legend { margin-bottom: 8px; font-size: 13px; font-weight: 650; }
+@media (max-width: 620px) { .qz-list li { flex-wrap: wrap; } }
 
 /* Progresso (UX-05) */
 .pg-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; margin-bottom: 16px; align-items: start; }

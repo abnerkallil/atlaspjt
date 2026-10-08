@@ -55,7 +55,10 @@
     "lib/study-sessions.ts",
     "tests/study-sessions.test.ts",
     "lib/study-plan.ts",
-    "tests/study-plan.test.ts"
+    "tests/study-plan.test.ts",
+    "lib/quizzes.ts",
+    "tests/quizzes.test.ts",
+    "tests/question-bank.test.ts"
   ],
   "exclude": [
     "node_modules"
