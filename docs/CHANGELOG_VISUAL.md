@@ -171,3 +171,16 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
     passou a dizer "A nota com pesos fica em Progresso."
 - Se algo der errado: relatório que não abre, risco ou próxima ação que não
   batem com o estado do conteúdo, ou histórico incompleto vêm deste PR.
+
+## PR #38 — Reprovação em quiz não altera a nota (ATLAS-ESC-20)
+
+- Ponto de restauração: branch `restore/pre-quiz-nota` (commit `cd2cb38`, main antes do merge).
+- Sem migration nova.
+- O que muda no site:
+  - **Progresso** e **Relatório**: o componente Quiz da nota só conta a melhor
+    nota *aprovada* de cada conteúdo. Uma reprovação não baixa mais a nota; só
+    deixa o conteúdo urgente.
+  - Conteúdo em revisão ativa (falhou numa revisão) continua contando na
+    Cobertura.
+- Se algo der errado: nota de disciplina que caiu depois de um quiz reprovado,
+  ou cobertura que não conta um conteúdo já estudado vêm deste PR.
