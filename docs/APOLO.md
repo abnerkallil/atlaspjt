@@ -246,3 +246,46 @@ para `lib/quizzes.ts`, que já emprestava `QUESTION_KINDS`/`QUIZ_SIZE`/
 `lib/quizzes.ts` as reexporta com os mesmos nomes — nenhum chamador mudou.
 
 Gate: não (o card não pede um Raf Gate novo).
+
+## Revisões, corretivo e fila de recuperação (APO-15)
+
+Revisão (24h/7d/30d) e corretivo passam a ter plano próprio em
+`lib/apolo/plans.ts` em vez de reaproveitar o do quiz sem distinção. Tamanho
+**confirmado pelo Abner em 2026-10-08**: começa em 10 questões (igual ao
+quiz) e sobe para 30 (24h e 7d) ou 60 (30d), "conforme o banco permitir" —
+quando o conteúdo tem menos questões classificadas que isso, o seletor (ou
+o sorteio local, para conteúdo ainda sem tema) devolve só o que existe, sem
+inventar questão nem travar a revisão. A revisão de 30 dias intercala
+questões de dificuldade média e difícil (`difficultyMix: { media: 0.5,
+dificil: 0.5 }`), por cobrar mais depois de mais tempo.
+
+**Simplificação assumida (disclosed):** o card também pede essa revisão de
+30 dias intercalada com **conteúdos vizinhos**, não só o próprio. Toda
+seleção do Apolo hoje — seletor (APO-12), planos (APO-11), este card — é
+escopada a um único `contentId`; buscar banco de outro conteúdo na mesma
+prova exigiria decidir o que "vizinho" significa (mesma disciplina? posição
+adjacente no roadmap?) e como gravar isso numa tentativa que hoje tem um
+`content_id` só (`atlas_quiz_attempts`). Isso fica para um card futuro,
+quando (ou se) o volume de questões por conteúdo justificar — hoje, com
+banco pequeno em todo conteúdo real, intercalar dentro do próprio conteúdo
+já cobre o objetivo ("cobrar mais depois de mais tempo").
+
+**Fila de recuperação com formatura** (`lib/apolo/skill.ts`,
+`recoveryQueueState`): uma questão que já errou alguma vez só "se forma"
+(sai de consideração como pendente) depois de **3 acertos em sessões
+diferentes** desde o último erro — dois acertos na mesma tentativa contam
+como um só; errar de novo zera a contagem. Isso é mais rígido que o FSRS
+puro do APO-09 (que já empurra o `dueAt` para longe com um único acerto) —
+as duas coisas convivem: o FSRS decide **quando** reexpor a questão
+(`dueAt`, já usado pelo seletor), isto decide **se** ela ainda conta como
+"em recuperação" para quem olha a fila (hoje, a nova rota de leitura
+abaixo). `getRecoveryQueue` (`lib/apolo/profile.ts`) combina as duas coisas
+e `GET /api/apolo/recuperacao` expõe `{ queue }` por questão (tema,
+conteúdo, vencimento, sessões corridas de acerto) — recalculada do zero a
+cada chamada, mesmo princípio do resto do Apolo (DEC-017); só leitura,
+nenhum corte aplicado aqui.
+
+Nenhuma migration nova; nenhuma tela usa a rota nova ainda — fica para
+quando um card ligar a agenda (MVP-05) a ela.
+
+Gate: não.

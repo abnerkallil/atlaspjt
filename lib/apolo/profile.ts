@@ -5,7 +5,14 @@
 // próprio classificou.
 import type { D1Like } from '../pedagogy/transitions.js';
 import type { DifficultyLevel } from './types.js';
-import { foldMemory, foldSkills, type QuestionMemory, type SkillEvent, type SkillState } from './skill.js';
+import {
+  foldMemory,
+  foldSkills,
+  recoveryQueueState,
+  type QuestionMemory,
+  type SkillEvent,
+  type SkillState,
+} from './skill.js';
 
 type AttemptRow = { content_id: string; submitted_at: string; result_json: string };
 type QuestionRow = {
@@ -81,4 +88,37 @@ export async function getStudentProfile(db: D1Like): Promise<StudentProfile> {
     temas: foldSkills(events),
     filaRecuperacao: [...foldMemory(events)].sort((a, b) => a.dueAt.localeCompare(b.dueAt)),
   };
+}
+
+// APO-15: a visão da fila de recuperação para a agenda — só questões que já
+// erraram alguma vez e ainda não "se formaram" (GRADUATION_STREAK acertos em
+// sessões diferentes desde o último erro, lib/apolo/skill.ts), com a data de
+// vencimento do FSRS (dueAt) para saber quando cobrar de novo. Recalculada do
+// zero a cada chamada, mesmo princípio do resto do Apolo (DEC-017).
+export type RecoveryQueueItem = {
+  questionId: string;
+  contentId: string;
+  theme: string;
+  dueAt: string;
+  correctStreakSessions: number;
+};
+
+export async function getRecoveryQueue(db: D1Like): Promise<RecoveryQueueItem[]> {
+  const events = await loadSkillEvents(db);
+  const memoryByQuestion = new Map(foldMemory(events).map((item) => [item.questionId, item]));
+  const latestByQuestion = new Map<string, SkillEvent>();
+  for (const event of events) latestByQuestion.set(event.questionId, event);
+  return recoveryQueueState(events)
+    .filter((item) => !item.graduated)
+    .map((item) => {
+      const info = latestByQuestion.get(item.questionId)!;
+      return {
+        questionId: item.questionId,
+        contentId: info.contentId,
+        theme: info.theme,
+        dueAt: memoryByQuestion.get(item.questionId)?.dueAt ?? info.at,
+        correctStreakSessions: item.correctStreakSessions,
+      };
+    })
+    .sort((a, b) => a.dueAt.localeCompare(b.dueAt));
 }

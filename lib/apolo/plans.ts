@@ -90,9 +90,9 @@ const AREA_KIND_MIX: Record<KnowledgeArea, KindMix> = {
 };
 
 function quizLikePlan(instrument: Instrument): ExamPlan {
-  // revisão (24h/7d/30d) e corretivo reaproveitam hoje o mesmo
-  // startQuiz/selectQuestions do quiz (lib/quizzes.ts) — mesmo tamanho, tempo
-  // e corte; só o `purpose` gravado na tentativa muda.
+  // Quiz e corretivo reaproveitam hoje o mesmo startQuiz/selectQuestions
+  // (lib/quizzes.ts) — mesmo tamanho, tempo e corte; só o `purpose` gravado
+  // na tentativa muda. Revisão (24h/7d/30d) tem plano próprio, logo abaixo.
   return {
     instrument,
     version: 1,
@@ -103,6 +103,30 @@ function quizLikePlan(instrument: Instrument): ExamPlan {
     interleaving: false,
     secondsByKind: QUESTION_SECONDS,
     passingScore: PASSING_SCORE,
+  };
+}
+
+// APO-15: tamanho confirmado pelo Abner em 2026-10-08 — revisão começa em 10
+// questões (igual ao quiz) e sobe para 30 (24h, 7d) ou 60 (30d) "conforme o
+// banco permitir": aqui isso é só o alvo do plano — quando o banco de um
+// conteúdo tem menos que isso, o seletor (e o sorteio local, de volta em
+// lib/quizzes.ts) já devolvem o que der, sem inventar questão nem travar.
+// 30d intercala médias e difíceis (revisão de longo prazo cobra mais) — a
+// intercalação com CONTEÚDOS VIZINHOS que o card pede fica para um card
+// futuro (ver docs/APOLO.md): hoje toda seleção, aqui e em todo o resto do
+// Apolo, é escopada a um único conteúdo.
+const REVIEW_TARGET_SIZE: Record<'revisao_24h' | 'revisao_7d' | 'revisao_30d', number> = {
+  revisao_24h: 30,
+  revisao_7d: 30,
+  revisao_30d: 60,
+};
+
+function reviewPlan(instrument: 'revisao_24h' | 'revisao_7d' | 'revisao_30d'): ExamPlan {
+  return {
+    ...quizLikePlan(instrument),
+    size: REVIEW_TARGET_SIZE[instrument],
+    difficultyMix: instrument === 'revisao_30d' ? { media: 0.5, dificil: 0.5 } : {},
+    interleaving: instrument === 'revisao_30d',
   };
 }
 
@@ -152,9 +176,9 @@ const DRAFT_PLANS: Record<
 
 const BASE_PLANS: Record<Instrument, ExamPlan> = {
   quiz: quizLikePlan('quiz'),
-  revisao_24h: quizLikePlan('revisao_24h'),
-  revisao_7d: quizLikePlan('revisao_7d'),
-  revisao_30d: quizLikePlan('revisao_30d'),
+  revisao_24h: reviewPlan('revisao_24h'),
+  revisao_7d: reviewPlan('revisao_7d'),
+  revisao_30d: reviewPlan('revisao_30d'),
   corretivo: quizLikePlan('corretivo'),
   ...DRAFT_PLANS,
 };

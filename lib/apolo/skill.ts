@@ -132,3 +132,44 @@ export function foldMemory(events: SkillEvent[]): QuestionMemory[] {
     }))
     .sort((a, b) => a.questionId.localeCompare(b.questionId));
 }
+
+// APO-15: sair da recuperação exige acertar em sessões diferentes, não só
+// uma vez — uma questão que errou continua "em recuperação" até acumular
+// GRADUATION_STREAK acertos, cada um numa tentativa (sessão) diferente; errar
+// de novo zera a contagem. Isso é mais rígido que o FSRS puro do foldMemory
+// (que já empurra o dueAt para longe com um único acerto) — as duas coisas
+// convivem: o FSRS decide QUANDO reexpor (dueAt), isto decide SE a questão
+// ainda está "pendente" para a fila de recuperação.
+export const GRADUATION_STREAK = 3;
+
+export type RecoveryQueueState = {
+  questionId: string;
+  correctStreakSessions: number;
+  graduated: boolean;
+};
+
+export function recoveryQueueState(events: SkillEvent[]): RecoveryQueueState[] {
+  const byQuestion = new Map<string, { everWrong: boolean; streak: number; lastSessionAt: string | null }>();
+  for (const event of events) {
+    const prior = byQuestion.get(event.questionId) ?? { everWrong: false, streak: 0, lastSessionAt: null };
+    if (event.correct) {
+      if (prior.lastSessionAt !== event.at) {
+        prior.streak += 1;
+        prior.lastSessionAt = event.at;
+      }
+    } else {
+      prior.everWrong = true;
+      prior.streak = 0;
+      prior.lastSessionAt = null;
+    }
+    byQuestion.set(event.questionId, prior);
+  }
+  return [...byQuestion.entries()]
+    .filter(([, state]) => state.everWrong)
+    .map(([questionId, state]) => ({
+      questionId,
+      correctStreakSessions: state.streak,
+      graduated: state.streak >= GRADUATION_STREAK,
+    }))
+    .sort((a, b) => a.questionId.localeCompare(b.questionId));
+}
