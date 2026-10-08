@@ -1,0 +1,306 @@
+// Cálculo determinístico de progresso (MVP-07, DEC-02). Fórmula versionada:
+// cada disciplina soma 100 pontos distribuídos pelos pesos do DEC-02, e cada
+// componente diz de onde vieram os pontos (rastreável, sem IA).
+//
+// v1: pesos padrão fixos. O ajuste adaptativo (±10 pp, soma 100) tem os limites
+// validados aqui, mas o gatilho que move os pesos aguarda decisão do Raf
+// (ATLAS-RAF-GATE-20261008-001, docs/quests/ARCHITECTURE_GATE.md).
+import { PREREQUISITE_MET_STATES } from './pedagogy/prerequisites.js';
+import type { ContentState } from './pedagogy/states.js';
+import type { D1Like } from './pedagogy/transitions.js';
+import { getRoadmap } from './roadmap-store.js';
+import { REVIEW_STAGES, localDateOf } from './reviews.js';
+
+export const FORMULA_VERSION = 'v1';
+
+export const COMPONENTS = ['avaliacoes', 'atividades', 'cobertura', 'revisao', 'quiz'] as const;
+export type ComponentKey = (typeof COMPONENTS)[number];
+export type Weights = Record<ComponentKey, number>;
+
+// DEC-02: pesos padrão ao iniciar o curso.
+export const DEFAULT_WEIGHTS: Weights = { avaliacoes: 30, atividades: 20, cobertura: 20, revisao: 15, quiz: 15 };
+export const MAX_WEIGHT_SHIFT = 10;
+
+export const COMPONENT_LABEL: Record<ComponentKey, string> = {
+  avaliacoes: 'Avaliações',
+  atividades: 'Atividades',
+  cobertura: 'Cobertura de conteúdo',
+  revisao: 'Revisão',
+  quiz: 'Quiz',
+};
+
+// DEC-02: cada peso varia no máximo ±10 pp do padrão e a soma é sempre 100.
+export function validateWeights(weights: Weights): string[] {
+  const problems: string[] = [];
+  for (const key of COMPONENTS) {
+    if (Math.abs(weights[key] - DEFAULT_WEIGHTS[key]) > MAX_WEIGHT_SHIFT) {
+      problems.push(`${COMPONENT_LABEL[key]} fora de ${DEFAULT_WEIGHTS[key] - MAX_WEIGHT_SHIFT}–${DEFAULT_WEIGHTS[key] + MAX_WEIGHT_SHIFT}%.`);
+    }
+  }
+  const total = COMPONENTS.reduce((sum, key) => sum + weights[key], 0);
+  if (Math.abs(total - 100) > 1e-9) problems.push(`Os pesos somam ${total}%, não 100%.`);
+  return problems;
+}
+
+export type ProgressComponent = {
+  key: ComponentKey;
+  label: string;
+  weight: number;
+  // 0 a 1; pontos = peso × proporção.
+  ratio: number;
+  points: number;
+  // De onde vem o número (ex.: "3 de 12 conteúdos concluídos").
+  detail: string;
+  // false enquanto o Atlas ainda não registra esse tipo de evidência.
+  available: boolean;
+};
+
+export type DisciplineProgress = {
+  id: string;
+  title: string;
+  score: number;
+  components: ProgressComponent[];
+  // Desempenho recente: média das últimas tentativas (quiz, revisão, corretivo).
+  proficiency: number;
+  // Domínio = pontuação do DEC-02.
+  mastery: number;
+  // Revisões aprovadas / revisões feitas.
+  retention: number;
+  reviewsTaken: number;
+  history: { proficiency: number[]; retention: number[] };
+};
+
+export type ProgressReport = {
+  formulaVersion: string;
+  weights: Weights;
+  weeks: string[];
+  disciplines: DisciplineProgress[];
+  overall: { mastery: number; retention: number; retentionChange: number; reviewsTaken: number };
+  consistency: { days: number[]; streak: number; studiedDays: number };
+  atRisk: AtRiskContent[];
+};
+
+export type AtRiskContent = { id: string; title: string; discipline: string; state: ContentState; reason: string; action: string };
+
+// Conteúdos que pedem atenção, pelo estado atual (DEC-03).
+const RISK: Partial<Record<ContentState, { reason: string; action: string }>> = {
+  'em-revisao-ativa': { reason: 'Falhou na revisão: o conteúdo foi reaberto.', action: 'Estude de novo e faça o quiz corretivo.' },
+  bloqueado: { reason: 'Reprovado no quiz de conteúdo.', action: 'Estude de novo para liberar outro quiz.' },
+  'aguardando-revisao': { reason: 'A revisão espaçada venceu.', action: 'Faça o quiz de revisão em Quizzes.' },
+};
+
+// ---------------------------------------------------------------------------
+// Entrada e regras puras
+// ---------------------------------------------------------------------------
+
+export type ProgressInput = {
+  disciplines: { id: string; title: string; contents: { id: string; title: string; state: ContentState }[] }[];
+  attempts: { contentId: string; purpose: string; score: number; passed: boolean; submittedAt: string }[];
+  // Eventos de estado relevantes: quiz-aprovado, dispensa-proficiencia, revisao-aprovada.
+  events: { contentId: string; event: string; occurredAt: string }[];
+  sessions: { activeSeconds: number; at: string }[];
+};
+
+const round1 = (value: number) => Math.round(value * 10) / 10;
+const percent = (value: number) => Math.round(value * 100);
+const average = (values: number[]) => (values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0);
+const WEEK_COUNT = 8;
+const DAY_MS = 86_400_000;
+
+// Etapas de revisão vencidas e aprovadas de um conteúdo até `now`.
+export function reviewTally(events: ProgressInput['events'], now: string) {
+  const anchor = events
+    .filter((item) => item.event === 'quiz-aprovado' || item.event === 'dispensa-proficiencia')
+    .map((item) => item.occurredAt)
+    .sort()
+    .at(-1);
+  if (!anchor) return { due: 0, passed: 0 };
+  const due = REVIEW_STAGES.filter((stage) => Date.parse(anchor) + stage.days * DAY_MS <= Date.parse(now)).length;
+  const passed = events.filter((item) => item.event === 'revisao-aprovada' && item.occurredAt >= anchor).length;
+  return { due, passed: Math.min(passed, due) };
+}
+
+function retentionOf(attempts: ProgressInput['attempts']) {
+  const reviews = attempts.filter((item) => item.purpose === 'revisao');
+  return { taken: reviews.length, rate: reviews.length ? reviews.filter((item) => item.passed).length / reviews.length : 0 };
+}
+
+export function computeProgress(
+  input: ProgressInput,
+  options: { now: string; today: string; tzOffsetMinutes: number; weights?: Weights },
+): ProgressReport {
+  const weights = options.weights ?? DEFAULT_WEIGHTS;
+  const nowMs = Date.parse(options.now);
+  // Semanas de 7 dias terminando agora: S1 (mais antiga) … S8 (atual).
+  const weekEnd = (index: number) => new Date(nowMs - (WEEK_COUNT - 1 - index) * 7 * DAY_MS).toISOString();
+  const weeks = Array.from({ length: WEEK_COUNT }, (_, index) => `S${index + 1}`);
+
+  const disciplines = input.disciplines.map((discipline): DisciplineProgress => {
+    const ids = new Set(discipline.contents.map((content) => content.id));
+    const attempts = input.attempts.filter((item) => ids.has(item.contentId)).sort((a, b) => a.submittedAt.localeCompare(b.submittedAt));
+    const total = discipline.contents.length;
+    const covered = discipline.contents.filter((content) => PREREQUISITE_MET_STATES.includes(content.state)).length;
+
+    const bestQuiz = new Map<string, number>();
+    for (const item of attempts.filter((attempt) => attempt.purpose === 'quiz')) {
+      bestQuiz.set(item.contentId, Math.max(bestQuiz.get(item.contentId) ?? 0, item.score));
+    }
+    const quizAverage = average([...bestQuiz.values()]);
+
+    let due = 0;
+    let passed = 0;
+    for (const id of ids) {
+      const tally = reviewTally(
+        input.events.filter((item) => item.contentId === id),
+        options.now,
+      );
+      due += tally.due;
+      passed += tally.passed;
+    }
+
+    const ratios: Record<ComponentKey, { ratio: number; detail: string; available: boolean }> = {
+      avaliacoes: { ratio: 0, detail: 'Exame de meio de curso e atividade final ainda não fazem parte do Atlas.', available: false },
+      atividades: { ratio: 0, detail: 'Atividades teóricas e práticas ainda não fazem parte do Atlas.', available: false },
+      cobertura: { ratio: total ? covered / total : 0, detail: `${covered} de ${total} conteúdos concluídos.`, available: true },
+      revisao: {
+        ratio: due ? passed / due : 0,
+        detail: due ? `${passed} de ${due} ${due === 1 ? 'revisão vencida aprovada' : 'revisões vencidas aprovadas'}.` : 'Nenhuma revisão vencida ainda.',
+        available: true,
+      },
+      quiz: {
+        ratio: quizAverage / 100,
+        detail: bestQuiz.size
+          ? `Média ${round1(quizAverage)}% da melhor nota ${bestQuiz.size === 1 ? 'no quiz de 1 conteúdo' : `nos quizzes de ${bestQuiz.size} conteúdos`}.`
+          : 'Nenhum quiz de conteúdo feito ainda.',
+        available: true,
+      },
+    };
+    const components = COMPONENTS.map((key) => ({
+      key,
+      label: COMPONENT_LABEL[key],
+      weight: weights[key],
+      ratio: ratios[key].ratio,
+      points: round1(weights[key] * ratios[key].ratio),
+      detail: ratios[key].detail,
+      available: ratios[key].available,
+    }));
+    const score = round1(components.reduce((sum, item) => sum + item.points, 0));
+    const recent = attempts.slice(-5);
+    const retention = retentionOf(attempts);
+
+    // Histórico: proficiência média da semana (repete a anterior se não houve
+    // tentativa) e retenção acumulada até o fim de cada semana.
+    const proficiencyHistory: number[] = [];
+    const retentionHistory: number[] = [];
+    for (let index = 0; index < WEEK_COUNT; index += 1) {
+      const end = weekEnd(index);
+      const start = new Date(Date.parse(end) - 7 * DAY_MS).toISOString();
+      const inWeek = attempts.filter((item) => item.submittedAt > start && item.submittedAt <= end);
+      proficiencyHistory.push(inWeek.length ? Math.round(average(inWeek.map((item) => item.score))) : (proficiencyHistory.at(-1) ?? 0));
+      retentionHistory.push(percent(retentionOf(attempts.filter((item) => item.submittedAt <= end)).rate));
+    }
+
+    return {
+      id: discipline.id,
+      title: discipline.title,
+      score,
+      components,
+      proficiency: Math.round(average(recent.map((item) => item.score))),
+      mastery: score,
+      retention: percent(retention.rate),
+      reviewsTaken: retention.taken,
+      history: { proficiency: proficiencyHistory, retention: retentionHistory },
+    };
+  });
+
+  const overallRetention = retentionOf(input.attempts);
+  const firstWeekStart = new Date(Date.parse(weekEnd(0)) - 7 * DAY_MS).toISOString();
+  const retentionBefore = percent(retentionOf(input.attempts.filter((item) => item.submittedAt <= firstWeekStart)).rate);
+
+  // Consistência: minutos de sessão por dia local, últimos 28 dias.
+  const days = Array.from({ length: 28 }, () => 0);
+  const dayIndex = new Map(
+    Array.from({ length: 28 }, (_, index) => {
+      const date = new Date(Date.parse(`${options.today}T00:00:00Z`) - (27 - index) * DAY_MS).toISOString().slice(0, 10);
+      return [date, index] as const;
+    }),
+  );
+  const seconds = Array.from({ length: 28 }, () => 0);
+  for (const session of input.sessions) {
+    const index = dayIndex.get(localDateOf(session.at, options.tzOffsetMinutes));
+    if (index !== undefined) seconds[index] += session.activeSeconds;
+  }
+  // Minuto começado conta: um dia com estudo nunca aparece como "sem estudo".
+  seconds.forEach((value, index) => {
+    days[index] = Math.ceil(value / 60);
+  });
+  // Sequência de dias seguidos com estudo; hoje ainda sem estudo não quebra a de ontem.
+  let streak = 0;
+  for (let index = days.at(-1) ? days.length - 1 : days.length - 2; index >= 0 && days[index] > 0; index -= 1) streak += 1;
+
+  return {
+    formulaVersion: FORMULA_VERSION,
+    weights,
+    weeks,
+    disciplines,
+    overall: {
+      mastery: round1(average(disciplines.map((item) => item.score))),
+      retention: percent(overallRetention.rate),
+      retentionChange: percent(overallRetention.rate) - retentionBefore,
+      reviewsTaken: overallRetention.taken,
+    },
+    consistency: { days, streak, studiedDays: days.filter((minutes) => minutes > 0).length },
+    atRisk: input.disciplines.flatMap((discipline) =>
+      discipline.contents.flatMap((content) => {
+        const risk = RISK[content.state];
+        return risk ? [{ id: content.id, title: content.title, discipline: discipline.title, state: content.state, ...risk }] : [];
+      }),
+    ),
+  };
+}
+
+// ---------------------------------------------------------------------------
+// D1
+// ---------------------------------------------------------------------------
+
+export async function loadProgressInput(db: D1Like): Promise<ProgressInput> {
+  const roadmap = await getRoadmap(db);
+  const disciplines = (roadmap?.phases ?? []).flatMap((phase) =>
+    phase.disciplines.map((discipline) => ({
+      id: discipline.id,
+      title: discipline.title,
+      contents: discipline.contents.map((content) => ({ id: content.id, title: content.title, state: content.state })),
+    })),
+  );
+  const [{ results: attempts }, { results: events }, { results: sessions }] = await Promise.all([
+    db
+      .prepare(
+        `SELECT content_id, purpose, score, passed, submitted_at FROM atlas_quiz_attempts
+         WHERE status = 'enviado' AND score IS NOT NULL ORDER BY submitted_at`,
+      )
+      .all<{ content_id: string; purpose: string; score: number; passed: number; submitted_at: string }>(),
+    db
+      .prepare(
+        `SELECT entity_id, event, occurred_at FROM atlas_state_audit
+         WHERE entity_type = 'conteudo' AND event IN ('quiz-aprovado', 'dispensa-proficiencia', 'revisao-aprovada')`,
+      )
+      .all<{ entity_id: string; event: string; occurred_at: string }>(),
+    db
+      .prepare(
+        `SELECT active_seconds, COALESCE(finished_at, updated_at) AS at FROM atlas_study_sessions WHERE active_seconds > 0`,
+      )
+      .all<{ active_seconds: number; at: string }>(),
+  ]);
+  return {
+    disciplines,
+    attempts: attempts.map((row) => ({
+      contentId: row.content_id,
+      purpose: row.purpose,
+      score: Number(row.score),
+      passed: Number(row.passed) === 1,
+      submittedAt: row.submitted_at,
+    })),
+    events: events.map((row) => ({ contentId: row.entity_id, event: row.event, occurredAt: row.occurred_at })),
+    sessions: sessions.map((row) => ({ activeSeconds: Number(row.active_seconds), at: row.at })),
+  };
+}

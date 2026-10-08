@@ -754,6 +754,13 @@ button { color: inherit; }
 .pg-recs summary svg { flex: none; margin-top: 2px; color: #2463eb; }
 .pg-recs details p { margin: 10px 0 6px; color: #3f3c49; font-size: 13px; line-height: 1.6; }
 .pg-recs details small { color: #4d4957; font-size: 11px; }
+.pg-formula, .pg-weights { display: grid; gap: 10px; margin: 0 0 14px; padding: 0; list-style: none; }
+.pg-formula li { display: grid; gap: 6px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 11px; }
+.pg-formula li.off { background: #faf9fc; }
+.pg-formula li > div { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; }
+.pg-formula li > div span { color: #4d4957; font-variant-numeric: tabular-nums; }
+.pg-formula small { color: #4d4957; font-size: 12px; line-height: 1.5; }
+.pg-weights li { display: flex; justify-content: space-between; padding: 10px 14px; border: 1px solid var(--line); border-radius: 11px; font-size: 13px; }
 @media (max-width: 900px) { .pg-grid { grid-template-columns: 1fr; } }
 @media (max-width: 620px) {
   .pg-card { padding: 18px 16px; }

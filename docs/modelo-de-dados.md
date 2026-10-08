@@ -215,3 +215,25 @@ e o histórico de estados. Regras em `lib/reviews.ts` (DEC-09 e DEC-03):
   sessão concluída; aprovado, aplica `revisao-aprovada` e o ciclo segue.
 - Evidência `kind = 'revisao'` para revisão e corretivo. O resultado guarda o
   resumo (`review`: etapa, próxima revisão, ciclo concluído após os 30d).
+
+## Progresso determinístico (MVP-07)
+
+Sem tabela nova: `lib/progress.ts` recalcula a cada leitura (`GET /api/progresso`)
+a partir de estados, `atlas_quiz_attempts` enviados, `atlas_state_audit` e
+`atlas_study_sessions`. Fórmula `v1` com os pesos padrão do DEC-02 (Avaliações
+30, Atividades 20, Cobertura 20, Revisão 15, Quiz 15), por disciplina:
+
+- Cobertura: conteúdos em `concluido`, `aguardando-revisao` ou `revalidado`
+  sobre o total da disciplina.
+- Quiz: média da melhor nota de quiz de conteúdo (`purpose = 'quiz'`) de cada
+  conteúdo já tentado.
+- Revisão: etapas aprovadas sobre etapas vencidas no ciclo atual de cada
+  conteúdo (mesma âncora do MVP-06).
+- Avaliações e Atividades: 0 e marcadas como indisponíveis até o Atlas
+  registrar essas entregas.
+
+Domínio é a nota da disciplina; proficiência é a média das últimas 5
+tentativas (quiz, revisão, corretivo); retenção é revisões aprovadas sobre
+revisões feitas. Consistência soma `active_seconds` por dia local nos últimos
+28 dias. O gatilho do ajuste adaptativo dos pesos (±10 pp) aguarda o Gate
+`ATLAS-RAF-GATE-20261008-001`.
