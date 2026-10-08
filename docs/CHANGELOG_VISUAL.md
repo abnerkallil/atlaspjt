@@ -313,3 +313,16 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
   junto com os demais anexos do R2.
 - Se algo der errado: só poderia afetar a tela Fontes e o banco de questões
   do Apolo (ainda em construção); nenhuma tela de estudo do aluno é tocada.
+
+## PR #48 — Extrator determinístico de questões (APO-06)
+
+- Ponto de restauração: branch `restore/pre-apo-06` (commit `404ccd3`, main antes do merge).
+- Sem migration nova (só código novo em `scripts/` e a dependência `unpdf`,
+  usada fora do bundle do site).
+- O que muda no site: nada visível — este PR só adiciona o script
+  `pnpm run apolo:extrair`, que tira o texto de um PDF do acervo de fontes
+  (ou um PDF local) e corta em rascunhos de questão (Cebraspe, alternativas
+  A-E ou genérico), gravando um JSON em disco para a curadoria revisar. Não
+  grava nada no D1 nem muda nenhuma tela.
+- Se algo der errado: só poderia afetar uma extração futura de rascunhos
+  (`pnpm run apolo:extrair`), nunca o site em produção.
