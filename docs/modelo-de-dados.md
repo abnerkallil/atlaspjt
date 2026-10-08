@@ -223,10 +223,13 @@ a partir de estados, `atlas_quiz_attempts` enviados, `atlas_state_audit` e
 `atlas_study_sessions`. Fórmula `v1` com os pesos padrão do DEC-02 (Avaliações
 30, Atividades 20, Cobertura 20, Revisão 15, Quiz 15), por disciplina:
 
-- Cobertura: conteúdos em `concluido`, `aguardando-revisao` ou `revalidado`
-  sobre o total da disciplina.
-- Quiz: média da melhor nota de quiz de conteúdo (`purpose = 'quiz'`) de cada
-  conteúdo já tentado.
+- Cobertura: conteúdos já concluídos (`concluido`, `aguardando-revisao`,
+  `revalidado` ou `em-revisao-ativa`) sobre o total da disciplina.
+- Quiz: média da melhor nota aprovada de quiz de conteúdo (`purpose = 'quiz'`)
+  de cada conteúdo.
+- Regra do Abner (2026-10-08): reprovação em quiz (conteúdo, revisão ou
+  corretivo) não altera a nota; só deixa o conteúdo urgente na agenda. Só
+  atividades com nota vinculada (avaliações e atividades) mudam a nota.
 - Revisão: etapas aprovadas sobre etapas vencidas no ciclo atual de cada
   conteúdo (mesma âncora do MVP-06).
 - Avaliações e Atividades: 0 e marcadas como indisponíveis até o Atlas
@@ -255,12 +258,11 @@ transição do DEC-03 ao passar; o MVP-08 não cria estado novo.
   e completa com o sorteio normal; `questions_json.directed` guarda quantas
   voltaram.
 - Conclusão congelada (DEC-03): disciplina com conteúdo bloqueado ou em revisão
-  ativa mostra o aviso em Progresso; a cobertura já não conta esses conteúdos.
-- Penalidade numérica: nenhuma decisão aprovada define um desconto em pontos
-  por reprovação (a única redução aprovada é a da atividade final pelo exame de
-  meio de curso, DEC-10, que depende das avaliações). Hoje a reprovação pesa só
-  pelo que a fórmula do MVP-07 já mede (revisão aprovada sobre vencida e
-  cobertura).
+  ativa mostra o aviso em Progresso (só o aviso: a nota não muda por isso).
+- Penalidade: reprovação em quiz não desconta nota (regra do Abner,
+  2026-10-08); o efeito é a urgência na agenda e o estudo dirigido. A única
+  redução de nota aprovada é a da atividade final pelo exame de meio de
+  curso (DEC-10), que chega com as avaliações.
 
 ## Relatórios explicáveis (MVP-09)
 

@@ -68,7 +68,7 @@ void test('relatório do conteúdo a partir do D1', async () => {
   assert.equal(report.content.stateLabel, 'Concluído');
   // Origem: o conteúdo conta na cobertura e no quiz da disciplina.
   assert.match(report.origin.contribution[0], /conta como 1 dos/);
-  assert.match(report.origin.contribution[1], /melhor nota 100% em 1 tentativa/);
+  assert.match(report.origin.contribution[1], /melhor nota aprovada 100%/);
   assert.ok(report.origin.disciplineScore > 0);
   assert.equal(report.origin.formulaVersion, 'v1');
   // Mudanças de estado com motivo, da mais recente à mais antiga.

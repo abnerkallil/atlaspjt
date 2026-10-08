@@ -5,7 +5,7 @@
 import { CONTENT_STATE_META } from './pedagogy/state-labels.js';
 import type { ContentState } from './pedagogy/states.js';
 import { listAudit, type AuditEntry, type D1Like } from './pedagogy/transitions.js';
-import { computeProgress, loadProgressInput, reviewTally, type ProgressComponent } from './progress.js';
+import { COVERED_STATES, computeProgress, loadProgressInput, reviewTally, type ProgressComponent } from './progress.js';
 import { listAttempts, type QuizAttempt } from './quizzes.js';
 import { recoveryStatus, type RecoveryStatus } from './recovery.js';
 import { correctiveReady, nextReview, reviewCycle, localDateOf, type NextReview } from './reviews.js';
@@ -204,19 +204,19 @@ export async function contentReport(
   };
 
   // Contribuição deste conteúdo para os componentes da disciplina (MVP-07).
-  const quizScores = attempts.filter((item) => item.purpose === 'quiz' && item.status === 'enviado' && item.score !== null).map((item) => item.score!);
+  const quizScores = attempts.filter((item) => item.purpose === 'quiz' && item.status === 'enviado' && item.passed && item.score !== null).map((item) => item.score!);
   const tally = reviewTally(
     input.events.filter((item) => item.contentId === contentId),
     now,
   );
-  const covered = ['concluido', 'aguardando-revisao', 'revalidado'].includes(content.state);
+  const covered = COVERED_STATES.includes(content.state);
   const contribution = [
     covered
       ? `Cobertura: conta como 1 dos ${discipline.contents.length} conteúdos da disciplina.`
       : `Cobertura: ainda não conta (estado ${CONTENT_STATE_META[content.state].label.toLowerCase()}).`,
     quizScores.length
-      ? `Quiz: melhor nota ${percent(Math.max(...quizScores))} em ${quizScores.length} ${quizScores.length === 1 ? 'tentativa' : 'tentativas'}; entra na média da disciplina.`
-      : 'Quiz: nenhum quiz do conteúdo enviado ainda.',
+      ? `Quiz: melhor nota aprovada ${percent(Math.max(...quizScores))}; entra na média da disciplina.`
+      : 'Quiz: nenhum quiz do conteúdo aprovado ainda (reprovação não entra na nota, só deixa o conteúdo urgente).',
     tally.due
       ? `Revisão: ${tally.passed} de ${tally.due} ${tally.due === 1 ? 'revisão vencida aprovada' : 'revisões vencidas aprovadas'} no ciclo atual.`
       : 'Revisão: nenhuma revisão vencida ainda.',
