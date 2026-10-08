@@ -5,7 +5,6 @@
 // v1: pesos padrão fixos. O ajuste adaptativo (±10 pp, soma 100) tem os limites
 // validados aqui, mas o gatilho que move os pesos aguarda decisão do Raf
 // (ATLAS-RAF-GATE-20261008-001, docs/quests/ARCHITECTURE_GATE.md).
-import { PREREQUISITE_MET_STATES } from './pedagogy/prerequisites.js';
 import type { ContentState } from './pedagogy/states.js';
 import type { D1Like } from './pedagogy/transitions.js';
 import { getRoadmap } from './roadmap-store.js';
@@ -21,6 +20,11 @@ export type Weights = Record<ComponentKey, number>;
 // DEC-02: pesos padrão ao iniciar o curso.
 export const DEFAULT_WEIGHTS: Weights = { avaliacoes: 30, atividades: 20, cobertura: 20, revisao: 15, quiz: 15 };
 export const MAX_WEIGHT_SHIFT = 10;
+
+// Conteúdos que contam na cobertura: os já concluídos, inclusive os reabertos
+// por revisão. Reprovar em quiz não altera a nota (regra do Abner, 2026-10-08):
+// só deixa o conteúdo urgente na agenda. Bloqueado nunca foi concluído.
+export const COVERED_STATES: readonly ContentState[] = ['concluido', 'aguardando-revisao', 'revalidado', 'em-revisao-ativa'];
 
 export const COMPONENT_LABEL: Record<ComponentKey, string> = {
   avaliacoes: 'Avaliações',
@@ -153,10 +157,11 @@ export function computeProgress(
     const ids = new Set(discipline.contents.map((content) => content.id));
     const attempts = input.attempts.filter((item) => ids.has(item.contentId)).sort((a, b) => a.submittedAt.localeCompare(b.submittedAt));
     const total = discipline.contents.length;
-    const covered = discipline.contents.filter((content) => PREREQUISITE_MET_STATES.includes(content.state)).length;
+    const covered = discipline.contents.filter((content) => COVERED_STATES.includes(content.state)).length;
 
+    // Só quizzes aprovados entram na nota; reprovação não soma nem desconta.
     const bestQuiz = new Map<string, number>();
-    for (const item of attempts.filter((attempt) => attempt.purpose === 'quiz')) {
+    for (const item of attempts.filter((attempt) => attempt.purpose === 'quiz' && attempt.passed)) {
       bestQuiz.set(item.contentId, Math.max(bestQuiz.get(item.contentId) ?? 0, item.score));
     }
     const quizAverage = average([...bestQuiz.values()]);
@@ -184,8 +189,8 @@ export function computeProgress(
       quiz: {
         ratio: quizAverage / 100,
         detail: bestQuiz.size
-          ? `Média ${round1(quizAverage)}% da melhor nota ${bestQuiz.size === 1 ? 'no quiz de 1 conteúdo' : `nos quizzes de ${bestQuiz.size} conteúdos`}.`
-          : 'Nenhum quiz de conteúdo feito ainda.',
+          ? `Média ${round1(quizAverage)}% da melhor nota aprovada ${bestQuiz.size === 1 ? 'no quiz de 1 conteúdo' : `nos quizzes de ${bestQuiz.size} conteúdos`}. Reprovações não entram na nota.`
+          : 'Nenhum quiz de conteúdo aprovado ainda. Reprovações não entram na nota.',
         available: true,
       },
     };

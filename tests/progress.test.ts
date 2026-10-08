@@ -48,13 +48,14 @@ void test('sem histórico tudo é zero, mas a cobertura já conta e cada número
   const report = computeProgress(input(), { now, today, tzOffsetMinutes: 180 });
   const [discipline] = report.disciplines;
   const byKey = Object.fromEntries(discipline.components.map((item) => [item.key, item]));
-  assert.equal(byKey.cobertura.detail, '2 de 4 conteúdos concluídos.');
-  assert.equal(byKey.cobertura.points, 10);
+  // Em revisão ativa já foi concluído: reprovar na revisão não tira a cobertura.
+  assert.equal(byKey.cobertura.detail, '3 de 4 conteúdos concluídos.');
+  assert.equal(byKey.cobertura.points, 15);
   assert.equal(byKey.avaliacoes.available, false);
   assert.equal(byKey.revisao.detail, 'Nenhuma revisão vencida ainda.');
-  assert.equal(discipline.score, 10);
-  assert.equal(report.overall.mastery, 10);
-  assert.equal(discipline.mastery, 10);
+  assert.equal(discipline.score, 15);
+  assert.equal(report.overall.mastery, 15);
+  assert.equal(discipline.mastery, 15);
   assert.deepEqual(report.consistency, { days: Array(28).fill(0), streak: 0, studiedDays: 0 });
   assert.deepEqual(
     report.atRisk.map((item) => [item.id, item.state]),
@@ -66,6 +67,7 @@ void test('quiz usa a melhor nota por conteúdo; revisão conta etapas vencidas 
   const report = computeProgress(
     input({
       attempts: [
+        { contentId: 'C', purpose: 'quiz', score: 40, passed: false, submittedAt: '2026-08-01T10:00:00.000Z' },
         { contentId: 'A', purpose: 'quiz', score: 60, passed: false, submittedAt: '2026-09-01T10:00:00.000Z' },
         { contentId: 'A', purpose: 'quiz', score: 90, passed: true, submittedAt: '2026-09-02T10:00:00.000Z' },
         { contentId: 'B', purpose: 'quiz', score: 70, passed: true, submittedAt: '2026-10-01T10:00:00.000Z' },
@@ -87,8 +89,8 @@ void test('quiz usa a melhor nota por conteúdo; revisão conta etapas vencidas 
   // A: 24h, 7d e 30d vencidas (30d em 02/10), 2 aprovadas. B: 24h e 7d vencidas, nenhuma aprovada.
   assert.equal(byKey.revisao.detail, '2 de 5 revisões vencidas aprovadas.');
   assert.equal(byKey.revisao.points, 6);
-  assert.equal(byKey.quiz.points, 12, 'média (90 + 70) / 2 = 80% de 15');
-  assert.equal(discipline.score, 28);
+  assert.equal(byKey.quiz.points, 12, 'média (90 + 70) / 2 = 80% de 15; as reprovações (60 e 40) não entram');
+  assert.equal(discipline.score, 33);
   // Proficiência: últimas 5 tentativas em ordem (60 sai).
   assert.equal(discipline.proficiency, Math.round((90 + 80 + 50 + 100 + 70) / 5));
   assert.deepEqual([discipline.retention, discipline.reviewsTaken], [50, 2]);
