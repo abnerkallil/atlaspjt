@@ -110,3 +110,27 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 - Se algo der errado: revisão que aparece no dia errado, conteúdo que fica
   preso em "aguardando revisão", corretivo que não libera ou data de próxima
   revisão estranha vêm deste PR.
+
+## PR #35 — Progresso calculado (MVP-07, ATLAS-ESC-17)
+
+- Ponto de restauração: branch `restore/pre-mvp-07` (commit `7963874`, main antes do merge).
+- Sem migration nova.
+- O que muda no site:
+  - **Hoje → Seus indicadores** e **Progresso** (os três cartões do topo):
+    Domínio geral, Retenção média e Consistência deixam de ser números fixos e
+    passam a ser calculados (podem ter uma casa decimal, ex.: "3,8%").
+  - **Progresso → Visão por disciplina**: as quatro "competências" de exemplo
+    viraram as disciplinas reais do roadmap, com proficiência (média das
+    últimas 5 tentativas) e domínio (nota da disciplina).
+  - **Progresso → Histórico e tendência**: gráfico de 8 semanas real.
+  - **Progresso → Consistência**: os 28 quadrados pintam pelos minutos de
+    sessão de cada dia.
+  - **Progresso → Conteúdos em risco**: lista conteúdos bloqueados, com revisão
+    vencida ou reabertos, com o próximo passo.
+  - **Progresso → Como a nota é calculada** e **Pesos do curso** (novos):
+    pontos de cada componente (Avaliações, Atividades, Cobertura, Revisão,
+    Quiz) e de onde vieram. Avaliações e Atividades aparecem em 0 porque ainda
+    não existem no Atlas.
+  - Saíram o "Plano da semana" de exemplo e o aviso "Dados de demonstração".
+- Se algo der errado: nota de disciplina ou indicador estranho, gráfico ou
+  consistência que não bate com o que você estudou vêm deste PR.
