@@ -14,6 +14,7 @@ export const navItems = [
   { label: 'Quizzes', href: '/quizzes' },
   { label: 'Progresso', href: '/progresso' },
   { label: 'Fontes', href: '/fontes' },
+  { label: 'Rascunhos', href: '/rascunhos' },
 ];
 
 // Estado compartilhado entre rotas: o resumo diário do cabeçalho e a jornada de Hoje leem a mesma agenda (MVP-05),
