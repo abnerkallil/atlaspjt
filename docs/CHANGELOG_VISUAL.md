@@ -46,3 +46,27 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 - Se algo der errado: tempo de estudo errado, sessão que não retoma, conteúdo
   que não passa para "aguardando quiz" ou cartão "Continue de onde parou"
   estranho vêm deste PR.
+
+## PR #32 — Quizzes reais com banco de questões (MVP-04, ATLAS-ESC-14)
+
+- Ponto de restauração: branch `restore/pre-mvp-04` (commit `40f6b8a`, main antes do merge).
+- Migrations novas: `0009_quizzes` (tabelas `atlas_questions` e
+  `atlas_quiz_attempts`) e `0010_question_bank` (60 questões de Fundamentos,
+  CG-001 a CG-006). O `Publicar Atlas.cmd` aplica sozinho.
+- O que muda no site:
+  - **Quizzes**: o quiz de demonstração "Débito e crédito" sumiu. A tela lista
+    os quizzes liberados (conteúdos com sessão concluída) e as tentativas
+    anteriores com nota.
+  - **Fazer um quiz**: tela de regras, até 10 questões com alternativas
+    embaralhadas, relógio (1 min por múltipla, 5 min por dissertativa) que trava
+    as respostas ao zerar, revisão antes do envio e, se houver dissertativas, uma
+    etapa para comparar sua resposta com o gabarito.
+  - **Resultado**: nota, certa/errada de cada questão com gabarito e explicação.
+    Aprovado (70% ou mais) marca o conteúdo como **concluído** no Roadmap;
+    reprovado o deixa **bloqueado** até uma nova sessão de estudo, com o botão
+    "Estudar de novo".
+  - **Sessão concluída**: ganhou o botão "Fazer o quiz".
+  - Conteúdos fora de Fundamentos (CG-007 em diante) aparecem com "Ainda sem
+    questões cadastradas" até você importar questões (`docs/QUESTOES.md`).
+- Se algo der errado: quiz que não abre, nota estranha, conteúdo que não vira
+  concluído/bloqueado depois do quiz, ou texto de questão errado vêm deste PR.
