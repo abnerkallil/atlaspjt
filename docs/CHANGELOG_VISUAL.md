@@ -91,3 +91,22 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
     passos reagendados aparecem em **Próximos dias**.
 - Se algo der errado: passos repetidos, horários estranhos, contagem errada no
   cabeçalho ou um passo que não some depois de feito vêm deste PR.
+
+## PR #34 — Revisões 24h/7d/30d (MVP-06, ATLAS-ESC-16)
+
+- Ponto de restauração: branch `restore/pre-mvp-06` (commit `22fbb60`, main antes do merge).
+- Sem migration nova.
+- O que muda no site:
+  - **Quizzes**: além do quiz de conteúdo, aparecem "Revisão de 24h", "Revisão
+    de 7d", "Revisão de 30d" e "Quiz corretivo". O corretivo só libera depois de
+    uma nova sessão de estudo.
+  - **Hoje**: a revisão aparece na agenda (já em Próximos dias antes do prazo).
+    Falhar numa revisão cria uma **recuperação urgente** (vermelho) e depois o
+    quiz corretivo.
+  - **Resultado do quiz**: mostra a data da próxima revisão, "Ciclo de revisões
+    concluído" ou "Conteúdo reaberto" quando a revisão falha.
+  - **Roadmap**: os estados "aguardando revisão", "revalidado" e "em revisão
+    ativa" passam a acontecer de verdade.
+- Se algo der errado: revisão que aparece no dia errado, conteúdo que fica
+  preso em "aguardando revisão", corretivo que não libera ou data de próxima
+  revisão estranha vêm deste PR.
