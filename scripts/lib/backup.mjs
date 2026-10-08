@@ -76,13 +76,15 @@ export function countRowsSql(tables) {
   return `SELECT ${tables.map((name) => `(SELECT COUNT(*) FROM ${ident(name)}) AS ${ident(name)}`).join(', ')}`;
 }
 
-// Todos os objetos do R2 que o D1 referencia: anexos de notas e arquivos de
-// material de estudo (UX-01), conforme as tabelas que existem no banco.
+// Todos os objetos do R2 que o D1 referencia: anexos de notas, arquivos de
+// material de estudo (UX-01) e o acervo de fontes do Apolo (APO-05, prefixo
+// apolo/fontes/), conforme as tabelas que existem no banco.
 const OBJECT_SOURCES = [
   "SELECT id, object_key, mime_type, size_bytes FROM atlas_note_attachments",
   "SELECT id, object_key, mime_type, size_bytes FROM atlas_content_materials WHERE object_key IS NOT NULL",
+  "SELECT id, object_key, mime_type, size_bytes FROM atlas_question_sources",
 ];
-const OBJECT_TABLES = ['atlas_note_attachments', 'atlas_content_materials'];
+const OBJECT_TABLES = ['atlas_note_attachments', 'atlas_content_materials', 'atlas_question_sources'];
 
 export function objectsSql(tables) {
   const parts = OBJECT_SOURCES.filter((_, index) => tables.includes(OBJECT_TABLES[index]));

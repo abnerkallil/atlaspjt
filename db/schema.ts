@@ -468,6 +468,40 @@ export const atlasItemModels = sqliteTable(
   ],
 );
 
+// Acervo de fontes no R2 (APO-05, DEC-015): PDF de prova de concurso, apostila
+// ou lista curado por humano, usado como base de questão oficial ou molde.
+// Bytes no bucket `ATTACHMENTS` sob `apolo/fontes/<tema>/<id>` — nunca público
+// (legal ainda não revisou direitos autorais de prova de concurso); todo
+// acesso passa pelas rotas autenticadas do Worker, como anexos/materiais.
+export const atlasQuestionSources = sqliteTable(
+  'atlas_question_sources',
+  {
+    id: text('id').primaryKey(),
+    title: text('title').notNull(),
+    // Etiqueta de texto livre, sem enum fixo (mesmo princípio de tema em
+    // atlas_questions — DEC-014). Nula até a curadoria atribuir um tema.
+    theme: text('theme'),
+    // "prova_concurso", "apostila" ou "lista".
+    sourceType: text('source_type').notNull(),
+    // Proveniência de prova de concurso; nulos para apostila/lista.
+    examBoard: text('exam_board'),
+    examOrg: text('exam_org'),
+    examYear: integer('exam_year'),
+    pageCount: integer('page_count'),
+    fileName: text('file_name').notNull(),
+    mimeType: text('mime_type').notNull(),
+    sizeBytes: integer('size_bytes').notNull(),
+    // SHA-256 do arquivo, para detectar o mesmo PDF reenviado.
+    sha256: text('sha256').notNull(),
+    objectKey: text('object_key').notNull(),
+    createdAt: text('created_at').notNull(),
+  },
+  (table) => [
+    index('idx_atlas_question_sources_theme').on(table.theme),
+    uniqueIndex('idx_atlas_question_sources_sha256').on(table.sha256),
+  ],
+);
+
 export const atlasQuizAttempts = sqliteTable(
   'atlas_quiz_attempts',
   {
