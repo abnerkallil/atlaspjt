@@ -102,8 +102,8 @@ const FREEZING_STATES: readonly ContentState[] = ['bloqueado', 'em-revisao-ativa
 
 // Conteúdos que pedem atenção, pelo estado atual (DEC-03).
 const RISK: Partial<Record<ContentState, { reason: string; action: string }>> = {
-  'em-revisao-ativa': { reason: 'Falhou na revisão: o conteúdo foi reaberto.', action: 'Estude de novo e faça o quiz corretivo.' },
-  bloqueado: { reason: 'Reprovado no quiz de conteúdo.', action: 'Estude de novo para liberar outro quiz.' },
+  'em-revisao-ativa': { reason: 'Falhou na revisão: o conteúdo foi reaberto.', action: 'Refaça o quiz corretivo até passar (revise as notas antes, se quiser).' },
+  bloqueado: { reason: 'Reprovado no quiz de conteúdo.', action: 'Refaça o quiz até passar com 70% (revise as notas antes, se quiser).' },
   'aguardando-revisao': { reason: 'A revisão espaçada venceu.', action: 'Faça o quiz de revisão em Quizzes.' },
 };
 

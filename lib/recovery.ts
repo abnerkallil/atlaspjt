@@ -1,7 +1,8 @@
 // Recuperação e bloqueios (MVP-08, DEC-03 e DEC-04).
 //
 // Depois de uma reprovação (quiz do conteúdo, revisão ou corretivo) o conteúdo
-// fica bloqueado ou em revisão ativa até o usuário estudar de novo e passar.
+// fica bloqueado ou em revisão ativa até o usuário passar com 70%: refaz o quiz
+// direto ou revisa as notas antes, quantas vezes precisar.
 // Este módulo lê o histórico de tentativas para dizer o que errou (estudo
 // dirigido), quantas reprovações seguidas houve (reincidência) e quais questões
 // voltam primeiro no próximo quiz (quiz dirigido). Desbloqueio continua sendo a
@@ -126,7 +127,7 @@ export function directedSelection<T extends { id: string }>(missedIds: string[],
 
 export function recoveryReason(status: RecoveryStatus | null, base: string): string {
   if (!status) return base;
-  const missed = status.missed.length ? ` ${status.missed.length} ${status.missed.length === 1 ? 'questão errada volta' : 'questões erradas voltam'} no estudo dirigido.` : '';
+  const missed = status.missed.length ? ` ${status.missed.length} ${status.missed.length === 1 ? 'questão errada volta' : 'questões erradas voltam'} no quiz.` : '';
   const repeat = status.failures >= 2 ? ` Reincidência: ${status.failures}ª reprovação seguida.` : '';
   return `${base}${missed}${repeat}`;
 }

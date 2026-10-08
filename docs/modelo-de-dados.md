@@ -44,6 +44,12 @@ partir de `atlas_content_prerequisites` (MVP-01). Dispensa por proficiência
 Leituras feitas na implementação, onde o DEC-03 não detalha:
 
 - `bloqueado → em-estudo` ao reabrir o material ("revisar e passar de novo").
+- `bloqueado → concluido` (`quiz-aprovado`) ao refazer o quiz direto e passar.
+  Regra do Abner (2026-10-08): o quiz reprovado reprova o conteúdo; a pessoa
+  refaz o quiz (ou revisa as notas antes) quantas vezes precisar até passar de
+  70%, e o próximo conteúdo fica travado enquanto isso (pré-requisito). Nova
+  reprovação mantém `bloqueado`. O mesmo vale para o corretivo em
+  `em-revisao-ativa`, que pode ser refeito direto.
 - `revalidado → aguardando-revisao` a cada novo prazo (7d, 30d).
 - `em-revisao-ativa → revalidado` quando o domínio volta a ser comprovado.
 - A disciplina só libera a atividade final depois do exame de meio de curso
@@ -167,7 +173,9 @@ evidência. `status`: `em-andamento` → (com dissertativas) `autoavaliacao` →
   valor, anulado com menos de 3 das 5 verificações. Cada questão vale 100/N
   sem contar as anuladas; aprova com 70%.
 - Envio grava a evidência `kind = 'quiz'` e aplica `quiz-aprovado` (→
-  `concluido`) ou `quiz-reprovado` (→ `bloqueado`).
+  `concluido`) ou `quiz-reprovado` (→ `bloqueado`). Em `bloqueado`, o quiz
+  continua liberado: aprovado aplica `quiz-aprovado` (→ `concluido`); reprovado
+  não muda o estado.
 
 API: `GET /api/quizzes` (liberados e tentativas), `POST /api/quizzes { contentId }`,
 `GET /api/quizzes/:id` e `POST /api/quizzes/:id { action: travar | enviar, answers?, selfAssessments? }`.
@@ -186,8 +194,11 @@ Importação de questões: `docs/QUESTOES.md`.
 - Sem tarefa agendada: `GET /api/agenda?hoje=AAAA-MM-DD` sincroniza antes de
   listar. A sincronização conclui por evidência (sessão para estudo e
   recuperação, quiz para quiz), cancela o que perdeu sentido, passa para hoje o
-  que ficou para trás e cria o que falta: recuperação urgente para conteúdo
-  bloqueado, quiz para conteúdo aguardando quiz e o próximo estudo do roadmap.
+  que ficou para trás e cria o que falta: quiz urgente para refazer (conteúdo
+  bloqueado ou em revisão ativa), quiz para conteúdo aguardando quiz e o
+  próximo estudo do roadmap. Enquanto há reprovação pendente, o Atlas não
+  propõe conteúdo novo. Itens `recuperacao` antigos são cancelados (só seguem
+  válidos com o conteúdo em estudo).
 - Horário: sem hora fixada, os itens do dia seguem em sequência a partir das
   7h, por prioridade (recuperação, quiz, revisão, estudo).
 - Concluir à mão vale pelo dia (o passo não é recriado até amanhã) e não muda o
@@ -210,9 +221,10 @@ e o histórico de estados. Regras em `lib/reviews.ts` (DEC-09 e DEC-03):
 - A sincronização da agenda aplica `revisao-vencida` (→ `aguardando-revisao`)
   quando o dia local chega à data da etapa e agenda a próxima revisão com
   antecedência.
-- Revisão aprovada → `revalidado`; reprovada → `em-revisao-ativa`, com
-  recuperação urgente na agenda. O quiz corretivo só abre depois de uma nova
-  sessão concluída; aprovado, aplica `revisao-aprovada` e o ciclo segue.
+- Revisão aprovada → `revalidado`; reprovada → `em-revisao-ativa`, com o quiz
+  corretivo urgente na agenda. O corretivo abre na hora e pode ser refeito até
+  passar (revisar as notas antes é opcional); aprovado, aplica
+  `revisao-aprovada` e o ciclo segue.
 - Evidência `kind = 'revisao'` para revisão e corretivo. O resultado guarda o
   resumo (`review`: etapa, próxima revisão, ciclo concluído após os 30d).
 
@@ -280,6 +292,6 @@ Sem tabela nova: `lib/reports.ts` monta, por conteúdo, o relatório de
   quiz pendente), em dia, ou sem dados; reincidência do MVP-08 entra nos
   motivos.
 - Próxima ação: regra fixa por estado (pré-requisitos, estudar, quiz ou quiz
-  dirigido, revisão, corretivo ou estudar de novo, próxima revisão).
+  dirigido, refazer o quiz, revisão, corretivo, próxima revisão).
 - Histórico: sessões concluídas e tentativas enviadas, da mais recente à mais
   antiga.

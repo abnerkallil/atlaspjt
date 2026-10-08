@@ -54,7 +54,7 @@ const RULES = [
   'Tempo: 1 min por múltipla escolha e até 5 min por dissertativa; o tempo total é a soma. Ao zerar, as respostas são travadas automaticamente.',
   `Cálculo não tem limite de tempo, mas só vale se você acertar ao menos ${VERIFICATION_MINIMUM} das ${VERIFICATION_SIZE} perguntas de verificação; senão é anulada.`,
   'Dissertativas: depois de travar as respostas, você compara cada uma com o gabarito e diz se acertou. A correção é determinística, sem IA.',
-  `Nota mínima: ${PASSING_SCORE}%. Abaixo disso o conteúdo fica bloqueado até você estudar de novo.`,
+  `Nota mínima: ${PASSING_SCORE}%. Abaixo disso o conteúdo fica bloqueado, e o próximo conteúdo também, até você passar: refaça o quiz quantas vezes precisar, revisando suas notas antes se quiser. A reprovação não baixa a nota.`,
   'Suas respostas ficam salvas neste navegador se a página recarregar; o tempo continua correndo.',
 ];
 
@@ -181,6 +181,15 @@ export function QuizzesPage() {
     }
   }
 
+  // Reprovou: volta à preparação do mesmo quiz (as questões erradas voltam).
+  function retry(contentId: string) {
+    setActive(null);
+    setError('');
+    setVersion((value) => value + 1);
+    router.replace(`/quizzes?conteudo=${encodeURIComponent(contentId)}`);
+    window.scrollTo(0, 0);
+  }
+
   async function studyAgain(contentId: string) {
     setBusy(true);
     try {
@@ -228,6 +237,7 @@ export function QuizzesPage() {
         error={error}
         onBack={backToList}
         onStudyAgain={studyAgain}
+        onRetry={retry}
       />
     );
   }
@@ -348,14 +358,12 @@ function QuizList(props: {
                       <span>
                         {item.questionCount === 0
                           ? 'Ainda sem questões cadastradas.'
-                          : !item.ready
-                            ? 'Estude o conteúdo de novo (conclua uma sessão) para liberar o quiz corretivo.'
-                            : `${Math.min(item.questionCount, QUIZ_SIZE)} questões${item.attempts ? ` · ${item.attempts} tentativa(s) antes` : ''}`}
+                          : `${Math.min(item.questionCount, QUIZ_SIZE)} questões${item.attempts ? ` · ${item.attempts} tentativa(s) antes` : ''}`}
                       </span>
                     </div>
                     <Button
                       className="primary-button"
-                      disabled={item.questionCount === 0 || !item.ready}
+                      disabled={item.questionCount === 0}
                       onClick={() => props.onPick(item)}
                     >
                       {item.openAttemptId ? (
@@ -441,7 +449,7 @@ function QuizPrep(props: {
         titleId="qz-title"
       >
         {item.purpose === 'revisao'
-          ? `Revisão de ${item.stage} do conteúdo (DEC-09): aprovada, o conteúdo fica revalidado; reprovada, ele é reaberto até você estudar de novo e passar no quiz corretivo.`
+          ? `Revisão de ${item.stage} do conteúdo (DEC-09): aprovada, o conteúdo fica revalidado; reprovada, ele é reaberto até você passar no quiz corretivo (refaça quantas vezes precisar).`
           : item.purpose === 'corretivo'
             ? 'Quiz corretivo depois da revisão que falhou: aprovado, o conteúdo volta a revalidado e o ciclo de revisões continua.'
             : 'Confira as regras antes de começar: o tempo começa a contar ao iniciar.'}
@@ -1002,6 +1010,7 @@ function QuizResult(props: {
   error: string;
   onBack: () => void;
   onStudyAgain: (contentId: string) => void;
+  onRetry: (contentId: string) => void;
 }) {
   const { attempt } = props;
   const results = new Map(
@@ -1022,7 +1031,7 @@ function QuizResult(props: {
           }
         : {
             title: 'Conteúdo bloqueado',
-            text: `${wrong} questão(ões) erradas. O conteúdo ficou bloqueado até você estudar de novo; ao concluir a nova sessão, o quiz é liberado outra vez.`,
+            text: `${wrong} questão(ões) erradas. O conteúdo fica bloqueado, e o próximo também, até você passar com ${PASSING_SCORE}%. Refaça o quiz agora ou revise suas notas antes; as questões erradas voltam.`,
           }
       : review?.cycleDone
         ? {
@@ -1038,7 +1047,7 @@ function QuizResult(props: {
             }
           : {
               title: 'Conteúdo reaberto',
-              text: `${wrong} questão(ões) erradas. ${attempt.contentTitle} está em revisão ativa: estude de novo (recuperação urgente na agenda) e faça o quiz corretivo.`,
+              text: `${wrong} questão(ões) erradas. ${attempt.contentTitle} está em revisão ativa até você passar no quiz corretivo com ${PASSING_SCORE}%. Faça-o agora ou revise suas notas antes; as questões erradas voltam.`,
             };
   return (
     <section className="qz-view" aria-labelledby="qz-title">
@@ -1191,13 +1200,23 @@ function QuizResult(props: {
               Ver no roadmap
             </Link>
           ) : (
-            <Button
-              className="primary-button"
-              disabled={props.busy}
-              onClick={() => props.onStudyAgain(attempt.contentId)}
-            >
-              <RotateCcw size={16} /> Estudar de novo
-            </Button>
+            <>
+              <Button
+                className="primary-button"
+                disabled={props.busy}
+                onClick={() => props.onRetry(attempt.contentId)}
+              >
+                <RotateCcw size={16} /> Refazer o quiz
+              </Button>
+              <Button
+                variant="outline"
+                className="qz-outline"
+                disabled={props.busy}
+                onClick={() => props.onStudyAgain(attempt.contentId)}
+              >
+                Revisar as notas antes
+              </Button>
+            </>
           )}
           <Button
             variant="outline"

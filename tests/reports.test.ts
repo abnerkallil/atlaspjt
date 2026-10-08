@@ -17,7 +17,6 @@ const facts = (overrides: Partial<ReportFacts> = {}): ReportFacts => ({
   pendingTitles: [],
   recovery: null,
   next: null,
-  correctiveReady: true,
   hasOpenSession: false,
   now: at(12),
   tzOffsetMinutes: 180,
@@ -36,7 +35,10 @@ void test('risco e próxima ação seguem o estado do DEC-03', () => {
   assert.equal(blocked.level, 'alto');
   assert.match(blocked.reasons.join(' '), /2 reprovações seguidas/);
   assert.equal(nextAction(facts({ state: 'aguardando-quiz', recovery }), 'X').label, 'Fazer o quiz dirigido');
-  assert.equal(nextAction(facts({ state: 'em-revisao-ativa', correctiveReady: false }), 'X').label, 'Estudar de novo');
+  assert.deepEqual(
+    [nextAction(facts({ state: 'bloqueado', recovery }), 'X').label, nextAction(facts({ state: 'bloqueado', recovery }), 'X').href],
+    ['Refazer o quiz', '/quizzes?conteudo=X'],
+  );
   assert.equal(nextAction(facts({ state: 'em-revisao-ativa' }), 'X').href, '/quizzes?conteudo=X');
   const next = { stage: '7d' as const, dueAt: '2026-10-15T12:00:00.000Z' };
   assert.equal(assessRisk(facts({ state: 'revalidado', next })).reasons[0], 'Próxima revisão (7d) em 15/10.');

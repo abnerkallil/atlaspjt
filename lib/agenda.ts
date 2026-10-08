@@ -9,7 +9,7 @@ import type { D1Like } from './pedagogy/transitions.js';
 import { getRoadmap } from './roadmap-store.js';
 import { listOpenSessions } from './study-sessions.js';
 import { roadmapContents } from './study-plan.js';
-import { correctiveReady, syncReviews } from './reviews.js';
+import { syncReviews } from './reviews.js';
 import { QUESTION_SECONDS, QUIZ_SIZE, type QuestionKind } from './quizzes.js';
 import { recoveryReason, recoveryStatus } from './recovery.js';
 
@@ -249,8 +249,9 @@ const MATCHING_EVIDENCE = `FROM atlas_evidences e
 // Estados em que cada tipo de item ainda faz sentido.
 const STILL_VALID: Record<AgendaKind, string[]> = {
   estudo: ['nao-iniciado', 'em-estudo'],
-  quiz: ['aguardando-quiz', 'em-revisao-ativa'],
-  recuperacao: ['bloqueado', 'em-estudo', 'em-revisao-ativa'],
+  quiz: ['aguardando-quiz', 'bloqueado', 'em-revisao-ativa'],
+  // Itens antigos de "estude de novo": a reprovação agora agenda o quiz de novo.
+  recuperacao: ['em-estudo'],
   revisao: ['concluido', 'revalidado', 'aguardando-revisao'],
 };
 
@@ -316,42 +317,19 @@ export async function syncAgenda(db: D1Like, options: { today: string; tzOffsetM
     );
   }
 
-  // 4. Cria o que falta: recuperação urgente, quiz liberado (ou corretivo),
-  //    revisões e o próximo estudo.
+  // 4. Cria o que falta: quiz liberado, quiz a refazer depois de reprovar
+  //    (urgente, até passar), corretivo, revisões e o próximo estudo.
   const { results: states } = await db
     .prepare(
-      `SELECT s.content_id, s.state, c.estimated_minutes
-       FROM atlas_content_states s JOIN atlas_contents c ON c.id = s.content_id
-       WHERE s.state IN ('bloqueado', 'aguardando-quiz', 'em-revisao-ativa')`,
+      `SELECT content_id, state FROM atlas_content_states
+       WHERE state IN ('bloqueado', 'aguardando-quiz', 'em-revisao-ativa')`,
     )
-    .all<{ content_id: string; state: string; estimated_minutes: number | null }>();
+    .all<{ content_id: string; state: string }>();
   const inserts: ReturnType<typeof insertItem>[] = [];
   for (const row of states) {
-    const studyMinutes = Number(row.estimated_minutes ?? DEFAULT_STUDY_MINUTES);
     const corrective = row.state === 'em-revisao-ativa';
+    const failed = corrective || row.state === 'bloqueado';
     const recovery = await recoveryStatus(db, row.content_id);
-    if (row.state === 'bloqueado' || (corrective && !(await correctiveReady(db, row.content_id)))) {
-      inserts.push(
-        insertItem(
-          db,
-          {
-            kind: 'recuperacao',
-            contentId: row.content_id,
-            durationMinutes: studyMinutes,
-            priority: 'urgente',
-            reason: recoveryReason(
-              recovery,
-              corrective
-                ? 'Falhou na revisão: estude de novo para liberar o quiz corretivo (DEC-03).'
-                : 'Reprovado no quiz: estude de novo para liberar outra tentativa (DEC-04).',
-            ),
-          },
-          today,
-          now,
-        ),
-      );
-      continue;
-    }
     inserts.push(
       insertItem(
         db,
@@ -359,12 +337,14 @@ export async function syncAgenda(db: D1Like, options: { today: string; tzOffsetM
           kind: 'quiz',
           contentId: row.content_id,
           durationMinutes: quizMinutes(await questionKinds(db, row.content_id)),
-          priority: corrective ? 'urgente' : 'alta',
+          priority: failed ? 'urgente' : 'alta',
           reason: corrective
-            ? 'Quiz corretivo: as questões erradas na revisão voltam; passe para revalidar o conteúdo.'
-            : recovery
-              ? 'Quiz dirigido: as questões que você errou voltam; passe para desbloquear o conteúdo.'
-              : 'Sessão concluída: o quiz confirma o conteúdo e o leva a concluído.',
+            ? recoveryReason(recovery, 'Falhou na revisão: refaça o quiz corretivo até passar com 70% (revise suas notas antes, se quiser).')
+            : failed
+              ? recoveryReason(recovery, 'Reprovado no quiz: refaça até passar com 70% (revise suas notas antes, se quiser); o próximo conteúdo espera.')
+              : recovery
+                ? 'Quiz dirigido: as questões que você errou voltam; passe para desbloquear o conteúdo.'
+                : 'Sessão concluída: o quiz confirma o conteúdo e o leva a concluído.',
         },
         today,
         now,
@@ -398,9 +378,23 @@ export async function syncAgenda(db: D1Like, options: { today: string; tzOffsetM
   const pendingStudy = await db
     .prepare(`SELECT 1 AS found FROM atlas_agenda_items WHERE status = 'pendente' AND kind IN ('estudo', 'recuperacao') LIMIT 1`)
     .first<{ found: number }>();
-  if (!pendingStudy) {
+  // Reprovação pendente trava o avanço: o Atlas não propõe conteúdo novo até passar.
+  const failing = states.some((row) => row.state === 'bloqueado' || row.state === 'em-revisao-ativa');
+  if (failing) {
+    await db.batch([
+      db
+        .prepare(
+          `UPDATE atlas_agenda_items
+           SET status = 'cancelado', change_reason = 'Reprovação pendente: o próximo conteúdo espera você passar no quiz.', updated_at = ?1
+           WHERE status = 'pendente' AND kind = 'estudo'
+             AND COALESCE((SELECT s.state FROM atlas_content_states s WHERE s.content_id = atlas_agenda_items.content_id), 'nao-iniciado') = 'nao-iniciado'`,
+        )
+        .bind(now),
+    ]);
+  }
+  if (!pendingStudy && !failing) {
     // Próximo estudo: sessão aberta, conteúdo em estudo ou o primeiro liberado do
-    // roadmap. Recuperação e corretivo já têm seus próprios itens.
+    // roadmap. Quiz a refazer e corretivo já têm seus próprios itens.
     const contents = roadmapContents(await getRoadmap(db));
     const [open] = (await listOpenSessions(db)).filter((session) =>
       STILL_VALID.estudo.includes(contents.find((item) => item.id === session.contentId)?.state ?? ''),

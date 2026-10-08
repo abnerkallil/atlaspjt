@@ -5,7 +5,6 @@ import test from 'node:test';
 import { addDays, listAgenda, syncAgenda } from '../lib/agenda.js';
 import { currentState } from '../lib/pedagogy/transitions.js';
 import {
-  QuizError,
   listQuestions,
   listQuizQueue,
   shuffleQuestion,
@@ -75,7 +74,7 @@ void test('ciclo completo: revisão, falha, recuperação urgente, corretivo e r
   await syncAgenda(db, { today: day1, now: at(day1, 6) });
   assert.equal(await currentState(db, 'conteudo', 'CG-001'), 'aguardando-revisao');
   const [queued] = await listQuizQueue(db);
-  assert.deepEqual([queued.purpose, queued.stage, queued.ready], ['revisao', '24h', true]);
+  assert.deepEqual([queued.purpose, queued.stage], ['revisao', '24h']);
   const { attempt: r1, done: r1done } = await takeQuiz(raw, db, 'r1', at(day1, 9), true);
   assert.deepEqual([r1.purpose, r1.stage], ['revisao', '24h']);
   assert.equal(await currentState(db, 'conteudo', 'CG-001'), 'revalidado');
@@ -89,7 +88,7 @@ void test('ciclo completo: revisão, falha, recuperação urgente, corretivo e r
   assert.equal(agenda1.find((item) => item.sourceRef === '24h')?.completion, 'evidencia');
   assert.equal(agenda1.find((item) => item.sourceRef === '7d' && item.status === 'pendente')?.dueDate, addDays(day0, 7));
 
-  // 7d: falha, conteúdo reaberto, recuperação urgente e corretivo só depois de estudar.
+  // 7d: falha, conteúdo reaberto e quiz corretivo urgente, que pode ser refeito direto.
   const day7 = addDays(day0, 7);
   await syncAgenda(db, { today: day7, now: at(day7, 6) });
   const { done: r2done } = await takeQuiz(raw, db, 'r2', at(day7, 9), false);
@@ -98,17 +97,14 @@ void test('ciclo completo: revisão, falha, recuperação urgente, corretivo e r
   assert.equal(await currentState(db, 'conteudo', 'CG-001'), 'em-revisao-ativa');
   await syncAgenda(db, { today: day7, now: at(day7, 10) });
   const [urgent] = await pending(db, day7);
-  assert.deepEqual([urgent.kind, urgent.priority], ['recuperacao', 'urgente']);
-  assert.match(urgent.reason, /Falhou na revisão/);
-  assert.equal((await listQuizQueue(db))[0].ready, false);
-  await assert.rejects(startQuiz(db, 'CG-001', { now: at(day7, 11) }), (error: unknown) => error instanceof QuizError && /corretivo/.test(error.message));
+  assert.deepEqual([urgent.kind, urgent.priority], ['quiz', 'urgente']);
+  assert.match(urgent.reason, /Falhou na revisão: refaça o quiz corretivo/);
+  assert.equal((await listQuizQueue(db))[0].purpose, 'corretivo');
 
-  await startSession(db, 'CG-001', { now: at(day7, 12), id: 's2' });
-  await concludeSession(db, 's2', { now: at(day7, 13) });
-  assert.equal(await currentState(db, 'conteudo', 'CG-001'), 'em-revisao-ativa', 'estudar não fecha a revisão ativa');
-  await syncAgenda(db, { today: day7, now: at(day7, 14) });
-  const corrective = (await pending(db, day7)).find((item) => item.kind === 'quiz');
-  assert.match(corrective?.reason ?? '', /Quiz corretivo/);
+  // Reprovar o corretivo mantém a revisão ativa; o quiz volta na hora.
+  const { attempt: c0 } = await takeQuiz(raw, db, 'c0', at(day7, 11), false);
+  assert.equal(c0.purpose, 'corretivo');
+  assert.equal(await currentState(db, 'conteudo', 'CG-001'), 'em-revisao-ativa');
   const { attempt: c1, done: c1done } = await takeQuiz(raw, db, 'c1', at(day7, 15), true);
   assert.deepEqual([c1.purpose, c1.stage], ['corretivo', '7d']);
   assert.equal(await currentState(db, 'conteudo', 'CG-001'), 'revalidado');
