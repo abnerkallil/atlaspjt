@@ -424,3 +424,18 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
   quiz de hoje continua exatamente igual, sorteando do jeito de sempre.
 - Se algo der errado: só poderia afetar `lib/apolo/selector.ts`, que
   nenhuma tela ou rota usa ainda; nenhuma tela de estudo do aluno é tocada.
+
+## PR #55 — Corretor e boletim (APO-13)
+
+- Ponto de restauração: branch `restore/pre-apo-13` (commit `7515bc3`, main antes do merge).
+- Sem migration nova. Sem rota nova. Sem estado persistido novo.
+- O que muda no site: nada visível — `gradeQuestion`/`scoreResults` (a
+  correção do quiz) mudaram de arquivo, de `lib/quizzes.ts` para
+  `lib/apolo/corrector.ts`, mas a lógica é exatamente a mesma (mesmo
+  critério de certo/errado, mesma regra de anulação do cálculo, mesma nota
+  mínima). Toda tentativa de quiz, nova ou antiga, continua corrigida do
+  jeito de sempre. `buildBoletim` (empacota um resultado já calculado com a
+  versão do corretor) existe em código mas nenhuma tela ou rota o usa ainda.
+- Se algo der errado: reverter para `restore/pre-apo-13` traz a correção de
+  volta a `lib/quizzes.ts` sem perder nenhuma nota já gravada (o resultado
+  de cada tentativa enviada é imutável e não muda com este PR).
