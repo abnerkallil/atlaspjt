@@ -359,3 +359,22 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
   própria ainda e sem afetar nota, quiz ou qualquer outra tela.
 - Se algo der errado: só poderia afetar essa rota nova, que nada mais do
   site usa ainda; nenhuma tela de estudo do aluno é tocada.
+
+## PR #51 — Estatística de itens e corte automático de questão ruim (APO-10)
+
+- Ponto de restauração: branch `restore/pre-apo-10` (commit `ff1d573`, main antes do merge).
+- Sem migration nova. Nenhum estado novo é gravado no banco — a estatística é
+  recalculada do zero a partir do histórico de tentativas de quiz já
+  existente a cada leitura, igual ao APO-09.
+- O que muda no site: a cada quiz enviado, o Apolo passa a medir a questão
+  (taxa de acerto, dificuldade Elo própria, correlação item-total, taxa de
+  escolha de cada alternativa) e, por conteúdo, o KR-20. Questão que bate uma
+  regra de alerta — com amostra mínima de 30 respostas — sai sozinha do
+  próximo sorteio e cai na mesma fila de curadoria do APO-07, sem mexer em
+  nenhuma nota já emitida. Também adiciona uma rota nova, só leitura,
+  `GET /api/apolo/estatisticas`, sem tela própria ainda.
+- Se algo der errado: o corte só desativa questões (`lifecycle_state` vira
+  'curadoria', `active` vira 0) — nunca apaga nada nem muda nota já emitida;
+  uma questão desativada por engano pode ser reativada manualmente no banco.
+  Uma falha na auditoria nunca derruba a resposta de um quiz já corrigido
+  (está em `try/catch` isolado).
