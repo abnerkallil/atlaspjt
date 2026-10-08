@@ -75,3 +75,56 @@ O corte roda sozinho a cada quiz enviado (`app/api/quizzes/[id]/route.ts`,
 depois que a nota já foi gravada; uma falha na auditoria nunca derruba a
 resposta do quiz). `GET /api/apolo/estatisticas` expõe tudo isso para leitura
 (`{ items, instruments, alerts }`), sem aplicar nenhum corte por si só.
+
+## Planos de prova (APO-11)
+
+Cada instrumento (quiz, revisão 24h/7d/30d, corretivo, atividade, exame de
+meio de curso, atividade final, recuperação, proficiência) tem uma regra fixa
+e visível de composição: tamanho, mistura de tipo de questão, mistura de
+Bloom, mistura de dificuldade, intercalação, tempo por tipo (reaproveita
+`QUESTION_SECONDS` de `lib/quizzes.ts`) e corte de aprovação. Tudo em
+`lib/apolo/plans.ts` (funções puras, sem I/O): `resolvePlan(instrumento,
+áreaDeConhecimento?, overrides?)` monta o plano, `allocateCounts` converte uma
+mistura de pesos em contagens inteiras que somam o tamanho do plano (maior
+resto/Hamilton, determinístico), e `applyDifficultyFallback` resolve o risco
+do card — quando o banco não tem questões suficientes numa faixa de
+dificuldade, o excedente vai para a faixa vizinha (fácil-média-difícil) com
+sobra, e um aviso é reportado; nenhuma questão é inventada.
+
+O plano de `quiz` sem área de conhecimento é, de propósito, idêntico ao que
+`lib/quizzes.ts` já faz hoje (`QUIZ_SIZE`, `QUESTION_SECONDS`,
+`PASSING_SCORE`) — nada muda na prova atual. O perfil por área de
+conhecimento do tema (`atlas_themes.knowledge_area`, APO-02) só ajusta a
+mistura de tipo de questão: exatas prioriza cálculo/lacuna numérica; humanas
+prioriza dissertativa; jurídico prioriza certo/errado; sociais aplicadas e
+linguagens ficam mistas. "Biológicas" (uma das 6 áreas já presentes no schema,
+mas que o card não listava) foi tratada como mista, igual sociais aplicadas,
+até o Abner revisar.
+
+**DEC-10 confirmado pelo Abner em 2026-10-08:** o card cita "Gate: não
+(implementa o DEC-10)", e o DEC-10 do kanban pessoal ("Definir a composição
+das avaliações", P0, Pedagogia/Produto) não tinha decisão formal registrada
+em `docs/ATLAS_DECISIONS.md` até este card ser implementado. Pergunta feita
+ao Abner no chat do projeto às 15:58 (`cmsg_015thNCrpovZtKsRcfQ4RaQBX9VTDhqU89TeJfXPPP7AgC`,
+item 2: "Confirma o DEC-10 das Avaliações (exame de meio com 60 questões,
+final 50/50, cascata)?") e resposta às 16:08
+(`cmsg_015thNCrpovZtKsRcfQ4RaQBHJC7stLu1MZeGbV69v51i8`, "2 -> Sim."):
+exame de meio de curso tem 60 questões; atividade final e exame de meio
+pesam 50/50 na nota da disciplina (já documentado em
+`docs/modelo-de-dados.md` linha 56); e a "cascata" (ordem de liberação
+atividade → exame de meio → atividade final → recuperação, DEC-018) foi
+confirmada em princípio — a fórmula exata de como a nota cascateia entre
+essas etapas ainda não foi detalhada por ele, então continua sendo decisão
+do card APO-19 quando chegar a vez.
+
+Isso fixa o tamanho de `exame_meio` e `atividade_final` neste plano em 60
+questões (antes um rascunho com 20, só palpite). O peso 50/50 é uma regra de
+nota da disciplina, não de composição de prova — fica fora do escopo de
+`ExamPlan` aqui, para o card que calcular a nota final da disciplina
+decidir. Os perfis por área de conhecimento do tema e os planos dos
+instrumentos sem motor próprio (atividade, recuperação, proficiência —
+"fora da espinha", só existem como estado da FSM em
+`lib/pedagogy/states.ts`) seguem como primeiro rascunho deste card, não uma
+decisão fechada. Nenhum desses planos está ligado à seleção real de questão
+ainda — isso é o APO-12 (seletor
+adaptativo), que depende deste card.

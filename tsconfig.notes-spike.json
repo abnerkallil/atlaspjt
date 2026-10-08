@@ -84,6 +84,7 @@
     "lib/apolo/profile.ts",
     "lib/apolo/item-stats.ts",
     "lib/apolo/item-audit.ts",
+    "lib/apolo/plans.ts",
     "lib/apolo/index.ts",
     "tests/apolo.test.ts",
     "tests/apolo-themes.test.ts",
@@ -92,7 +93,8 @@
     "tests/apolo-extractor.test.ts",
     "tests/apolo-drafts.test.ts",
     "tests/apolo-skill.test.ts",
-    "tests/apolo-item-stats.test.ts"
+    "tests/apolo-item-stats.test.ts",
+    "tests/apolo-plans.test.ts"
   ],
   "exclude": [
     "node_modules"
