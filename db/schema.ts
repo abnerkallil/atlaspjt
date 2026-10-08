@@ -405,3 +405,52 @@ export const atlasQuizAttempts = sqliteTable(
       .where(sql`status <> 'enviado'`),
   ],
 );
+
+// Agenda interna (MVP-05, DEC-09). Cada item é um compromisso de um dia:
+// estudar, fazer o quiz, revisar (MVP-06) ou recuperar um conteúdo bloqueado.
+// O Atlas gera e conclui os itens a partir do estado do roadmap e das
+// evidências; o usuário pode concluir à mão, reagendar e ajustar duração e
+// prioridade. Toda mudança guarda o motivo (reagendamento explicável).
+export const atlasAgendaItems = sqliteTable(
+  'atlas_agenda_items',
+  {
+    id: text('id').primaryKey(),
+    // "estudo", "quiz", "revisao" ou "recuperacao".
+    kind: text('kind').notNull(),
+    contentId: text('content_id')
+      .notNull()
+      .references(() => atlasContents.id, { onDelete: 'cascade' }),
+    // Distingue itens do mesmo tipo e conteúdo (ex.: revisão de 24h, 7d, 30d).
+    sourceRef: text('source_ref').notNull().default(''),
+    // Dia local do usuário (AAAA-MM-DD).
+    dueDate: text('due_date').notNull(),
+    // Horário fixado pelo usuário (HH:MM); nulo = em sequência a partir das 7h.
+    startTime: text('start_time'),
+    durationMinutes: integer('duration_minutes').notNull(),
+    // "normal", "alta" ou "urgente".
+    priority: text('priority').notNull().default('normal'),
+    // "pendente", "concluido" ou "cancelado".
+    status: text('status').notNull().default('pendente'),
+    // Por que o item existe.
+    reason: text('reason').notNull(),
+    // Motivo da última mudança (reagendamento, conclusão, cancelamento).
+    changeReason: text('change_reason'),
+    originalDate: text('original_date'),
+    rescheduleCount: integer('reschedule_count').notNull().default(0),
+    // "evidencia" ou "manual".
+    completion: text('completion'),
+    completedAt: text('completed_at'),
+    evidenceId: text('evidence_id').references(() => atlasEvidences.id, {
+      onDelete: 'set null',
+    }),
+    createdAt: text('created_at').notNull(),
+    updatedAt: text('updated_at').notNull(),
+  },
+  (table) => [
+    index('idx_atlas_agenda_items_due').on(table.dueDate, table.status),
+    // Um item pendente por tipo, conteúdo e origem.
+    uniqueIndex('uq_atlas_agenda_items_pending')
+      .on(table.kind, table.contentId, table.sourceRef)
+      .where(sql`status = 'pendente'`),
+  ],
+);

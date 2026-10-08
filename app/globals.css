@@ -133,6 +133,25 @@ button { color: inherit; }
 .task-copy > div { display: flex; align-items: center; gap: 10px; }
 .task-label { font-size: 10px; letter-spacing: .09em; text-transform: uppercase; font-weight: 760; }
 .task-label.blue { color: #1d4ed8; }.task-label.violet { color: #7c3aed; }.task-label.amber { color: #a9510e; }.task-label.green { color: #0f7a59; }
+/* Agenda (MVP-05) */
+.task-icon.red { color: #b42318; background: #fdecea; }
+.task-label.red { color: #b42318; }
+.task-check:disabled { cursor: default; }
+.agenda-change { margin-top: 4px !important; color: #7a4a0c !important; font-size: 12px !important; }
+.agenda-adjust { display: inline-flex; align-items: center; gap: 5px; margin-top: 8px; padding: 0; border: 0; background: transparent; color: #1d4ed8; cursor: pointer; font-size: 12px; font-weight: 650; }
+.agenda-adjust:hover { text-decoration: underline; }
+.agenda-upcoming { margin-top: 18px; padding: 18px 20px; border: 1px solid var(--line); border-radius: 16px; background: #fff; }
+.agenda-upcoming h3 { margin: 0 0 10px; font-size: 15px; }
+.agenda-upcoming ul { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.agenda-upcoming li { display: grid; gap: 2px; padding-top: 10px; border-top: 1px solid #eeecf2; }
+.agenda-upcoming li:first-child { padding-top: 0; border-top: 0; }
+.agenda-upcoming li > span, .agenda-upcoming small { color: var(--muted); font-size: 12px; }
+.agenda-upcoming li .agenda-adjust { margin-top: 2px; width: fit-content; }
+.agenda-dialog-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; margin-top: 8px; }
+.agenda-dialog-grid label, .agenda-dialog > label { display: grid; gap: 6px; margin: 8px 0 0; font-size: 12px; font-weight: 700; color: #4d4957; }
+.agenda-dialog input, .agenda-dialog select, .agenda-dialog textarea { width: 100%; padding: 9px 11px; border: 1px solid #d9e2f2; border-radius: 10px; color: var(--ink); background: #f7faff; font: inherit; font-size: 14px; font-weight: 400; }
+.agenda-hint { display: block; margin-top: 8px; color: var(--muted); font-size: 11px; }
+@media (max-width: 520px) { .agenda-dialog-grid { grid-template-columns: 1fr; } }
 .task-time { display: flex; gap: 4px; align-items: center; color: #6f6a7c; font-size: 10px; }
 .task-copy h3 { margin: 6px 0 4px; font-size: 16px; }
 .task-copy p { margin: 0; color: var(--muted); font-size: 12px; }

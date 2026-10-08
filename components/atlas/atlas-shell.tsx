@@ -4,7 +4,8 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ArrowRight, Bell, BrainCircuit, CircleHelp, MessageCircle, Map as MapIcon, Menu, Search, Sparkles, UserRound, X } from 'lucide-react';
-import { assistantDemo, dailySummary, todayTasks } from '@/lib/demo/today';
+import { assistantDemo } from '@/lib/demo/today';
+import { daySummary, useAgendaData, type AgendaState } from '@/components/atlas/use-agenda';
 
 export const navItems = [
   { label: 'Hoje', href: '/' },
@@ -15,11 +16,11 @@ export const navItems = [
   { label: 'Progresso', href: '/progresso' },
 ];
 
-// Estado compartilhado entre rotas: o resumo diário do cabeçalho depende das tarefas concluídas em Hoje, e o modo
-// de foco esconde navegação, perfil e assistente durante uma sessão de estudo ativa (DEC-01, DEC-12).
+// Estado compartilhado entre rotas: o resumo diário do cabeçalho e a jornada de Hoje leem a mesma agenda (MVP-05),
+// e o modo de foco esconde navegação, perfil e assistente durante uma sessão de estudo ativa (DEC-01, DEC-12).
 type ShellContextValue = {
-  done: number[];
-  toggleTask: (id: number) => void;
+  agenda: AgendaState;
+  reloadAgenda: () => void;
   openAssistant: () => void;
   setFocusMode: (focus: boolean) => void;
 };
@@ -63,25 +64,22 @@ function AssistantDrawer({ onClose }: { onClose: () => void }) {
 
 export function AtlasShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const [done, setDone] = useState<number[]>([]);
+  const { agenda, reload: reloadAgenda } = useAgendaData(pathname);
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [focusMode, setFocusModeState] = useState(false);
 
-  const toggleTask = useCallback((id: number) => {
-    setDone((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));
-  }, []);
   const openAssistant = useCallback(() => setAssistantOpen(true), []);
   const setFocusMode = useCallback((focus: boolean) => {
     setFocusModeState(focus);
     if (focus) setMenuOpen(false);
   }, []);
   const value = useMemo(
-    () => ({ done, toggleTask, openAssistant, setFocusMode }),
-    [done, toggleTask, openAssistant, setFocusMode],
+    () => ({ agenda, reloadAgenda, openAssistant, setFocusMode }),
+    [agenda, reloadAgenda, openAssistant, setFocusMode],
   );
 
-  const completedMinutes = done.reduce((sum, id) => sum + (todayTasks.find((task) => task.id === id)?.minutes ?? 0), 0);
+  const summary = agenda.status === 'ready' ? daySummary(agenda.items, agenda.today) : null;
 
   return (
     <ShellContext.Provider value={value}>
@@ -91,11 +89,17 @@ export function AtlasShell({ children }: { children: ReactNode }) {
             <div className="top-ribbon-inner">
               <div className="daily-summary">
                 <span className="pulse-dot" />
-                <strong>{todayTasks.length - done.length} atividades</strong>
-                <span>·</span>
-                <span>{Math.max(0, dailySummary.plannedMinutes - completedMinutes)} min restantes</span>
-                <span className="summary-divider" />
-                <span>{dailySummary.scheduledReviews} {dailySummary.scheduledReviews === 1 ? 'revisão programada' : 'revisões programadas'}</span>
+                {summary ? (
+                  <>
+                    <strong>{summary.pending} {summary.pending === 1 ? 'atividade' : 'atividades'}</strong>
+                    <span>·</span>
+                    <span>{summary.minutes} min restantes</span>
+                    <span className="summary-divider" />
+                    <span>{summary.reviews} {summary.reviews === 1 ? 'revisão programada' : 'revisões programadas'}</span>
+                  </>
+                ) : (
+                  <span>{agenda.status === 'error' ? 'Agenda indisponível' : 'Carregando agenda…'}</span>
+                )}
               </div>
               <button className="quiet-button" onClick={openAssistant}>
                 <Sparkles size={15} /> Ver orientação do Atlas

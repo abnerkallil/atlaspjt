@@ -4,20 +4,19 @@ import { useEffect, useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
-  ArrowRight, BookOpen, BrainCircuit, Check, ChevronRight, Clock3, Flame, Map as MapIcon, PenLine, Sparkles, Target,
+  ArrowRight, BookOpen, BrainCircuit, ChevronRight, Clock3, Flame, Map as MapIcon, Sparkles, Target,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { MetricCard } from '@/components/atlas/metric-card';
 import { PageHeading } from '@/components/atlas/page-heading';
 import { ProgressBar } from '@/components/atlas/progress-bar';
 import { SessionStartModal } from '@/components/atlas/session-start-modal';
-import { useAtlasShell } from '@/components/atlas/atlas-shell';
-import { dailySummary, todayMetrics, todayTasks } from '@/lib/demo/today';
+import { todayMetrics } from '@/lib/demo/today';
+import { TodayAgenda } from '@/components/pages/today-agenda';
 import { formatMinutes, startStudySession, useStudyOverview } from '@/components/pages/use-study-overview';
 import { elapsedSeconds } from '@/lib/study-sessions';
 import type { RoadmapView } from '@/lib/roadmap-store';
 
-const taskIcons = { book: BookOpen, brain: BrainCircuit, target: Target, pen: PenLine } as const;
 const metricIcons = { target: Target, brain: BrainCircuit, flame: Flame } as const;
 
 // Data e saudação dependem do relógio de quem acessa: calculadas só no navegador (no servidor ficam vazias),
@@ -52,7 +51,6 @@ function useCurrentPhase() {
 }
 
 export function TodayPage() {
-  const { done, toggleTask } = useAtlasShell();
   const currentPhase = useCurrentPhase();
   const [sessionOpen, setSessionOpen] = useState(false);
   const [starting, setStarting] = useState(false);
@@ -138,37 +136,7 @@ export function TodayPage() {
         </aside>
       </div>
 
-      <section className="journey-section" aria-labelledby="today-journey-title">
-        <div className="section-heading">
-          <div><p className="eyebrow">SUA JORNADA DE HOJE</p><h2 id="today-journey-title">Quatro passos, um objetivo claro.</h2></div>
-          <div className="journey-total"><Clock3 size={16} /> {Math.floor(dailySummary.plannedMinutes / 60)}h{String(dailySummary.plannedMinutes % 60).padStart(2, '0')} planejadas</div>
-        </div>
-
-        <div className="task-list">
-          {todayTasks.map((task, index) => {
-            const Icon = taskIcons[task.icon];
-            const isDone = done.includes(task.id);
-            return (
-              <article className={`task-row ${isDone ? 'done' : ''}`} key={task.id}>
-                <button
-                  className="task-check"
-                  onClick={() => toggleTask(task.id)}
-                  aria-label={isDone ? `Marcar ${task.title} como pendente` : `Concluir ${task.title}`}
-                >
-                  {isDone ? <Check size={17} /> : <span>{index + 1}</span>}
-                </button>
-                <div className={`task-icon ${task.tone}`}><Icon size={19} /></div>
-                <div className="task-copy">
-                  <div><span className={`task-label ${task.tone}`}>{task.label}</span><span className="task-time"><Clock3 size={13} />{task.minutes} min</span></div>
-                  <h3>{task.title}</h3>
-                  <p>{isDone ? 'Atividade concluída. Bom trabalho.' : task.description}</p>
-                </div>
-                <Link className="task-arrow" href={task.href} aria-label={`Abrir ${task.title}`}><ChevronRight size={19} /></Link>
-              </article>
-            );
-          })}
-        </div>
-      </section>
+      <TodayAgenda />
 
       <section className="metrics-section today-metrics" aria-labelledby="today-metrics-title">
         <div className="section-heading">

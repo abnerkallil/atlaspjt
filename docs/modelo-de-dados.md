@@ -172,3 +172,28 @@ evidência. `status`: `em-andamento` → (com dissertativas) `autoavaliacao` →
 API: `GET /api/quizzes` (liberados e tentativas), `POST /api/quizzes { contentId }`,
 `GET /api/quizzes/:id` e `POST /api/quizzes/:id { action: travar | enviar, answers?, selfAssessments? }`.
 Importação de questões: `docs/QUESTOES.md`.
+
+## Agenda interna (MVP-05)
+
+`atlas_agenda_items` (migration 0011): um compromisso por linha, com `kind`
+(`estudo`, `quiz`, `revisao`, `recuperacao`), conteúdo, dia local
+(`due_date`), horário fixado (`start_time`, opcional), duração, prioridade
+(`urgente`, `alta`, `normal`), `status` (`pendente`, `concluido`,
+`cancelado`), o motivo de existir (`reason`) e o motivo da última mudança
+(`change_reason`, `original_date`, `reschedule_count`). Regras em
+`lib/agenda.ts` (DEC-09):
+
+- Sem tarefa agendada: `GET /api/agenda?hoje=AAAA-MM-DD` sincroniza antes de
+  listar. A sincronização conclui por evidência (sessão para estudo e
+  recuperação, quiz para quiz), cancela o que perdeu sentido, passa para hoje o
+  que ficou para trás e cria o que falta: recuperação urgente para conteúdo
+  bloqueado, quiz para conteúdo aguardando quiz e o próximo estudo do roadmap.
+- Horário: sem hora fixada, os itens do dia seguem em sequência a partir das
+  7h, por prioridade (recuperação, quiz, revisão, estudo).
+- Concluir à mão vale pelo dia (o passo não é recriado até amanhã) e não muda o
+  estado pedagógico do conteúdo.
+- As revisões 24h/7d/30d (`kind = 'revisao'`, `source_ref` com o prazo) chegam
+  com o MVP-06.
+
+API: `GET /api/agenda?hoje=AAAA-MM-DD&dias=7` e
+`PATCH /api/agenda/:id { action: concluir | reagendar (hoje, date, time?, reason?) | ajustar (durationMinutes?, priority?) }`.
