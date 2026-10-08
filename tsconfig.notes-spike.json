@@ -83,7 +83,8 @@
     "tests/apolo.test.ts",
     "tests/apolo-themes.test.ts",
     "tests/apolo-question-bank.test.ts",
-    "tests/apolo-sources.test.ts"
+    "tests/apolo-sources.test.ts",
+    "tests/apolo-extractor.test.ts"
   ],
   "exclude": [
     "node_modules"
