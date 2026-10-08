@@ -270,3 +270,17 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
   Apolo. Nenhum tema foi cadastrado em produção por este PR.
 - Se algo der errado: só poderia afetar a resposta de `/api/roadmap` (campo
   de tema a mais); nenhuma tela do Atlas muda de comportamento.
+
+## PR #45 — Banco de questões v2 (APO-03, DEC-014)
+
+- Ponto de restauração: branch `restore/pre-apo-03` (commit `b36d3b5`, main antes do merge).
+- Migration nova: `0015_banco_questoes_v2` (colunas aditivas em `atlas_questions`:
+  subtópico, dimensão de conhecimento, proveniência, banca/órgão/ano, fonte no
+  R2 e hash do enunciado — todas opcionais). O `Publicar Atlas.cmd` aplica
+  sozinho; as 60 questões já cadastradas continuam exatamente como estavam.
+- O que muda no site: a tela de quiz passa a reconhecer dois tipos novos de
+  questão — "Certo ou errado" e "Lacuna numérica" — caso uma questão desses
+  tipos seja cadastrada no futuro (nenhuma foi cadastrada por este PR). Os
+  quizzes de múltipla escolha, dissertativa e cálculo continuam idênticos.
+- Se algo der errado: só poderia afetar uma questão cadastrada com um dos
+  tipos novos; os quizzes já existentes não usam nenhum campo novo.
