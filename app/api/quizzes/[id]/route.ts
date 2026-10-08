@@ -1,4 +1,5 @@
 import { env } from 'cloudflare:workers';
+import { applyItemAlerts } from '@/lib/apolo/index';
 import type { D1Like } from '@/lib/pedagogy/transitions';
 import {
   getAttempt,
@@ -50,6 +51,15 @@ export async function POST(request: Request, { params }: Context) {
             answers: body.answers,
             selfAssessments: body.selfAssessments,
           });
+    if (attempt.status === 'enviado') {
+      // APO-10: tira da prova, em segundo plano, toda questão que a
+      // estatística acabou de alertar — nunca mexe na nota já emitida.
+      try {
+        await applyItemAlerts(db);
+      } catch {
+        // Falha na auditoria nunca derruba a resposta de um quiz já corrigido.
+      }
+    }
     return Response.json({ attempt, now: new Date().toISOString() });
   } catch (error) {
     return quizErrorResponse(error);
