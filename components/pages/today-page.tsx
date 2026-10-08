@@ -11,7 +11,7 @@ import { MetricCard } from '@/components/atlas/metric-card';
 import { PageHeading } from '@/components/atlas/page-heading';
 import { ProgressBar } from '@/components/atlas/progress-bar';
 import { SessionStartModal } from '@/components/atlas/session-start-modal';
-import { todayMetrics } from '@/lib/demo/today';
+import { progressMetrics, useProgress } from '@/components/pages/use-progress';
 import { TodayAgenda } from '@/components/pages/today-agenda';
 import { formatMinutes, startStudySession, useStudyOverview } from '@/components/pages/use-study-overview';
 import { elapsedSeconds } from '@/lib/study-sessions';
@@ -52,6 +52,7 @@ function useCurrentPhase() {
 
 export function TodayPage() {
   const currentPhase = useCurrentPhase();
+  const progress = useProgress();
   const [sessionOpen, setSessionOpen] = useState(false);
   const [starting, setStarting] = useState(false);
   const [startError, setStartError] = useState('');
@@ -143,7 +144,7 @@ export function TodayPage() {
           <div><p className="eyebrow">COMO VOCÊ ESTÁ</p><h2 id="today-metrics-title">Seus indicadores</h2></div>
           <Link className="section-link" href="/progresso">Ver progresso completo <ChevronRight size={16} /></Link>
         </div>
-        {todayMetrics.map((metric) => {
+        {progressMetrics(progress.status === 'ready' ? progress.progress : null).map((metric) => {
           const Icon = metricIcons[metric.icon];
           return <MetricCard key={metric.label} tone={metric.tone} icon={<Icon size={19} />} label={metric.label} value={metric.value} hint={metric.hint} />;
         })}

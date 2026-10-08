@@ -62,6 +62,8 @@
     "lib/agenda.ts",
     "lib/reviews.ts",
     "tests/reviews.test.ts",
+    "lib/progress.ts",
+    "tests/progress.test.ts",
     "tests/agenda.test.ts"
   ],
   "exclude": [

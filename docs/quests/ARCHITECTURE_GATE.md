@@ -525,6 +525,58 @@ YES
 
 ---
 
+# GATE MVP-07 — GATILHO DO AJUSTE ADAPTATIVO DE PESOS
+
+Status: OPEN — não bloqueia o MVP-07; a fórmula v1 roda com os pesos padrão do DEC-02 até a decisão
+
+Correlation: ATLAS-RAF-GATE-20261008-001
+
+## Quest
+
+Fora do QUEST-010. Card MVP-07 — "Implementar cálculo determinístico de progresso" (Trello, P0). O DEC-02 fixa os pesos padrão e os limites do ajuste, e registra o gatilho como "decisão de implementação/algoritmo — fica com Raf/Claude Code quando MVP-07 for implementado". Este Gate registra essa pergunta; a escada do MVP seguiu com os pesos padrão.
+
+## Architectural question
+
+O que faz os pesos de uma disciplina saírem do padrão do DEC-02, com que frequência, e onde fica registrado o peso em vigor para que uma nota antiga continue explicável?
+
+## Gate trigger
+
+"expensive or difficult-to-reverse technical decision" (item 9): depois que pesos diferentes produzirem notas, mudar a regra muda notas já mostradas, e o MVP-09 (relatórios explicáveis) precisa explicar cada uma.
+
+## Original requirement
+
+DEC-02: pesos padrão Avaliações 30, Atividades 20, Cobertura 20, Revisão 15, Quiz 15; cada peso varia no máximo ±10 pp; a soma é sempre 100%. O gatilho do ajuste não foi definido.
+
+## Relevant repository facts
+
+1. `lib/progress.ts` (MVP-07) calcula a nota por disciplina com `FORMULA_VERSION = 'v1'` e `DEFAULT_WEIGHTS`; `validateWeights` já aplica os limites do DEC-02. Nada persiste pesos: a nota é recalculada a cada leitura a partir de estados, quizzes, auditoria e sessões.
+2. Avaliações e Atividades ainda não existem no Atlas, então 50 dos 100 pontos ficam sempre em 0 na v1. Qualquer gatilho que dependa desses componentes não tem dado hoje.
+3. Os sinais disponíveis hoje são: notas de quiz por conteúdo, revisões vencidas/aprovadas (MVP-06), estados de conteúdo (DEC-03) e minutos de sessão.
+4. Não existe tabela de configuração por disciplina nem histórico de pesos.
+
+## Options and trade-offs
+
+**Eixo 1 — o que dispara o ajuste.**
+A. Nada automático: pesos mudam só por configuração do curso. Trade-offs: simples e sempre explicável; não é "adaptativo".
+B. Regra determinística sobre sinais do usuário (por exemplo, retenção baixa aumenta o peso de Revisão dentro do limite). Trade-offs: adapta sem IA; a regra precisa ser definida e notas mudam quando o sinal muda.
+C. Regra sobre a disponibilidade de componentes (redistribuir os pontos de componentes que ainda não existem). Trade-offs: resolve os 50 pontos parados (fato 2); muda o sentido do peso padrão enquanto Avaliações/Atividades não existem.
+
+**Eixo 2 — quando o ajuste vale.**
+A. Recalculado a cada leitura. Trade-offs: sempre atual; nota de ontem pode mudar sem nova evidência.
+B. Fixado por período (semana, fase). Trade-offs: notas estáveis; exige guardar o peso em vigor e a data.
+
+**Eixo 3 — registro.** (a) Nenhum (derivável); (b) histórico de pesos por disciplina com versão da fórmula, para o MVP-09 explicar notas passadas.
+
+## Decision required
+
+(1) o gatilho (eixo 1); (2) a vigência (eixo 2); (3) se o peso em vigor precisa de registro (eixo 3). Até lá a v1 usa os pesos padrão; nomes de tabelas e versão da fórmula são detalhe de implementação.
+
+## Raf decision
+
+Pendente.
+
+---
+
 # CORE PRINCIPLE
 
 Atlas supplies product requirement. Claude Code supplies evidence. Raf supplies architectural judgment. These responsibilities must remain separate.
