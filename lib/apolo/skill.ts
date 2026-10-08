@@ -36,14 +36,16 @@ export type QuestionMemory = {
   dueAt: string;
 };
 
-const INITIAL_ELO = 1200;
-const DIFFICULTY_ELO: Record<DifficultyLevel, number> = { facil: 1000, media: 1200, dificil: 1400 };
-const DEFAULT_DIFFICULTY_ELO = 1200;
+// Exportado para lib/apolo/item-stats.ts (APO-10) reusar o mesmo sistema Elo,
+// na granularidade de questão em vez de tema/conteúdo/subtópico.
+export const INITIAL_ELO = 1200;
+export const DIFFICULTY_ELO: Record<DifficultyLevel, number> = { facil: 1000, media: 1200, dificil: 1400 };
+export const DEFAULT_DIFFICULTY_ELO = 1200;
 // K encolhe com mais respostas (K_MAX no início, estabiliza perto de K_MIN).
 const K_MAX = 32;
 const K_MIN = 8;
 
-function kFactor(answers: number): number {
+export function kFactor(answers: number): number {
   return Math.max(K_MIN, K_MAX / Math.sqrt(answers + 1));
 }
 

@@ -39,3 +39,39 @@ migrado, só recalculado).
 
 `GET /api/apolo/perfil` retorna `{ temas, filaRecuperacao }`: a habilidade por
 grupo e a lista de questões por ordem de vencimento (`dueAt`).
+
+## Estatística de itens (APO-10, DEC-017)
+
+Mede cada questão para tirar as ruins das provas. Por questão: taxa de
+acerto, dificuldade Elo (mesmo sistema do modelo do aluno, mas por questão em
+vez de por tema/conteúdo/subtópico — as duas Elo são independentes, não se
+influenciam), correlação item-total (point-biserial entre acertar o item e a
+nota da tentativa inteira) e taxa de escolha de cada alternativa (para
+múltipla escolha, já desembaralhada de volta ao índice original do banco).
+Por conteúdo ("instrumento aplicado"): KR-20.
+
+Tudo em `lib/apolo/item-stats.ts` (funções puras) e `lib/apolo/item-audit.ts`
+(leitura do D1 e o corte automático). Mesmo princípio do APO-09: recalculado
+do zero a cada chamada, nenhum estado incremental.
+
+**Simplificação assumida (disclosed):** o KR-20 de livro-texto pressupõe
+várias pessoas respondendo à mesma aplicação ao mesmo tempo (a variância vem
+da nota de cada pessoa). Aqui há só o Abner, então a variância usada é entre
+as tentativas já enviadas do **mesmo conteúdo** — o quiz é reaplicado a cada
+reprovação/retomada (DEC-04), então essas repetições fazem o papel que
+"várias pessoas" fariam no KR-20 de livro-texto. Com menos de 2 tentativas
+daquele conteúdo, ou variância zero (sempre a mesma nota), o KR-20 fica nulo.
+
+**Regras de alerta** (amostra mínima de 30 respostas, por item): correlação
+item-total abaixo de 0,10; acerto acima de 95%; ou alguma alternativa
+incorreta escolhida em menos de 5% das respostas (a alternativa certa nunca
+conta como "distrator fraco" — baixa escolha nela seria baixo acerto, já
+coberto pela outra regra). Questão alertada tem `lifecycle_state` virando
+`'curadoria'` e `active` virando `0` — some do próximo sorteio (que só lê
+`active = 1`) e cai na mesma fila de revisão humana do APO-07, sem apagar
+nada nem mexer em nota já emitida.
+
+O corte roda sozinho a cada quiz enviado (`app/api/quizzes/[id]/route.ts`,
+depois que a nota já foi gravada; uma falha na auditoria nunca derruba a
+resposta do quiz). `GET /api/apolo/estatisticas` expõe tudo isso para leitura
+(`{ items, instruments, alerts }`), sem aplicar nenhum corte por si só.
