@@ -411,3 +411,16 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
   decisão).
 - Se algo der errado: só poderia afetar `lib/apolo/plans.ts`, que nenhuma
   tela ou rota usa ainda.
+
+## PR #54 — Seletor adaptativo de questões (APO-12)
+
+- Ponto de restauração: branch `restore/pre-apo-12` (commit `478ff42`, main antes do merge).
+- Sem migration nova. Função pura, sem leitura/escrita no D1.
+- O que muda no site: nada visível ainda — `lib/apolo/selector.ts` decide,
+  em código, quais questões entrariam numa prova dado o plano (APO-11) e o
+  perfil do aluno (APO-09): recuperação vencida primeiro, depois subtópico
+  fraco, depois cobertura normal do plano (ou, em modo adaptativo, o item
+  mais próximo da habilidade do aluno). Nenhuma tela usa isso ainda — o
+  quiz de hoje continua exatamente igual, sorteando do jeito de sempre.
+- Se algo der errado: só poderia afetar `lib/apolo/selector.ts`, que
+  nenhuma tela ou rota usa ainda; nenhuma tela de estudo do aluno é tocada.
