@@ -203,3 +203,23 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
   - **Relatório**: próxima ação de conteúdo bloqueado é "Refazer o quiz".
 - Se algo der errado: quiz que não reabre depois de reprovar, conteúdo que não
   desbloqueia ao passar, ou agenda sem sugestão de estudo vêm deste PR.
+
+## PR #40 — Revisão da página Hoje (UX-06, ATLAS-ESC-22)
+
+- Ponto de restauração: branch `restore/pre-ux-06` (commit `f4216f1`, main antes do merge).
+- Sem migration nova.
+- O que muda no site:
+  - **Hoje · Continue de onde parou**: quando há quiz pendente (refazer,
+    corretivo, liberado ou revisão vencida), o botão principal é o quiz
+    ("Refazer o quiz", "Fazer o quiz corretivo"…) e, se o conteúdo foi
+    reprovado, aparece "Revisar as notas antes".
+  - **Estudar**: mesmo próximo passo, com o selo "QUIZ PENDENTE".
+  - **Hoje · O Atlas observou**: texto calculado do seu progresso (conteúdo em
+    risco com link para o relatório, sequência de dias, retenção ou
+    constância), não mais fixo.
+  - **Assistente (Perguntar ao Atlas)**: sem exemplo fictício nem campo de
+    pergunta; atalhos para Roadmap, Progresso e Relatórios.
+  - **Agenda**: o quiz corretivo feito conclui o item de quiz; o motivo de um
+    item pendente se atualiza (ex.: contagem de reincidência).
+- Se algo der errado: botão de Hoje levando ao lugar errado, observação
+  estranha, ou item de agenda que não conclui/atualiza vêm deste PR.
