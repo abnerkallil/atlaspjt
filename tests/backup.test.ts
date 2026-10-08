@@ -120,6 +120,14 @@ void test('DEC-011/UX-01: backup copia do R2 os anexos de notas e os arquivos de
   assert.deepEqual(db.prepare(notesOnly).all().map((row) => row.id), ['b']);
 });
 
+void test('APO-05/DEC-015: backup também copia o acervo de fontes (prefixo apolo/fontes/)', () => {
+  const db = new DatabaseSync(':memory:');
+  db.exec(`CREATE TABLE atlas_question_sources (id TEXT, object_key TEXT, mime_type TEXT, size_bytes INTEGER);
+    INSERT INTO atlas_question_sources VALUES ('s1', 'apolo/fontes/direito/s1', 'application/pdf', 7);`);
+  const sql = lib.objectsSql(['atlas_question_sources'])!;
+  assert.deepEqual(db.prepare(sql).all().map((row) => row.object_key), ['apolo/fontes/direito/s1']);
+});
+
 void test('DEC-009/DEC-011: backup e restauração param sem ambiente explícito', () => {
   for (const script of ['backup.mjs', 'restore-local.mjs']) {
     const result = run(script, []);
