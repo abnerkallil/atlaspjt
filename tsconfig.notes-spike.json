@@ -77,9 +77,11 @@
     "lib/apolo/generators.ts",
     "lib/apolo/store.ts",
     "lib/apolo/themes.ts",
+    "lib/apolo/question-bank.ts",
     "lib/apolo/index.ts",
     "tests/apolo.test.ts",
-    "tests/apolo-themes.test.ts"
+    "tests/apolo-themes.test.ts",
+    "tests/apolo-question-bank.test.ts"
   ],
   "exclude": [
     "node_modules"
