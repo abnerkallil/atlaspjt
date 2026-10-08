@@ -457,3 +457,21 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 - Se algo der errado: reverter para `restore/pre-apo-14` traz o sorteio
   local de volta para todo conteúdo, sem perder nenhuma tentativa ou nota
   já gravada.
+
+## PR #57 — Revisões, corretivo e fila de recuperação (APO-15)
+
+- Ponto de restauração: branch `restore/pre-apo-15` (commit `7060eab`, main antes do merge).
+- Sem migration nova.
+- O que muda no site: **nada, por enquanto** — revisão (24h/7d/30d) e
+  corretivo passam a ter plano próprio por etapa (tamanho 10→30 ou 10→60,
+  conforme o banco permitir) e a fila de recuperação do Apolo ganha uma
+  regra de "formatura" (uma questão errada só sai de consideração depois
+  de 3 acertos em sessões diferentes desde o último erro), mas isso só
+  afeta conteúdo com banco já classificado por tema — e nenhum conteúdo
+  real está classificado ainda (depende do APO-08, trabalho humano do
+  Abner). Todo quiz/revisão/corretivo de hoje continua exatamente igual.
+  A nova rota `GET /api/apolo/recuperacao` existe e lê certo, mas nenhuma
+  tela a usa ainda.
+- Se algo der errado: reverter para `restore/pre-apo-15` remove a rota
+  nova e volta os planos de revisão/corretivo ao tamanho único de antes,
+  sem perder nenhuma tentativa ou nota já gravada.
