@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { AlertTriangle, BrainCircuit, Flame, Target, TrendingDown, TrendingUp } from 'lucide-react';
 import { MetricCard } from '@/components/atlas/metric-card';
 import { PageHeading } from '@/components/atlas/page-heading';
@@ -84,7 +85,8 @@ export function ProgressPage() {
         titleId="pg-title"
         aside={<div className="streak-pill"><Flame size={17} /> {consistency?.studiedDays ?? 0} de 28 dias estudados</div>}
       >
-        Competências, tendência, retenção e a origem de cada número.
+        Competências, tendência, retenção e a origem de cada número.{' '}
+        <Link href="/relatorio">Relatórios por conteúdo</Link>
       </PageHeading>
 
       {state.status === 'error' && <p className="rm-error" role="alert">{state.message}</p>}
@@ -178,7 +180,7 @@ export function ProgressPage() {
               {progress.atRisk.map((item) => (
                 <li key={item.id}>
                   <AlertTriangle size={16} />
-                  <div><strong>{item.title}</strong><p>{item.discipline} · {item.reason}</p><small>Próximo passo: {item.action}</small></div>
+                  <div><strong>{item.title}</strong><p>{item.discipline} · {item.reason}</p><small>Próximo passo: {item.action}</small> <Link href={`/relatorio?conteudo=${encodeURIComponent(item.id)}`}>Ver relatório</Link></div>
                 </li>
               ))}
             </ul>

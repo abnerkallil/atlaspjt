@@ -261,3 +261,21 @@ transição do DEC-03 ao passar; o MVP-08 não cria estado novo.
   meio de curso, DEC-10, que depende das avaliações). Hoje a reprovação pesa só
   pelo que a fórmula do MVP-07 já mede (revisão aprovada sobre vencida e
   cobertura).
+
+## Relatórios explicáveis (MVP-09)
+
+Sem tabela nova: `lib/reports.ts` monta, por conteúdo, o relatório de
+`GET /api/relatorio?conteudo=&hoje=&fuso=` (página `/relatorio`):
+
+- Origem da nota: a nota da disciplina pela fórmula do MVP-07 e o que este
+  conteúdo soma em cobertura, quiz (melhor nota) e revisão (etapas aprovadas
+  sobre vencidas).
+- Mudanças de estado: a trilha de `atlas_state_audit` do conteúdo, com motivo e
+  autor (você ou o Atlas).
+- Risco: alto (bloqueado, em revisão ativa), pede atenção (revisão vencida,
+  quiz pendente), em dia, ou sem dados; reincidência do MVP-08 entra nos
+  motivos.
+- Próxima ação: regra fixa por estado (pré-requisitos, estudar, quiz ou quiz
+  dirigido, revisão, corretivo ou estudar de novo, próxima revisão).
+- Histórico: sessões concluídas e tentativas enviadas, da mais recente à mais
+  antiga.
