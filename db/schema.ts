@@ -361,9 +361,60 @@ export const atlasQuestions = sqliteTable(
     source: text('source').notNull().default('curado'),
     active: integer('active').notNull().default(1),
     updatedAt: text('updated_at').notNull(),
+    // DEC-014 (Apolo): tema é etiqueta de texto livre, sem enum fixo — o banco
+    // de questões é universal, não um nível da hierarquia DEC-05/DEC-010.
+    // Nula nas questões curadas antes do Apolo, ainda sem tema atribuído.
+    theme: text('theme'),
+    // Taxonomia de Bloom revisada (6 níveis fixos e conhecidos, diferente de
+    // tema por não ser "universal/aberto por definição" — DEC-014).
+    bloomLevel: text('bloom_level'),
+    // Dificuldade nominal curada; prior inicial do modelo do aluno (DEC-017).
+    difficultyNominal: text('difficulty_nominal'),
+    // Ciclo de vida explícito (DEC-014), estende o antigo `active` booleano:
+    // o Apolo só seleciona itens em estado 'ativa'. `active` é mantido por
+    // compatibilidade aditiva; novo código passa a ler `lifecycleState`.
+    lifecycleState: text('lifecycle_state').notNull().default('ativa'),
+    // Molde que gerou esta instância, quando aplicável (DEC-014); nulo para
+    // toda questão curada/importada manualmente (fora do Apolo).
+    itemModelId: text('item_model_id'),
   },
   (table) => [
     index('idx_atlas_questions_content').on(table.contentId, table.position),
+    index('idx_atlas_questions_theme').on(table.theme),
+    index('idx_atlas_questions_item_model').on(table.itemModelId),
+  ],
+);
+
+// Moldes (item models, DEC-014/APO-01): parâmetros curados por humano para
+// gerar instâncias de questão sob demanda. A expansão molde+semente em uma
+// instância concreta é função determinística em código (lib/apolo/moldes.ts),
+// nunca IA; o molde em si é só o dado curado que parametriza essa função.
+export const atlasItemModels = sqliteTable(
+  'atlas_item_models',
+  {
+    id: text('id').primaryKey(),
+    // Etiqueta de texto livre, sem enum fixo (mesmo princípio de tema em
+    // atlas_questions — DEC-014).
+    theme: text('theme').notNull(),
+    title: text('title').notNull(),
+    // "multipla", "dissertativa" ou "calculo" (mesmos QUESTION_KINDS do quiz).
+    kind: text('kind').notNull(),
+    // Chave do gerador determinístico em código que sabe expandir este molde
+    // (lib/apolo/generators); o molde não guarda lógica, só parâmetros.
+    generatorKey: text('generator_key').notNull(),
+    // Parâmetros do molde (variáveis, faixas, regras de distratores), em JSON.
+    // Formato é específico de cada generatorKey.
+    paramsJson: text('params_json').notNull(),
+    bloomLevel: text('bloom_level'),
+    difficultyNominal: text('difficulty_nominal'),
+    // Ciclo de vida do molde: Apolo só expande moldes em estado 'ativa'.
+    lifecycleState: text('lifecycle_state').notNull().default('rascunho'),
+    curatedBy: text('curated_by').notNull(),
+    createdAt: text('created_at').notNull(),
+    updatedAt: text('updated_at').notNull(),
+  },
+  (table) => [
+    index('idx_atlas_item_models_theme').on(table.theme, table.lifecycleState),
   ],
 );
 

@@ -72,7 +72,12 @@
     "tests/recovery.test.ts",
     "lib/reports.ts",
     "tests/reports.test.ts",
-    "tests/agenda.test.ts"
+    "tests/agenda.test.ts",
+    "lib/apolo/types.ts",
+    "lib/apolo/generators.ts",
+    "lib/apolo/store.ts",
+    "lib/apolo/index.ts",
+    "tests/apolo.test.ts"
   ],
   "exclude": [
     "node_modules"
