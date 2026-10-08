@@ -14,6 +14,7 @@ import { SessionStartModal } from '@/components/atlas/session-start-modal';
 import { progressMetrics, useProgress } from '@/components/pages/use-progress';
 import { TodayAgenda } from '@/components/pages/today-agenda';
 import { formatMinutes, startStudySession, useStudyOverview } from '@/components/pages/use-study-overview';
+import { observe } from '@/lib/observations';
 import { elapsedSeconds } from '@/lib/study-sessions';
 import type { RoadmapView } from '@/lib/roadmap-store';
 
@@ -60,13 +61,17 @@ export function TodayPage() {
   const { overview } = useStudyOverview();
   const ready = overview.status === 'ready' ? overview : null;
   const nextContent = ready?.nextContent ?? null;
-  const openSession = ready?.next?.kind === 'retomar' ? ready.openSessions[0] : undefined;
+  const next = ready?.next ?? null;
+  const openSession = next?.kind === 'retomar' ? ready?.openSessions[0] : undefined;
+  const quizStep = next?.kind === 'quiz' ? next : null;
+  const observation = progress.status === 'ready' ? observe(progress.progress) : null;
   const nextDiscipline = ready?.roadmap?.phases
     .flatMap((phase) => phase.disciplines)
     .find((item) => item.id === nextContent?.disciplineId);
 
   function continueStudy() {
     if (openSession) router.push(`/estudar?sessao=${encodeURIComponent(openSession.id)}`);
+    else if (quizStep) router.push(`/quizzes?conteudo=${encodeURIComponent(quizStep.contentId)}`);
     else if (nextContent) setSessionOpen(true);
     else router.push('/roadmap');
   }
@@ -104,8 +109,8 @@ export function TodayPage() {
               <p>
                 {openSession
                   ? `Sessão ${openSession.status === 'pausada' ? 'pausada' : 'em andamento'}: retome de onde parou.`
-                  : ready?.next?.kind === 'iniciar'
-                    ? ready.next.reason
+                  : next && next.kind !== 'retomar'
+                    ? next.reason
                     : ready
                       ? 'Os conteúdos liberados já foram estudados.'
                       : ''}
@@ -121,9 +126,16 @@ export function TodayPage() {
                 ? `${formatMinutes(elapsedSeconds(openSession, ready.serverNow))} nesta sessão`
                 : 'Nenhuma sessão aberta'}
             </span>
-            <Button className="primary-button" onClick={continueStudy} disabled={!ready}>
-              {openSession ? 'Retomar sessão' : 'Continuar estudo'} <ArrowRight size={17} />
-            </Button>
+            <div className="continue-actions">
+              {quizStep?.canStudy && (
+                <Button variant="outline" className="qz-outline" onClick={() => setSessionOpen(true)} disabled={starting}>
+                  Revisar as notas antes
+                </Button>
+              )}
+              <Button className="primary-button" onClick={continueStudy} disabled={!ready}>
+                {openSession ? 'Retomar sessão' : quizStep ? quizStep.label : 'Continuar estudo'} <ArrowRight size={17} />
+              </Button>
+            </div>
           </div>
           {startError && <p className="rm-error" role="alert">{startError}</p>}
         </article>
@@ -131,9 +143,9 @@ export function TodayPage() {
         <aside className="atlas-observed-card">
           <div className="atlas-orbit"><Sparkles size={19} /></div>
           <p className="card-kicker">O ATLAS OBSERVOU</p>
-          <h3>Ainda sem histórico.</h3>
-          <p>Depois das primeiras sessões, o Atlas mostra aqui o que observou sobre o seu ritmo e a sua retenção.</p>
-          <Link href="/progresso">Entender recomendação <ChevronRight size={16} /></Link>
+          <h3>{observation?.title ?? 'Carregando…'}</h3>
+          <p>{observation?.text ?? ''}</p>
+          <Link href={observation?.href ?? '/progresso'}>{observation?.linkLabel ?? 'Ver progresso'} <ChevronRight size={16} /></Link>
         </aside>
       </div>
 
@@ -162,7 +174,7 @@ export function TodayPage() {
       {sessionOpen && nextContent && (
         <SessionStartModal
           title={nextContent.title}
-          description={`${nextContent.disciplineTitle}${nextContent.estimatedMinutes ? ` · ${nextContent.estimatedMinutes} min estimados` : ''}. Material e notas lado a lado; ao concluir, o quiz do conteúdo fica disponível.`}
+          description={`${nextContent.disciplineTitle}${nextContent.estimatedMinutes ? ` · ${nextContent.estimatedMinutes} min estimados` : ''}. Material e notas lado a lado; ao concluir, ${quizStep ? 'o quiz volta com as questões que você errou' : 'o quiz do conteúdo fica disponível'}.`}
           starting={starting}
           onClose={() => setSessionOpen(false)}
           onStart={() => void beginSession()}

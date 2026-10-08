@@ -91,6 +91,7 @@ button { color: inherit; }
 .continue-card .progress-track span { background: #fff; }
 .continue-footer { margin-top: 22px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
 .continue-footer > span { display: flex; gap: 6px; align-items: center; color: var(--muted); font-size: 12px; }
+.continue-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
 .primary-button { height: 42px; padding: 0 18px; gap: 8px; border-radius: 8px; background: var(--blue); color: white; font-weight: 700; cursor: pointer; box-shadow: 0 8px 26px rgba(36,99,235,.18); }
 .continue-card .primary-button { color: #1d4ed8; background: #fff; }
 .primary-button:hover { background: #1d4ed8; }
@@ -201,6 +202,9 @@ button { color: inherit; }
 .lesson-content h2 { margin: 22px 0 13px; font-size: clamp(25px, 3vw, 35px); line-height: 1.13; letter-spacing: -.035em; }
 .lesson-content p { max-width: 480px; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
 .study-start { width: fit-content; height: 48px; margin-top: 32px; padding-inline: 22px; }
+.study-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 32px; }
+.study-actions .study-start { margin-top: 0; }
+.study-quiz-link { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
 .study-side-card { padding: 29px 25px 24px; border-radius: 20px; }
 .study-side-card > h2 { margin: 9px 0 25px; font-size: 21px; letter-spacing: -.025em; }
 .session-step { position: relative; display: grid; grid-template-columns: 32px 1fr; align-items: center; gap: 12px; padding: 11px 0; }
@@ -423,7 +427,9 @@ button { color: inherit; }
 .drawer-header > button { border: 0; background: transparent; cursor: pointer; }
 .drawer-body { flex: 1; padding: 28px 22px; }
 .atlas-message { padding: 16px; border-radius: 5px 16px 16px 16px; background: #eaf2ff; color: #314866; font-size: 13px; line-height: 1.65; }
-.drawer-body > button { width: 100%; padding: 13px; margin-top: 10px; display: flex; align-items: center; gap: 9px; border: 1px solid var(--line); border-radius: 11px; background: #fff; color: #5f596b; cursor: pointer; text-align: left; font-size: 12px; }
+.drawer-body > button, .drawer-body > a { width: 100%; padding: 13px; margin-top: 10px; display: flex; align-items: center; gap: 9px; border: 1px solid var(--line); border-radius: 11px; background: #fff; color: #5f596b; cursor: pointer; text-align: left; font-size: 12px; }
+.drawer-body > a { text-decoration: none; }
+.drawer-body > a svg:last-child { margin-left: auto; }
 .drawer-input { padding: 17px; display: flex; gap: 8px; border-top: 1px solid var(--line); }
 .drawer-input input { min-width: 0; flex: 1; padding: 12px 14px; color: #1d1e27; border: 1px solid var(--line); border-radius: 11px; background: #faf9fc; outline: none; }
 .drawer-input button { width: 42px; border: 0; border-radius: 11px; display: grid; place-items: center; background: var(--blue); cursor: pointer; }
@@ -468,6 +474,8 @@ button { color: inherit; }
   .progress-copy { display: none; }
   .continue-footer { align-items: stretch; flex-direction: column; }
   .continue-footer .primary-button { width: 100%; }
+  .continue-actions { flex-direction: column-reverse; }
+  .continue-actions .qz-outline { width: 100%; }
   .metrics-section { margin-bottom: 48px; }
   .hero-grid + .journey-section, .today-metrics { margin-top: 44px; }
   .section-heading { align-items: start; flex-direction: column; }

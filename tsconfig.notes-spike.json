@@ -17,6 +17,8 @@
   },
   "include": [
     "lib/auth.ts",
+    "lib/observations.ts",
+    "tests/observations.test.ts",
     "tests/auth.test.ts",
     "tests/auth-recovery.test.ts",
     "tests/dev-prod-isolation.test.ts",

@@ -89,8 +89,8 @@ void test('reprovar, estudo dirigido, quiz dirigido, reincidência e desbloqueio
   assert.equal(await currentState(db, 'conteudo', 'CG-001'), 'aguardando-quiz');
   await syncAgenda(db, { today: day, now: at(11) });
   const quizItem = (await listAgenda(db, { from: day, to: addDays(day, 7) })).find((item) => item.kind === 'quiz' && item.status === 'pendente');
-  // O item urgente continua até passar (as erradas voltam no quiz).
-  assert.match(quizItem?.reason ?? '', /questões erradas voltam no quiz/);
+  // O item pendente acompanha o estado: depois de revisar, vira o quiz dirigido.
+  assert.match(quizItem?.reason ?? '', /Quiz dirigido/);
   const second = await takeQuiz(raw, db, 'q2', at(12), 0);
   assert.equal(second.attempt.directed, wrong.length);
   for (const id of wrong) assert.ok(second.questionIds.includes(id), `questão ${id} voltou`);

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { ArrowLeft, Bookmark, Check, Clock3, ListChecks, LockKeyhole, Pause, Play, Sparkles } from 'lucide-react';
+import { ArrowLeft, Bookmark, Check, Clock3, ListChecks, LockKeyhole, Pause, Play, RotateCcw, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SessionStartModal } from '@/components/atlas/session-start-modal';
 import { StudySession } from '@/components/pages/study-session';
@@ -182,7 +182,7 @@ export function StudyPage() {
             <article className="lesson-card">
               <div className="lesson-cover">
                 <span className="lesson-status">
-                  <Bookmark size={15} /> {openSession ? (openSession.status === 'pausada' ? 'SESSÃO PAUSADA' : 'SESSÃO EM ANDAMENTO') : 'PRÓXIMO PASSO'}
+                  <Bookmark size={15} /> {openSession ? (openSession.status === 'pausada' ? 'SESSÃO PAUSADA' : 'SESSÃO EM ANDAMENTO') : next.kind === 'quiz' ? 'QUIZ PENDENTE' : 'PRÓXIMO PASSO'}
                 </span>
                 <div className="lesson-visual">
                   <div className="balance-symbol"><span>{nextContent.unit ?? discipline?.title}</span><i /><span>{nextContent.id}</span></div>
@@ -198,7 +198,15 @@ export function StudyPage() {
                   )}
                 </div>
                 <h2>{nextContent.title}</h2>
-                <p>{openSession ? sessionStepLabel(openSession) : describeContent(nextContent)}</p>
+                <p>
+                  {openSession
+                    ? sessionStepLabel(openSession)
+                    : next.kind === 'quiz'
+                      ? next.canStudy
+                        ? 'As questões que você errou voltam primeiro. Passe com 70% para liberar o próximo conteúdo.'
+                        : 'Passe com 70% para confirmar o conteúdo.'
+                      : describeContent(nextContent)}
+                </p>
                 {openSession ? (
                   <Button
                     className="primary-button study-start"
@@ -206,6 +214,17 @@ export function StudyPage() {
                   >
                     {openSession.status === 'pausada' ? <Play size={17} fill="currentColor" /> : <Pause size={17} />} Retomar sessão
                   </Button>
+                ) : next.kind === 'quiz' ? (
+                  <div className="study-actions">
+                    <Link className="primary-button study-start study-quiz-link" href={`/quizzes?conteudo=${encodeURIComponent(next.contentId)}`}>
+                      <RotateCcw size={17} /> {next.label}
+                    </Link>
+                    {next.canStudy && (
+                      <Button variant="outline" className="qz-outline study-start" onClick={() => setModalContent(nextContent)}>
+                        <Play size={15} /> Revisar as notas antes
+                      </Button>
+                    )}
+                  </div>
                 ) : (
                   <Button className="primary-button study-start" onClick={() => setModalContent(nextContent)}>
                     <Play size={17} fill="currentColor" /> Iniciar sessão

@@ -213,7 +213,8 @@ type NewItem = {
   reason: string;
 };
 
-// Concluir à mão vale pelo dia: o mesmo passo não é recriado até amanhã.
+// Concluir à mão vale pelo dia: o mesmo passo não é recriado até amanhã. Se o
+// passo já está pendente, só o motivo é atualizado (ex.: reincidência que cresce).
 function insertItem(db: D1Like, item: NewItem, today: string, now: string) {
   return db
     .prepare(
@@ -223,7 +224,9 @@ function insertItem(db: D1Like, item: NewItem, today: string, now: string) {
          SELECT 1 FROM atlas_agenda_items
          WHERE kind = ?2 AND content_id = ?3 AND source_ref = ?9 AND due_date = ?4 AND status = 'concluido' AND completion = 'manual'
        )
-       ON CONFLICT DO NOTHING`,
+       ON CONFLICT (kind, content_id, source_ref) WHERE status = 'pendente'
+       DO UPDATE SET reason = excluded.reason, updated_at = excluded.updated_at
+       WHERE atlas_agenda_items.reason <> excluded.reason`,
     )
     .bind(
       crypto.randomUUID(),
@@ -239,10 +242,11 @@ function insertItem(db: D1Like, item: NewItem, today: string, now: string) {
 }
 
 // Evidência que conclui cada tipo de item (registrada depois de o item existir).
+// O quiz corretivo grava evidência de revisão e também conclui o item de quiz.
 const EVIDENCE_FOR_KIND = `CASE atlas_agenda_items.kind WHEN 'quiz' THEN 'quiz' WHEN 'revisao' THEN 'revisao' ELSE 'sessao' END`;
 const MATCHING_EVIDENCE = `FROM atlas_evidences e
   WHERE e.content_id = atlas_agenda_items.content_id
-    AND e.kind = ${EVIDENCE_FOR_KIND}
+    AND (e.kind = ${EVIDENCE_FOR_KIND} OR (atlas_agenda_items.kind = 'quiz' AND e.kind = 'revisao'))
     AND e.recorded_at >= atlas_agenda_items.created_at
   ORDER BY e.recorded_at LIMIT 1`;
 
