@@ -801,3 +801,233 @@ Quest: Card MVP-07 — Implementar cálculo determinístico de progresso (ATLAS-
 Supersedes: NONE
 
 Superseded by: NONE
+
+---
+
+## DEC-014 — Arquitetura do Apolo e banco de questões v2
+
+Status: ACCEPTED
+
+Date: 2026-10-08
+
+### Context
+
+Card APO-01 exige decidir onde o Apolo (motor de avaliação determinístico, hardcoded, sem IA externa) vive no Atlas, e qual modelo de dados o banco de questões adota para tema, metadados de item, ciclo de vida e questões geradas por molde. O requisito original (Abner, 2026-10-08) pede que o Apolo selecione e elabore questões, analise respostas e emita gabarito/nota de quiz, atividade, avaliação e exame; o banco de questões é universal (qualquer tema que exista), sempre com curadoria humana obrigatória — nunca seleção automática de exame/questão de origem. `lib/quizzes.ts` já sorteia por semente, embaralha e corrige; `atlas_questions` tem 60 questões sem tema, dificuldade, Bloom ou ciclo de vida; o catálogo hoje só tem Contabilidade; D1 é a fonte da verdade (DEC-010). Não há nenhuma menção a "Apolo" em nenhum outro arquivo do repositório — este é o primeiro Gate do subsistema.
+
+### Decision
+
+Eixo 1 (onde o Apolo vive): o Apolo é um módulo de funções puras no mesmo Worker, operando sobre o mesmo D1 (fonte da verdade, DEC-010), estendendo `atlas_questions` por migração aditiva. Não um Worker separado por service binding, nem `atlas_questions` congelada como legado.
+
+Eixo 2 (tema): tema é etiqueta aberta (texto livre, sem enum fixo nem CHECK constraint), associada ao item de questão/molde — não um nível novo inserido acima de fase na hierarquia do DEC-05/DEC-010. Nenhuma FK já estabelecida é redesenhada.
+
+Eixo 3 (moldes): moldes vivem como linhas no D1 (tabela nova, curada por humano), não só em código. A lógica de geração/expansão de um molde em uma instância concreta (parâmetros → enunciado/gabarito) é função determinística em código, no mesmo padrão de `lib/quizzes.ts`.
+
+### Rationale
+
+1. Eixo 1: nenhum fato do repositório exige isolamento de deploy, escala ou equipe para o Apolo — é lógica determinística sobre dados que já vivem no mesmo D1 (DEC-010). Um Worker separado duplicaria superfície de deploy/segredo/isolamento dev-produção (DEC-009) sem ganho real; congelar `atlas_questions` como legado é desnecessário, já que colunas novas aditivas com `NULL`/default preservam as 60 questões e tentativas antigas sem conversão (mesmo padrão de DEC-010/DEC-012).
+2. Eixo 2: o requisito diz literalmente "universal (qualquer tema que exista)". Um enum fixo ou nível de hierarquia com FK obrigatória exigiria migração de schema a cada novo tema, contradizendo "universal" pela própria definição. Etiqueta aberta no item é a menor mudança que satisfaz isso sem redesenhar a espinha que DEC-010 fixou deliberadamente, e sem forçar o catálogo hoje mono-tema a se reorganizar antecipadamente.
+3. Eixo 3: "curadoria humana obrigatória" só é sustentável operacionalmente se um molde puder ser criado/editado/ativado por um curador sem deploy de código — o mesmo padrão já existente para questões avulsas (`docs/QUESTOES.md`, import CSV → D1). Manter o molde só em código obrigaria qualquer novo molde a passar por alteração de TypeScript e deploy, o que não é curadoria, é desenvolvimento, e colide com "sem IA externa, hardcoded": a parte determinística é a função de expansão, não o dado curado em si.
+
+### Constraints for Claude Code
+
+- `atlas_questions` é estendida por migração(ões) aditiva(s), nunca substituída; as 60 linhas curadas existentes continuam válidas sem conversão, com colunas novas aceitando `NULL`/default.
+- Nenhum Worker, D1 ou service binding novo é criado para o Apolo; o módulo roda no mesmo Worker e acessa o mesmo binding D1 já em uso (nome exato de pasta/arquivo, ex. `lib/apolo/`, é detalhe de implementação).
+- `theme` (ou nome equivalente) é coluna de texto livre, sem `CHECK` de valores permitidos e sem nova tabela de hierarquia acima de `atlas_phases`; não alterar `atlas_roadmaps`/`atlas_phases`/`atlas_disciplines` para acomodar tema.
+- Dificuldade e nível de Bloom podem usar um conjunto fixo pequeno (taxonomia externa de 6 níveis já conhecida), distinto de tema por não ser "universal/aberto por definição" — escolha exata de representação é detalhe de implementação.
+- Ciclo de vida substitui/estende o atual `active` booleano por um conjunto de estados explícito (rascunho/curadoria/ativa/aposentada ou equivalente); nomes exatos são detalhe de implementação, mas o Apolo só pode selecionar itens em um estado que já passou por aprovação humana explícita — nenhuma seleção, geração ou ativação automática de item sem curadoria humana prévia.
+- Moldes vivem em tabela própria no D1 (curada por humano: parâmetros, tema, dificuldade, estado do molde); a função que expande um molde + semente em instância concreta é código puro determinístico (mesmo padrão de `seededRandom`/`selectQuestions`); nenhuma aleatoriedade não determinística nem chamada a IA externa.
+- Se/como instâncias geradas por molde são materializadas em `atlas_questions` versus regeneradas sob demanda é detalhe de implementação, desde que: (a) a correção de uma tentativa antiga continue reconstituível sem IA e sem ambiguidade, e (b) questões curadas/importadas hoje não sejam afetadas.
+- `content_id` hoje é `NOT NULL` em `atlas_questions`, escopando toda questão a um único conteúdo; atividade/avaliação/exame (que podem abranger disciplina inteira, DEC-03/DEC-010) podem exigir que essa associação deixe de ser só 1:1 — não resolvido aqui; é um Gate futuro quando o card de avaliação/exame for aberto.
+- Nome de tabelas/colunas, índices e ordem exata das migrations são detalhe de implementação do Claude Code.
+
+### Consequences
+
+Desbloqueia a implementação do card APO-01 e de todos os cards que dependem do modelo de dados do banco de questões (APO-02 em diante). Fixa tema como atributo aberto do item, nunca um nível de hierarquia — qualquer novo tema passa a não exigir migração de schema. Moldes passam a ser dado curável sem deploy, abrindo caminho para a curadoria por Abner exigida pelo produto. A questão de questões multiconteúdo (avaliação/exame de disciplina inteira) fica explicitamente aberta para um Gate futuro.
+
+### Related
+
+Quest: Card APO-01 — Arquitetura do Apolo e banco de questões v2 (ATLAS-RAF-GATE-20261008-002)
+
+Supersedes: NONE
+
+Superseded by: NONE
+
+---
+
+## DEC-015 — Acervo de fontes oficiais no R2
+
+Status: ACCEPTED
+
+Date: 2026-10-08
+
+### Context
+
+Card APO-05 exige decidir onde ficam os PDFs de questionários oficiais que Abner envia (qualquer tema, não só concursos; curadoria sempre humana, sem seleção automática), quem pode lê-los e como entram no backup e na exclusão. Bucket privado `ATTACHMENTS` (DEC-008) já guarda anexos e materiais com chaves `materials/<conteúdo>/<id>`; backup (DEC-011) copia objetos do R2 listados no D1; R2 gratuito tem 10GB; o Worker gratuito tem pouco CPU por requisição para ler PDF. Fato adicional de inspeção: o script de backup atual copia do R2 só o arquivo de cada objeto listado no D1 — não varre o bucket inteiro, o que é determinante para "como entra no backup".
+
+### Decision
+
+Mesmo bucket R2 `ATTACHMENTS` (DEC-008), prefixo `apolo/fontes/<tema>/<id>` (tema como etiqueta aberta, DEC-014). Nenhum bucket novo, nenhum PDF fora da nuvem. Nova tabela de metadados no D1 (mesmo padrão bytes-R2/metadados-D1 do DEC-008): id, tema, título, origem/citação (`NOT NULL`), chave do objeto, mime type, tamanho, curador, timestamp. Acesso só por rota do Worker sob sessão (fail-closed via `proxy.ts`), nunca pública nem por URL assinada do R2 — suficiente para "só usuário único", já que o Atlas é estruturalmente mono-usuário. Extração/curadoria acontece em script local, fora do Worker. Backup/exclusão não ganham mecanismo novo: a tabela de metadados faz o acervo entrar automaticamente no backup já existente do DEC-011 e na retenção rotativa já implementada; exclusão segue o mesmo padrão de `deleteAttachment` (objeto R2 primeiro, linha D1 depois). Regra de uso interina até parecer jurídico sobre direitos autorais de questões de concurso: leitura restrita ao usuário único autenticado, citação de origem obrigatória por registro, nenhuma rota pública, link compartilhável, export em massa ou redistribuição do PDF.
+
+### Rationale
+
+1. O requisito original diz literalmente que os PDFs "ficarão... no Cloudflare" — isso descarta manter o PDF fora da nuvem por fidelidade ao produto, não por preferência arquitetural.
+2. Reaproveitar o bucket e o padrão bytes-R2/metadados-D1 já estabelecido pelo DEC-008 é a menor extensão correta: nenhum binding novo, nenhuma duplicação de lógica de backup/retenção, e "origem sempre citada" vira restrição de schema verificável (`NOT NULL`), não convenção dependente de disciplina humana. Um bucket novo não compraria isolamento real, já que controle de acesso e retenção já são decisão de código/política.
+3. O limite de CPU por requisição do Worker gratuito para processar PDF é fato técnico da própria plataforma — mantém o Worker como camada burra de storage/serving e a extração/curadoria como processo local revisado por humano, no mesmo padrão já usado pela importação de CSV de questões.
+
+### Constraints for Claude Code
+
+- Nenhum bucket R2 novo; usar o binding `ATTACHMENTS` já existente (DEC-008), chave no formato `apolo/fontes/<tema>/<id>` (ou equivalente), nunca pública nem com URL assinada.
+- Nova tabela de metadados no D1 com, no mínimo: tema, título, origem/citação (`NOT NULL`, sem default vazio), chave do objeto, mime, tamanho, curador, timestamp — sem coluna de bytes.
+- Toda rota de upload/leitura de fonte entra sob a mesma verificação de sessão de DEC-007/DEC-008 (fail-closed via `proxy.ts`); não entra na lista de exceções públicas.
+- Nenhuma extração/parsing de PDF roda dentro de uma rota do Worker; o processo de extração/curadoria é script local, cujo resultado curado por humano é o que entra em `atlas_questions`/tabela de moldes — o PDF em si não precisa ser parseado em produção para o Apolo funcionar.
+- Não alterar `scripts/backup.mjs`/`docs/BACKUP.md` além do necessário para também enumerar a nova tabela de metadados ao copiar objetos do R2; não criar destino de backup separado para fontes.
+- Exclusão de uma fonte segue o mesmo padrão já existente (objeto R2 primeiro, linha D1 depois); se/quando existir exclusão de conta (DEC-08), este acervo entra no mesmo escopo de exclusão em 3 dias já aplicado a anexos/materiais.
+- Enquanto não houver parecer jurídico sobre direitos autorais de questões de concurso: nenhuma rota pública, link compartilhável, export em massa, ou qualquer forma de distribuição do PDF ou do seu conteúdo integral fora do próprio usuário autenticado — deve ser verificável no código, não apenas mencionado em texto.
+- O limite de 10MB por arquivo do DEC-07 foi fixado para anexos de nota; se um PDF de prova digitalizada o exceder, é decisão de produto do Atlas sobre o limite para esta categoria — não fixar um novo número aqui especulativamente.
+- Nome de tabela/colunas, índices, ordem de migration e exato formato da chave R2 são detalhe de implementação do Claude Code.
+
+### Consequences
+
+Desbloqueia o card APO-05. O acervo de fontes passa a herdar automaticamente o backup e a retenção já existentes (DEC-011), sem infraestrutura nova. Fecha, até parecer jurídico formal, qualquer caminho de distribuição do material fora do usuário único — essa restrição é estrutural e verificável no código, não apenas documental.
+
+### Related
+
+Quest: Card APO-05 — Acervo de fontes oficiais no R2 (ATLAS-RAF-GATE-20261008-003)
+
+Supersedes: NONE
+
+Superseded by: NONE
+
+---
+
+## DEC-016 — Apolo como único emissor de nota
+
+Status: ACCEPTED
+
+Date: 2026-10-08
+
+### Context
+
+Card APO-13 exige garantir que toda nota do Atlas venha de um boletim do Apolo, explicável e estável no tempo — requisito original: "qualquer coisa que envolva nota, quem elabora e emite para o usuário é o Apolo". Hoje a nota fica em `atlas_quiz_attempts.result_json`; o progresso agregado recalcula a cada leitura (DEC-010); reprovação não altera nota (PR #38); DEC-013 exige registro durável antes de pesos fora do padrão. Fato adicional de inspeção: o score de uma tentativa já não é recorrigido a cada leitura hoje — `submitQuiz` grava `score`/`passed`/`result_json` uma única vez sob guarda, e só o agregado por disciplina (`computeProgress`) recalcula a cada leitura a partir desses registros já emitidos. A pergunta deste Gate é formalizar essa emissão como propriedade exclusiva do Apolo e decidir o caso de correção, não mudar o recompute-on-read já existente.
+
+### Decision
+
+Boletim imutável e versionado por tentativa (quiz hoje; atividade/avaliação/exame quando existirem); o progresso agregado por disciplina continua recalculado a cada leitura (DEC-010 Eixo 2), sempre a partir dos boletins emitidos, nunca recorrigindo a prova com a regra do momento da leitura. Toda coluna que carrega nota só pode ser escrita pela função de emissão do módulo Apolo (`lib/apolo/`, DEC-014); `lib/progress.ts`/`lib/reports.ts` continuam só lendo boletins já emitidos. Cada boletim grava a versão da regra de correção vigente na emissão (mesmo princípio de `FORMULA_VERSION`/DEC-013). Correção de gabarito pode reemitir um boletim antigo, mas nunca por sobrescrita silenciosa: reaproveita o padrão já estabelecido pelo DEC-010 (valor atual + trilha de auditoria insert-only) — grava, no mesmo lote atômico, o novo valor vigente e um registro de correção insert-only (valor original, valor corrigido, motivo, autor humano, momento); a correção é sempre disparada por humano, nunca pelo Apolo por conta própria.
+
+### Rationale
+
+1. Recorrigir sempre com a regra atual contradiz "estável no tempo" — faria uma nota já emitida mudar silenciosamente se a lógica de correção mudar depois, uma regressão do que já existe hoje. Materializar o agregado como fotografia periódica resolveria um problema que não existe: DEC-010 (Eixo 2) já rejeitou estado derivado de log de eventos para o progresso pelo mesmo motivo, e se o boletim de cada tentativa já é imutável, o agregado recalculado a partir dele já é determinístico e estável.
+2. "Quem elabora e emite para o usuário é o Apolo" só é uma fronteira real se nenhum outro caminho de código puder gravar um valor de nota; sem exclusividade de escrita, `lib/progress.ts`/`lib/reports.ts` poderiam voltar a calcular nota por fora do Apolo, como já quase fazem hoje ao reagregar `atlas_quiz_attempts` diretamente.
+3. DEC-010 já resolveu este tipo de problema (preservar histórico sem apagar, permitir valor atual mudar sob auditoria) para estado pedagógico; reaproveitar esse padrão para boletim de nota é a menor extensão — imutabilidade absoluta tornaria um erro real de gabarito impossível de corrigir, e sobrescrita livre sem rastro quebraria "explicável e estável no tempo".
+
+### Constraints for Claude Code
+
+- Toda escrita de `score`/`passed`/`result_json` (e equivalentes futuros em atividade/avaliação/exame) passa a ser responsabilidade exclusiva de uma função de emissão do módulo Apolo (`lib/apolo/`, DEC-014); `lib/quizzes.ts` deixa de ser o dono dessa escrita.
+- Cada boletim grava a versão da regra de correção vigente no momento da emissão; boletins antigos nunca são recalculados sob uma versão de regra posterior sem passar pelo mecanismo de correção explícito.
+- Nenhuma coluna de nota é sobrescrita em `UPDATE` direto fora do fluxo de correção governado; a emissão original continua grave-uma-vez.
+- Correção de gabarito: só disparada por ação humana explícita; grava, no mesmo lote atômico, o novo valor vigente e uma linha insert-only de correção (boletim original referenciado, valor anterior, valor novo, motivo, autor, momento) — mesmo padrão de `atlas_state_audit`.
+- Se uma correção de nota muda aprovação/reprovação com efeito sobre o estado pedagógico do conteúdo (DEC-03), essa mudança só pode acontecer pelo `applyTransition`/trilha de auditoria (TEC-06) existente — nunca por escrita direta em `atlas_content_states`/`atlas_discipline_states` como atalho.
+- `lib/progress.ts`/`lib/reports.ts` continuam lendo boletins já emitidos (inclusive corrigidos) para compor o agregado; nenhuma das duas camadas implementa lógica própria de correção ou de nota.
+- Esta decisão não cria tabela nova de "boletim" genérica nem redesenha `atlas_quiz_attempts`; aplica o princípio (imutável, versionado, só Apolo emite, correção auditável) às tabelas de nota já existentes e às que entrarem com atividade/avaliação/exame.
+
+### Consequences
+
+Desbloqueia o card APO-13. Fixa uma invariante de arquitetura que vale para todo subsistema de nota futuro: nenhuma coluna de nota pode ter um segundo caminho de escrita fora do Apolo. `lib/progress.ts`/`lib/reports.ts` (MVP-07/MVP-09) permanecem camadas de leitura puras, nunca de cálculo de nota.
+
+### Related
+
+Quest: Card APO-13 — Apolo como único emissor de nota (ATLAS-RAF-GATE-20261008-004)
+
+Supersedes: NONE
+
+Superseded by: NONE
+
+---
+
+## DEC-017 — Modelo do aluno e calibração
+
+Status: ACCEPTED
+
+Date: 2026-10-08
+
+### Context
+
+Card APO-09 exige decidir qual modelo adaptativo o Apolo usa para elaborar questões "baseado no ponto em que o usuário está em cada tema", e o que é gravado versus recalculado. `lib/recovery.ts` já lê erradas do histórico; proficiência hoje é a média das últimas 5 tentativas; há um único usuário, com poucas respostas por questão no início. Nenhuma menção prévia a Elo/Rasch/TRI no repositório — primeiro Gate sobre o assunto.
+
+### Decision
+
+Elo para habilidade (por usuário×tema) e dificuldade (por questão/instância de molde), com Rasch (1 parâmetro) como critério de seleção do próximo item dentro de uma prova adaptativa. Habilidade e dificuldade são, por definição, função determinística do histórico de boletins já emitidos (DEC-016) — nunca uma fonte de verdade independente; o valor persistido no D1 é só cache desse cálculo, atualizado incrementalmente logo após cada boletim ser emitido. Reprocesso do cache só acontece por evento, nunca por agendamento: (1) mudança de versão da fórmula/modelo; (2) correção de um boletim já incorporada ao cache; (3) primeira leitura sem cache (inicialização a frio a partir da dificuldade nominal curada do DEC-014 como prior). O perfil do aluno nunca entra na nota — só influencia qual questão/parâmetro de molde é servido a seguir; a correção continua sendo só acerto/erro por questão, 100/N, independente da dificuldade do item ou da habilidade do usuário.
+
+### Rationale
+
+1. 2PL/3PL (TRI completa) exige estimar 2–3 parâmetros por item a partir de volume razoável de respostas por item entre vários respondentes; com um usuário só e poucas respostas por questão, essa estimativa é estatisticamente instável, não "mais precisa" — produziria números não explicáveis e dependentes de ajuste iterativo em lote, contradizendo o padrão determinístico já exigido em todo o produto (DEC-04, DEC-10, DEC-016), e implicaria um processo automático recorrente que o projeto já evitou repetidamente (DEC-009, DEC-011, DEC-013).
+2. O requisito pede explicitamente selecionar/elaborar questões "baseado no ponto em que o usuário está em cada tema" — uma régua contínua e explicável (Elo) atende isso com um número por tema atualizável a cada resposta, sem dado em lote; faixas fixas resolveriam isso de forma mais grosseira e não dariam um número único comparável entre temas para o boletim explicável (DEC-016/MVP-09). Rasch é o teto de complexidade que o volume de dados declarado sustenta — 2PL/3PL não é.
+3. Tratar habilidade/dificuldade como cache de um cálculo puro sobre o histórico de boletins é a menor extensão do padrão já decidido em DEC-010 (estado atual + trilha auditável, nunca uma segunda fonte de verdade) e em DEC-016 (boletim imutável como insumo); isso também resolve "quando reprocessar": sempre que o insumo muda ou a regra de cálculo muda, nunca por agendamento.
+
+### Constraints for Claude Code
+
+- Habilidade (por usuário×tema) e dificuldade (por item/instância de molde) são funções puras do histórico de boletins (DEC-016), implementadas como atualização incremental tipo Elo (fórmula fechada, sem iteração/otimização numérica); nenhuma biblioteca de TRI completa é introduzida.
+- Rasch (1 parâmetro) é usado só como critério de seleção do próximo item dentro de uma prova/sessão adaptativa; não gera um segundo conjunto de parâmetros por item além da dificuldade já tratada pelo Elo.
+- Os valores de habilidade/dificuldade persistidos no D1 são cache, não fonte da verdade; devem ser integralmente reconstituíveis a partir do histórico de boletins a qualquer momento.
+- Dificuldade nominal curada (DEC-014) é o prior/seed inicial de cada item antes de haver respostas suficientes; a dificuldade observada (Elo) refina esse prior, não o substitui silenciosamente sem base em dados.
+- Reprocesso do cache só por: (a) mudança de versão da fórmula/modelo (versionado, mesmo princípio do DEC-016/DEC-013), (b) correção de um boletim que já alimentou o cache (DEC-016), (c) ausência de cache (inicialização a frio). Nenhum job agendado, cron ou recorrência automática de recálculo.
+- Restrição dura, não negociável: nenhuma rota de nota (`scoreResults`/`gradeQuestion`/emissão de boletim, DEC-016) pode ler ou ser influenciada pelo valor de habilidade/dificuldade; essas variáveis só podem ser lidas pela função de seleção/elaboração de questão do Apolo (DEC-014). Qualquer acoplamento entre o modelo do aluno e o cálculo da nota é violação desta decisão, não refinamento.
+- A chave de habilidade é por tema (etiqueta aberta do DEC-014), não por nível da hierarquia pedagógica (DEC-05); a seleção dentro de um conteúdo só consulta a habilidade do(s) tema(s) associados às questões desse conteúdo.
+- "Elaborar questões" com base no modelo do aluno pode significar escolher, entre as faixas de parâmetro de um molde (DEC-014), a faixa compatível com a habilidade atual — a mecânica exata de como um molde expõe faixas de dificuldade é detalhe de implementação do card do molde, não decidida aqui.
+- Nome de tabelas/colunas, valor de K (fator de atualização do Elo), janela/critério exato de seleção por Rasch e ordem de migration são detalhe de implementação do Claude Code.
+
+### Consequences
+
+Desbloqueia o card APO-09. Fixa que nenhum cálculo adaptativo pode influenciar a nota — essa é uma invariante dura de arquitetura, verificável em revisão de código. O modelo do aluno fica isolado numa camada de cache reconstituível, nunca uma segunda fonte de verdade.
+
+### Related
+
+Quest: Card APO-09 — Modelo do aluno e calibração (ATLAS-RAF-GATE-20261008-005)
+
+Supersedes: NONE
+
+Superseded by: NONE
+
+---
+
+## DEC-018 — Atividades como pré-requisito da Avaliação Final
+
+Status: ACCEPTED
+
+Date: 2026-10-08
+
+### Context
+
+Card APO-17 exige decidir como o conteúdo registra que sua atividade foi aprovada (>70%), e como a disciplina verifica que todas as atividades dos seus conteúdos estão aprovadas antes de liberar a Avaliação Final. Requisito original (Abner, 2026-10-08): "Atividades tem nota, travam o andamento do conteudo, precisam ser concluidas e com nota superior a 70% antes da Avaliação de Final de Conteudo." Hoje só o quiz do conteúdo tem esse papel (bloqueado/concluído via quiz-aprovado); a disciplina só libera a atividade final depois do exame de meio de curso entregue (DEC-10); não existe estado nem evidência de atividade. Fato adicional de inspeção: nenhum código de produção hoje dispara os eventos `conteudo-50`/`conteudo-100`/`exame-meio-*`/`atividade-final-*` da máquina de disciplina — existem só na definição da FSM e em testes; avaliação/exame de meio/atividade final ainda não têm card MVP implementado (DEC-010 já deixou essas entidades fora da espinha). Esta decisão não altera um disparo automático já em produção — fixa a regra que essa lógica, ainda não construída, terá que respeitar quando for implementada.
+
+### Decision
+
+Atividade fica independente do `state` do conteúdo (DEC-03 não é reaberto, nem no nível de conteúdo nem no de disciplina); a disciplina soma "todas as atividades aprovadas" como segunda condição, ao lado da cobertura de 100%, para permitir o disparo de `conteudo-100` (→ `atividade-final-liberada`). Registro de aprovação da Atividade: evidência nova (`atlas_evidences.kind = 'atividade'`) por aprovação, emitida exclusivamente pelo Apolo (DEC-016) quando uma tentativa de atividade é aprovada com nota >70% — nenhuma coluna nova em `atlas_contents`/`atlas_content_states`. Quando a lógica (ainda não implementada) que dispara `conteudo-100` for construída, ela passa a exigir também 100% dos conteúdos da disciplina com evidência `atividade` aprovada, consultando `atlas_evidences` diretamente. "Trava o andamento do conteúdo" é superficializado nos mesmos canais que já tratam `bloqueado`/`em-revisao-ativa` como congelamento (`frozenBy` em `lib/progress.ts`, aviso em Progresso MVP-08) — o travamento real exigido pelo requisito é impedir a Avaliação Final, decidido acima; o "trava" visível não muda o `state` do conteúdo. Refação: atividade reprovada pode ser refeita diretamente, quantas vezes precisar, sem penalidade de nota — mesma regra do quiz; só a melhor tentativa aprovada conta.
+
+### Rationale
+
+1. O próprio gatilho do Gate aponta a mudança como "condição de liberação" da transição de disciplina, não redesenho da transição em si — alterar a precondição de disparo de um evento já existente é mudança muito menor e localizada do que alterar `CONTENT_TRANSITIONS`/`DISCIPLINE_TRANSITIONS` (DEC-03), que tem múltiplos consumidores já em produção.
+2. "Trava o andamento do conteúdo" é satisfeito pelo mesmo vocabulário que o DEC-03/MVP-08 já usa para `bloqueado`/`em-revisao-ativa`: lá, "congela a conclusão da disciplina" também não muda o `state` do conteúdo além do já previsto pela FSM — significa aviso visível mais trava real a jusante. Aplicar o mesmo padrão evita um segundo mecanismo de "trava" incompatível com o que já existe.
+3. Reaproveitar o par evidência-insere-só (`atlas_evidences`, TEC-06) e a regra "reprovação não penaliza nota, só mantém urgência" (DEC-013) é a menor extensão correta — a Atividade se encaixa no molde já validado para quiz/revisão, em vez de um mecanismo de aprovação novo.
+
+### Constraints for Claude Code
+
+- Nenhuma alteração em `CONTENT_TRANSITIONS` nem `DISCIPLINE_TRANSITIONS` (`lib/pedagogy/states.ts`); os eventos e estados do DEC-03 permanecem exatamente como estão.
+- Nova evidência `kind = 'atividade'` em `atlas_evidences`, emitida só pela função de emissão do Apolo (DEC-016) na aprovação de uma tentativa de atividade; nenhuma coluna nova em `atlas_contents`/`atlas_content_states` para marcar "atividade aprovada".
+- Quando a lógica de disparo de `conteudo-100` for implementada, ela deve checar, além da cobertura de 100%, que todo conteúdo da disciplina tem uma evidência `atividade` aprovada; ambas as condições gatam o mesmo evento, nenhum evento novo é criado.
+- Atividade reprovada: pode ser refeita diretamente, sem limite de tentativas nem cooldown, mesma mecânica de refação do quiz; reprovação não altera nota da disciplina nem da atividade (só a melhor aprovada conta, mesmo padrão de `bestQuiz`/`COVERED_STATES`).
+- `lib/progress.ts` (`frozenBy`) e `lib/reports.ts` (risco/próxima ação) devem ser estendidos para também sinalizar conteúdo com Atividade pendente/reprovada como "congelado"/"pede atenção", reaproveitando a mesma seção que já trata `bloqueado`/`em-revisao-ativa` — sem criar uma segunda seção de risco paralela.
+- Não decidido aqui: se uma Atividade pendente/reprovada também conta como pré-requisito não cumprido para o próximo conteúdo (`isPrerequisiteMet` hoje só olha `atlas_content_prerequisites` + `COVERED_STATES`, que não muda nesta decisão) — se necessário, é pergunta nova a trazer quando o card de Atividade for implementado.
+- Nome de tabela/colunas da tentativa de atividade, forma exata da query "todas as atividades aprovadas" e ordem de migration são detalhe de implementação, a resolver junto do card MVP que efetivamente implementa Atividades/Avaliação Final.
+
+### Consequences
+
+Desbloqueia o card APO-17. Fixa que a FSM do DEC-03 nunca é reaberta por este requisito — Atividade é pré-condição adicional da transição de disciplina, não um estado novo de conteúdo. Quando avaliação/exame de meio e atividade final forem implementados (fora da espinha do DEC-010), sua lógica de disparo já nasce obrigada a checar também "todas as atividades aprovadas".
+
+### Related
+
+Quest: Card APO-17 — Atividades como pré-requisito da Avaliação Final (ATLAS-RAF-GATE-20261008-006)
+
+Supersedes: NONE
+
+Superseded by: NONE
