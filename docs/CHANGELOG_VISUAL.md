@@ -223,3 +223,22 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
     item pendente se atualiza (ex.: contagem de reincidência).
 - Se algo der errado: botão de Hoje levando ao lugar errado, observação
   estranha, ou item de agenda que não conclui/atualiza vêm deste PR.
+
+## PR #41 — Material de estudo por conteúdo (UX-01, ATLAS-ESC-23)
+
+- Ponto de restauração: branch `restore/pre-ux-01` (commit `a30cb74`, main antes do merge).
+- Migration nova: `0012_content_materials` (tabela `atlas_content_materials`).
+  Voltar ao ponto de restauração não apaga a tabela; ela só deixa de ser usada.
+- O que muda no site:
+  - **Sessão de estudo** (qualquer conteúdo fora da demonstração): o aviso
+    "material ainda não cadastrado" dá lugar à área **Material do conteúdo**,
+    com "Adicionar material" para texto, link (ex.: videoaula) ou arquivo
+    (PNG, JPG, PDF ou DOCX até 10MB). O material fica no conteúdo e aparece em
+    toda sessão dele; PDF e imagem abrem no navegador, imagem aparece em
+    miniatura, cada item tem lixeira.
+  - **Backup**: os arquivos de material entram na cópia do R2 junto com os
+    anexos de notas.
+- Continua igual: atividade prática e fixação só existem no conteúdo de
+  demonstração (dependem das regras de Atividades).
+- Se algo der errado: material que não salva, não abre ou não some ao remover
+  vem deste PR.
