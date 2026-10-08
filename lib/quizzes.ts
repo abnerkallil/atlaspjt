@@ -16,7 +16,17 @@ import {
 } from './reviews.js';
 import { directedSelection, recoveryStatus } from './recovery.js';
 
-export const QUESTION_KINDS = ['multipla', 'dissertativa', 'calculo'] as const;
+// APO-03: "certo_errado" é julgamento binário (como múltipla com 2
+// alternativas fixas); "lacuna_numerica" é valor numérico simples, sem as 5
+// verificações de raciocínio que o cálculo exige (DEC-10) — por isso tem
+// correção própria em gradeQuestion, não reaproveita a de "calculo".
+export const QUESTION_KINDS = [
+  'multipla',
+  'dissertativa',
+  'calculo',
+  'certo_errado',
+  'lacuna_numerica',
+] as const;
 export type QuestionKind = (typeof QUESTION_KINDS)[number];
 
 // DEC-10: quiz de nota com 10 questões; 1 min por múltipla escolha; até 5 min
@@ -26,6 +36,8 @@ export const QUESTION_SECONDS: Record<QuestionKind, number | null> = {
   multipla: 60,
   dissertativa: 300,
   calculo: null,
+  certo_errado: 60,
+  lacuna_numerica: null,
 };
 export const VERIFICATION_SIZE = 5;
 export const VERIFICATION_MINIMUM = 3;
@@ -207,7 +219,7 @@ export function shuffleQuestion(
   order: number[] | undefined,
 ): Question {
   if (
-    question.kind !== 'multipla' ||
+    (question.kind !== 'multipla' && question.kind !== 'certo_errado') ||
     !question.options ||
     !order ||
     order.length !== question.options.length
@@ -252,7 +264,7 @@ export function gradeQuestion(
     correctOption: question.correctOption,
     expectedValue: question.expectedValue,
   };
-  if (question.kind === 'multipla') {
+  if (question.kind === 'multipla' || question.kind === 'certo_errado') {
     return {
       ...base,
       correct: answer?.option === question.correctOption,
@@ -267,6 +279,18 @@ export function gradeQuestion(
       correct: wrote && answer?.selfAssessment === 'certa',
       voided: false,
     };
+  }
+  if (question.kind === 'lacuna_numerica') {
+    // Lacuna numérica (APO-03): valor simples contra o gabarito, sem as
+    // verificações de raciocínio do cálculo (DEC-10) — nunca anulada.
+    const value =
+      typeof answer?.value === 'number' && Number.isFinite(answer.value)
+        ? answer.value
+        : null;
+    const expected = question.expectedValue ?? Number.NaN;
+    const correct =
+      value !== null && Math.abs(value - expected) <= (question.tolerance ?? 0);
+    return { ...base, correct, voided: false };
   }
   // Cálculo: a questão só vale se o raciocínio for confirmado (≥3 de 5).
   const verification = question.verification ?? [];

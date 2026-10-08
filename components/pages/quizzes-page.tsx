@@ -47,6 +47,8 @@ const KIND_LABEL = {
   multipla: 'Múltipla escolha',
   dissertativa: 'Dissertativa',
   calculo: 'Cálculo',
+  certo_errado: 'Certo ou errado',
+  lacuna_numerica: 'Lacuna numérica',
 } as const;
 
 const RULES = [
@@ -81,7 +83,8 @@ const dayMonth = (iso: string) =>
 
 function isAnswered(question: PublicQuestion, answer: Answer | undefined) {
   if (!answer) return false;
-  if (question.kind === 'multipla') return typeof answer.option === 'number';
+  if (question.kind === 'multipla' || question.kind === 'certo_errado')
+    return typeof answer.option === 'number';
   if (question.kind === 'dissertativa')
     return typeof answer.text === 'string' && answer.text.trim().length > 0;
   return typeof answer.value === 'number';

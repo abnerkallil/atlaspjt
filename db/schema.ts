@@ -405,11 +405,33 @@ export const atlasQuestions = sqliteTable(
     // Molde que gerou esta instância, quando aplicável (DEC-014); nulo para
     // toda questão curada/importada manualmente (fora do Apolo).
     itemModelId: text('item_model_id'),
+    // APO-03: subtópico (DEC-05) desta questão, quando já cadastrado.
+    subtopicId: text('subtopic_id').references(() => atlasSubtopics.id, { onDelete: 'set null' }),
+    // Dimensão de conhecimento (Anderson/Krathwohl), distinta do nível de
+    // Bloom (processo cognitivo) — mesmo princípio: taxonomia pequena e fixa.
+    knowledgeType: text('knowledge_type'),
+    // "curada" (banco inicial humano), "oficial" (prova real, concurso) ou
+    // "molde" (expandida por um item model, APO-01). Nula para questões
+    // anteriores ao Apolo, que só têm `source` (curado/importado).
+    origin: text('origin'),
+    // Proveniência de questão oficial (concurso): banca, órgão e ano.
+    examBoard: text('exam_board'),
+    examOrg: text('exam_org'),
+    examYear: integer('exam_year'),
+    // Chave do PDF de origem no R2 (DEC-015: prefixo apolo/fontes/<tema>/<id>).
+    sourceObjectKey: text('source_object_key'),
+    // Hash do enunciado (lib/apolo/question-bank.ts) para detectar duplicatas.
+    textHash: text('text_hash'),
+    // Explicação por alternativa (múltipla escolha), em JSON; `explanation` continua
+    // sendo a explicação geral da questão.
+    optionExplanationsJson: text('option_explanations_json'),
   },
   (table) => [
     index('idx_atlas_questions_content').on(table.contentId, table.position),
     index('idx_atlas_questions_theme').on(table.theme),
     index('idx_atlas_questions_item_model').on(table.itemModelId),
+    index('idx_atlas_questions_subtopic').on(table.subtopicId),
+    index('idx_atlas_questions_text_hash').on(table.textHash),
   ],
 );
 

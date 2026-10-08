@@ -70,7 +70,12 @@ function answerText(row: QuestionRow): string {
       return '';
     }
   }
-  if (row.kind === 'calculo' && row.expected_value !== null) return String(row.expected_value).replace('.', ',');
+  if (row.kind === 'certo_errado' && row.correct_option !== null) {
+    return Number(row.correct_option) === 1 ? 'Certo' : 'Errado';
+  }
+  if ((row.kind === 'calculo' || row.kind === 'lacuna_numerica') && row.expected_value !== null) {
+    return String(row.expected_value).replace('.', ',');
+  }
   return row.model_answer ?? '';
 }
 

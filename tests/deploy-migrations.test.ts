@@ -69,6 +69,7 @@ void test('produção atual: 0004 e 0006 aplicadas à mão são só registradas,
     '0012_content_materials.sql',
     '0013_apolo_base.sql',
     '0014_temas_apo02.sql',
+    '0015_banco_questoes_v2.sql',
   ]);
   assert.deepEqual(plan.partial, []);
 });
@@ -94,6 +95,7 @@ void test('migration nova ainda não aplicada vai para apply', () => {
       '0012_content_materials.sql',
       '0013_apolo_base.sql',
       '0014_temas_apo02.sql',
+      '0015_banco_questoes_v2.sql',
     ],
     partial: [],
   });
