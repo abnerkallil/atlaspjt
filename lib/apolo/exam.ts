@@ -15,6 +15,13 @@
 // nunca classificação automática — DEC-014). Enquanto a disciplina não tiver
 // NENHUM conteúdo nivelado, vale a primeira metade pela posição (⌈n/2⌉) —
 // degradação graciosa enquanto a curadoria não chega (ver docs/APOLO.md).
+//
+// APO-19: a mesma tabela guarda também a atividade final e a recuperação
+// (uma linha por instrumento, mesmo índice único). O que é comum às três
+// provas — montagem, gravação, correção, KR-20, liberação pela cobertura e o
+// tempo (com e sem rolagem) — mora aqui; o que é só da atividade final e da
+// recuperação (cascata, resposta questão a questão, maior nota) mora em
+// `lib/apolo/final.ts`.
 import {
   TransitionError,
   applyTransition,
@@ -45,6 +52,7 @@ import {
   gradeQuestion,
   scoreResults,
   type Boletim,
+  type BoletimCascade,
   type BoletimReliability,
 } from './corrector.js';
 import { kr20 } from './item-stats.js';
@@ -69,8 +77,26 @@ export const MIDTERM_LEVELS: readonly ContentLevel[] = ['iniciante', 'intermedia
 // Fração de conteúdos cobertos (COVERED_STATES, mesma régua do componente
 // Cobertura de lib/progress.ts) que libera o exame (`conteudo-50`).
 export const MIDTERM_COVERAGE = 0.5;
+// APO-19: fração que libera a atividade final (`conteudo-100`) — junto com
+// todas as atividades aprovadas (DEC-018).
+export const FINAL_COVERAGE = 1;
 
-export type ExamScopeRule = 'nivel' | 'posicao';
+// Instrumentos por disciplina gravados em `atlas_exam_attempts` (APO-18/19).
+export const FINAL_INSTRUMENT = 'atividade_final';
+export const RECOVERY_INSTRUMENT = 'recuperacao';
+export const DISCIPLINE_INSTRUMENTS = [EXAM_INSTRUMENT, FINAL_INSTRUMENT, RECOVERY_INSTRUMENT] as const;
+export type DisciplineInstrument = (typeof DISCIPLINE_INSTRUMENTS)[number];
+export function isDisciplineInstrument(value: unknown): value is DisciplineInstrument {
+  return typeof value === 'string' && (DISCIPLINE_INSTRUMENTS as readonly string[]).includes(value);
+}
+// Só a atividade final e a recuperação têm rolagem de tempo (APO-19); o
+// exame de meio continua com o tempo total somado, sem rolagem (APO-18).
+export function hasRollover(instrument: string): boolean {
+  return instrument === FINAL_INSTRUMENT || instrument === RECOVERY_INSTRUMENT;
+}
+
+// 'disciplina' (APO-19): todos os conteúdos da disciplina, sem recorte.
+export type ExamScopeRule = 'nivel' | 'posicao' | 'disciplina';
 export type ExamScope = {
   rule: ExamScopeRule;
   // Níveis que entraram (só na regra 'nivel').
@@ -101,6 +127,14 @@ export type ExamAttempt = {
   boletim: Boletim | null;
   planVersion: number;
   correctorVersion: number | null;
+  // APO-19 (só atividade final e recuperação; nulos no exame de meio):
+  // momento em que cada questão foi respondida (relógio do servidor), o
+  // tempo questão a questão com a rolagem, a questão da vez com o prazo dela
+  // (só em andamento) e a cascata do exame de meio (só depois do envio).
+  answeredAt: Record<string, string> | null;
+  timing: QuestionTiming[] | null;
+  currentQuestion: { questionId: string; index: number; deadlineAt: string | null } | null;
+  cascade: BoletimCascade | null;
 };
 
 // ---------------------------------------------------------------------------
@@ -171,11 +205,91 @@ export function examTotalSeconds(
   return total;
 }
 
+// Tempo da atividade final e da recuperação (APO-19): mesma base de 90 s por
+// questão, mas a sobra de uma questão passa para a seguinte — respondeu uma
+// questão de 90 s em 60 s, a próxima tem 90 + 30 = 120 s. Questão a questão,
+// pela ordem da prova, a partir do momento em que cada uma foi respondida
+// (relógio do servidor, gravado no `responder`; ver lib/apolo/final.ts):
+//
+// - gasto = resposta desta − resposta da anterior (a primeira conta do início);
+// - prazo = base + sobra herdada; atrasada se gasto > prazo + tolerância
+//   (DEADLINE_GRACE_SECONDS, a mesma do quiz);
+// - sobra = prazo − gasto (nunca negativa: estourar zera a sobra, não
+//   desconta da próxima);
+// - cálculo/lacuna numérica continuam sem limite: não atrasam e deixam a
+//   sobra herdada passar intacta para a seguinte.
+//
+// Questão ainda sem resposta: a primeira delas é a "da vez" (prazo conta da
+// última resposta); depois dela não há prazo calculável.
+export type QuestionTiming = {
+  questionId: string;
+  baseSeconds: number | null;
+  carriedSeconds: number;
+  budgetSeconds: number | null;
+  deadlineAt: string | null;
+  answeredAt: string | null;
+  spentSeconds: number | null;
+  leftoverSeconds: number;
+  late: boolean;
+};
+
+export function rolloverTiming(
+  questions: { id: string; seconds: number | null }[],
+  startedAt: string,
+  answeredAt: Record<string, string>,
+  graceSeconds: number = DEADLINE_GRACE_SECONDS,
+): QuestionTiming[] {
+  const timing: QuestionTiming[] = [];
+  let previous: number | null = Date.parse(startedAt);
+  let carried = 0;
+  for (const question of questions) {
+    const base = question.seconds;
+    const budget = base === null ? null : base + carried;
+    const at = answeredAt[question.id] ?? null;
+    const deadlineAt =
+      previous !== null && budget !== null ? new Date(previous + budget * 1000).toISOString() : null;
+    if (at === null || previous === null) {
+      timing.push({
+        questionId: question.id,
+        baseSeconds: base,
+        carriedSeconds: carried,
+        budgetSeconds: budget,
+        deadlineAt,
+        answeredAt: null,
+        spentSeconds: null,
+        leftoverSeconds: 0,
+        late: false,
+      });
+      previous = null;
+      carried = 0;
+      continue;
+    }
+    const answered = Math.max(Date.parse(at), previous);
+    const spent = (answered - previous) / 1000;
+    const late = budget !== null && spent > budget + graceSeconds;
+    const leftover = budget === null ? carried : Math.max(0, budget - spent);
+    timing.push({
+      questionId: question.id,
+      baseSeconds: base,
+      carriedSeconds: carried,
+      budgetSeconds: budget,
+      deadlineAt,
+      answeredAt: at,
+      spentSeconds: spent,
+      leftoverSeconds: leftover,
+      late,
+    });
+    previous = answered;
+    carried = leftover;
+  }
+  return timing;
+}
+
 // ---------------------------------------------------------------------------
 // D1
 // ---------------------------------------------------------------------------
 
-function parseJson<T>(value: string | null): T | null {
+export function parseJson<T>(value: string | null): T | null {
   if (!value) return null;
   try {
     return JSON.parse(value) as T;
@@ -191,7 +305,7 @@ function addSeconds(iso: string, seconds: number) {
 // Igual ao tratamento de `submitQuiz` (lib/quizzes.ts): se outro caminho já
 // moveu o estado no meio do caminho, a transição perdida não derruba a
 // operação.
-async function applyIgnoringConflict(
+export async function applyIgnoringConflict(
   db: D1Like,
   request: Parameters<typeof applyTransition>[1],
   now: string,
@@ -217,7 +331,7 @@ export async function setContentLevel(db: D1Like, contentId: string, level: Cont
   if (!result || result.meta.changes !== 1) throw new QuizError('Conteúdo não encontrado.', 404);
 }
 
-async function disciplineContents(db: D1Like, disciplineId: string) {
+export async function disciplineContents(db: D1Like, disciplineId: string) {
   const { results } = await db
     .prepare(
       `SELECT c.id, c.position, c.level, s.state FROM atlas_contents c
@@ -238,14 +352,39 @@ export type DisciplineExamStatus = {
   state: string;
   covered: number;
   total: number;
-  // true quando esta chamada disparou `conteudo-50`.
+  // APO-19 (DEC-018): conteúdos da disciplina com atividade aprovada
+  // (evidência `atividade`), segunda condição de `conteudo-100`.
+  atividadesAprovadas: number;
+  // true quando esta chamada disparou `conteudo-50` ou `conteudo-100`.
   released: boolean;
 };
 
-// Dispara `conteudo-50` (sistema) quando pelo menos metade dos conteúdos da
-// disciplina está coberta — mesma lista COVERED_STATES do componente de
-// Cobertura (lib/progress.ts). Idempotente: fora de `em-andamento` não faz
-// nada; uma corrida com outra chamada não derruba nada (conflito ignorado).
+// Conteúdos da disciplina com pelo menos uma evidência `atividade` — só
+// gravada quando a atividade é aprovada (> 70%, APO-17/DEC-018).
+async function approvedActivityCount(db: D1Like, disciplineId: string): Promise<number> {
+  const row = await db
+    .prepare(
+      `SELECT COUNT(DISTINCT e.content_id) AS n FROM atlas_evidences e
+       JOIN atlas_contents c ON c.id = e.content_id
+       WHERE c.discipline_id = ?1 AND e.kind = 'atividade'`,
+    )
+    .bind(disciplineId)
+    .first<{ n: number }>();
+  return Number(row?.n ?? 0);
+}
+
+// Libera as provas da disciplina pela cobertura (mesma lista COVERED_STATES
+// do componente de Cobertura, lib/progress.ts), sempre pela FSM existente:
+//
+// - `conteudo-50` (sistema): em `em-andamento`, com pelo menos metade dos
+//   conteúdos cobertos → exame de meio de curso liberado (APO-18);
+// - `conteudo-100` (sistema, APO-19): em `exame-meio-concluido`, com todos
+//   os conteúdos cobertos E todos com atividade aprovada (DEC-018: as duas
+//   condições gatam o mesmo evento) → atividade final liberada.
+//
+// Um passo por chamada (nunca pula o exame de meio). Idempotente: fora
+// desses dois estados não faz nada; uma corrida com outra chamada não derruba
+// nada (conflito ignorado).
 export async function syncDisciplineState(
   db: D1Like,
   disciplineId: string,
@@ -258,7 +397,9 @@ export async function syncDisciplineState(
   const covered = contents.filter((content) =>
     COVERED_STATES.includes((content.state ?? 'nao-iniciado') as ContentState),
   ).length;
+  const atividadesAprovadas = await approvedActivityCount(db, disciplineId);
   let released = false;
+  let next = state;
   if (state === 'em-andamento' && total > 0 && covered / total >= MIDTERM_COVERAGE) {
     released = await applyIgnoringConflict(
       db,
@@ -271,12 +412,32 @@ export async function syncDisciplineState(
       },
       now,
     );
+    next = 'exame-meio-liberado';
+  } else if (
+    state === 'exame-meio-concluido' &&
+    total > 0 &&
+    covered / total >= FINAL_COVERAGE &&
+    atividadesAprovadas >= total
+  ) {
+    released = await applyIgnoringConflict(
+      db,
+      {
+        entityType: 'disciplina',
+        entityId: disciplineId,
+        event: 'conteudo-100',
+        actor: 'sistema',
+        reason: `${covered} de ${total} conteúdos concluídos e ${atividadesAprovadas} de ${total} atividades aprovadas (DEC-018): atividade final liberada.`,
+      },
+      now,
+    );
+    next = 'atividade-final-liberada';
   }
   return {
     disciplineId,
-    state: released ? 'exame-meio-liberado' : await currentState(db, 'disciplina', disciplineId),
+    state: released ? next : await currentState(db, 'disciplina', disciplineId),
     covered,
     total,
+    atividadesAprovadas,
     released,
   };
 }
@@ -294,7 +455,7 @@ export async function syncDisciplineOfContent(
   return row ? syncDisciplineState(db, row.discipline_id, options) : null;
 }
 
-type ExamRow = {
+export type ExamRow = {
   id: string;
   discipline_id: string;
   discipline_title: string;
@@ -313,7 +474,7 @@ type ExamRow = {
   corrector_version: number | null;
 };
 
-type StoredExamQuestions = {
+export type StoredExamQuestions = {
   questionIds: string[];
   optionOrders?: Record<string, number[]>;
   questions: PublicQuestion[];
@@ -321,12 +482,16 @@ type StoredExamQuestions = {
   warnings?: string[];
 };
 
-type StoredExamResult = {
+export type StoredExamResult = {
   results?: QuestionResult[];
   late?: boolean;
   lockedAt?: string;
   modelAnswers?: Record<string, string>;
   boletim?: Boletim;
+  // APO-19 (atividade final e recuperação): relógio do servidor por questão
+  // (já em andamento) e o tempo com rolagem fechado na trava/envio.
+  answeredAt?: Record<string, string>;
+  timing?: QuestionTiming[];
 };
 
 const SELECT_EXAM = `SELECT a.*, d.title AS discipline_title FROM atlas_exam_attempts a
@@ -341,6 +506,22 @@ function examFromRow(row: ExamRow): ExamAttempt {
     contentIds: [],
     totalContents: 0,
   };
+  const questions = stored?.questions ?? [];
+  const rollover = hasRollover(row.instrument);
+  const answeredAt = rollover ? (result?.answeredAt ?? {}) : null;
+  // Tempo fechado na trava/envio vale como gravado; em andamento, é recalculado
+  // do que já foi respondido (mesma regra pura, mesmos dados gravados).
+  const timing =
+    answeredAt === null
+      ? null
+      : (result?.timing ??
+        rolloverTiming(
+          questions.map((question) => ({ id: question.id, seconds: question.seconds })),
+          row.started_at,
+          answeredAt,
+        ));
+  const currentIndex =
+    timing && row.status === 'em-andamento' ? timing.findIndex((item) => item.answeredAt === null) : -1;
   return {
     id: row.id,
     disciplineId: row.discipline_id,
@@ -351,7 +532,7 @@ function examFromRow(row: ExamRow): ExamAttempt {
     deadlineAt: row.deadline_at,
     submittedAt: row.submitted_at,
     scope,
-    questions: stored?.questions ?? [],
+    questions,
     answers: parseJson<Answers>(row.answers_json),
     results: result?.results ?? null,
     score: row.score === null ? null : Number(row.score),
@@ -361,6 +542,17 @@ function examFromRow(row: ExamRow): ExamAttempt {
     boletim: result?.boletim ?? null,
     planVersion: Number(row.plan_version),
     correctorVersion: row.corrector_version === null ? null : Number(row.corrector_version),
+    answeredAt,
+    timing,
+    currentQuestion:
+      timing && currentIndex >= 0
+        ? {
+            questionId: timing[currentIndex].questionId,
+            index: currentIndex,
+            deadlineAt: timing[currentIndex].deadlineAt,
+          }
+        : null,
+    cascade: result?.boletim?.cascade ?? null,
   };
 }
 
@@ -383,55 +575,67 @@ export async function listExamAttempts(
 export type ExamQueueItem = DisciplineExamStatus & {
   disciplineTitle: string;
   scope: ExamScope;
+  // Tentativa do exame de meio (APO-18), mantida com o mesmo nome.
   attemptId: string | null;
+  // APO-19: a tentativa de cada instrumento por disciplina, se houver.
+  attemptIds: Record<DisciplineInstrument, string | null>;
 };
 
-// Todas as disciplinas, já sincronizadas (dispara `conteudo-50` onde couber),
-// com o escopo que o exame teria hoje e a tentativa, se houver.
+// Todas as disciplinas, já sincronizadas (dispara `conteudo-50`/`conteudo-100`
+// onde couber), com o escopo que o exame de meio teria hoje e as tentativas.
 export async function listExamQueue(db: D1Like, options: { now?: string } = {}): Promise<ExamQueueItem[]> {
   const { results } = await db
     .prepare(
-      `SELECT d.id, d.title,
-              (SELECT a.id FROM atlas_exam_attempts a WHERE a.discipline_id = d.id AND a.instrument = ?1) AS attempt_id
-       FROM atlas_disciplines d JOIN atlas_phases p ON p.id = d.phase_id
+      `SELECT d.id, d.title FROM atlas_disciplines d JOIN atlas_phases p ON p.id = d.phase_id
        ORDER BY p.position, d.position`,
     )
-    .bind(EXAM_INSTRUMENT)
-    .all<{ id: string; title: string; attempt_id: string | null }>();
+    .all<{ id: string; title: string }>();
+  const { results: attempts } = await db
+    .prepare('SELECT id, discipline_id, instrument FROM atlas_exam_attempts')
+    .all<{ id: string; discipline_id: string; instrument: string }>();
   const queue: ExamQueueItem[] = [];
   for (const row of results) {
     const status = await syncDisciplineState(db, row.id, options);
+    const attemptIds = Object.fromEntries(
+      DISCIPLINE_INSTRUMENTS.map((instrument) => [
+        instrument,
+        attempts.find((item) => item.discipline_id === row.id && item.instrument === instrument)?.id ?? null,
+      ]),
+    ) as Record<DisciplineInstrument, string | null>;
     queue.push({
       ...status,
       disciplineTitle: row.title,
       scope: await examScope(db, row.id),
-      attemptId: row.attempt_id,
+      attemptId: attemptIds[EXAM_INSTRUMENT],
+      attemptIds,
     });
   }
   return queue;
 }
 
-async function existingAttemptId(db: D1Like, disciplineId: string): Promise<string | null> {
+export async function existingAttemptId(
+  db: D1Like,
+  disciplineId: string,
+  instrument: DisciplineInstrument = EXAM_INSTRUMENT,
+): Promise<string | null> {
   const row = await db
     .prepare('SELECT id FROM atlas_exam_attempts WHERE discipline_id = ?1 AND instrument = ?2')
-    .bind(disciplineId, EXAM_INSTRUMENT)
+    .bind(disciplineId, instrument)
     .first<{ id: string }>();
   return row?.id ?? null;
 }
 
-// Monta a prova (sem gravar nada): escopo fotografado, cota por conteúdo,
-// seletor do Apolo (APO-12) com o plano `exame_meio`.
-async function buildExam(db: D1Like, disciplineId: string, id: string, now: string) {
-  const scope = await examScope(db, disciplineId);
-  if (scope.contentIds.length === 0) {
-    throw new QuizError(
-      scope.rule === 'nivel'
-        ? 'Nenhum conteúdo desta disciplina está nivelado como iniciante ou intermediário.'
-        : 'Esta disciplina ainda não tem conteúdos.',
-      409,
-    );
-  }
-  const plan = resolvePlan('exame_meio');
+// Monta a prova (sem gravar nada) sobre um escopo já resolvido: cota por
+// conteúdo e seletor do Apolo (APO-12) com o plano do instrumento.
+// `recentlySeen` (APO-19): a recuperação evita repetir a atividade final.
+export async function buildExamQuestions(
+  db: D1Like,
+  scope: ExamScope,
+  plan: ExamPlan,
+  id: string,
+  now: string,
+  options: { recentlySeen?: string[] } = {},
+): Promise<{ chosen: Question[]; warnings: string[] }> {
   const bank = await listQuestions(db, scope.contentIds);
   const candidates = await listCandidateQuestions(db, scope.contentIds);
   const availableByContent: Record<string, number> = {};
@@ -445,7 +649,7 @@ async function buildExam(db: D1Like, disciplineId: string, id: string, now: stri
     plan,
     profile,
     bank: candidates,
-    recentlySeen: [],
+    recentlySeen: options.recentlySeen ?? [],
     seed: id,
     now,
     perContentQuota: quotas,
@@ -466,7 +670,71 @@ async function buildExam(db: D1Like, disciplineId: string, id: string, now: stri
     chosen.length < plan.size
       ? [`Banco dos conteúdos do exame tem só ${chosen.length} de ${plan.size} questões; o exame sai com o que existe.`]
       : [];
-  return { scope, plan, chosen, warnings };
+  return { chosen, warnings };
+}
+
+// Grava a tentativa (questões embaralhadas, prazo total, escopo e plano).
+// Corrida: o índice único em (discipline_id, instrument) deixa uma só — quem
+// perde o INSERT devolve a da outra chamada.
+export async function insertExamAttempt(
+  db: D1Like,
+  input: {
+    id: string;
+    disciplineId: string;
+    instrument: DisciplineInstrument;
+    scope: ExamScope;
+    plan: ExamPlan;
+    chosen: Question[];
+    warnings: string[];
+    now: string;
+  },
+): Promise<ExamAttempt> {
+  const { id, disciplineId, instrument, scope, plan, chosen, warnings, now } = input;
+  // Teto do tempo da prova inteira; com rolagem (APO-19) é o mesmo total —
+  // a sobra só muda de questão, nunca cresce.
+  const seconds = examTotalSeconds(chosen, plan);
+  const optionOrders: Record<string, number[]> = {};
+  for (const question of chosen) {
+    if (question.kind === 'multipla' && question.options) {
+      optionOrders[question.id] = optionOrder(question.options.length, `${id}:${question.id}`);
+    }
+  }
+  const shown = chosen.map((question) => ({
+    ...publicQuestion(shuffleQuestion(question, optionOrders[question.id])),
+    seconds: plan.secondsByKind[question.kind],
+  }));
+  const stored: StoredExamQuestions = {
+    questionIds: chosen.map((question) => question.id),
+    optionOrders,
+    questions: shown,
+    passingScore: plan.passingScore,
+    warnings,
+  };
+  try {
+    await db.batch([
+      db
+        .prepare(
+          `INSERT INTO atlas_exam_attempts
+             (id, discipline_id, instrument, status, started_at, deadline_at, scope_json, questions_json, plan_version)
+           VALUES (?1, ?2, ?3, 'em-andamento', ?4, ?5, ?6, ?7, ?8)`,
+        )
+        .bind(
+          id,
+          disciplineId,
+          instrument,
+          now,
+          seconds === null ? null : addSeconds(now, seconds),
+          JSON.stringify(scope),
+          JSON.stringify(stored),
+          plan.version,
+        ),
+    ]);
+  } catch (error) {
+    const winner = await existingAttemptId(db, disciplineId, instrument);
+    if (winner) return (await getExamAttempt(db, winner))!;
+    throw error;
+  }
+  return (await getExamAttempt(db, id))!;
 }
 
 // Inicia o exame de meio de curso (tentativa única). Exige `confirmed: true`
@@ -509,56 +777,31 @@ export async function startExameMeio(
   // applyTransition): sem ela, erro sem nenhuma leitura extra nem escrita.
   if (!alreadyStarted) planTransition(transition, state, now, id);
 
-  const { scope, plan, chosen, warnings } = await buildExam(db, disciplineId, id, now);
+  const scope = await examScope(db, disciplineId);
+  if (scope.contentIds.length === 0) {
+    throw new QuizError(
+      scope.rule === 'nivel'
+        ? 'Nenhum conteúdo desta disciplina está nivelado como iniciante ou intermediário.'
+        : 'Esta disciplina ainda não tem conteúdos.',
+      409,
+    );
+  }
+  const plan = resolvePlan('exame_meio');
+  const { chosen, warnings } = await buildExamQuestions(db, scope, plan, id, now);
   if (!alreadyStarted) await applyTransition(db, transition, { now });
-
-  const seconds = examTotalSeconds(chosen, plan);
-  const optionOrders: Record<string, number[]> = {};
-  for (const question of chosen) {
-    if (question.kind === 'multipla' && question.options) {
-      optionOrders[question.id] = optionOrder(question.options.length, `${id}:${question.id}`);
-    }
-  }
-  const shown = chosen.map((question) => ({
-    ...publicQuestion(shuffleQuestion(question, optionOrders[question.id])),
-    seconds: plan.secondsByKind[question.kind],
-  }));
-  const stored: StoredExamQuestions = {
-    questionIds: chosen.map((question) => question.id),
-    optionOrders,
-    questions: shown,
-    passingScore: plan.passingScore,
+  return insertExamAttempt(db, {
+    id,
+    disciplineId,
+    instrument: EXAM_INSTRUMENT,
+    scope,
+    plan,
+    chosen,
     warnings,
-  };
-  try {
-    await db.batch([
-      db
-        .prepare(
-          `INSERT INTO atlas_exam_attempts
-             (id, discipline_id, instrument, status, started_at, deadline_at, scope_json, questions_json, plan_version)
-           VALUES (?1, ?2, ?3, 'em-andamento', ?4, ?5, ?6, ?7, ?8)`,
-        )
-        .bind(
-          id,
-          disciplineId,
-          EXAM_INSTRUMENT,
-          now,
-          seconds === null ? null : addSeconds(now, seconds),
-          JSON.stringify(scope),
-          JSON.stringify(stored),
-          plan.version,
-        ),
-    ]);
-  } catch (error) {
-    // Corrida: outra chamada gravou primeiro (índice único) — vale a dela.
-    const winner = await existingAttemptId(db, disciplineId);
-    if (winner) return (await getExamAttempt(db, winner))!;
-    throw error;
-  }
-  return (await getExamAttempt(db, id))!;
+    now,
+  });
 }
 
-async function examRow(db: D1Like, attemptId: string): Promise<ExamRow> {
+export async function examRow(db: D1Like, attemptId: string): Promise<ExamRow> {
   const row = await db
     .prepare(`${SELECT_EXAM} WHERE a.id = ?1`)
     .bind(attemptId)
@@ -567,8 +810,25 @@ async function examRow(db: D1Like, attemptId: string): Promise<ExamRow> {
   return row;
 }
 
+// O exame de meio (sem rolagem) e a atividade final/recuperação (com rolagem,
+// lib/apolo/final.ts) têm fluxos de trava e envio próprios; a rota escolhe
+// pelo instrumento, e cada fluxo recusa a tentativa do outro.
+function assertMidterm(row: ExamRow) {
+  if (row.instrument !== EXAM_INSTRUMENT) {
+    throw new QuizError('Esta tentativa não é de exame de meio de curso.', 409);
+  }
+}
+
 function isLate(row: ExamRow, now: string) {
   return row.deadline_at !== null && Date.parse(now) > Date.parse(row.deadline_at) + DEADLINE_GRACE_SECONDS * 1000;
+}
+
+export async function modelAnswersOf(db: D1Like, ids: string[]): Promise<Record<string, string>> {
+  const modelAnswers: Record<string, string> = {};
+  for (const question of await listAllQuestions(db, ids)) {
+    if (question.kind === 'dissertativa') modelAnswers[question.id] = question.modelAnswer ?? '';
+  }
+  return modelAnswers;
 }
 
 // Trava as respostas e libera o gabarito das dissertativas para a
@@ -581,13 +841,11 @@ export async function lockExam(
 ): Promise<ExamAttempt> {
   const now = options.now ?? new Date().toISOString();
   const row = await examRow(db, attemptId);
+  assertMidterm(row);
   if (row.status !== 'em-andamento') throw new QuizError('As respostas desta tentativa já foram travadas.', 409);
   const ids = parseJson<StoredExamQuestions>(row.questions_json)?.questionIds ?? [];
   const answers = sanitizeAnswers(rawAnswers, new Set(ids));
-  const modelAnswers: Record<string, string> = {};
-  for (const question of await listAllQuestions(db, ids)) {
-    if (question.kind === 'dissertativa') modelAnswers[question.id] = question.modelAnswer ?? '';
-  }
+  const modelAnswers = await modelAnswersOf(db, ids);
   const [result] = await db.batch([
     db
       .prepare(
@@ -600,13 +858,17 @@ export async function lockExam(
   return (await getExamAttempt(db, attemptId))!;
 }
 
-// KR-20 do exame (mesma aproximação do APO-10: aplicações repetidas fazem o
+// KR-20 da prova (mesma aproximação do APO-10: aplicações repetidas fazem o
 // papel de "várias pessoas"), sobre todas as tentativas enviadas deste
-// instrumento na disciplina, incluindo a que está sendo enviada.
-async function examReliability(
+// instrumento na disciplina, incluindo a que está sendo enviada. A nota de
+// cada aplicação é a BRUTA do corretor (`boletim.score`): na atividade final
+// e na recuperação a coluna `score` é a nota ajustada pela cascata (APO-19),
+// que não mede consistência da prova.
+export async function examReliability(
   db: D1Like,
   row: ExamRow,
   current: { results: QuestionResult[]; score: number },
+  basis: string,
 ): Promise<BoletimReliability> {
   const { results: previous } = await db
     .prepare(
@@ -616,10 +878,10 @@ async function examReliability(
     .bind(row.discipline_id, row.instrument, row.id)
     .all<{ result_json: string | null; score: number }>();
   const administrations = [
-    ...previous.map((item) => ({
-      results: parseJson<StoredExamResult>(item.result_json)?.results ?? [],
-      score: Number(item.score),
-    })),
+    ...previous.map((item) => {
+      const stored = parseJson<StoredExamResult>(item.result_json);
+      return { results: stored?.results ?? [], score: stored?.boletim?.score ?? Number(item.score) };
+    }),
     current,
   ];
   const items = new Map<string, { correct: number; answers: number }>();
@@ -634,9 +896,36 @@ async function examReliability(
   }
   return {
     kr20: kr20([...items.values()], administrations.map((item) => item.score)),
-    basis: 'tentativas enviadas do exame de meio de curso nesta disciplina (aplicações repetidas no tempo no lugar de várias pessoas, APO-10)',
+    basis,
     administrations: administrations.length,
   };
+}
+
+// Correção comum às três provas por disciplina: autoavaliação das
+// dissertativas por cima das respostas e corretor único do Apolo (APO-13),
+// questão por questão na ordem gravada.
+export async function gradeExamAnswers(
+  db: D1Like,
+  row: ExamRow,
+  baseAnswers: Answers,
+  selfAssessments: unknown,
+): Promise<{ answers: Answers; results: QuestionResult[]; correct: number; counted: number; score: number }> {
+  const stored = parseJson<StoredExamQuestions>(row.questions_json);
+  const ids = stored?.questionIds ?? [];
+  const bank = new Map((await listAllQuestions(db, ids)).map((item) => [item.id, item]));
+  const answers: Answers = { ...baseAnswers };
+  for (const [id, verdict] of Object.entries(
+    selfAssessments && typeof selfAssessments === 'object' ? (selfAssessments as Record<string, unknown>) : {},
+  )) {
+    if (bank.get(id)?.kind !== 'dissertativa' || (verdict !== 'certa' && verdict !== 'errada')) continue;
+    answers[id] = { ...answers[id], selfAssessment: verdict };
+  }
+  const results = ids.flatMap((id) => {
+    const question = bank.get(id);
+    return question ? [gradeQuestion(shuffleQuestion(question, stored?.optionOrders?.[id]), answers[id])] : [];
+  });
+  const { correct, counted, score } = scoreResults(results);
+  return { answers, results, correct, counted, score };
 }
 
 // Envio: corrige pelo corretor único do Apolo (APO-13), grava resultado e
@@ -651,31 +940,28 @@ export async function submitExam(
 ): Promise<ExamAttempt> {
   const now = options.now ?? new Date().toISOString();
   const row = await examRow(db, attemptId);
+  assertMidterm(row);
   if (row.status === 'enviado') throw new QuizError('Esta tentativa já foi enviada.', 409);
 
   const stored = parseJson<StoredExamQuestions>(row.questions_json);
   const ids = stored?.questionIds ?? [];
-  const bank = new Map((await listAllQuestions(db, ids)).map((item) => [item.id, item]));
   const locked = row.status === 'autoavaliacao';
-  const answers = sanitizeAnswers(locked ? parseJson<Answers>(row.answers_json) : payload.answers, new Set(ids));
-  for (const [id, verdict] of Object.entries(
-    payload.selfAssessments && typeof payload.selfAssessments === 'object'
-      ? (payload.selfAssessments as Record<string, unknown>)
-      : {},
-  )) {
-    if (bank.get(id)?.kind !== 'dissertativa' || (verdict !== 'certa' && verdict !== 'errada')) continue;
-    answers[id] = { ...answers[id], selfAssessment: verdict };
-  }
-  const results = ids.flatMap((id) => {
-    const question = bank.get(id);
-    return question ? [gradeQuestion(shuffleQuestion(question, stored?.optionOrders?.[id]), answers[id])] : [];
-  });
-  const { correct, counted, score } = scoreResults(results);
+  const { answers, results, correct, counted, score } = await gradeExamAnswers(
+    db,
+    row,
+    sanitizeAnswers(locked ? parseJson<Answers>(row.answers_json) : payload.answers, new Set(ids)),
+    payload.selfAssessments,
+  );
   const passingScore = stored?.passingScore ?? resolvePlan('exame_meio').passingScore;
   const passed = counted > 0 && score >= passingScore;
   const lockInfo = locked ? parseJson<StoredExamResult>(row.result_json) : null;
   const late = locked ? lockInfo?.late === true : isLate(row, now);
-  const reliability = await examReliability(db, row, { results, score });
+  const reliability = await examReliability(
+    db,
+    row,
+    { results, score },
+    'tentativas enviadas do exame de meio de curso nesta disciplina (aplicações repetidas no tempo no lugar de várias pessoas, APO-10)',
+  );
   const boletim: Boletim = {
     ...buildBoletim(attemptId, results, now, Number(row.plan_version), reliability),
     passed,

@@ -258,7 +258,9 @@ a partir de estados, `atlas_quiz_attempts` enviados, `atlas_state_audit` e
 - Avaliações e Atividades: 0 e marcadas como indisponíveis até o Atlas
   registrar essas entregas. Atividades valem desde o APO-17; Avaliações,
   desde o APO-18: nota do exame de meio de curso entregue / 100
-  (`atlas_exam_attempts`), até a atividade final (APO-19) entrar na conta.
+  (`atlas_exam_attempts`); desde o APO-19, com a atividade final entregue,
+  média 50/50 entre o exame de meio e a maior nota entre atividade final e
+  recuperação (as duas já ajustadas pela cascata do exame de meio).
 
 Domínio é a nota da disciplina; proficiência é a média das últimas 5
 tentativas (quiz, revisão, corretivo); retenção é revisões aprovadas sobre
@@ -298,7 +300,8 @@ transição do DEC-03 ao passar; o MVP-08 não cria estado novo.
 não curado. Nunca classificado automaticamente (DEC-014).
 
 `atlas_exam_attempts` (migration 0020): tentativa de avaliação por
-**disciplina** (não por conteúdo), hoje só `instrument = 'exame_meio'`.
+**disciplina** (não por conteúdo): `instrument = 'exame_meio'` (APO-18),
+`'atividade_final'` ou `'recuperacao'` (APO-19, mesma tabela, sem migration).
 Índice único não parcial em `(discipline_id, instrument)`: tentativa única,
 garantida pelo banco. Guarda o escopo fotografado no início (`scope_json`:
 conteúdos cobertos e a regra — nível curado ou primeira metade por posição),
@@ -311,8 +314,18 @@ com KR-20 (`result_json`), nota, aprovação (>= 70%), `plan_version` e
 confirmação) → `exame-meio-entregue` (sistema, no envio). Regras em
 `lib/apolo/exam.ts`; detalhes e simplificações em `docs/APOLO.md`.
 
-API: `GET /api/exames`, `POST /api/exames { disciplineId, confirmar: true }`,
-`GET /api/exames/:id` e `POST /api/exames/:id { action: travar | enviar, answers?, selfAssessments? }`.
+API: `GET /api/exames`, `POST /api/exames { disciplineId, instrument?, confirmar: true }`,
+`GET /api/exames/:id` e `POST /api/exames/:id { action: responder | travar | enviar, ... }`.
+
+Atividade final e recuperação (APO-19): mesma tabela, escopo da disciplina
+inteira (`scope_json.rule = 'disciplina'`). `conteudo-100` (sistema, 100% de
+cobertura e todas as atividades aprovadas, DEC-018) → `iniciar-atividade-final`
+(com confirmação) → `atividade-final-aprovada` | `atividade-final-insatisfatoria`
+(pela nota ajustada) → `iniciar-recuperacao` (com confirmação) →
+`recuperacao-entregue`. `score` é a nota ajustada pela cascata do exame de
+meio; o boletim (`result_json.boletim.cascade`) guarda a bruta e a nota do
+exame de meio usada. `result_json.answeredAt`/`timing`: relógio do servidor
+por questão e o tempo com rolagem da sobra. Detalhes em `docs/APOLO.md`.
 
 ## Relatórios explicáveis (MVP-09)
 

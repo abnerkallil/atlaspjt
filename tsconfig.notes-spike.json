@@ -88,6 +88,7 @@
     "lib/apolo/selector.ts",
     "lib/apolo/corrector.ts",
     "lib/apolo/exam.ts",
+    "lib/apolo/final.ts",
     "lib/apolo/index.ts",
     "tests/apolo.test.ts",
     "tests/apolo-themes.test.ts",
@@ -104,7 +105,8 @@
     "tests/apolo-recovery-queue.test.ts",
     "tests/apolo-generators.test.ts",
     "tests/atividades.test.ts",
-    "tests/exame-meio.test.ts"
+    "tests/exame-meio.test.ts",
+    "tests/atividade-final.test.ts"
   ],
   "exclude": [
     "node_modules"
