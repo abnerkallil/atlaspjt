@@ -578,3 +578,20 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 - Se algo der errado: reverter para `restore/pre-apo-21` remove os campos
   `sources`/`questionTrail`; a nota de cada disciplina/conteúdo continua
   idêntica (nenhuma fórmula mudou).
+
+## PR #64 — Painel do banco e do Apolo (APO-22)
+
+- Ponto de restauração: branch `restore/pre-apo-22` (commit `ebe06a3`, main
+  antes do merge).
+- Migrations: nenhuma — só um campo aditivo (`selectionReasons`) dentro do
+  JSON já existente em `atlas_exam_attempts.questions_json`.
+- O que muda no site: tela nova, "Painel" (`/painel`), com link na
+  navegação — cobertura do banco de questões por tema/conteúdo/Bloom/
+  dificuldade (conteúdos com menos de 30 questões ativas aparecem
+  marcados), questões em alerta, acervo e espaço ocupado no R2, o ponto do
+  usuário por tema e as últimas provas de disciplina montadas (exame de
+  meio, atividade final, recuperação) com o motivo de cada questão. Só
+  leitura; nenhuma nota muda.
+- Se algo der errado: reverter para `restore/pre-apo-22` remove a tela, a
+  rota `/api/apolo/painel` e o campo `selectionReasons`; nenhuma nota ou
+  tentativa existente é afetada.
