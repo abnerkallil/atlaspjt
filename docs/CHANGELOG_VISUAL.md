@@ -525,3 +525,22 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 - Se algo der errado: reverter para `restore/pre-apo-18` remove a coluna
   `level`, a tabela de exame e a rota `/api/exames`; nenhum dado de quiz,
   atividade ou progresso existente é afetado.
+
+## PR #61 — Atividade final e recuperação (APO-19)
+
+- Ponto de restauração: branch `restore/pre-apo-19` (commit `39152f3`, main
+  antes do merge).
+- Migrations: nenhuma — reusa a tabela `atlas_exam_attempts` do PR #60 (dois
+  instrumentos novos, `atividade_final` e `recuperacao`, no mesmo índice
+  único por disciplina).
+- O que muda no site: nada visível ainda — mesmo padrão do PR #60, as rotas
+  `/api/exames` e `/api/exames/:id` ganham a ação `responder` e aceitam os
+  dois instrumentos novos, mas nenhuma tela chama isso ainda. O componente
+  "Avaliações" do progresso passa a somar a nota da atividade final/
+  recuperação (50/50 com o exame de meio) no cálculo interno, assim que uma
+  disciplina tiver as duas provas entregues — sem tela, não há como isso
+  acontecer na prática ainda.
+- Se algo der errado: reverter para `restore/pre-apo-19` remove a rota de
+  atividade final/recuperação (`lib/apolo/final.ts`) e a ação `responder`;
+  nenhum dado de quiz, exame de meio, atividade ou progresso existente é
+  afetado (nenhuma migration para desfazer).
