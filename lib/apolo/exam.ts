@@ -58,7 +58,7 @@ import {
 import { kr20 } from './item-stats.js';
 import { resolvePlan, type ExamPlan } from './plans.js';
 import { getStudentProfile } from './profile.js';
-import { selectQuestions as selectApoloQuestions } from './selector.js';
+import { selectQuestions as selectApoloQuestions, type SelectionReason } from './selector.js';
 import type { QuestionKind } from './types.js';
 
 export const EXAM_INSTRUMENT = 'exame_meio';
@@ -480,6 +480,11 @@ export type StoredExamQuestions = {
   questions: PublicQuestion[];
   passingScore: number;
   warnings?: string[];
+  // APO-22 (painel): o motivo de cada questão escolhida pelo seletor
+  // (lib/apolo/selector.ts) — recuperação vencida, subtópico fraco ou
+  // cobertura do plano. Ausente em questões que vieram do fallback sem
+  // seletor adaptativo (banco pequeno: todo o banco entra, sem motivo).
+  selectionReasons?: Record<string, SelectionReason>;
 };
 
 export type StoredExamResult = {
@@ -635,7 +640,7 @@ export async function buildExamQuestions(
   id: string,
   now: string,
   options: { recentlySeen?: string[] } = {},
-): Promise<{ chosen: Question[]; warnings: string[] }> {
+): Promise<{ chosen: Question[]; warnings: string[]; reasons: Record<string, SelectionReason> }> {
   const bank = await listQuestions(db, scope.contentIds);
   const candidates = await listCandidateQuestions(db, scope.contentIds);
   const availableByContent: Record<string, number> = {};
@@ -655,6 +660,7 @@ export async function buildExamQuestions(
     perContentQuota: quotas,
   });
   const byId = new Map(bank.map((question) => [question.id, question]));
+  const reasonById = new Map(selection.map((item) => [item.questionId, item.reason]));
   const picked = selection.flatMap((item) => {
     const question = byId.get(item.questionId);
     return question ? [question] : [];
@@ -670,7 +676,12 @@ export async function buildExamQuestions(
     chosen.length < plan.size
       ? [`Banco dos conteúdos do exame tem só ${chosen.length} de ${plan.size} questões; o exame sai com o que existe.`]
       : [];
-  return { chosen, warnings };
+  const reasons: Record<string, SelectionReason> = {};
+  for (const question of chosen) {
+    const reason = reasonById.get(question.id);
+    if (reason) reasons[question.id] = reason;
+  }
+  return { chosen, warnings, reasons };
 }
 
 // Grava a tentativa (questões embaralhadas, prazo total, escopo e plano).
@@ -686,10 +697,11 @@ export async function insertExamAttempt(
     plan: ExamPlan;
     chosen: Question[];
     warnings: string[];
+    reasons?: Record<string, SelectionReason>;
     now: string;
   },
 ): Promise<ExamAttempt> {
-  const { id, disciplineId, instrument, scope, plan, chosen, warnings, now } = input;
+  const { id, disciplineId, instrument, scope, plan, chosen, warnings, reasons, now } = input;
   // Teto do tempo da prova inteira; com rolagem (APO-19) é o mesmo total —
   // a sobra só muda de questão, nunca cresce.
   const seconds = examTotalSeconds(chosen, plan);
@@ -709,6 +721,7 @@ export async function insertExamAttempt(
     questions: shown,
     passingScore: plan.passingScore,
     warnings,
+    ...(reasons && Object.keys(reasons).length ? { selectionReasons: reasons } : {}),
   };
   try {
     await db.batch([
@@ -787,7 +800,7 @@ export async function startExameMeio(
     );
   }
   const plan = resolvePlan('exame_meio');
-  const { chosen, warnings } = await buildExamQuestions(db, scope, plan, id, now);
+  const { chosen, warnings, reasons } = await buildExamQuestions(db, scope, plan, id, now);
   if (!alreadyStarted) await applyTransition(db, transition, { now });
   return insertExamAttempt(db, {
     id,
@@ -797,6 +810,7 @@ export async function startExameMeio(
     plan,
     chosen,
     warnings,
+    reasons,
     now,
   });
 }

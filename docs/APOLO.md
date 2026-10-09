@@ -806,3 +806,51 @@ cada ponto, por tentativa.
   fórmula nem nenhuma nota já emitida.
 
 Gate: não.
+
+## Painel do banco e do Apolo (APO-22)
+
+Tela só de leitura (`/painel`, `app/api/apolo/painel`) que junta, numa visão
+só, dados que já existiam separados — estatística de itens e alertas
+(`getItemAudit`, APO-10), acervo e espaço no R2 (`listSources`, APO-05),
+ponto do usuário por tema (`getStudentProfile`, APO-09) — com uma visão
+nova (`lib/apolo/dashboard.ts`, `getApoloPanel`), tudo recalculado do
+histórico a cada chamada (DEC-017), sem nenhum estado próprio.
+
+- **Cobertura do banco** (`getBankCoverage`/`bankCoverageOf`): conta
+  questão ATIVA de `atlas_questions`, agrupada por conteúdo e por tema,
+  com a repartição por Bloom e por dificuldade nominal. Conteúdo com menos
+  de `LOW_BANK_THRESHOLD` (30) questões ativas sai marcado (`low: true`) —
+  o critério de aceite do card ("o Abner identifica os conteúdos com menos
+  de 30 questões ativas, por tema"). Conteúdo sem tema atribuído (APO-02)
+  aparece fora de qualquer tema, para não desaparecer do painel.
+- **Ponto do usuário por tema** (`themeSkillOf`): `getStudentProfile`
+  devolve o Elo por tema×conteúdo×subtópico; aqui agrega por tema só,
+  com a média ponderada pelo número de respostas de cada combinação (uma
+  combinação com 30 respostas pesa mais que uma com 1).
+- **Últimas provas montadas, com o motivo de cada questão**
+  (`getLastAssembledExams`/`assembledExamOf`): lê as últimas tentativas de
+  `atlas_exam_attempts` (exame de meio, atividade final, recuperação — as
+  provas por disciplina; quiz/atividade por conteúdo ficam fora, ver
+  abaixo) e junta o boletim (certa/errada/anulada) com o motivo que o
+  seletor (`lib/apolo/selector.ts`, APO-12) deu a cada questão na
+  montagem.
+  - **Novo campo aditivo**: `StoredExamQuestions.selectionReasons`
+    (`lib/apolo/exam.ts`) grava, na montagem (`buildExamQuestions` →
+    `insertExamAttempt`), o motivo (`recuperacao-vencida`,
+    `subtopico-fraco`, `cobertura-do-plano`) de cada questão escolhida
+    pelo seletor adaptativo. Só isso — nenhuma regra de montagem, de
+    correção ou de nota mudou; é só o motivo, que antes era calculado e
+    descartado, passando a ficar gravado junto da prova (mesmo princípio
+    de imutabilidade do boletim, DEC-016).
+  - **Disclosed**: provas montadas antes deste card, ou que caíram no
+    fallback sem seletor adaptativo (banco pequeno: todo o banco entra,
+    sem seleção), aparecem com `reason: null` — nunca um motivo inventado.
+    O quiz e a atividade (por conteúdo, `lib/quizzes.ts`) não entraram
+    nesta gravação: a mesma mudança lá tocaria o módulo mais delicado e
+    testado do sistema para um ganho só do painel; fica para um card
+    futuro se o Abner quiser o mesmo rastro em quiz/atividade. O exame de
+    proficiência (APO-20) também fica fora: a seleção lá é por
+    proximidade a θ (CAT, Rasch), não pelas três razões do seletor de
+    plano — um "motivo" de outra natureza, que o painel não mistura aqui.
+
+Gate: não.
