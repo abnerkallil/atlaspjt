@@ -207,9 +207,9 @@ async function startFinalInstrument(
     const finalRow = finalId ? await examRow(db, finalId) : null;
     recentlySeen = finalRow ? (parseJson<StoredExamQuestions>(finalRow.questions_json)?.questionIds ?? []) : [];
   }
-  const { chosen, warnings } = await buildExamQuestions(db, scope, plan, id, now, { recentlySeen });
+  const { chosen, warnings, reasons } = await buildExamQuestions(db, scope, plan, id, now, { recentlySeen });
   if (!alreadyStarted) await applyTransition(db, transition, { now });
-  return insertExamAttempt(db, { id, disciplineId, instrument, scope, plan, chosen, warnings, now });
+  return insertExamAttempt(db, { id, disciplineId, instrument, scope, plan, chosen, warnings, reasons, now });
 }
 
 export function startAtividadeFinal(
