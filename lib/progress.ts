@@ -47,6 +47,12 @@ export function validateWeights(weights: Weights): string[] {
   return problems;
 }
 
+// APO-21: de onde vem a nota — a(s) tentativa(s) cujo boletim (DEC-016,
+// imutável desde o envio) sustenta os pontos. Só preenchido nos componentes
+// que vêm de instrumento corrigido pelo Apolo (avaliações, atividades,
+// quiz); cobertura e revisão vêm do estado/agenda, sem boletim próprio.
+export type ComponentSource = { attemptId: string; instrument: string; contentId?: string };
+
 export type ProgressComponent = {
   key: ComponentKey;
   label: string;
@@ -58,6 +64,7 @@ export type ProgressComponent = {
   detail: string;
   // false enquanto o Atlas ainda não registra esse tipo de evidência.
   available: boolean;
+  sources: ComponentSource[];
 };
 
 export type DisciplineProgress = {
@@ -121,7 +128,7 @@ const ATIVIDADE_RISK = {
 
 export type ProgressInput = {
   disciplines: { id: string; title: string; contents: { id: string; title: string; state: ContentState }[] }[];
-  attempts: { contentId: string; purpose: string; score: number; passed: boolean; submittedAt: string }[];
+  attempts: { id: string; contentId: string; purpose: string; score: number; passed: boolean; submittedAt: string }[];
   // Eventos de estado relevantes: quiz-aprovado, dispensa-proficiencia, revisao-aprovada.
   events: { contentId: string; event: string; occurredAt: string }[];
   sessions: { activeSeconds: number; at: string }[];
@@ -130,7 +137,7 @@ export type ProgressInput = {
   // (as duas últimas com a nota já ajustada pela cascata, emitida pelo
   // Apolo). Opcional para quem monta a entrada à mão (testes, relatórios)
   // sem exame nenhum.
-  exams?: { disciplineId: string; instrument: string; score: number; passed: boolean; submittedAt: string }[];
+  exams?: { id: string; disciplineId: string; instrument: string; score: number; passed: boolean; submittedAt: string }[];
 };
 
 // APO-19: nota da atividade final que vale para a disciplina — a maior entre
@@ -138,12 +145,12 @@ export type ProgressInput = {
 // exame de meio (notas emitidas pelo Apolo, DEC-016; aqui só se escolhe a
 // maior, como a melhor nota de quiz). Empate fica com a atividade final.
 export function effectiveFinalActivity(
-  exams: { instrument: string; score: number }[],
-): { score: number; source: 'atividade_final' | 'recuperacao' } | null {
-  let best: { score: number; source: 'atividade_final' | 'recuperacao' } | null = null;
+  exams: { id: string; instrument: string; score: number }[],
+): { attemptId: string; score: number; source: 'atividade_final' | 'recuperacao' } | null {
+  let best: { attemptId: string; score: number; source: 'atividade_final' | 'recuperacao' } | null = null;
   for (const source of ['atividade_final', 'recuperacao'] as const) {
     for (const item of exams.filter((exam) => exam.instrument === source)) {
-      if (!best || item.score > best.score) best = { score: item.score, source };
+      if (!best || item.score > best.score) best = { attemptId: item.id, score: item.score, source };
     }
   }
   return best;
@@ -201,20 +208,22 @@ export function computeProgress(
     const covered = discipline.contents.filter((content) => COVERED_STATES.includes(content.state)).length;
 
     // Só quizzes aprovados entram na nota; reprovação não soma nem desconta.
-    const bestQuiz = new Map<string, number>();
+    const bestQuiz = new Map<string, { score: number; attemptId: string }>();
     for (const item of attempts.filter((attempt) => attempt.purpose === 'quiz' && attempt.passed)) {
-      bestQuiz.set(item.contentId, Math.max(bestQuiz.get(item.contentId) ?? 0, item.score));
+      const current = bestQuiz.get(item.contentId);
+      if (!current || item.score > current.score) bestQuiz.set(item.contentId, { score: item.score, attemptId: item.id });
     }
-    const quizAverage = average([...bestQuiz.values()]);
+    const quizAverage = average([...bestQuiz.values()].map((item) => item.score));
 
     // APO-17 (DEC-018): Atividade segue a mesma regra do quiz — só a melhor
     // tentativa aprovada (>70%) entra na nota; reprovação não desconta, só
     // pode ser refeita direto.
-    const bestAtividade = new Map<string, number>();
+    const bestAtividade = new Map<string, { score: number; attemptId: string }>();
     for (const item of attempts.filter((attempt) => attempt.purpose === 'atividade' && attempt.passed)) {
-      bestAtividade.set(item.contentId, Math.max(bestAtividade.get(item.contentId) ?? 0, item.score));
+      const current = bestAtividade.get(item.contentId);
+      if (!current || item.score > current.score) bestAtividade.set(item.contentId, { score: item.score, attemptId: item.id });
     }
-    const atividadeAverage = average([...bestAtividade.values()]);
+    const atividadeAverage = average([...bestAtividade.values()].map((item) => item.score));
 
     let due = 0;
     let passed = 0;
@@ -239,32 +248,39 @@ export function computeProgress(
     const finalActivity = effectiveFinalActivity(disciplineExams);
     const examDetail = exam ? `Exame de meio de curso: ${round1(exam.score)}% (${exam.passed ? 'aprovado' : 'reprovado'})` : '';
 
-    const ratios: Record<ComponentKey, { ratio: number; detail: string; available: boolean }> = {
+    const ratios: Record<ComponentKey, { ratio: number; detail: string; available: boolean; sources: ComponentSource[] }> = {
       avaliacoes: exam
         ? finalActivity
           ? {
               ratio: (exam.score + finalActivity.score) / 200,
               detail: `${examDetail}; atividade final: ${round1(finalActivity.score)}% (${finalActivity.source === 'recuperacao' ? 'nota da recuperação, maior que a da atividade final, ' : ''}já com o ajuste pelo exame de meio). Média 50/50: ${round1((exam.score + finalActivity.score) / 2)}%.`,
               available: true,
+              sources: [
+                { attemptId: exam.id, instrument: 'exame_meio' },
+                { attemptId: finalActivity.attemptId, instrument: finalActivity.source },
+              ],
             }
           : {
               ratio: exam.score / 100,
               detail: `${examDetail}. Atividade final ainda não entregue.`,
               available: true,
+              sources: [{ attemptId: exam.id, instrument: 'exame_meio' }],
             }
-        : { ratio: 0, detail: 'Exame de meio de curso ainda não entregue.', available: false },
+        : { ratio: 0, detail: 'Exame de meio de curso ainda não entregue.', available: false, sources: [] },
       atividades: {
         ratio: atividadeAverage / 100,
         detail: bestAtividade.size
           ? `Média ${round1(atividadeAverage)}% da melhor nota aprovada ${bestAtividade.size === 1 ? 'na atividade de 1 conteúdo' : `nas atividades de ${bestAtividade.size} conteúdos`}. Reprovações não entram na nota.`
           : 'Nenhuma atividade aprovada ainda. Reprovações não entram na nota (nota mínima: mais de 70%).',
         available: true,
+        sources: [...bestAtividade.entries()].map(([contentId, item]) => ({ attemptId: item.attemptId, instrument: 'atividade', contentId })),
       },
-      cobertura: { ratio: total ? covered / total : 0, detail: `${covered} de ${total} conteúdos concluídos.`, available: true },
+      cobertura: { ratio: total ? covered / total : 0, detail: `${covered} de ${total} conteúdos concluídos.`, available: true, sources: [] },
       revisao: {
         ratio: due ? passed / due : 0,
         detail: due ? `${passed} de ${due} ${due === 1 ? 'revisão vencida aprovada' : 'revisões vencidas aprovadas'}.` : 'Nenhuma revisão vencida ainda.',
         available: true,
+        sources: [],
       },
       quiz: {
         ratio: quizAverage / 100,
@@ -272,6 +288,7 @@ export function computeProgress(
           ? `Média ${round1(quizAverage)}% da melhor nota aprovada ${bestQuiz.size === 1 ? 'no quiz de 1 conteúdo' : `nos quizzes de ${bestQuiz.size} conteúdos`}. Reprovações não entram na nota.`
           : 'Nenhum quiz de conteúdo aprovado ainda. Reprovações não entram na nota.',
         available: true,
+        sources: [...bestQuiz.entries()].map(([contentId, item]) => ({ attemptId: item.attemptId, instrument: 'quiz', contentId })),
       },
     };
     const components = COMPONENTS.map((key) => ({
@@ -282,6 +299,7 @@ export function computeProgress(
       points: round1(weights[key] * ratios[key].ratio),
       detail: ratios[key].detail,
       available: ratios[key].available,
+      sources: ratios[key].sources,
     }));
     const score = round1(components.reduce((sum, item) => sum + item.points, 0));
     const recent = attempts.slice(-5);
@@ -389,10 +407,10 @@ export async function loadProgressInput(db: D1Like): Promise<ProgressInput> {
   const [{ results: attempts }, { results: events }, { results: sessions }, { results: exams }] = await Promise.all([
     db
       .prepare(
-        `SELECT content_id, purpose, score, passed, submitted_at FROM atlas_quiz_attempts
+        `SELECT id, content_id, purpose, score, passed, submitted_at FROM atlas_quiz_attempts
          WHERE status = 'enviado' AND score IS NOT NULL ORDER BY submitted_at`,
       )
-      .all<{ content_id: string; purpose: string; score: number; passed: number; submitted_at: string }>(),
+      .all<{ id: string; content_id: string; purpose: string; score: number; passed: number; submitted_at: string }>(),
     db
       .prepare(
         `SELECT entity_id, event, occurred_at FROM atlas_state_audit
@@ -406,14 +424,15 @@ export async function loadProgressInput(db: D1Like): Promise<ProgressInput> {
       .all<{ active_seconds: number; at: string }>(),
     db
       .prepare(
-        `SELECT discipline_id, instrument, score, passed, submitted_at FROM atlas_exam_attempts
+        `SELECT id, discipline_id, instrument, score, passed, submitted_at FROM atlas_exam_attempts
          WHERE status = 'enviado' AND score IS NOT NULL ORDER BY submitted_at`,
       )
-      .all<{ discipline_id: string; instrument: string; score: number; passed: number; submitted_at: string }>(),
+      .all<{ id: string; discipline_id: string; instrument: string; score: number; passed: number; submitted_at: string }>(),
   ]);
   return {
     disciplines,
     attempts: attempts.map((row) => ({
+      id: row.id,
       contentId: row.content_id,
       purpose: row.purpose,
       score: Number(row.score),
@@ -423,6 +442,7 @@ export async function loadProgressInput(db: D1Like): Promise<ProgressInput> {
     events: events.map((row) => ({ contentId: row.entity_id, event: row.event, occurredAt: row.occurred_at })),
     sessions: sessions.map((row) => ({ activeSeconds: Number(row.active_seconds), at: row.at })),
     exams: exams.map((row) => ({
+      id: row.id,
       disciplineId: row.discipline_id,
       instrument: row.instrument,
       score: Number(row.score),

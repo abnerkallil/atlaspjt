@@ -67,13 +67,13 @@ void test('quiz usa a melhor nota por conteúdo; revisão conta etapas vencidas 
   const report = computeProgress(
     input({
       attempts: [
-        { contentId: 'C', purpose: 'quiz', score: 40, passed: false, submittedAt: '2026-08-01T10:00:00.000Z' },
-        { contentId: 'A', purpose: 'quiz', score: 60, passed: false, submittedAt: '2026-09-01T10:00:00.000Z' },
-        { contentId: 'A', purpose: 'quiz', score: 90, passed: true, submittedAt: '2026-09-02T10:00:00.000Z' },
-        { contentId: 'B', purpose: 'quiz', score: 70, passed: true, submittedAt: '2026-10-01T10:00:00.000Z' },
-        { contentId: 'A', purpose: 'revisao', score: 80, passed: true, submittedAt: '2026-09-03T10:00:00.000Z' },
-        { contentId: 'A', purpose: 'revisao', score: 50, passed: false, submittedAt: '2026-09-09T10:00:00.000Z' },
-        { contentId: 'A', purpose: 'corretivo', score: 100, passed: true, submittedAt: '2026-09-10T10:00:00.000Z' },
+        { id: 'a1', contentId: 'C', purpose: 'quiz', score: 40, passed: false, submittedAt: '2026-08-01T10:00:00.000Z' },
+        { id: 'a2', contentId: 'A', purpose: 'quiz', score: 60, passed: false, submittedAt: '2026-09-01T10:00:00.000Z' },
+        { id: 'a3', contentId: 'A', purpose: 'quiz', score: 90, passed: true, submittedAt: '2026-09-02T10:00:00.000Z' },
+        { id: 'a4', contentId: 'B', purpose: 'quiz', score: 70, passed: true, submittedAt: '2026-10-01T10:00:00.000Z' },
+        { id: 'a5', contentId: 'A', purpose: 'revisao', score: 80, passed: true, submittedAt: '2026-09-03T10:00:00.000Z' },
+        { id: 'a6', contentId: 'A', purpose: 'revisao', score: 50, passed: false, submittedAt: '2026-09-09T10:00:00.000Z' },
+        { id: 'a7', contentId: 'A', purpose: 'corretivo', score: 100, passed: true, submittedAt: '2026-09-10T10:00:00.000Z' },
       ],
       events: [
         { contentId: 'A', event: 'quiz-aprovado', occurredAt: '2026-09-02T10:00:00.000Z' },
@@ -90,6 +90,14 @@ void test('quiz usa a melhor nota por conteúdo; revisão conta etapas vencidas 
   assert.equal(byKey.revisao.detail, '2 de 5 revisões vencidas aprovadas.');
   assert.equal(byKey.revisao.points, 6);
   assert.equal(byKey.quiz.points, 12, 'média (90 + 70) / 2 = 80% de 15; as reprovações (60 e 40) não entram');
+  // APO-21: cada ponto rastreável até a tentativa (boletim) que o sustenta — só a melhor aprovada, não a reprovada.
+  assert.deepEqual(
+    byKey.quiz.sources.sort((a, b) => a.contentId!.localeCompare(b.contentId!)),
+    [
+      { attemptId: 'a3', instrument: 'quiz', contentId: 'A' },
+      { attemptId: 'a4', instrument: 'quiz', contentId: 'B' },
+    ],
+  );
   assert.equal(discipline.score, 33);
   // Proficiência: últimas 5 tentativas em ordem (60 sai).
   assert.equal(discipline.proficiency, Math.round((90 + 80 + 50 + 100 + 70) / 5));
@@ -103,10 +111,10 @@ void test('APO-17 (DEC-018): atividade usa a melhor nota aprovada; reprovada sem
     input({
       attempts: [
         // D (nao-iniciado): atividade reprovada, nunca aprovada — congela.
-        { contentId: 'D', purpose: 'atividade', score: 60, passed: false, submittedAt: '2026-09-01T10:00:00.000Z' },
+        { id: 'a1', contentId: 'D', purpose: 'atividade', score: 60, passed: false, submittedAt: '2026-09-01T10:00:00.000Z' },
         // B (concluido): atividade reprovada e depois aprovada — não congela, conta a melhor.
-        { contentId: 'B', purpose: 'atividade', score: 50, passed: false, submittedAt: '2026-09-01T10:00:00.000Z' },
-        { contentId: 'B', purpose: 'atividade', score: 85, passed: true, submittedAt: '2026-09-05T10:00:00.000Z' },
+        { id: 'a2', contentId: 'B', purpose: 'atividade', score: 50, passed: false, submittedAt: '2026-09-01T10:00:00.000Z' },
+        { id: 'a3', contentId: 'B', purpose: 'atividade', score: 85, passed: true, submittedAt: '2026-09-05T10:00:00.000Z' },
       ],
     }),
     { now, today, tzOffsetMinutes: 180 },
@@ -116,6 +124,8 @@ void test('APO-17 (DEC-018): atividade usa a melhor nota aprovada; reprovada sem
   assert.equal(byKey.atividades.available, true);
   assert.equal(byKey.atividades.detail, 'Média 85% da melhor nota aprovada na atividade de 1 conteúdo. Reprovações não entram na nota.');
   assert.equal(byKey.atividades.points, 17);
+  // APO-21: a atividade reprovada (a2) não entra nas fontes — só a aprovada (a3).
+  assert.deepEqual(byKey.atividades.sources, [{ attemptId: 'a3', instrument: 'atividade', contentId: 'B' }]);
   // D congela (atividade reprovada, nunca aprovada); C já congelava por em-revisao-ativa; B não congela mais (foi aprovada depois).
   assert.deepEqual(discipline.frozenBy.sort(), ['Conteúdo C', 'Conteúdo D']);
   const atRiskIds = report.atRisk.map((item) => item.id).sort();
@@ -125,7 +135,7 @@ void test('APO-17 (DEC-018): atividade usa a melhor nota aprovada; reprovada sem
 });
 
 void test('APO-18: Avaliações vale a nota do exame de meio de curso entregue; sem exame, segue indisponível', () => {
-  const exams = [{ disciplineId: 'D1', instrument: 'exame_meio', score: 62.5, passed: false, submittedAt: now }];
+  const exams = [{ id: 'ex1', disciplineId: 'D1', instrument: 'exame_meio', score: 62.5, passed: false, submittedAt: now }];
   const report = computeProgress(input({ exams }), { now, today, tzOffsetMinutes: 180 });
   const [discipline] = report.disciplines;
   const byKey = Object.fromEntries(discipline.components.map((item) => [item.key, item]));
@@ -134,6 +144,8 @@ void test('APO-18: Avaliações vale a nota do exame de meio de curso entregue; 
   assert.equal(byKey.avaliacoes.ratio, 0.625);
   assert.equal(byKey.avaliacoes.points, 18.8);
   assert.equal(byKey.avaliacoes.detail, 'Exame de meio de curso: 62.5% (reprovado). Atividade final ainda não entregue.');
+  // APO-21: rastreável até a tentativa do exame de meio.
+  assert.deepEqual(byKey.avaliacoes.sources, [{ attemptId: 'ex1', instrument: 'exame_meio' }]);
   // Cobertura (15) + Avaliações (18,8).
   assert.equal(discipline.score, 33.8);
   // Exame de outra disciplina não conta aqui.

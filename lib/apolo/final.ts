@@ -514,18 +514,19 @@ export type FinalActivityGrade = {
 export async function getFinalActivityGrade(db: D1Like, disciplineId: string): Promise<FinalActivityGrade> {
   const { results } = await db
     .prepare(
-      `SELECT instrument, score FROM atlas_exam_attempts
+      `SELECT id, instrument, score FROM atlas_exam_attempts
        WHERE discipline_id = ?1 AND status = 'enviado' AND score IS NOT NULL`,
     )
     .bind(disciplineId)
-    .all<{ instrument: string; score: number }>();
-  const exams = results.map((row) => ({ instrument: row.instrument, score: Number(row.score) }));
+    .all<{ id: string; instrument: string; score: number }>();
+  const exams = results.map((row) => ({ id: row.id, instrument: row.instrument, score: Number(row.score) }));
   const scoreOf = (instrument: string) => exams.find((item) => item.instrument === instrument)?.score ?? null;
+  const best = effectiveFinalActivity(exams);
   return {
     disciplineId,
     exameMeio: scoreOf(EXAM_INSTRUMENT),
     atividadeFinal: scoreOf(FINAL_INSTRUMENT),
     recuperacao: scoreOf(RECOVERY_INSTRUMENT),
-    finalActivity: effectiveFinalActivity(exams),
+    finalActivity: best ? { score: best.score, source: best.source } : null,
   };
 }
