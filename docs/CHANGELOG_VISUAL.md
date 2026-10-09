@@ -595,3 +595,17 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 - Se algo der errado: reverter para `restore/pre-apo-22` remove a tela, a
   rota `/api/apolo/painel` e o campo `selectionReasons`; nenhuma nota ou
   tentativa existente é afetada.
+
+## PR #65 — Simulador e testes do Apolo (APO-23)
+
+- Ponto de restauração: branch `restore/pre-apo-23` (commit `360e5da`, main
+  antes do merge).
+- Migrations: nenhuma — código novo (`lib/apolo/simulator.ts`) e testes só,
+  sem tocar D1.
+- O que muda no site: nada visível — é um simulador interno (alunos e banco
+  sintéticos, sem D1) que prova, com números medidos, que o Elo converge
+  para a habilidade verdadeira, que o seletor de questões nunca ultrapassa
+  o plano nem a cota por conteúdo, e que o KR-20 de uma prova bem calibrada
+  chega à meta de 0,80. Documentado em `docs/APOLO.md`.
+- Se algo der errado: reverter para `restore/pre-apo-23` remove o
+  simulador e seus testes; nenhum outro código do Apolo é afetado.
