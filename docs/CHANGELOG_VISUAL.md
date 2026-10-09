@@ -544,3 +544,20 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
   atividade final/recuperação (`lib/apolo/final.ts`) e a ação `responder`;
   nenhum dado de quiz, exame de meio, atividade ou progresso existente é
   afetado (nenhuma migration para desfazer).
+
+## PR #62 — Exame de proficiência (APO-20)
+
+- Ponto de restauração: branch `restore/pre-apo-20` (commit `5333b90`, main
+  antes do merge).
+- Migrations: nenhuma — reusa `atlas_quiz_attempts` (`purpose='proficiencia'`)
+  e `atlas_evidences` (`kind='proficiencia'`), colunas de texto livre sem
+  CHECK constraint.
+- O que muda no site: nada visível ainda — as rotas novas `/api/proficiencia`
+  e `/api/proficiencia/:id` existem, mas nenhuma tela chama isso ainda. Só
+  quando uma tela usar essas rotas é que um aluno vai conseguir, no estado
+  "não iniciado" de um conteúdo, fazer um exame adaptativo que, com nota
+  acima de 85%, dispensa o conteúdo direto para "concluído".
+- Se algo der errado: reverter para `restore/pre-apo-20` remove o motor de
+  proficiência (`lib/apolo/proficiency.ts`) e as duas rotas novas; nenhum
+  dado de quiz, exame, atividade ou progresso existente é afetado (nenhuma
+  migration para desfazer).
