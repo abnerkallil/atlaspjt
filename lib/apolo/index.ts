@@ -21,3 +21,4 @@ export * from './exam.js';
 export * from './final.js';
 export * from './proficiency.js';
 export * from './dashboard.js';
+export * from './simulator.js';

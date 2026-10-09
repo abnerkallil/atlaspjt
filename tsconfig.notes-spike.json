@@ -91,6 +91,7 @@
     "lib/apolo/final.ts",
     "lib/apolo/proficiency.ts",
     "lib/apolo/dashboard.ts",
+    "lib/apolo/simulator.ts",
     "lib/apolo/index.ts",
     "tests/apolo.test.ts",
     "tests/apolo-themes.test.ts",
@@ -110,7 +111,8 @@
     "tests/exame-meio.test.ts",
     "tests/atividade-final.test.ts",
     "tests/apolo-proficiency.test.ts",
-    "tests/apolo-dashboard.test.ts"
+    "tests/apolo-dashboard.test.ts",
+    "tests/apolo-simulator.test.ts"
   ],
   "exclude": [
     "node_modules"
