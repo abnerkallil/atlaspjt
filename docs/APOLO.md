@@ -696,3 +696,81 @@ atividade final e vice-versa (409).
 
 Gate: não (DEC-016 e DEC-018 já ACEITOS cobrem; nenhuma transição nova,
 nenhuma migration).
+
+## Exame de proficiência (APO-20)
+
+Quem já domina um conteúdo prova isso e pula o estudo (DEC-05) — sem afetar
+nenhuma nota (DEC-017). Por CONTEÚDO, reusando `atlas_quiz_attempts` com
+`purpose = 'proficiencia'` (mesmo índice único `content_id`+`purpose` do
+quiz/atividade, APO-14/APO-17) e `atlas_evidences` com `kind =
+'proficiencia'` — nenhuma migration nova; as duas colunas já eram texto
+livre. A transição `dispensa-proficiencia` (`nao-iniciado` → `concluido`,
+com evidência) já existia na FSM desde o DEC-03 original — este card só
+constrói o motor que a alimenta.
+
+**Diferente de tudo que o Apolo já tinha**: exame de meio/atividade
+final/recuperação sorteiam uma lista fixa no início (`lib/apolo/exam.ts`/
+`final.ts`); este é **adaptativo de verdade** (CAT — computerized adaptive
+testing). Cada resposta atualiza uma estimativa de habilidade (θ, Rasch de
+1 parâmetro, na mesma escala Elo do modelo do aluno — `lib/apolo/skill.ts`,
+`estimateAbility` em `lib/apolo/proficiency.ts`) e escolhe a próxima
+questão — sempre a de dificuldade mais próxima de θ (`pickNextItem`, sem
+sorteio: um CAT clássico decide assim, mesmo princípio do modo adaptativo
+do seletor com topN=1, `lib/apolo/selector.ts`) — até parar por erro-padrão
+baixo ou por atingir o tamanho máximo do plano `proficiencia` (20,
+`lib/apolo/plans.ts`). A dificuldade (Elo) de cada questão vem da
+estatística de item já existente (APO-10, `getItemAudit`); sem histórico
+ainda, cai no padrão nominal de sempre (`DEFAULT_DIFFICULTY_ELO`).
+
+**θ nunca é a nota** (DEC-017: Rasch só prioriza/decide a parada). A nota
+final é a de sempre — corretor único, acerto/total × 100
+(`lib/apolo/corrector.ts`) — sobre as questões administradas, não sobre θ.
+**Nota acima de 85%** (texto literal da transição na FSM, diferente do
+corte de 70% do resto do Apolo) grava a evidência "proficiencia" e dispara
+`dispensa-proficiencia`; nota insuficiente não grava nada na FSM, e o exame
+pode ser refeito a qualquer momento, como o quiz/atividade (sem limite de
+tentativas, sem penalidade).
+
+**Só antes de começar o conteúdo** (`nao-iniciado`) — depois disso a
+dispensa não faz sentido (DEC-05), e a própria FSM recusaria a transição
+mesmo que o motor chegasse lá. Sem checar pré-requisito: DEC-05 é
+justamente o caminho para pular essa exigência (comentário já existente em
+`lib/pedagogy/transitions.ts` desde antes deste card).
+
+**Resposta questão a questão** (`answerProficiencia`, uma ação só —
+responder já é enviar aquela questão, diferente do `responder`/`travar`/
+`enviar` separados da atividade final/recuperação): sempre a última de
+`administered`, a única pendente por invariante do motor (nunca há mais de
+uma questão em aberto ao mesmo tempo). Sem gabarito revelado antes: a
+questão da vez some de `currentQuestion` só depois de respondida.
+
+**Simplificações assumidas (disclosed, sem decisão do Abner):**
+
+- **Limiar de parada por erro-padrão e mínimo de questões são nossos.**
+  O card só pede "parada por erro-padrão ou tamanho máximo", sem números.
+  Usamos a convenção usual de CAT (erro-padrão abaixo de 0,3 logito — aqui
+  convertido para ~52 pontos Elo, `SE_STOP_ELO`) e um mínimo de 5 questões
+  antes de aceitar essa parada (`MIN_QUESTIONS`) — a própria mitigação que
+  o card pede para "prova adaptativa curta é menos precisa".
+- **Dissertativa fica fora do banco de candidatas.** Exigiria
+  autoavaliação por questão (DEC-04) no meio do loop adaptativo — o card
+  não pede isso, e a maioria dos conteúdos tem alternativa objetiva
+  suficiente (cálculo, lacuna numérica, múltipla, certo/errado).
+- **Do plano `proficiencia` (APO-11) só o tamanho (20, teto máximo) é
+  usado.** `kindMix`/`difficultyMix`/`bloomMix`/`interleaving` não valem
+  aqui — a escolha de questão é toda do motor adaptativo (θ), não da
+  cobertura de um plano fixo.
+- **Banco curto.** Sem 20 questões ativas (sem dissertativa) no conteúdo, o
+  exame para antes, pelo esgotamento do banco (`stoppedBy:
+  'banco-esgotado'`) — mesmo princípio de todo o resto do Apolo: nunca
+  inventa questão.
+- **Sem UI.** Rotas existem (`POST /api/proficiencia`, `GET`/`POST
+  /api/proficiencia/:id`), nenhuma tela usa ainda.
+
+API: `POST /api/proficiencia { contentId }` → começa (ou devolve a tentativa
+já em andamento); `GET /api/proficiencia/:id` → situação, com a questão da
+vez quando em andamento; `POST /api/proficiencia/:id { questionId, answer }`
+→ responde a questão da vez — a última resposta é o próprio envio.
+
+Gate: não (DEC-05 e DEC-017 já cobrem; nenhuma transição nova, nenhuma
+migration).

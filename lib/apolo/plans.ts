@@ -7,13 +7,15 @@
 // kanban pessoal do Abner — nunca virou um Gate aceito em
 // `docs/ATLAS_DECISIONS.md`. O plano de 'quiz' abaixo só espelha, sem mudar
 // nada, o comportamento que `lib/quizzes.ts` já tem hoje (QUIZ_SIZE,
-// QUESTION_SECONDS, PASSING_SCORE); os perfis por área de conhecimento e o
-// plano do instrumento ainda sem motor próprio (proficiência — só existe
-// como estado da FSM em `lib/pedagogy/states.ts`) são a primeira definição
-// deles: um ponto de partida documentado, não uma decisão de produto
-// fechada. Atividade (APO-17), exame de meio de curso (APO-18), atividade
-// final e recuperação (APO-19) já têm motor; o tamanho da recuperação segue
-// rascunho. Ver `docs/APOLO.md`.
+// QUESTION_SECONDS, PASSING_SCORE); os perfis por área de conhecimento são a
+// primeira definição deles: um ponto de partida documentado, não uma decisão
+// de produto fechada. Atividade (APO-17), exame de meio de curso (APO-18),
+// atividade final e recuperação (APO-19) e proficiência (APO-20) já têm
+// motor; o tamanho da recuperação segue rascunho. Do plano `proficiencia`,
+// só o `size` (teto máximo do CAT) vale — o motor adaptativo
+// (`lib/apolo/proficiency.ts`) escolhe questão pela estimativa de
+// habilidade, não pela cobertura de kindMix/difficultyMix/bloomMix daqui.
+// Ver `docs/APOLO.md`.
 import { PASSING_SCORE } from './corrector.js';
 import {
   QUESTION_SECONDS,

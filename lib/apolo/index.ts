@@ -19,3 +19,4 @@ export * from './selector.js';
 export * from './corrector.js';
 export * from './exam.js';
 export * from './final.js';
+export * from './proficiency.js';
