@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { listQuestions, shuffleQuestion, startQuiz, submitQuiz, type Answers } from '../lib/quizzes.js';
-import { assessRisk, contentReport, nextAction, type ReportFacts } from '../lib/reports.js';
+import { assessRisk, atividadeStatusOf, contentReport, nextAction, type ReportFacts } from '../lib/reports.js';
 import { concludeSession, startSession } from '../lib/study-sessions.js';
 import { d1 } from './support/d1-sqlite.js';
 import { migratedDatabase } from './support/migrated-db.js';
@@ -20,6 +20,7 @@ const facts = (overrides: Partial<ReportFacts> = {}): ReportFacts => ({
   hasOpenSession: false,
   now: at(12),
   tzOffsetMinutes: 180,
+  atividade: { status: null, failures: 0 },
   ...overrides,
 });
 
@@ -87,4 +88,48 @@ void test('relatório do conteúdo a partir do D1', async () => {
     ['quiz', 'sessao'],
   );
   assert.match(report.history[0].title, /Quiz do conteúdo: aprovado/);
+});
+
+void test('APO-17 (DEC-018): atividade reprovada pede atenção mesmo com state em dia, sem criar trilha de risco paralela', () => {
+  const emDia = assessRisk(facts({ state: 'em-estudo' }));
+  assert.equal(emDia.level, 'em-dia');
+
+  const comAtividadeReprovada = assessRisk(
+    facts({ state: 'em-estudo', atividade: { status: 'reprovada', failures: 1 } }),
+  );
+  assert.equal(comAtividadeReprovada.level, 'atencao');
+  assert.equal(comAtividadeReprovada.reasons[0], 'Atividade reprovada: refaça até passar com mais de 70%.');
+
+  // Já em risco alto pelo state: nível não regride, mas o motivo da atividade aparece também.
+  const jaAlto = assessRisk(
+    facts({ state: 'bloqueado', atividade: { status: 'reprovada', failures: 3 } }),
+  );
+  assert.equal(jaAlto.level, 'alto');
+  assert.equal(jaAlto.reasons[0], 'Atividade reprovada (3 seguidas): refaça até passar com mais de 70%.');
+
+  // Aprovada ou nunca feita: nenhum motivo extra.
+  const aprovada = assessRisk(facts({ state: 'em-estudo', atividade: { status: 'aprovada', failures: 0 } }));
+  assert.deepEqual(aprovada, emDia);
+});
+
+void test('APO-17: atividadeStatusOf — aprovada se alguma tentativa passou, mesmo depois de reprovar antes', () => {
+  assert.deepEqual(atividadeStatusOf([]), { status: null, failures: 0 });
+  assert.deepEqual(
+    atividadeStatusOf([{ purpose: 'quiz', passed: true, submittedAt: '2026-10-01T00:00:00.000Z' }]),
+    { status: null, failures: 0 },
+  );
+  assert.deepEqual(
+    atividadeStatusOf([
+      { purpose: 'atividade', passed: false, submittedAt: '2026-10-01T00:00:00.000Z' },
+      { purpose: 'atividade', passed: false, submittedAt: '2026-10-02T00:00:00.000Z' },
+    ]),
+    { status: 'reprovada', failures: 2 },
+  );
+  assert.deepEqual(
+    atividadeStatusOf([
+      { purpose: 'atividade', passed: false, submittedAt: '2026-10-01T00:00:00.000Z' },
+      { purpose: 'atividade', passed: true, submittedAt: '2026-10-02T00:00:00.000Z' },
+    ]),
+    { status: 'aprovada', failures: 0 },
+  );
 });
