@@ -774,3 +774,35 @@ vez quando em andamento; `POST /api/proficiencia/:id { questionId, answer }`
 
 Gate: não (DEC-05 e DEC-017 já cobrem; nenhuma transição nova, nenhuma
 migration).
+
+## Progresso e relatórios ligados ao Apolo (APO-21)
+
+A nota do Atlas (DEC-02, `lib/progress.ts`) já lia Avaliações (exame de
+meio + atividade final/recuperação, APO-18/19) e Atividades (APO-17) de
+`atlas_exam_attempts`/`atlas_quiz_attempts` — as mesmas colunas que o
+corretor único grava no envio (DEC-016), então o número já era o do
+boletim. O que faltava era o **rastro explícito**: de onde exatamente vem
+cada ponto, por tentativa.
+
+- **`ProgressComponent.sources`** (novo campo, `ComponentSource[]`): a
+  tentativa (`attemptId`, `instrument`, e `contentId` quando for por
+  conteúdo) que sustenta o número do componente. Preenchido em avaliações
+  (exame de meio + a atividade final/recuperação que vale,
+  `effectiveFinalActivity`), atividades (melhor tentativa aprovada por
+  conteúdo) e quiz (idem); cobertura e revisão não vêm de boletim (são do
+  estado/agenda), ficam com `sources: []`.
+- **`lib/reports.ts` — `questionTrailOf`** (nova função pura) e
+  `ContentReport.origin.questionTrail`: para quiz e atividade do conteúdo,
+  a tentativa aprovada de maior nota, questão a questão (`questionId`,
+  `correct`, `voided`) — o "caminho até as questões" pedido pelo card, sem
+  reler nada do D1 além do que `listAttempts` já trazia.
+- **Pesos (DEC-02/DEC-013)**: nenhuma mudança — continuam fixos,
+  `validateWeights` já impedia ajuste fora de ±10 pp, e não existe nenhum
+  gatilho automático de peso no código (o ajuste adaptativo citado no
+  DEC-02 aguarda decisão do Raf, como já documentado acima).
+- **Os 100 pontos**: já estavam todos disponíveis desde APO-17/18/19 (o
+  card temia um componente "indisponível" por falta de instrumento — não
+  era mais o caso); este card só adicionou o rastro, não mudou nenhuma
+  fórmula nem nenhuma nota já emitida.
+
+Gate: não.

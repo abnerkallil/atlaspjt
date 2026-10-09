@@ -6,7 +6,7 @@ import { CONTENT_STATE_META } from './pedagogy/state-labels.js';
 import type { ContentState } from './pedagogy/states.js';
 import { listAudit, type AuditEntry, type D1Like } from './pedagogy/transitions.js';
 import { COVERED_STATES, computeProgress, loadProgressInput, reviewTally, type ProgressComponent } from './progress.js';
-import { listAttempts, type QuizAttempt } from './quizzes.js';
+import { listAttempts, type QuestionResult, type QuizAttempt } from './quizzes.js';
 import { failureStreak, recoveryStatus, type RecoveryStatus } from './recovery.js';
 import { nextReview, reviewCycle, localDateOf, type NextReview } from './reviews.js';
 import { getRoadmap } from './roadmap-store.js';
@@ -25,6 +25,38 @@ export type NextAction = { label: string; detail: string; href: string };
 
 export type HistoryEntry = { at: string; kind: 'sessao' | 'quiz' | 'revisao' | 'corretivo' | 'atividade'; title: string; detail: string };
 
+// APO-21: o caminho até as questões — a tentativa (boletim, DEC-016) que vale
+// a nota de quiz/atividade deste conteúdo, questão a questão. Só a melhor
+// tentativa aprovada entra (mesma regra de `lib/progress.ts`); nenhuma
+// tentativa aprovada ainda para o instrumento e a entrada não aparece.
+export type QuestionTrailEntry = {
+  attemptId: string;
+  purpose: 'quiz' | 'atividade';
+  score: number;
+  questions: { questionId: string; correct: boolean; voided: boolean }[];
+};
+
+// Pura: para cada instrumento do conteúdo (quiz, atividade), a tentativa
+// aprovada de maior nota — mesma seleção de `lib/progress.ts` — com a
+// correção questão a questão já guardada no boletim da tentativa.
+export function questionTrailOf(
+  attempts: { id: string; purpose: string; passed: boolean | null; score: number | null; results: QuestionResult[] | null }[],
+): QuestionTrailEntry[] {
+  const entries: QuestionTrailEntry[] = [];
+  for (const purpose of ['quiz', 'atividade'] as const) {
+    const candidates = attempts.filter((item) => item.purpose === purpose && item.passed && item.results && item.score !== null);
+    if (!candidates.length) continue;
+    const best = candidates.reduce((top, item) => (item.score! > top.score! ? item : top));
+    entries.push({
+      attemptId: best.id,
+      purpose,
+      score: best.score!,
+      questions: best.results!.map((result) => ({ questionId: result.questionId, correct: result.correct, voided: result.voided })),
+    });
+  }
+  return entries;
+}
+
 export type ContentReport = {
   content: {
     id: string;
@@ -42,6 +74,8 @@ export type ContentReport = {
     components: ProgressComponent[];
     // O que este conteúdo soma em cada componente da disciplina.
     contribution: string[];
+    // APO-21: o caminho até as questões (quiz/atividade deste conteúdo).
+    questionTrail: QuestionTrailEntry[];
   };
   risk: { level: RiskLevel; label: string; reasons: string[] };
   nextAction: NextAction;
@@ -277,6 +311,7 @@ export async function contentReport(
       disciplineScore: disciplineProgress?.score ?? 0,
       components: disciplineProgress?.components ?? [],
       contribution,
+      questionTrail: questionTrailOf(attempts),
     },
     risk: { ...risk, label: RISK_LABEL[risk.level] },
     nextAction: nextAction(facts, contentId),

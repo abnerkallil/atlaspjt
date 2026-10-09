@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { listQuestions, shuffleQuestion, startQuiz, submitQuiz, type Answers } from '../lib/quizzes.js';
-import { assessRisk, atividadeStatusOf, contentReport, nextAction, type ReportFacts } from '../lib/reports.js';
+import { assessRisk, atividadeStatusOf, contentReport, nextAction, questionTrailOf, type ReportFacts } from '../lib/reports.js';
 import { concludeSession, startSession } from '../lib/study-sessions.js';
 import { d1 } from './support/d1-sqlite.js';
 import { migratedDatabase } from './support/migrated-db.js';
@@ -46,6 +46,22 @@ void test('risco e próxima ação seguem o estado do DEC-03', () => {
   assert.equal(nextAction(facts({ state: 'revalidado', next }), 'X').label, 'Revisão de 7d em 15/10');
 });
 
+void test('questionTrailOf: só a melhor tentativa aprovada por instrumento entra, com a correção questão a questão', () => {
+  const r = (questionId: string, correct: boolean) => ({ questionId, correct, voided: false, kind: 'multipla' as const, explanation: '', modelAnswer: null, correctOption: null, expectedValue: null });
+  const attempts = [
+    { id: 'q1', purpose: 'quiz', passed: false, score: 40, results: [r('a', true), r('b', false)] },
+    { id: 'q2', purpose: 'quiz', passed: true, score: 60, results: [r('a', true), r('b', false)] },
+    { id: 'q3', purpose: 'quiz', passed: true, score: 90, results: [r('a', true), r('b', true)] },
+    { id: 'at1', purpose: 'atividade', passed: false, score: 50, results: [r('c', false)] },
+  ];
+  const trail = questionTrailOf(attempts);
+  assert.deepEqual(trail.map((item) => item.attemptId), ['q3']);
+  assert.deepEqual(trail[0].questions, [{ questionId: 'a', correct: true, voided: false }, { questionId: 'b', correct: true, voided: false }]);
+  // Nenhuma atividade aprovada: nenhuma entrada para "atividade".
+  assert.equal(questionTrailOf(attempts).find((item) => item.purpose === 'atividade'), undefined);
+  assert.deepEqual(questionTrailOf([]), []);
+});
+
 void test('relatório do conteúdo a partir do D1', async () => {
   const raw = migratedDatabase();
   const db = d1(raw);
@@ -74,6 +90,12 @@ void test('relatório do conteúdo a partir do D1', async () => {
   assert.match(report.origin.contribution[1], /melhor nota aprovada 100%/);
   assert.ok(report.origin.disciplineScore > 0);
   assert.equal(report.origin.formulaVersion, 'v1');
+  // APO-21: caminho até as questões — a tentativa de quiz que vale a nota, questão a questão.
+  assert.equal(report.origin.questionTrail.length, 1);
+  const [trail] = report.origin.questionTrail;
+  assert.deepEqual({ attemptId: trail.attemptId, purpose: trail.purpose, score: trail.score }, { attemptId: 'q1', purpose: 'quiz', score: 100 });
+  assert.equal(trail.questions.length, stored.questionIds.length);
+  assert.ok(trail.questions.every((item) => item.correct && !item.voided));
   // Mudanças de estado com motivo, da mais recente à mais antiga.
   assert.deepEqual(
     report.stateChanges.map((item) => item.toState),

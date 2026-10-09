@@ -390,7 +390,7 @@ void test('progresso: Avaliações passa a valer a nota do exame entregue', asyn
   await submitExam(db, 'ex1', { answers: await correctAnswers(raw, db, 'ex1', 45) }, { now: later });
   const input = await loadProgressInput(db);
   assert.deepEqual(input.exams, [
-    { disciplineId: DISCIPLINE, instrument: 'exame_meio', score: 75, passed: true, submittedAt: later },
+    { id: 'ex1', disciplineId: DISCIPLINE, instrument: 'exame_meio', score: 75, passed: true, submittedAt: later },
   ]);
   const report = computeProgress(input, { now: later, today: '2026-10-09', tzOffsetMinutes: 180 });
   const discipline = report.disciplines.find((item) => item.id === DISCIPLINE)!;
