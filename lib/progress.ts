@@ -107,6 +107,14 @@ const RISK: Partial<Record<ContentState, { reason: string; action: string }>> = 
   'aguardando-revisao': { reason: 'A revisão espaçada venceu.', action: 'Faça o quiz de revisão em Quizzes.' },
 };
 
+// APO-17 (DEC-018): atividade reprovada pede atenção mesmo quando o state
+// (DEC-03) por si só não indicaria risco — reaproveita a mesma lista de
+// risco, não uma trilha paralela.
+const ATIVIDADE_RISK = {
+  reason: 'Atividade reprovada: refaça até passar com mais de 70%.',
+  action: 'Refaça a atividade (sem limite de tentativas; a reprovação não altera a nota).',
+};
+
 // ---------------------------------------------------------------------------
 // Entrada e regras puras
 // ---------------------------------------------------------------------------
@@ -153,6 +161,17 @@ export function computeProgress(
   const weekEnd = (index: number) => new Date(nowMs - (WEEK_COUNT - 1 - index) * 7 * DAY_MS).toISOString();
   const weeks = Array.from({ length: WEEK_COUNT }, (_, index) => `S${index + 1}`);
 
+  // APO-17 (DEC-018): conteúdos com atividade reprovada e nenhuma aprovada
+  // depois (ordem cronológica) — calculado uma vez, global (contentId é
+  // único entre disciplinas), reaproveitado no congelamento e no risco
+  // abaixo, sem duplicar a regra.
+  const atividadeReprovadaGlobal = new Set<string>();
+  for (const item of [...input.attempts].sort((a, b) => a.submittedAt.localeCompare(b.submittedAt))) {
+    if (item.purpose !== 'atividade') continue;
+    if (item.passed) atividadeReprovadaGlobal.delete(item.contentId);
+    else if (!atividadeReprovadaGlobal.has(item.contentId)) atividadeReprovadaGlobal.add(item.contentId);
+  }
+
   const disciplines = input.disciplines.map((discipline): DisciplineProgress => {
     const ids = new Set(discipline.contents.map((content) => content.id));
     const attempts = input.attempts.filter((item) => ids.has(item.contentId)).sort((a, b) => a.submittedAt.localeCompare(b.submittedAt));
@@ -165,6 +184,15 @@ export function computeProgress(
       bestQuiz.set(item.contentId, Math.max(bestQuiz.get(item.contentId) ?? 0, item.score));
     }
     const quizAverage = average([...bestQuiz.values()]);
+
+    // APO-17 (DEC-018): Atividade segue a mesma regra do quiz — só a melhor
+    // tentativa aprovada (>70%) entra na nota; reprovação não desconta, só
+    // pode ser refeita direto.
+    const bestAtividade = new Map<string, number>();
+    for (const item of attempts.filter((attempt) => attempt.purpose === 'atividade' && attempt.passed)) {
+      bestAtividade.set(item.contentId, Math.max(bestAtividade.get(item.contentId) ?? 0, item.score));
+    }
+    const atividadeAverage = average([...bestAtividade.values()]);
 
     let due = 0;
     let passed = 0;
@@ -179,7 +207,13 @@ export function computeProgress(
 
     const ratios: Record<ComponentKey, { ratio: number; detail: string; available: boolean }> = {
       avaliacoes: { ratio: 0, detail: 'Exame de meio de curso e atividade final ainda não fazem parte do Atlas.', available: false },
-      atividades: { ratio: 0, detail: 'Atividades teóricas e práticas ainda não fazem parte do Atlas.', available: false },
+      atividades: {
+        ratio: atividadeAverage / 100,
+        detail: bestAtividade.size
+          ? `Média ${round1(atividadeAverage)}% da melhor nota aprovada ${bestAtividade.size === 1 ? 'na atividade de 1 conteúdo' : `nas atividades de ${bestAtividade.size} conteúdos`}. Reprovações não entram na nota.`
+          : 'Nenhuma atividade aprovada ainda. Reprovações não entram na nota (nota mínima: mais de 70%).',
+        available: true,
+      },
       cobertura: { ratio: total ? covered / total : 0, detail: `${covered} de ${total} conteúdos concluídos.`, available: true },
       revisao: {
         ratio: due ? passed / due : 0,
@@ -229,7 +263,12 @@ export function computeProgress(
       retention: percent(retention.rate),
       reviewsTaken: retention.taken,
       history: { proficiency: proficiencyHistory, retention: retentionHistory },
-      frozenBy: discipline.contents.filter((content) => FREEZING_STATES.includes(content.state)).map((content) => content.title),
+      // APO-17 (DEC-018): atividade reprovada (e nunca aprovada depois)
+      // congela o mesmo jeito que bloqueado/em-revisao-ativa — mesma lista,
+      // sem duplicar conteúdo já congelado pelo state.
+      frozenBy: discipline.contents
+        .filter((content) => FREEZING_STATES.includes(content.state) || atividadeReprovadaGlobal.has(content.id))
+        .map((content) => content.title),
     };
   });
 
@@ -272,11 +311,13 @@ export function computeProgress(
     consistency: { days, streak, studiedDays: days.filter((minutes) => minutes > 0).length },
     atRisk: input.disciplines.flatMap((discipline) =>
       discipline.contents.flatMap((content) => {
-        const risk = RISK[content.state];
-        if (!risk) return [];
+        const stateRisk = RISK[content.state];
+        const atividadeFlag = atividadeReprovadaGlobal.has(content.id);
+        if (!stateRisk && !atividadeFlag) return [];
+        const risk = stateRisk ?? ATIVIDADE_RISK;
         const failures = failureStreak(
           input.attempts
-            .filter((item) => item.contentId === content.id)
+            .filter((item) => item.contentId === content.id && (stateRisk ? true : item.purpose === 'atividade'))
             .sort((a, b) => b.submittedAt.localeCompare(a.submittedAt)),
         );
         const reason = failures >= 2 ? `${risk.reason} Reincidência: ${failures} reprovações seguidas.` : risk.reason;

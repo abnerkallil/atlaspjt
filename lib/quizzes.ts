@@ -33,7 +33,7 @@ import {
 } from './apolo/types.js';
 export { QUESTION_KINDS, QUIZ_SIZE, QUESTION_SECONDS };
 export type { QuestionKind };
-import { resolvePlan } from './apolo/plans.js';
+import { resolvePlan, type Instrument } from './apolo/plans.js';
 import {
   selectQuestions as selectApoloQuestions,
   type CandidateQuestion,
@@ -108,8 +108,10 @@ export type QuestionResult = {
 // em-andamento → (com dissertativas) autoavaliacao → enviado.
 export type AttemptStatus = 'em-andamento' | 'autoavaliacao' | 'enviado';
 // "quiz" do conteúdo (MVP-04); "revisao" 24h/7d/30d e "corretivo" depois de
-// falhar a revisão (MVP-06).
-export type QuizPurpose = 'quiz' | 'revisao' | 'corretivo';
+// falhar a revisão (MVP-06); "atividade" (APO-17, DEC-018) é independente do
+// state do conteúdo — pode ser feita a qualquer momento, sem travar nem
+// liberar o quiz.
+export type QuizPurpose = 'quiz' | 'revisao' | 'corretivo' | 'atividade';
 
 export type QuizAttempt = {
   id: string;
@@ -540,44 +542,23 @@ function addSeconds(iso: string, seconds: number) {
   return new Date(Date.parse(iso) + seconds * 1000).toISOString();
 }
 
-// Inicia o quiz do conteúdo, ou devolve a tentativa em andamento (o tempo
-// continua correndo de onde estava).
-export async function startQuiz(
+// Monta e grava a tentativa (seleção de questões pelo Apolo ou sorteio
+// local), já com purpose/instrument/stage decididos pelo chamador —
+// compartilhado por startQuiz (liberado pelo state do conteúdo, DEC-03) e
+// startAtividade (APO-17: independente do state, DEC-018).
+async function createAttemptRecord(
   db: D1Like,
   contentId: string,
-  options: { now?: string; id?: string } = {},
+  purpose: QuizPurpose,
+  instrument: Instrument,
+  stage: ReviewStage | null,
+  now: string,
+  id: string,
 ): Promise<QuizAttempt> {
-  const now = options.now ?? new Date().toISOString();
-  const open = await db
-    .prepare(
-      `SELECT id FROM atlas_quiz_attempts WHERE content_id = ?1 AND status <> 'enviado'`,
-    )
-    .bind(contentId)
-    .first<{ id: string }>();
-  if (open) return (await getAttempt(db, open.id))!;
-
-  const state = await currentState(db, 'conteudo', contentId);
-  const purpose = PURPOSE_BY_STATE[state];
-  if (!purpose) {
-    throw new QuizError(
-      'O quiz deste conteúdo é liberado ao concluir uma sessão de estudo.',
-      409,
-    );
-  }
-  const stage = purpose === 'quiz' ? null : await reviewStageFor(db, contentId);
-  const id = options.id ?? crypto.randomUUID();
   const bank = await listQuestions(db, contentId);
   // MVP-08: depois de uma reprovação, as questões erradas voltam (quiz dirigido).
   const recovery = await recoveryStatus(db, contentId);
   const missedIds = recovery?.missed.map((item) => item.id) ?? [];
-  // APO-15: revisão tem plano próprio por etapa (24h/7d/30d, tamanho 10→30/60
-  // confirmado pelo Abner); quiz e corretivo seguem com o de sempre.
-  const instrument =
-    purpose === 'revisao' && stage
-      ? (`revisao_${stage}` as 'revisao_24h' | 'revisao_7d' | 'revisao_30d')
-      : purpose === 'corretivo'
-        ? 'corretivo'
-        : 'quiz';
   const plan = resolvePlan(instrument);
   const candidates = await listCandidateQuestions(db, contentId);
   let chosen: Question[];
@@ -662,6 +643,70 @@ export async function startQuiz(
       ),
   ]);
   return (await getAttempt(db, id))!;
+}
+
+// Inicia o quiz do conteúdo, ou devolve a tentativa em andamento (o tempo
+// continua correndo de onde estava).
+export async function startQuiz(
+  db: D1Like,
+  contentId: string,
+  options: { now?: string; id?: string } = {},
+): Promise<QuizAttempt> {
+  const now = options.now ?? new Date().toISOString();
+  const state = await currentState(db, 'conteudo', contentId);
+  const purpose = PURPOSE_BY_STATE[state];
+  if (!purpose) {
+    throw new QuizError(
+      'O quiz deste conteúdo é liberado ao concluir uma sessão de estudo.',
+      409,
+    );
+  }
+  // Mesma chave do índice único do banco (content_id, purpose): uma
+  // tentativa em andamento de outro propósito (ex.: atividade) não bloqueia
+  // nem é devolvida aqui.
+  const open = await db
+    .prepare(
+      `SELECT id FROM atlas_quiz_attempts WHERE content_id = ?1 AND purpose = ?2 AND status <> 'enviado'`,
+    )
+    .bind(contentId, purpose)
+    .first<{ id: string }>();
+  if (open) return (await getAttempt(db, open.id))!;
+
+  const stage = purpose === 'quiz' ? null : await reviewStageFor(db, contentId);
+  const id = options.id ?? crypto.randomUUID();
+  // APO-15: revisão tem plano próprio por etapa (24h/7d/30d, tamanho 10→30/60
+  // confirmado pelo Abner); quiz e corretivo seguem com o de sempre.
+  const instrument: Instrument =
+    purpose === 'revisao' && stage
+      ? (`revisao_${stage}` as 'revisao_24h' | 'revisao_7d' | 'revisao_30d')
+      : purpose === 'corretivo'
+        ? 'corretivo'
+        : 'quiz';
+  return createAttemptRecord(db, contentId, purpose, instrument, stage, now, id);
+}
+
+// APO-17 (DEC-018): Atividade do conteúdo — independente do state (DEC-03
+// não é reaberto nem consultado aqui); pode ser feita a qualquer momento,
+// com a mesma mecânica de refação do quiz (sem limite de tentativas, sem
+// penalidade de nota). Só uma tentativa de atividade em andamento por
+// conteúdo (mesmo índice único do banco, content_id+purpose) — uma tentativa
+// de quiz em andamento no mesmo conteúdo não é afetada nem devolvida aqui.
+export async function startAtividade(
+  db: D1Like,
+  contentId: string,
+  options: { now?: string; id?: string } = {},
+): Promise<QuizAttempt> {
+  const now = options.now ?? new Date().toISOString();
+  const open = await db
+    .prepare(
+      `SELECT id FROM atlas_quiz_attempts WHERE content_id = ?1 AND purpose = 'atividade' AND status <> 'enviado'`,
+    )
+    .bind(contentId)
+    .first<{ id: string }>();
+  if (open) return (await getAttempt(db, open.id))!;
+
+  const id = options.id ?? crypto.randomUUID();
+  return createAttemptRecord(db, contentId, 'atividade', 'atividade', null, now, id);
 }
 
 function sanitizeAnswers(raw: unknown, ids: Set<string>): Answers {
@@ -792,29 +837,54 @@ export async function submitQuiz(
         ]
       : [];
   });
-  const { correct, counted, score, passed } = scoreResults(results);
+  const { correct, counted, score, passed: passedThreshold } = scoreResults(results);
+  // APO-17 (DEC-018): Atividade só aprova com nota > 70% (texto literal da
+  // decisão), diferente do >= 70% do quiz/revisão (UX-04) — e só gera
+  // evidência quando aprovada; reprovação não registra evidência nem
+  // dispara nada (a Atividade não participa do DEC-03), só pode ser refeita
+  // direto, igual ao quiz.
+  const passed = row.purpose === 'atividade' ? counted > 0 && score > PASSING_SCORE : passedThreshold;
+  const shouldRecordEvidence = row.purpose !== 'atividade' || passed;
   const lockInfo = locked
     ? parseJson<{ late?: boolean; modelAnswers?: Record<string, string> }>(
         row.result_json,
       )
     : null;
   const late = locked ? lockInfo?.late === true : isLate(row, now);
-  const evidenceId = options.evidenceId ?? crypto.randomUUID();
+  const evidenceId = shouldRecordEvidence ? options.evidenceId ?? crypto.randomUUID() : null;
   const stage = parseJson<{ stage?: ReviewStage | null }>(row.questions_json)?.stage ?? null;
   const label =
-    row.purpose === 'quiz' ? 'Quiz' : row.purpose === 'revisao' ? `Revisão de ${stage ?? '?'}` : `Quiz corretivo (${stage ?? '?'})`;
-  const verdict = row.purpose === 'revisao' ? (passed ? 'aprovada' : 'reprovada') : passed ? 'aprovado' : 'reprovado';
+    row.purpose === 'quiz'
+      ? 'Quiz'
+      : row.purpose === 'atividade'
+        ? 'Atividade'
+        : row.purpose === 'revisao'
+          ? `Revisão de ${stage ?? '?'}`
+          : `Quiz corretivo (${stage ?? '?'})`;
+  const verdict =
+    row.purpose === 'revisao' || row.purpose === 'atividade'
+      ? passed
+        ? 'aprovada'
+        : 'reprovada'
+      : passed
+        ? 'aprovado'
+        : 'reprovado';
   const summary = `${label} ${verdict}: ${correct}/${counted} (${score}%).`;
-  const evidenceKind = row.purpose === 'quiz' ? 'quiz' : 'revisao';
+  const evidenceKind = row.purpose === 'quiz' ? 'quiz' : row.purpose === 'atividade' ? 'atividade' : 'revisao';
 
-  const [, updated] = await db.batch([
-    db
-      .prepare(
-        `INSERT INTO atlas_evidences (id, content_id, subtopic_id, kind, source_ref, summary, recorded_at)
-         SELECT ?1, ?2, NULL, ?7, ?3, ?4, ?5
-         WHERE EXISTS (SELECT 1 FROM atlas_quiz_attempts WHERE id = ?3 AND status = ?6)`,
-      )
-      .bind(evidenceId, row.content_id, attemptId, summary, now, row.status, evidenceKind),
+  const statements = [];
+  if (shouldRecordEvidence) {
+    statements.push(
+      db
+        .prepare(
+          `INSERT INTO atlas_evidences (id, content_id, subtopic_id, kind, source_ref, summary, recorded_at)
+           SELECT ?1, ?2, NULL, ?7, ?3, ?4, ?5
+           WHERE EXISTS (SELECT 1 FROM atlas_quiz_attempts WHERE id = ?3 AND status = ?6)`,
+        )
+        .bind(evidenceId, row.content_id, attemptId, summary, now, row.status, evidenceKind),
+    );
+  }
+  statements.push(
     db
       .prepare(
         `UPDATE atlas_quiz_attempts
@@ -831,7 +901,9 @@ export async function submitQuiz(
         evidenceId,
         row.status,
       ),
-  ]);
+  );
+  const batchResults = await db.batch(statements);
+  const updated = batchResults[batchResults.length - 1];
   if (!updated || updated.meta.changes !== 1)
     throw new QuizError('Esta tentativa já foi enviada.', 409);
 

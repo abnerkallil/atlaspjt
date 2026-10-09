@@ -336,3 +336,58 @@ decisão de um card futuro; este card só entrega o gerador+verificador e os
 moldes em rascunho. Gate: não (coberto pelo DEC-014). Próximo passo antes de
 qualquer um destes moldes valer em produção: Abner revisa 20 versões de
 cada um e ativa (`setItemModelLifecycle`) — nenhum dos 11 está ativo ainda.
+
+## Atividades (APO-17, DEC-018)
+
+Atividade é uma nota própria do conteúdo, independente do `state` do DEC-03
+(`lib/pedagogy/transitions.ts` nunca é tocado por ela) — pode ser feita a
+qualquer momento, não só quando o quiz libera. `startAtividade` (`lib/
+quizzes.ts`) é uma função separada de `startQuiz`, sem o lookup por
+`PURPOSE_BY_STATE`: foi preciso extrair a lógica comum de montagem da
+tentativa (banco de questões, plano, seleção de itens, `optionOrders`,
+`INSERT`) para `createAttemptRecord`, já que `startQuiz` deriva o `purpose`
+do estado do conteúdo e a Atividade não tem estado nenhum para derivar de.
+
+Aprovação em Atividade exige nota **maior que 70%** (estrito), diferente do
+quiz/revisão que aprovam com `>= 70%` — distinção pedida pelo DEC-018.
+Reprovação pode ser refeita direto, sem limite nem penalidade (mesma
+mecânica de refação do quiz, MVP-08).
+
+Evidência (`kind='atividade'` em `atlas_evidences`) só é gravada quando a
+tentativa é **aprovada** — diferente de quiz/revisão, que sempre gravam
+evidência (aprovado ou reprovado), porque a FSM do DEC-03 precisa da
+evidência nos dois casos para decidir entre `quiz-aprovado`/`quiz-
+reprovado`. Atividade não tem transição nenhuma no DEC-03, então uma
+reprovação não grava nada — fica só a tentativa em `atlas_quiz_attempts`.
+
+Risco e congelamento (`lib/progress.ts`, `lib/reports.ts`) reaproveitam a
+mesma trilha existente, como o DEC-018 pede (nenhuma estrutura paralela):
+um conteúdo com atividade reprovada e nunca aprovada depois entra no mesmo
+`frozenBy`/`atRisk` que os estados `em-revisao-ativa`/`bloqueado`/`aguardando-
+quiz` já usavam, e o motivo some assim que alguma tentativa passa. Em
+`assessRisk`, a atividade reprovada só sobe o nível para `atencao` — nunca
+rebaixa um nível já `alto` pelo state — e o motivo da atividade aparece
+junto, não no lugar do motivo do state.
+
+A nota de Atividades em `lib/progress.ts` (`COMPONENTS.atividades`, peso 20
+do DEC-02) usa a melhor nota aprovada por conteúdo (reprovações não entram
+na média), igual ao componente de quiz.
+
+**Correção de bug descoberto durante a implementação:** o índice único do
+banco (`uq_atlas_quiz_attempts_open` em `drizzle/0009_quizzes.sql`) é por
+`(content_id, purpose)` — uma tentativa de quiz em andamento não bloqueia
+nem é devolvida por engano a quem chama `startAtividade` no mesmo conteúdo
+(e vice-versa). O check de "tentativa em andamento" em `startQuiz` e
+`startAtividade` foi escrito para respeitar essa mesma chave composta;
+antes da Atividade existir isso era invisível (cada conteúdo só podia ter
+um propósito "atual" por vez, via `PURPOSE_BY_STATE`), mas deixou de ser
+seguro quando a Atividade passou a poder coexistir com qualquer state.
+Teste de regressão em `tests/atividades.test.ts` prova a coexistência.
+
+**Simplificação assumida (disclosed):** `/api/atividades` só expõe `GET`
+(lista) e `POST` (iniciar) — envio e correção reaproveitam `POST /api/
+quizzes/:id`, que já corrige por id da tentativa sem olhar o `purpose`
+(mesmo padrão de toda rota Apolo adicionada até aqui: sem wiring de UI
+ainda). `isPrerequisiteMet` por atividade (gatilho de pré-requisito entre
+conteúdos) fica explicitamente em aberto, como o DEC-018 definiu. Gate:
+não (coberto pelo DEC-018, ACCEPTED).

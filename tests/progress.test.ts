@@ -98,6 +98,32 @@ void test('quiz usa a melhor nota por conteúdo; revisão conta etapas vencidas 
   assert.equal(discipline.history.proficiency.length, 8);
 });
 
+void test('APO-17 (DEC-018): atividade usa a melhor nota aprovada; reprovada sem aprovação depois congela como bloqueado', () => {
+  const report = computeProgress(
+    input({
+      attempts: [
+        // D (nao-iniciado): atividade reprovada, nunca aprovada — congela.
+        { contentId: 'D', purpose: 'atividade', score: 60, passed: false, submittedAt: '2026-09-01T10:00:00.000Z' },
+        // B (concluido): atividade reprovada e depois aprovada — não congela, conta a melhor.
+        { contentId: 'B', purpose: 'atividade', score: 50, passed: false, submittedAt: '2026-09-01T10:00:00.000Z' },
+        { contentId: 'B', purpose: 'atividade', score: 85, passed: true, submittedAt: '2026-09-05T10:00:00.000Z' },
+      ],
+    }),
+    { now, today, tzOffsetMinutes: 180 },
+  );
+  const [discipline] = report.disciplines;
+  const byKey = Object.fromEntries(discipline.components.map((item) => [item.key, item]));
+  assert.equal(byKey.atividades.available, true);
+  assert.equal(byKey.atividades.detail, 'Média 85% da melhor nota aprovada na atividade de 1 conteúdo. Reprovações não entram na nota.');
+  assert.equal(byKey.atividades.points, 17);
+  // D congela (atividade reprovada, nunca aprovada); C já congelava por em-revisao-ativa; B não congela mais (foi aprovada depois).
+  assert.deepEqual(discipline.frozenBy.sort(), ['Conteúdo C', 'Conteúdo D']);
+  const atRiskIds = report.atRisk.map((item) => item.id).sort();
+  assert.deepEqual(atRiskIds, ['C', 'D']);
+  const riskD = report.atRisk.find((item) => item.id === 'D')!;
+  assert.equal(riskD.reason, 'Atividade reprovada: refaça até passar com mais de 70%.');
+});
+
 void test('reviewTally ignora revisões de um ciclo anterior', () => {
   const tally = reviewTally(
     [

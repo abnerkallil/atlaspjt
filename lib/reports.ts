@@ -7,7 +7,7 @@ import type { ContentState } from './pedagogy/states.js';
 import { listAudit, type AuditEntry, type D1Like } from './pedagogy/transitions.js';
 import { COVERED_STATES, computeProgress, loadProgressInput, reviewTally, type ProgressComponent } from './progress.js';
 import { listAttempts, type QuizAttempt } from './quizzes.js';
-import { recoveryStatus, type RecoveryStatus } from './recovery.js';
+import { failureStreak, recoveryStatus, type RecoveryStatus } from './recovery.js';
 import { nextReview, reviewCycle, localDateOf, type NextReview } from './reviews.js';
 import { getRoadmap } from './roadmap-store.js';
 import { listSessions, type StudySession } from './study-sessions.js';
@@ -23,7 +23,7 @@ export const RISK_LABEL: Record<RiskLevel, string> = {
 
 export type NextAction = { label: string; detail: string; href: string };
 
-export type HistoryEntry = { at: string; kind: 'sessao' | 'quiz' | 'revisao' | 'corretivo'; title: string; detail: string };
+export type HistoryEntry = { at: string; kind: 'sessao' | 'quiz' | 'revisao' | 'corretivo' | 'atividade'; title: string; detail: string };
 
 export type ContentReport = {
   content: {
@@ -54,11 +54,15 @@ const dayMonth = (iso: string, tz: number) => {
   return `${date.slice(8, 10)}/${date.slice(5, 7)}`;
 };
 const percent = (value: number) => `${String(value).replace('.', ',')}%`;
-const PURPOSE_TITLE: Record<string, string> = { quiz: 'Quiz do conteúdo', revisao: 'Revisão', corretivo: 'Quiz corretivo' };
+const PURPOSE_TITLE: Record<string, string> = { quiz: 'Quiz do conteúdo', revisao: 'Revisão', corretivo: 'Quiz corretivo', atividade: 'Atividade' };
 
 // ---------------------------------------------------------------------------
 // Regras puras
 // ---------------------------------------------------------------------------
+
+// APO-17 (DEC-018): status da Atividade, independente do state do conteúdo
+// (nunca reabre nem trava o DEC-03) — null quando nunca foi feita.
+export type AtividadeStatus = { status: 'aprovada' | 'reprovada' | null; failures: number };
 
 export type ReportFacts = {
   state: ContentState;
@@ -69,36 +73,65 @@ export type ReportFacts = {
   hasOpenSession: boolean;
   now: string;
   tzOffsetMinutes: number;
+  atividade: AtividadeStatus;
 };
+
+// Pura: aprovada se alguma tentativa já passou (>70%, DEC-018); reprovada se
+// só tem tentativas reprovadas; null se nunca foi feita.
+export function atividadeStatusOf(attempts: { purpose: string; passed: boolean | null; submittedAt: string | null }[]): AtividadeStatus {
+  const relevant = attempts
+    .filter((item) => item.purpose === 'atividade' && item.submittedAt)
+    .map((item) => ({ passed: item.passed === true, submittedAt: item.submittedAt }))
+    .sort((a, b) => (b.submittedAt ?? '').localeCompare(a.submittedAt ?? ''));
+  if (relevant.length === 0) return { status: null, failures: 0 };
+  if (relevant.some((item) => item.passed)) return { status: 'aprovada', failures: 0 };
+  return { status: 'reprovada', failures: failureStreak(relevant) };
+}
+
+const RISK_RANK: Record<RiskLevel, number> = { 'sem-dados': 0, 'em-dia': 1, atencao: 2, alto: 3 };
 
 export function assessRisk(facts: ReportFacts): { level: RiskLevel; reasons: string[] } {
   const reasons: string[] = [];
   const failures = facts.recovery?.failures ?? 0;
   if (failures >= 2) reasons.push(`${failures} reprovações seguidas (reincidência).`);
-  switch (facts.state) {
-    case 'bloqueado':
-      return { level: 'alto', reasons: ['Reprovado no quiz: a conclusão da disciplina está congelada.', ...reasons] };
-    case 'em-revisao-ativa':
-      return { level: 'alto', reasons: ['Falhou na revisão: o conteúdo foi reaberto e quem depende dele volta a esperar.', ...reasons] };
-    case 'aguardando-revisao':
-      return { level: 'atencao', reasons: ['A revisão espaçada venceu e ainda não foi feita.', ...reasons] };
-    case 'aguardando-quiz':
-      return { level: 'atencao', reasons: ['A sessão terminou; falta o quiz para confirmar o conteúdo.', ...reasons] };
-    case 'concluido':
-    case 'revalidado':
-      return {
-        level: 'em-dia',
-        reasons: [
-          facts.next
-            ? `Próxima revisão (${facts.next.stage}) em ${dayMonth(facts.next.dueAt, facts.tzOffsetMinutes)}.`
-            : 'Ciclo de revisões 24h/7d/30d concluído.',
-        ],
-      };
-    case 'em-estudo':
-      return { level: 'em-dia', reasons: ['Estudo em andamento.'] };
-    default:
-      return { level: 'sem-dados', reasons: [facts.locked ? 'Aguardando pré-requisitos.' : 'Ainda não estudado.'] };
+  const base: { level: RiskLevel; reasons: string[] } = (() => {
+    switch (facts.state) {
+      case 'bloqueado':
+        return { level: 'alto', reasons: ['Reprovado no quiz: a conclusão da disciplina está congelada.', ...reasons] };
+      case 'em-revisao-ativa':
+        return { level: 'alto', reasons: ['Falhou na revisão: o conteúdo foi reaberto e quem depende dele volta a esperar.', ...reasons] };
+      case 'aguardando-revisao':
+        return { level: 'atencao', reasons: ['A revisão espaçada venceu e ainda não foi feita.', ...reasons] };
+      case 'aguardando-quiz':
+        return { level: 'atencao', reasons: ['A sessão terminou; falta o quiz para confirmar o conteúdo.', ...reasons] };
+      case 'concluido':
+      case 'revalidado':
+        return {
+          level: 'em-dia',
+          reasons: [
+            facts.next
+              ? `Próxima revisão (${facts.next.stage}) em ${dayMonth(facts.next.dueAt, facts.tzOffsetMinutes)}.`
+              : 'Ciclo de revisões 24h/7d/30d concluído.',
+          ],
+        };
+      case 'em-estudo':
+        return { level: 'em-dia', reasons: ['Estudo em andamento.'] };
+      default:
+        return { level: 'sem-dados', reasons: [facts.locked ? 'Aguardando pré-requisitos.' : 'Ainda não estudado.'] };
+    }
+  })();
+  // APO-17 (DEC-018): Atividade reprovada pede atenção mesmo quando o
+  // state do conteúdo (DEC-03) por si só não indicaria risco — reaproveita
+  // esta mesma seção (nível + motivos), não uma trilha de risco paralela.
+  if (facts.atividade.status === 'reprovada') {
+    const reincidencia = facts.atividade.failures >= 2 ? ` (${facts.atividade.failures} seguidas)` : '';
+    const atividadeReason = `Atividade reprovada${reincidencia}: refaça até passar com mais de 70%.`;
+    if (RISK_RANK[base.level] < RISK_RANK.atencao) {
+      return { level: 'atencao', reasons: [atividadeReason, ...base.reasons] };
+    }
+    return { level: base.level, reasons: [atividadeReason, ...base.reasons] };
   }
+  return base;
 }
 
 export function nextAction(facts: ReportFacts, contentId: string): NextAction {
@@ -156,7 +189,7 @@ export function buildHistory(sessions: StudySession[], attempts: QuizAttempt[]):
       .map((item) => ({
         at: item.submittedAt!,
         kind: item.purpose,
-        title: `${PURPOSE_TITLE[item.purpose] ?? 'Quiz'}${item.stage ? ` de ${item.stage}` : ''}: ${item.passed ? 'aprovad' : 'reprovad'}${item.purpose === 'revisao' ? 'a' : 'o'}`,
+        title: `${PURPOSE_TITLE[item.purpose] ?? 'Quiz'}${item.stage ? ` de ${item.stage}` : ''}: ${item.passed ? 'aprovad' : 'reprovad'}${item.purpose === 'revisao' || item.purpose === 'atividade' ? 'a' : 'o'}`,
         detail: `Nota ${percent(item.score!)}${item.directed ? ` · dirigido (${item.directed} questões refeitas)` : ''}${item.late ? ' · enviado após o tempo' : ''}.`,
       })),
   ];
@@ -200,6 +233,7 @@ export async function contentReport(
     hasOpenSession: sessions.some((item) => item.status !== 'concluida'),
     now,
     tzOffsetMinutes: options.tzOffsetMinutes,
+    atividade: atividadeStatusOf(attempts),
   };
 
   // Contribuição deste conteúdo para os componentes da disciplina (MVP-07).
@@ -216,6 +250,11 @@ export async function contentReport(
     quizScores.length
       ? `Quiz: melhor nota aprovada ${percent(Math.max(...quizScores))}; entra na média da disciplina.`
       : 'Quiz: nenhum quiz do conteúdo aprovado ainda (reprovação não entra na nota, só deixa o conteúdo urgente).',
+    facts.atividade.status === 'aprovada'
+      ? 'Atividade: aprovada; entra na média da disciplina.'
+      : facts.atividade.status === 'reprovada'
+        ? 'Atividade: reprovada (nota > 70% necessária); pode ser refeita direto, sem penalidade.'
+        : 'Atividade: ainda não feita.',
     tally.due
       ? `Revisão: ${tally.passed} de ${tally.due} ${tally.due === 1 ? 'revisão vencida aprovada' : 'revisões vencidas aprovadas'} no ciclo atual.`
       : 'Revisão: nenhuma revisão vencida ainda.',
