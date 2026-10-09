@@ -854,3 +854,50 @@ histórico a cada chamada (DEC-017), sem nenhum estado próprio.
     plano — um "motivo" de outra natureza, que o painel não mistura aqui.
 
 Gate: não.
+
+## Simulador e testes do Apolo (APO-23)
+
+`lib/apolo/simulator.ts`: alunos e banco **sintéticos**, de habilidade/
+dificuldade conhecida de antemão, respondendo pelo mesmo modelo de Rasch/
+Elo do motor de produção (`probability`, reaproveitado de
+`lib/apolo/proficiency.ts`) — tudo função pura e determinística (mesma
+semente, mesmo resultado), sem D1 e sem o banco real (ainda pequeno, em
+curadoria por Abner). Prova, com números medidos (`tests/apolo-simulator.test.ts`,
+9 casos), as três propriedades que o card pede:
+
+1. **O Elo converge para a habilidade verdadeira.** Um aluno sintético de
+   θ fixo responde 300 questões sorteadas entre as 3 faixas cadastradas
+   (`DIFFICULTY_ELO`, `lib/apolo/skill.ts`: facil=1000/media=1200/
+   dificil=1400); o Elo final fica a menos de 100 pontos de θ para
+   θ ∈ {1000, 1200, 1400} (dentro da faixa cadastrada). **Disclosed**:
+   para θ fora dessa faixa (ex.: 1800), a convergência é estruturalmente
+   mais lenta e nunca alcança θ — o modelo nunca encontra um oponente
+   mais difícil que "dificil" para medir habilidade acima disso, e
+   `kFactor` (`lib/apolo/skill.ts`) estabiliza em `K_MIN=8` depois de
+   ~15 respostas (taxa de aprendizado fixa, não decrescente a zero). É
+   uma limitação real do modelo de produção, não um defeito deste
+   simulador; o teste correspondente verifica só a propriedade mais
+   fraca (sobe, e sobe mais com mais dados).
+2. **O seletor nunca ultrapassa o plano nem a cota por conteúdo**
+   (`selectQuestions`, `lib/apolo/selector.ts`), em 30-40 provas com
+   sementes diferentes, e **espalha a exposição** do banco ao longo de
+   várias provas. **Viés de exposição com empate total (disclosed)**:
+   quando todos os candidatos empatam na pontuação de cobertura (banco
+   homogêneo: mesmo `kind`, plano sem `difficultyMix` — caso do plano de
+   quiz), `pickFromTopN` sorteia só entre os 5 primeiros do array ainda
+   disponível (ordem estável), não entre os 5 melhores de todo o empate.
+   Isso espalha bem a exposição pela maior parte do banco, mas os
+   últimos itens do array só entram nessa janela perto do fim da prova e
+   ficam estruturalmente sub-expostos — com banco pouco maior que o
+   plano, 1-2 itens podem nunca sair em 40 provas. Propriedade real do
+   seletor de produção; o teste mede a versão correta (maioria exposta,
+   nenhum item em toda prova), não uma exposição perfeitamente uniforme.
+3. **O KR-20 de uma prova bem calibrada chega à meta de 0,80.** 60 itens
+   sintéticos (Elo espalhado numa faixa de 400 pontos) aplicados a 60
+   alunos sintéticos (mesma faixa de θ) dão KR-20 ≈ 0,95 — acima da
+   meta. Com a mesma prova aplicada a uma população pouco diversa
+   (θ espalhado só 100 pontos), o KR-20 cai para ≈ 0,74-0,77, abaixo da
+   meta — confirmando que 0,80 é informativo (depende da calibração
+   item↔população), não um resultado automático da conta.
+
+Gate: não.
