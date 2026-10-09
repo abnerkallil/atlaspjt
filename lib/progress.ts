@@ -125,11 +125,29 @@ export type ProgressInput = {
   // Eventos de estado relevantes: quiz-aprovado, dispensa-proficiencia, revisao-aprovada.
   events: { contentId: string; event: string; occurredAt: string }[];
   sessions: { activeSeconds: number; at: string }[];
-  // APO-18: tentativas enviadas de avaliação por disciplina
-  // (`atlas_exam_attempts`); hoje só o exame de meio de curso. Opcional para
-  // quem monta a entrada à mão (testes, relatórios) sem exame nenhum.
+  // APO-18/19: tentativas enviadas de avaliação por disciplina
+  // (`atlas_exam_attempts`): exame de meio, atividade final e recuperação
+  // (as duas últimas com a nota já ajustada pela cascata, emitida pelo
+  // Apolo). Opcional para quem monta a entrada à mão (testes, relatórios)
+  // sem exame nenhum.
   exams?: { disciplineId: string; instrument: string; score: number; passed: boolean; submittedAt: string }[];
 };
+
+// APO-19: nota da atividade final que vale para a disciplina — a maior entre
+// a atividade final e a recuperação, as duas já ajustadas pela cascata do
+// exame de meio (notas emitidas pelo Apolo, DEC-016; aqui só se escolhe a
+// maior, como a melhor nota de quiz). Empate fica com a atividade final.
+export function effectiveFinalActivity(
+  exams: { instrument: string; score: number }[],
+): { score: number; source: 'atividade_final' | 'recuperacao' } | null {
+  let best: { score: number; source: 'atividade_final' | 'recuperacao' } | null = null;
+  for (const source of ['atividade_final', 'recuperacao'] as const) {
+    for (const item of exams.filter((exam) => exam.instrument === source)) {
+      if (!best || item.score > best.score) best = { score: item.score, source };
+    }
+  }
+  return best;
+}
 
 const round1 = (value: number) => Math.round(value * 10) / 10;
 const percent = (value: number) => Math.round(value * 100);
@@ -209,22 +227,32 @@ export function computeProgress(
       passed += tally.passed;
     }
 
-    // APO-18: Avaliações = nota do exame de meio de curso (tentativa única,
-    // nota própria, aprovado ou não — é a nota emitida no boletim). A
-    // combinação com a atividade final é do APO-19; até lá, só o exame.
-    const exam = (input.exams ?? [])
-      .filter((item) => item.disciplineId === discipline.id && item.instrument === 'exame_meio')
-      .sort((a, b) => a.submittedAt.localeCompare(b.submittedAt))
-      .at(-1);
+    // APO-18/19: Avaliações = nota do exame de meio de curso (tentativa
+    // única, nota própria, aprovado ou não — é a nota emitida no boletim);
+    // com a atividade final entregue, média 50/50 entre o exame de meio e a
+    // nota da atividade final que vale (a maior entre atividade final e
+    // recuperação, as duas já ajustadas pela cascata — DEC-10).
+    const disciplineExams = (input.exams ?? [])
+      .filter((item) => item.disciplineId === discipline.id)
+      .sort((a, b) => a.submittedAt.localeCompare(b.submittedAt));
+    const exam = disciplineExams.filter((item) => item.instrument === 'exame_meio').at(-1);
+    const finalActivity = effectiveFinalActivity(disciplineExams);
+    const examDetail = exam ? `Exame de meio de curso: ${round1(exam.score)}% (${exam.passed ? 'aprovado' : 'reprovado'})` : '';
 
     const ratios: Record<ComponentKey, { ratio: number; detail: string; available: boolean }> = {
       avaliacoes: exam
-        ? {
-            ratio: exam.score / 100,
-            detail: `Exame de meio de curso: ${round1(exam.score)}% (${exam.passed ? 'aprovado' : 'reprovado'}). A atividade final ainda não faz parte do Atlas.`,
-            available: true,
-          }
-        : { ratio: 0, detail: 'Exame de meio de curso ainda não entregue; a atividade final ainda não faz parte do Atlas.', available: false },
+        ? finalActivity
+          ? {
+              ratio: (exam.score + finalActivity.score) / 200,
+              detail: `${examDetail}; atividade final: ${round1(finalActivity.score)}% (${finalActivity.source === 'recuperacao' ? 'nota da recuperação, maior que a da atividade final, ' : ''}já com o ajuste pelo exame de meio). Média 50/50: ${round1((exam.score + finalActivity.score) / 2)}%.`,
+              available: true,
+            }
+          : {
+              ratio: exam.score / 100,
+              detail: `${examDetail}. Atividade final ainda não entregue.`,
+              available: true,
+            }
+        : { ratio: 0, detail: 'Exame de meio de curso ainda não entregue.', available: false },
       atividades: {
         ratio: atividadeAverage / 100,
         detail: bestAtividade.size

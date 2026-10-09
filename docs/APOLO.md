@@ -122,7 +122,8 @@ rascunho com 20, só palpite). O peso 50/50 é uma regra de nota da
 disciplina (entre exame de meio e atividade final), não de composição de
 prova — fica fora do escopo de `ExamPlan` aqui, para o card que calcular a
 nota final da disciplina decidir; **não confirma quantas questões a
-atividade final tem** (continua rascunho de 20, sem decisão). Os perfis por
+atividade final tem** (continua rascunho de 20, sem decisão — o APO-19
+fixou em 60, confirmado pelo Abner em 2026-10-09). Os perfis por
 área de conhecimento do tema e os planos dos instrumentos sem motor próprio
 (atividade, atividade_final, recuperação, proficiência — "fora da espinha",
 só existem como estado da FSM em `lib/pedagogy/states.ts`) seguem como
@@ -522,3 +523,176 @@ disciplineId, confirmar: true }`, `GET /api/exames/:id` e `POST
 /api/exames/:id { action: travar | enviar, answers?, selfAssessments? }`.
 
 Gate: não (DEC-016 e DEC-018 já ACEITOS cobrem; nenhuma transição nova).
+
+## Atividade final e recuperação (APO-19)
+
+As duas provas que fecham a disciplina, na **mesma tabela** do exame de meio
+de curso (`atlas_exam_attempts`), sem migration nova: o índice único é em
+`(discipline_id, instrument)`, e `atividade_final` e `recuperacao` são
+instrumentos diferentes de `exame_meio` — cada disciplina tem no máximo uma
+linha de cada, a tentativa única das duas sai do banco do mesmo jeito. Nada
+precisou de coluna nova: a recuperação se liga à atividade final pela
+própria disciplina (não há `related_attempt_id`), e o que é novo (relógio
+por questão, tempo com rolagem, cascata) vai nos JSON que a tabela já tinha.
+O que é comum às três provas (montagem, gravação, correção, KR-20, liberação
+pela cobertura, regra de tempo) ficou em `lib/apolo/exam.ts`, extraído do
+APO-18 sem mudar o comportamento do exame de meio; o que é só destas duas
+está em `lib/apolo/final.ts`.
+
+**FSM que já existia** (DEC-03), nenhuma transição nova (DEC-018):
+
+1. `conteudo-100` (sistema): `syncDisciplineState` agora também dispara
+   este evento, a partir de `exame-meio-concluido`, quando **100% dos
+   conteúdos estão cobertos** (mesma `COVERED_STATES`) **e todos têm
+   atividade aprovada** (evidência `atividade` em `atlas_evidences`, só
+   gravada na aprovação, APO-17) — as duas condições que o DEC-018 manda
+   gatar o mesmo evento. Um passo por chamada: a sincronização nunca pula o
+   exame de meio. Roda nos mesmos pontos do `conteudo-50` (depois de todo
+   quiz/atividade enviado, a cada `GET /api/exames` e antes de iniciar).
+2. `iniciar-atividade-final` (usuário, **com confirmação explícita**) —
+   `startAtividadeFinal`; sem `confirmed: true`, 409 `code: 'confirmation'`
+   e nada gravado, como no exame de meio.
+3. `atividade-final-aprovada` → `concluida`, ou
+   `atividade-final-insatisfatoria` → `recuperacao-liberada` (sistema, no
+   envio), decididos pela nota **já ajustada** pela cascata contra o corte
+   de 70% do plano.
+4. `iniciar-recuperacao` (usuário, com confirmação) — `startRecuperacao`.
+5. `recuperacao-entregue` → `concluida` (sistema, sempre, no envio): a
+   recuperação é o fim da cadeia, aprovada ou não; não há segunda
+   recuperação, e o exame de meio não tem recuperação (APO-18).
+
+**Escopo**: a disciplina inteira (regra `disciplina` em `scope_json`, todos
+os conteúdos pela ordem do roadmap), sem recorte por nível. Montagem igual à
+do exame de meio — `allocateContentQuotas` + seletor do Apolo com cota por
+conteúdo, ordem intercalada com semente. A recuperação passa as questões da
+atividade final como `recentlySeen` para o seletor: só prioridade, com
+banco curto elas voltam (no banco semeado de hoje, 60 questões ativas em
+Contabilidade Geral, a atividade final usa todas e a recuperação repete).
+
+**Planos**: `atividade_final` com **60 questões** (confirmado pelo Abner em
+2026-10-09: sempre foi o mesmo tamanho do exame de meio; o 20 era rascunho),
+corte de 70% e 90 s por questão — versão 2 do plano (a 1 era o rascunho com
+o tempo do quiz). `recuperacao` também passou à versão 2, com a mesma base
+de 90 s e intercalação ligada.
+
+**Cascata do exame de meio** (`applyMidtermCascade`):
+`nota ajustada = nota bruta × (1 − erro do exame de meio)`, com `erro = 1 −
+nota do exame de meio / 100`. Exemplo do Abner: 33% de erro no exame de
+meio (nota 67) corta 33% da nota — bruta 90 vira 60,3. **Sem piso nem teto**
+além do natural (por decisão explícita do Abner: limitar o ajuste quebraria
+o propósito, que é ninguém passar "com louvor" na final depois de ir mal no
+exame de meio). Mesmo arredondamento do corretor (uma casa). A nota emitida
+(coluna `score`, `passed`, progresso) é a ajustada; o boletim guarda a
+correção bruta do corretor (`score`, `correct`, `counted`) e, no campo novo
+opcional `cascade`, a bruta, a tentativa e a nota do exame de meio usadas, o
+erro e a ajustada — o boletim continua reconstituível sem reler o exame de
+meio nem recorrigir nada (DEC-016). Sem exame de meio entregue na
+disciplina o envio é recusado (409) — pela FSM isso não acontece.
+
+**Recuperação — resgate aditivo, modelo "faculdade" (confirmado pelo Abner
+em 2026-10-09, `applyRecoveryBuyback`)**: a recuperação **não aplica a
+cascata de novo** sobre a própria nota bruta. Ela resgata só os pontos que
+a cascata cortou da atividade final: `removido = bruta da atividade final
+− ajustada da atividade final`; `ajustada da recuperação = ajustada da
+atividade final + (bruta da recuperação / 100) × removido`. Exemplo do
+Abner: exame de meio corta 50 pontos da atividade final (removido = 50);
+recuperação com nota máxima devolve os 50 inteiros, e a atividade final
+chega a 100 — a nota bruta ORIGINAL da atividade final, nunca a do exame de
+meio, que não é teto da recuperação (só da atividade final, por construção:
+`ajustada da recuperação <= bruta da atividade final`, igualdade só com
+recuperação 100%). Sem piso nem teto além desse. A nota da atividade final
+que vale para a disciplina é a **maior entre a atividade final e a
+recuperação** (`effectiveFinalActivity` em `lib/progress.ts`, usada por
+`getFinalActivityGrade` e pelo progresso; empate fica com a atividade
+final) — como a recuperação nunca fica abaixo da atividade final por
+construção (contribuição sempre >= 0), na prática vale sempre ela quando
+existe. Só lê notas já emitidas — escolher a maior é agregação, como a
+melhor nota de quiz, não uma nota nova.
+
+**Tempo com rolagem** (`rolloverTiming`, função pura): mesma base de 90 s
+por questão do exame de meio, mas a sobra de uma questão passa para a
+seguinte (respondeu em 60 s uma questão de 90, a próxima tem 120). Questão
+a questão, pela ordem da prova: gasto = momento da resposta − momento da
+resposta anterior (a primeira conta do início); prazo = base + sobra
+herdada; atrasada se gasto > prazo + tolerância (os mesmos 30 s do quiz);
+sobra = prazo − gasto, nunca negativa (estourar zera a sobra, não desconta
+da próxima). Cálculo e lacuna numérica seguem sem limite: nunca atrasam e
+deixam a sobra herdada passar intacta. Atraso só marca `late` (na questão,
+em `timing`, e na tentativa), igual ao quiz — não recusa resposta nem muda
+nota. `deadline_at` da tentativa continua sendo o total (60 × 90 s), agora
+só como teto: a rolagem move a sobra, nunca aumenta o total. O exame de
+meio **não mudou**: segue sem rolagem, com o prazo total somado (APO-18).
+
+O tempo é medido no **servidor**, questão a questão: ação nova `responder`
+(`answerFinalQuestion`, só para estas duas provas) recebe UMA resposta, a
+da vez (a primeira ainda sem resposta, na ordem da prova), e grava o
+momento pelo relógio do servidor (`result_json.answeredAt`). Fora de ordem
+é recusado (409); questão já respondida não volta. A tentativa expõe
+`currentQuestion` com o prazo da questão da vez (já com a sobra) e `timing`.
+Na trava (`travar`) ou no envio direto (`enviar`), o que já foi respondido
+questão a questão vale como gravado, e as questões restantes entram com o
+relógio daquele momento — o tempo e o `late` são fechados ali e gravados no
+resultado (a autoavaliação das dissertativas depois da trava não conta como
+tempo, igual ao quiz).
+
+**KR-20**: mesmo cálculo e mesma guarda do APO-10/APO-18, por instrumento
+(a atividade final e a recuperação são provas diferentes, não se somam),
+sobre a nota **bruta** de cada aplicação — a ajustada mistura o exame de
+meio e não mede a consistência da prova. Com tentativa única, fica nulo na
+prática, como no exame de meio.
+
+**Progresso**: o componente Avaliações (peso 30, DEC-02) passa a ser a
+média **50/50** entre o exame de meio e a nota da atividade final que vale
+(DEC-10, confirmado em 2026-10-08), assim que a atividade final é entregue.
+Antes disso, continua valendo só o exame de meio, como no APO-18 (agora com
+o texto "Atividade final ainda não entregue."). `FORMULA_VERSION` não mudou
+(o APO-18 também não mudou ao ligar o componente). A disciplina chegar em
+`concluida` não alimenta mais nada: nenhum relatório ou contagem lê o
+estado da disciplina hoje, e este card não cria uma.
+
+**Simplificações assumidas (disclosed):**
+
+- **Resolvido com o Abner, não é mais simplificação.** A primeira
+  implementação aplicou a mesma cascata multiplicativa na recuperação (nota
+  ajustada = bruta da recuperação × nota do exame de meio / 100). Isso
+  tornava a nota do exame de meio um **teto permanente e impossível de
+  superar** na nota da disciplina — exame de meio 50 significava que nem
+  100+100 em final e recuperação destravava a aprovação (mínimo 70%), já
+  que o exame de meio não tem refação (APO-18). Escalado ao Abner antes de
+  mesclar; ele confirmou o modelo **"faculdade"** (resgate aditivo, acima)
+  — a recuperação nunca mais aplica a cascata sobre a própria nota bruta.
+- **Rolagem medida pelo servidor, mas só no ritmo das respostas.** O que é
+  garantido no servidor é o momento em que cada resposta chegou (relógio do
+  servidor, na ordem). Não há como o servidor saber quando o aluno
+  "abriu" cada questão — o tempo de uma questão é medido entre uma
+  resposta e a seguinte. Quem não usar o `responder` (manda tudo junto no
+  `travar`/`enviar`) tem todas as questões restantes carimbadas naquele
+  momento: o tempo inteiro conta na primeira delas, que provavelmente
+  estoura. Nenhuma tela usa o `responder` ainda (mesmo padrão de toda rota
+  do Apolo até aqui); a tela que vier precisa responder questão a questão,
+  sem voltar.
+- **Sobra herdada atravessa cálculo/lacuna numérica.** Como essas questões
+  não têm limite, a sobra que chegou nelas passa intacta para a seguinte —
+  não ganha nem perde por causa do tempo gasto nelas.
+- **Tamanho da recuperação continua rascunho (10 questões), não
+  confirmado pelo Abner** — como vários outros tamanhos de plano neste
+  código. O tempo dela (90 s com rolagem) e a intercalação ligada são
+  inferência nossa (a recuperação é a mesma prova refeita, sobre a
+  disciplina inteira), não decisão dele.
+- **Sem evidência.** Como no exame de meio: `atlas_evidences` é por
+  conteúdo, nenhum destes eventos exige evidência; o registro durável é a
+  tentativa com o boletim.
+- **Sem UI.** Rotas existem, nenhuma tela usa ainda.
+
+API (as mesmas rotas do exame de meio, generalizadas): `POST /api/exames {
+disciplineId, instrument?: exame_meio | atividade_final | recuperacao,
+confirmar: true }` (sem `instrument`, exame de meio, como antes); `GET
+/api/exames?disciplina=` devolve também `grade` (exame de meio, atividade
+final e recuperação ajustadas e a nota que vale); `POST /api/exames/:id {
+action: responder, questionId, answer }` (só atividade final e
+recuperação) além de `travar`/`enviar`, que escolhem o fluxo pelo
+instrumento da tentativa — o fluxo do exame de meio recusa tentativa da
+atividade final e vice-versa (409).
+
+Gate: não (DEC-016 e DEC-018 já ACEITOS cobrem; nenhuma transição nova,
+nenhuma migration).

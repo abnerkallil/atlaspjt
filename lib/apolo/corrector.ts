@@ -111,6 +111,28 @@ export type BoletimReliability = {
   administrations: number;
 };
 
+// Cascata do exame de meio de curso (APO-19): a nota da atividade final e a
+// da recuperação saem da nota bruta do corretor reduzida pelo erro do exame
+// de meio — `ajustada = bruta × (1 − erro do exame de meio)`. Fica gravada
+// no boletim com a nota do exame de meio usada (e a tentativa de onde veio),
+// para o boletim continuar reconstituível sem reler o exame (DEC-016).
+export type BoletimCascade = {
+  rawScore: number;
+  midtermAttemptId: string;
+  midtermScore: number;
+  // Erro do exame de meio em %, 100 − nota.
+  midtermErrorPercent: number;
+  adjustedScore: number;
+  // Resgate aditivo da recuperação (APO-19, modelo "faculdade" confirmado
+  // pelo Abner): só a recuperação preenche. `removedAmount` é o quanto a
+  // cascata cortou da atividade final (bruta − ajustada); `recoveryContribution`
+  // é a fração disso devolvida pelo aproveitamento da própria recuperação.
+  // `adjustedScore` aqui é `atividadeFinal.adjustedScore + recoveryContribution`,
+  // não uma cascata nova sobre a nota bruta da recuperação.
+  removedAmount?: number;
+  recoveryContribution?: number;
+};
+
 export type Boletim = {
   corretorVersion: number;
   planVersion: number | null;
@@ -124,6 +146,10 @@ export type Boletim = {
   // Opcional (APO-18): só o exame de meio de curso preenche hoje; quiz e
   // atividade seguem sem o campo.
   reliability?: BoletimReliability;
+  // Opcional (APO-19): só atividade final e recuperação. Com cascata,
+  // `score`/`correct`/`counted` continuam sendo o resultado bruto do
+  // corretor; a nota emitida (e o `passed`) é `cascade.adjustedScore`.
+  cascade?: BoletimCascade;
 };
 
 export function buildBoletim(

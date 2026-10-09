@@ -7,12 +7,13 @@
 // kanban pessoal do Abner — nunca virou um Gate aceito em
 // `docs/ATLAS_DECISIONS.md`. O plano de 'quiz' abaixo só espelha, sem mudar
 // nada, o comportamento que `lib/quizzes.ts` já tem hoje (QUIZ_SIZE,
-// QUESTION_SECONDS, PASSING_SCORE); os perfis por área de conhecimento e os
-// planos dos instrumentos ainda sem motor próprio (atividade final,
-// recuperação, proficiência — só existem como estado da FSM em
-// `lib/pedagogy/states.ts`) são a primeira definição deles: um ponto de
-// partida documentado, não uma decisão de produto fechada. Atividade (APO-17)
-// e exame de meio de curso (APO-18) já têm motor. Ver `docs/APOLO.md`.
+// QUESTION_SECONDS, PASSING_SCORE); os perfis por área de conhecimento e o
+// plano do instrumento ainda sem motor próprio (proficiência — só existe
+// como estado da FSM em `lib/pedagogy/states.ts`) são a primeira definição
+// deles: um ponto de partida documentado, não uma decisão de produto
+// fechada. Atividade (APO-17), exame de meio de curso (APO-18), atividade
+// final e recuperação (APO-19) já têm motor; o tamanho da recuperação segue
+// rascunho. Ver `docs/APOLO.md`.
 import { PASSING_SCORE } from './corrector.js';
 import {
   QUESTION_SECONDS,
@@ -132,8 +133,10 @@ function reviewPlan(instrument: 'revisao_24h' | 'revisao_7d' | 'revisao_30d'): E
 
 // APO-18: o exame de meio de curso tem tempo próprio — 90 s por questão,
 // somados no tempo total, sem "sobra" passando para a questão seguinte (a
-// regra de rolagem é só da atividade final, APO-19). Cálculo e lacuna
-// numérica continuam sem limite, igual a todo o resto do Atlas (DEC-10).
+// regra de rolagem é só da atividade final e da recuperação, APO-19, e mora
+// no motor — `rolloverTiming` em lib/apolo/exam.ts —, não no plano: o plano
+// só diz a base de cada questão). Cálculo e lacuna numérica continuam sem
+// limite, igual a todo o resto do Atlas (DEC-10).
 export const EXAM_QUESTION_SECONDS = 90;
 const EXAM_SECONDS_BY_KIND: Record<QuestionKind, number | null> = {
   multipla: EXAM_QUESTION_SECONDS,
@@ -149,10 +152,12 @@ const EXAM_SECONDS_BY_KIND: Record<QuestionKind, number | null> = {
 // peso 50/50 que ele confirmou junto é entre exame_meio e atividade_final na
 // nota da disciplina — fórmula do APO-19, não deste plano) e 90 s por
 // questão (versão 2 do plano: a versão 1 era o rascunho com o tempo do
-// quiz). atividade tem motor desde o APO-17. atividade_final, recuperação e
-// proficiência seguem sem motor (só existem como estado da FSM,
-// `lib/pedagogy/states.ts`) — ponto de partida razoável, não uma decisão
-// fechada; cada um ganha motor e revisão própria num card futuro.
+// quiz). atividade tem motor desde o APO-17. atividade_final e recuperação
+// ganharam motor no APO-19 (`lib/apolo/final.ts`), as duas com a mesma base
+// de 90 s do exame de meio (versão 2 dos dois planos; a versão 1 era o
+// rascunho com o tempo do quiz). proficiência segue sem motor (só existe
+// como estado da FSM, `lib/pedagogy/states.ts`) — ponto de partida razoável,
+// não uma decisão fechada.
 const DRAFT_PLANS: Record<
   'atividade' | 'exame_meio' | 'atividade_final' | 'recuperacao' | 'proficiencia',
   ExamPlan
@@ -168,18 +173,21 @@ const DRAFT_PLANS: Record<
     interleaving: true, secondsByKind: EXAM_SECONDS_BY_KIND, passingScore: PASSING_SCORE,
   },
   atividade_final: {
-    // Tamanho NÃO confirmado pelo DEC-10: a resposta do Abner ("final 50/50")
-    // falava do peso da nota entre exame de meio e atividade final, não da
-    // quantidade de questões da atividade final — só exame_meio teve
-    // tamanho confirmado (60). Rascunho igual ao de antes, até revisão.
-    instrument: 'atividade_final', version: 1, size: 20, kindMix: NEUTRAL_KIND_MIX,
+    // APO-19: 60 questões, confirmado pelo Abner em 2026-10-09 (sempre foi o
+    // mesmo tamanho do exame de meio; o 20 de antes era rascunho). Cobre a
+    // disciplina inteira; corte de 70% sobre a nota JÁ ajustada pela cascata
+    // do exame de meio (lib/apolo/final.ts).
+    instrument: 'atividade_final', version: 2, size: 60, kindMix: NEUTRAL_KIND_MIX,
     bloomMix: {}, difficultyMix: { facil: 0.2, media: 0.5, dificil: 0.3 },
-    interleaving: true, secondsByKind: QUESTION_SECONDS, passingScore: PASSING_SCORE,
+    interleaving: true, secondsByKind: EXAM_SECONDS_BY_KIND, passingScore: PASSING_SCORE,
   },
   recuperacao: {
-    instrument: 'recuperacao', version: 1, size: 10, kindMix: NEUTRAL_KIND_MIX,
-    bloomMix: {}, difficultyMix: {}, interleaving: false,
-    secondsByKind: QUESTION_SECONDS, passingScore: PASSING_SCORE,
+    // Tamanho (10) ainda é rascunho, NÃO confirmado pelo Abner. O tempo segue
+    // o da atividade final (90 s com rolagem), porque a recuperação é a
+    // mesma prova refeita (APO-19, decisão documentada em docs/APOLO.md).
+    instrument: 'recuperacao', version: 2, size: 10, kindMix: NEUTRAL_KIND_MIX,
+    bloomMix: {}, difficultyMix: {}, interleaving: true,
+    secondsByKind: EXAM_SECONDS_BY_KIND, passingScore: PASSING_SCORE,
   },
   proficiencia: {
     instrument: 'proficiencia', version: 1, size: 20, kindMix: NEUTRAL_KIND_MIX,

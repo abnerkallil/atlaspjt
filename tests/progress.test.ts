@@ -129,14 +129,11 @@ void test('APO-18: Avaliações vale a nota do exame de meio de curso entregue; 
   const report = computeProgress(input({ exams }), { now, today, tzOffsetMinutes: 180 });
   const [discipline] = report.disciplines;
   const byKey = Object.fromEntries(discipline.components.map((item) => [item.key, item]));
-  // Nota própria do exame, aprovado ou não (a combinação com a atividade final é do APO-19).
+  // Nota própria do exame, aprovado ou não; sem atividade final entregue, só o exame (APO-19 faz a média 50/50).
   assert.equal(byKey.avaliacoes.available, true);
   assert.equal(byKey.avaliacoes.ratio, 0.625);
   assert.equal(byKey.avaliacoes.points, 18.8);
-  assert.equal(
-    byKey.avaliacoes.detail,
-    'Exame de meio de curso: 62.5% (reprovado). A atividade final ainda não faz parte do Atlas.',
-  );
+  assert.equal(byKey.avaliacoes.detail, 'Exame de meio de curso: 62.5% (reprovado). Atividade final ainda não entregue.');
   // Cobertura (15) + Avaliações (18,8).
   assert.equal(discipline.score, 33.8);
   // Exame de outra disciplina não conta aqui.

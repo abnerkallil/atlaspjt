@@ -605,14 +605,16 @@ export const atlasExamAttempts = sqliteTable(
     disciplineId: text('discipline_id')
       .notNull()
       .references(() => atlasDisciplines.id, { onDelete: 'cascade' }),
-    // "exame_meio" (APO-18); o mesmo registro pode servir a instrumentos
-    // de disciplina futuros (atividade final, recuperação).
+    // "exame_meio" (APO-18), "atividade_final" ou "recuperacao" (APO-19):
+    // uma linha por instrumento, o mesmo índice único vale para os três.
     instrument: text('instrument').notNull().default('exame_meio'),
     // "em-andamento", "autoavaliacao" (respostas travadas, falta comparar as
     // dissertativas com o gabarito) ou "enviado".
     status: text('status').notNull(),
     startedAt: text('started_at').notNull(),
     // Fim do tempo total (90 s por questão); nulo com cálculo/lacuna numérica.
+    // Na atividade final e na recuperação é só o teto: o prazo de cada
+    // questão (com a rolagem da sobra) sai de `result_json.answeredAt`.
     deadlineAt: text('deadline_at'),
     submittedAt: text('submitted_at'),
     // Conteúdos cobertos e a regra (nível curado ou posição), no início.
