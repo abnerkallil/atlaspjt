@@ -507,3 +507,21 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 - Se algo der errado: reverter para `restore/pre-apo-17` remove a rota e a
   lógica de Atividade; como nada grava em tabela nova, nenhum dado de quiz,
   revisão ou progresso existente é afetado.
+
+## PR #60 — Exame de meio de curso por disciplina (APO-18, DEC-010)
+
+- Ponto de restauração: branch `restore/pre-apo-18` (commit `a328f89`, main
+  antes do merge).
+- Migrations: `atlas_contents` ganha a coluna `level` (vazia em toda linha
+  existente); nova tabela `atlas_exam_attempts` (tentativa única por
+  disciplina).
+- O que muda no site: nada visível ainda — `level` nasce vazio em todo
+  conteúdo (precisa de curadoria humana, que ainda não tem tela), e sem
+  nenhum conteúdo nivelado o exame cairia na regra de posição; mas iniciar
+  um exame (`POST /api/exames`) exige a disciplina já ter 50% dos
+  conteúdos concluídos e confirmação explícita, e nenhuma tela chama essa
+  rota ainda. O componente "Avaliações" do progresso continua mostrando
+  vazio até o primeiro exame ser entregue em alguma disciplina.
+- Se algo der errado: reverter para `restore/pre-apo-18` remove a coluna
+  `level`, a tabela de exame e a rota `/api/exames`; nenhum dado de quiz,
+  atividade ou progresso existente é afetado.
