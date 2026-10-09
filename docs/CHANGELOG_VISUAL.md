@@ -561,3 +561,20 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
   proficiência (`lib/apolo/proficiency.ts`) e as duas rotas novas; nenhum
   dado de quiz, exame, atividade ou progresso existente é afetado (nenhuma
   migration para desfazer).
+
+## PR #63 — Progresso e relatórios ligados ao Apolo (APO-21)
+
+- Ponto de restauração: branch `restore/pre-apo-21` (commit `3f62337`, main
+  antes do merge).
+- Migrations: nenhuma — só leitura adicional de colunas já existentes
+  (`id` de `atlas_quiz_attempts`/`atlas_exam_attempts`).
+- O que muda no site: nenhuma nota muda — mesmas fórmulas de antes. O que
+  muda é o que a API de progresso e de relatório devolvem: cada componente
+  da nota (Avaliações, Atividades, Quiz) agora vem com `sources` (a
+  tentativa que sustenta o número) e o relatório do conteúdo
+  (`/api/relatorio`) ganha `questionTrail` (a correção questão a questão
+  da tentativa que vale a nota de quiz/atividade). Nenhuma tela usa isso
+  ainda — é dado disponível na API, sem UI nova.
+- Se algo der errado: reverter para `restore/pre-apo-21` remove os campos
+  `sources`/`questionTrail`; a nota de cada disciplina/conteúdo continua
+  idêntica (nenhuma fórmula mudou).
