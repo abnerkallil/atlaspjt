@@ -490,3 +490,20 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 - Se algo der errado: reverter para `restore/pre-apo-16` remove os 11
   moldes e os 5 geradores novos, sem afetar nenhum quiz, nota ou tentativa
   já gravada.
+
+## PR #59 — Atividades do conteúdo com nota própria (APO-17, DEC-018)
+
+- Ponto de restauração: branch `restore/pre-apo-17` (commit `f62d65a`, main
+  antes do merge).
+- Nova tabela não é criada; reaproveita `atlas_quiz_attempts` com
+  `purpose='atividade'` e `atlas_evidences` com `kind='atividade'`. Nenhuma
+  migration nova.
+- O que muda no site: o componente "Atividades" do progresso (peso 20) deixa
+  de aparecer sempre vazio e passa a mostrar a melhor nota aprovada quando
+  existir alguma tentativa de atividade; sem nenhuma tentativa, continua sem
+  dado (igual antes). A rota `POST /api/atividades` passa a existir, mas
+  nenhuma tela chama essa rota ainda — sem wiring de UI, ninguém consegue
+  começar uma atividade pela interface neste PR.
+- Se algo der errado: reverter para `restore/pre-apo-17` remove a rota e a
+  lógica de Atividade; como nada grava em tabela nova, nenhum dado de quiz,
+  revisão ou progresso existente é afetado.
