@@ -53,6 +53,12 @@ export type SelectInput = {
   // adaptativo; questão sem valor aqui entra pela cobertura normal do plano.
   itemElo?: Record<string, number>;
   adaptive?: boolean;
+  // APO-18: teto de questões por conteúdo, para uma prova que cobre vários
+  // conteúdos (exame de meio de curso) espalhar as questões em vez de deixar
+  // recuperação vencida/subtópico fraco concentrarem tudo em poucos
+  // conteúdos. Vale em todos os passos (recuperação, subtópico fraco,
+  // cobertura). Conteúdo sem chave aqui não tem teto; sem o campo, nada muda.
+  perContentQuota?: Record<string, number>;
 };
 
 // Abaixo disso, o grupo tema×conteúdo×subtópico é considerado "fraco" —
@@ -104,19 +110,27 @@ export function selectQuestions(input: SelectInput): SelectedQuestion[] {
   const kindUsed = Object.fromEntries(QUESTION_KINDS.map((k) => [k, 0])) as Record<QuestionKind, number>;
   const difficultyTargets = allocateCounts(input.plan.difficultyMix, input.plan.size, DIFFICULTY_LEVELS);
   const kindTargets = allocateCounts(input.plan.kindMix, input.plan.size, QUESTION_KINDS);
+  const contentUsed = new Map<string, number>();
+
+  function underQuota(q: CandidateQuestion): boolean {
+    const quota = input.perContentQuota?.[q.contentId];
+    return quota === undefined || (contentUsed.get(q.contentId) ?? 0) < quota;
+  }
 
   function available(excludeRecent: boolean): CandidateQuestion[] {
     return active.filter(
       (q) =>
         !selectedIds.has(q.id) &&
         (q.itemModelId === null || !usedModels.has(q.itemModelId)) &&
-        (!excludeRecent || !recentlySeen.has(q.id)),
+        (!excludeRecent || !recentlySeen.has(q.id)) &&
+        underQuota(q),
     );
   }
 
   function take(question: CandidateQuestion, reason: SelectionReason) {
     selected.push({ questionId: question.id, reason });
     selectedIds.add(question.id);
+    contentUsed.set(question.contentId, (contentUsed.get(question.contentId) ?? 0) + 1);
     if (question.itemModelId) usedModels.add(question.itemModelId);
     if (question.difficultyNominal) difficultyUsed[question.difficultyNominal] += 1;
     kindUsed[question.kind] += 1;

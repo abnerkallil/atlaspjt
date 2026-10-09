@@ -102,6 +102,15 @@ export type BoletimQuestionEntry = {
   reason: BoletimReason;
 };
 
+// Confiabilidade do instrumento (APO-18): KR-20 com a mesma aproximação do
+// APO-10 (`kr20` em lib/apolo/item-stats.ts). `basis` descreve sobre o que
+// foi calculado; `administrations`, quantas aplicações entraram na conta.
+export type BoletimReliability = {
+  kr20: number | null;
+  basis: string;
+  administrations: number;
+};
+
 export type Boletim = {
   corretorVersion: number;
   planVersion: number | null;
@@ -112,6 +121,9 @@ export type Boletim = {
   counted: number;
   score: number;
   passed: boolean;
+  // Opcional (APO-18): só o exame de meio de curso preenche hoje; quiz e
+  // atividade seguem sem o campo.
+  reliability?: BoletimReliability;
 };
 
 export function buildBoletim(
@@ -119,6 +131,7 @@ export function buildBoletim(
   results: QuestionResult[],
   issuedAt: string,
   planVersion: number | null = null,
+  reliability?: BoletimReliability,
 ): Boletim {
   const { correct, counted, score, passed } = scoreResults(results);
   const questions: BoletimQuestionEntry[] = results.map((result) => ({
@@ -141,5 +154,6 @@ export function buildBoletim(
     counted,
     score,
     passed,
+    ...(reliability ? { reliability } : {}),
   };
 }

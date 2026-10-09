@@ -256,7 +256,9 @@ a partir de estados, `atlas_quiz_attempts` enviados, `atlas_state_audit` e
 - Revisão: etapas aprovadas sobre etapas vencidas no ciclo atual de cada
   conteúdo (mesma âncora do MVP-06).
 - Avaliações e Atividades: 0 e marcadas como indisponíveis até o Atlas
-  registrar essas entregas.
+  registrar essas entregas. Atividades valem desde o APO-17; Avaliações,
+  desde o APO-18: nota do exame de meio de curso entregue / 100
+  (`atlas_exam_attempts`), até a atividade final (APO-19) entrar na conta.
 
 Domínio é a nota da disciplina; proficiência é a média das últimas 5
 tentativas (quiz, revisão, corretivo); retenção é revisões aprovadas sobre
@@ -288,6 +290,29 @@ transição do DEC-03 ao passar; o MVP-08 não cria estado novo.
   2026-10-08); o efeito é a urgência na agenda e o estudo dirigido. A única
   redução de nota aprovada é a da atividade final pelo exame de meio de
   curso (DEC-10), que chega com as avaliações.
+
+## Exame de meio de curso (APO-18)
+
+`atlas_contents.level` (migration 0019): nível curado à mão (`iniciante`,
+`intermediario`, `avancado`), texto livre validado em código, nulo enquanto
+não curado. Nunca classificado automaticamente (DEC-014).
+
+`atlas_exam_attempts` (migration 0020): tentativa de avaliação por
+**disciplina** (não por conteúdo), hoje só `instrument = 'exame_meio'`.
+Índice único não parcial em `(discipline_id, instrument)`: tentativa única,
+garantida pelo banco. Guarda o escopo fotografado no início (`scope_json`:
+conteúdos cobertos e a regra — nível curado ou primeira metade por posição),
+questões e ordem das alternativas (`questions_json`), prazo (90 s por
+questão; nulo com cálculo/lacuna numérica), respostas, resultado e boletim
+com KR-20 (`result_json`), nota, aprovação (>= 70%), `plan_version` e
+`corrector_version`. `status`: `em-andamento` → (com dissertativas)
+`autoavaliacao` → `enviado`. Estados da disciplina pela FSM do DEC-03:
+`conteudo-50` (sistema, 50% de cobertura) → `iniciar-exame-meio` (com
+confirmação) → `exame-meio-entregue` (sistema, no envio). Regras em
+`lib/apolo/exam.ts`; detalhes e simplificações em `docs/APOLO.md`.
+
+API: `GET /api/exames`, `POST /api/exames { disciplineId, confirmar: true }`,
+`GET /api/exames/:id` e `POST /api/exames/:id { action: travar | enviar, answers?, selfAssessments? }`.
 
 ## Relatórios explicáveis (MVP-09)
 

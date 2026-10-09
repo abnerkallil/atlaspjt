@@ -207,6 +207,11 @@ export const atlasContents = sqliteTable(
     estimatedMinutes: integer('estimated_minutes'),
     // Tema do Apolo (APO-02). Nullable: conteúdo sem tema ainda cadastrado não quebra nada.
     themeId: text('theme_id').references(() => atlasThemes.id, { onDelete: 'set null' }),
+    // Nível curado à mão (APO-18): "iniciante" | "intermediario" | "avancado".
+    // Texto livre no banco (sem CHECK), validado em código (lib/apolo/exam.ts),
+    // mesmo padrão do tema (DEC-014). Nullable: conteúdo sem curadoria ainda.
+    // Nunca classificado automaticamente (DEC-014: sem IA, só curadoria humana).
+    level: text('level'),
   },
   (table) => [
     index('idx_atlas_contents_discipline').on(table.disciplineId, table.position),
@@ -584,6 +589,48 @@ export const atlasQuizAttempts = sqliteTable(
     uniqueIndex('uq_atlas_quiz_attempts_open')
       .on(table.contentId, table.purpose)
       .where(sql`status <> 'enviado'`),
+  ],
+);
+
+// Exame de meio de curso (APO-18): tentativa por DISCIPLINA (não por conteúdo,
+// como atlas_quiz_attempts). Tentativa única: o índice único (não parcial)
+// em (discipline_id, instrument) garante no banco que nunca existe uma
+// segunda tentativa, aberta ou enviada. O escopo (conteúdos cobertos e a
+// regra usada) é fotografado no início, e o boletim (com KR-20) gravado uma
+// vez no envio — nunca recalculado depois (DEC-016).
+export const atlasExamAttempts = sqliteTable(
+  'atlas_exam_attempts',
+  {
+    id: text('id').primaryKey(),
+    disciplineId: text('discipline_id')
+      .notNull()
+      .references(() => atlasDisciplines.id, { onDelete: 'cascade' }),
+    // "exame_meio" (APO-18); o mesmo registro pode servir a instrumentos
+    // de disciplina futuros (atividade final, recuperação).
+    instrument: text('instrument').notNull().default('exame_meio'),
+    // "em-andamento", "autoavaliacao" (respostas travadas, falta comparar as
+    // dissertativas com o gabarito) ou "enviado".
+    status: text('status').notNull(),
+    startedAt: text('started_at').notNull(),
+    // Fim do tempo total (90 s por questão); nulo com cálculo/lacuna numérica.
+    deadlineAt: text('deadline_at'),
+    submittedAt: text('submitted_at'),
+    // Conteúdos cobertos e a regra (nível curado ou posição), no início.
+    scopeJson: text('scope_json').notNull(),
+    questionsJson: text('questions_json').notNull(),
+    answersJson: text('answers_json'),
+    // Correção por questão e boletim (com confiabilidade KR-20).
+    resultJson: text('result_json'),
+    score: real('score'),
+    passed: integer('passed'),
+    planVersion: integer('plan_version').notNull(),
+    correctorVersion: integer('corrector_version'),
+  },
+  (table) => [
+    uniqueIndex('uq_atlas_exam_attempts_discipline_instrument').on(
+      table.disciplineId,
+      table.instrument,
+    ),
   ],
 );
 

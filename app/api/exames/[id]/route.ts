@@ -1,12 +1,7 @@
 import { env } from 'cloudflare:workers';
-import { applyItemAlerts, syncDisciplineOfContent } from '@/lib/apolo/index';
+import { getExamAttempt, lockExam, submitExam } from '@/lib/apolo/exam';
 import type { D1Like } from '@/lib/pedagogy/transitions';
-import {
-  getAttempt,
-  lockQuiz,
-  quizErrorResponse,
-  submitQuiz,
-} from '@/lib/quizzes';
+import { quizErrorResponse } from '@/lib/quizzes';
 
 export const runtime = 'edge';
 
@@ -21,7 +16,7 @@ export async function GET(_request: Request, { params }: Context) {
   if (!db)
     return Response.json({ error: 'Banco indisponível.' }, { status: 503 });
   const { id } = await params;
-  const attempt = await getAttempt(db, id);
+  const attempt = await getExamAttempt(db, id);
   if (!attempt)
     return Response.json(
       { error: 'Tentativa não encontrada.' },
@@ -30,9 +25,9 @@ export async function GET(_request: Request, { params }: Context) {
   return Response.json({ attempt, now: new Date().toISOString() });
 }
 
-// POST /api/quizzes/:id
+// POST /api/exames/:id
 //   { action: 'travar', answers } → trava as respostas e devolve o gabarito das dissertativas;
-//   { action: 'enviar', answers?, selfAssessments? } → corrige e registra o resultado.
+//   { action: 'enviar', answers?, selfAssessments? } → corrige, emite o boletim e entrega o exame.
 export async function POST(request: Request, { params }: Context) {
   const db = database();
   if (!db)
@@ -46,28 +41,11 @@ export async function POST(request: Request, { params }: Context) {
     };
     const attempt =
       body.action === 'travar'
-        ? await lockQuiz(db, id, body.answers)
-        : await submitQuiz(db, id, {
+        ? await lockExam(db, id, body.answers)
+        : await submitExam(db, id, {
             answers: body.answers,
             selfAssessments: body.selfAssessments,
           });
-    if (attempt.status === 'enviado') {
-      // APO-10: tira da prova, em segundo plano, toda questão que a
-      // estatística acabou de alertar — nunca mexe na nota já emitida.
-      try {
-        await applyItemAlerts(db);
-      } catch {
-        // Falha na auditoria nunca derruba a resposta de um quiz já corrigido.
-      }
-      // APO-18: o quiz pode ter levado a disciplina a 50% de cobertura —
-      // libera o exame de meio de curso (`conteudo-50`, sistema). Mesma
-      // regra de não derrubar a resposta de um quiz já corrigido.
-      try {
-        await syncDisciplineOfContent(db, attempt.contentId);
-      } catch {
-        // A próxima leitura de /api/exames sincroniza de novo.
-      }
-    }
     return Response.json({ attempt, now: new Date().toISOString() });
   } catch (error) {
     return quizErrorResponse(error);
