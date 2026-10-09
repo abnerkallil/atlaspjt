@@ -125,6 +125,10 @@ export type ProgressInput = {
   // Eventos de estado relevantes: quiz-aprovado, dispensa-proficiencia, revisao-aprovada.
   events: { contentId: string; event: string; occurredAt: string }[];
   sessions: { activeSeconds: number; at: string }[];
+  // APO-18: tentativas enviadas de avaliação por disciplina
+  // (`atlas_exam_attempts`); hoje só o exame de meio de curso. Opcional para
+  // quem monta a entrada à mão (testes, relatórios) sem exame nenhum.
+  exams?: { disciplineId: string; instrument: string; score: number; passed: boolean; submittedAt: string }[];
 };
 
 const round1 = (value: number) => Math.round(value * 10) / 10;
@@ -205,8 +209,22 @@ export function computeProgress(
       passed += tally.passed;
     }
 
+    // APO-18: Avaliações = nota do exame de meio de curso (tentativa única,
+    // nota própria, aprovado ou não — é a nota emitida no boletim). A
+    // combinação com a atividade final é do APO-19; até lá, só o exame.
+    const exam = (input.exams ?? [])
+      .filter((item) => item.disciplineId === discipline.id && item.instrument === 'exame_meio')
+      .sort((a, b) => a.submittedAt.localeCompare(b.submittedAt))
+      .at(-1);
+
     const ratios: Record<ComponentKey, { ratio: number; detail: string; available: boolean }> = {
-      avaliacoes: { ratio: 0, detail: 'Exame de meio de curso e atividade final ainda não fazem parte do Atlas.', available: false },
+      avaliacoes: exam
+        ? {
+            ratio: exam.score / 100,
+            detail: `Exame de meio de curso: ${round1(exam.score)}% (${exam.passed ? 'aprovado' : 'reprovado'}). A atividade final ainda não faz parte do Atlas.`,
+            available: true,
+          }
+        : { ratio: 0, detail: 'Exame de meio de curso ainda não entregue; a atividade final ainda não faz parte do Atlas.', available: false },
       atividades: {
         ratio: atividadeAverage / 100,
         detail: bestAtividade.size
@@ -340,7 +358,7 @@ export async function loadProgressInput(db: D1Like): Promise<ProgressInput> {
       contents: discipline.contents.map((content) => ({ id: content.id, title: content.title, state: content.state })),
     })),
   );
-  const [{ results: attempts }, { results: events }, { results: sessions }] = await Promise.all([
+  const [{ results: attempts }, { results: events }, { results: sessions }, { results: exams }] = await Promise.all([
     db
       .prepare(
         `SELECT content_id, purpose, score, passed, submitted_at FROM atlas_quiz_attempts
@@ -358,6 +376,12 @@ export async function loadProgressInput(db: D1Like): Promise<ProgressInput> {
         `SELECT active_seconds, COALESCE(finished_at, updated_at) AS at FROM atlas_study_sessions WHERE active_seconds > 0`,
       )
       .all<{ active_seconds: number; at: string }>(),
+    db
+      .prepare(
+        `SELECT discipline_id, instrument, score, passed, submitted_at FROM atlas_exam_attempts
+         WHERE status = 'enviado' AND score IS NOT NULL ORDER BY submitted_at`,
+      )
+      .all<{ discipline_id: string; instrument: string; score: number; passed: number; submitted_at: string }>(),
   ]);
   return {
     disciplines,
@@ -370,5 +394,12 @@ export async function loadProgressInput(db: D1Like): Promise<ProgressInput> {
     })),
     events: events.map((row) => ({ contentId: row.entity_id, event: row.event, occurredAt: row.occurred_at })),
     sessions: sessions.map((row) => ({ activeSeconds: Number(row.active_seconds), at: row.at })),
+    exams: exams.map((row) => ({
+      disciplineId: row.discipline_id,
+      instrument: row.instrument,
+      score: Number(row.score),
+      passed: Number(row.passed) === 1,
+      submittedAt: row.submitted_at,
+    })),
   };
 }

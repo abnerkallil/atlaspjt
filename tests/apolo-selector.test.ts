@@ -174,3 +174,26 @@ void test('APO-12: modo adaptativo escolhe o item mais próximo da habilidade do
   assert.equal(result.length, 1);
   assert.equal(result[0].questionId, 'perto');
 });
+
+void test('APO-18: cota por conteúdo espalha a prova mesmo com recuperação vencida concentrada num conteúdo', () => {
+  const bank = [
+    ...bankOf(10, (i) => ({ id: `a${i}`, contentId: 'A' })),
+    ...bankOf(10, (i) => ({ id: `b${i}`, contentId: 'B' })),
+    ...bankOf(10, (i) => ({ id: `c${i}`, contentId: 'C' })),
+  ];
+  // Todas as questões de A estão vencidas: sem cota, A tomaria a prova inteira.
+  const profile: StudentProfile = {
+    temas: [],
+    filaRecuperacao: bank
+      .filter((q) => q.contentId === 'A')
+      .map((q) => ({ questionId: q.id, difficulty: 5, stability: 1, reviewedAt: NOW, dueAt: '2026-10-01T00:00:00.000Z' })),
+  };
+  const plan = { ...resolvePlan('quiz'), size: 9 };
+  const without = selectQuestions(baseInput({ plan, bank, profile }));
+  assert.ok(without.every((item) => item.questionId.startsWith('a')));
+  const withQuota = selectQuestions(baseInput({ plan, bank, profile, perContentQuota: { A: 3, B: 3, C: 3 } }));
+  const byContent = (prefix: string) => withQuota.filter((item) => item.questionId.startsWith(prefix)).length;
+  assert.deepEqual([byContent('a'), byContent('b'), byContent('c')], [3, 3, 3]);
+  // A cota de A ainda prioriza as vencidas dentro de A.
+  assert.ok(withQuota.filter((item) => item.questionId.startsWith('a')).every((item) => item.reason === 'recuperacao-vencida'));
+});

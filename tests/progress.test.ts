@@ -124,6 +124,26 @@ void test('APO-17 (DEC-018): atividade usa a melhor nota aprovada; reprovada sem
   assert.equal(riskD.reason, 'Atividade reprovada: refaça até passar com mais de 70%.');
 });
 
+void test('APO-18: Avaliações vale a nota do exame de meio de curso entregue; sem exame, segue indisponível', () => {
+  const exams = [{ disciplineId: 'D1', instrument: 'exame_meio', score: 62.5, passed: false, submittedAt: now }];
+  const report = computeProgress(input({ exams }), { now, today, tzOffsetMinutes: 180 });
+  const [discipline] = report.disciplines;
+  const byKey = Object.fromEntries(discipline.components.map((item) => [item.key, item]));
+  // Nota própria do exame, aprovado ou não (a combinação com a atividade final é do APO-19).
+  assert.equal(byKey.avaliacoes.available, true);
+  assert.equal(byKey.avaliacoes.ratio, 0.625);
+  assert.equal(byKey.avaliacoes.points, 18.8);
+  assert.equal(
+    byKey.avaliacoes.detail,
+    'Exame de meio de curso: 62.5% (reprovado). A atividade final ainda não faz parte do Atlas.',
+  );
+  // Cobertura (15) + Avaliações (18,8).
+  assert.equal(discipline.score, 33.8);
+  // Exame de outra disciplina não conta aqui.
+  const elsewhere = computeProgress(input({ exams: [{ ...exams[0], disciplineId: 'D2' }] }), { now, today, tzOffsetMinutes: 180 });
+  assert.equal(elsewhere.disciplines[0].components.find((item) => item.key === 'avaliacoes')!.available, false);
+});
+
 void test('reviewTally ignora revisões de um ciclo anterior', () => {
   const tally = reviewTally(
     [

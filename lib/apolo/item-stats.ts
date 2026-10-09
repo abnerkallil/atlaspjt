@@ -172,19 +172,32 @@ export function computeInstrumentStats(events: ItemAnswerEvent[]): InstrumentSta
   return [...byContent.entries()]
     .map(([contentId, content]) => {
       const scores = [...content.attempts.values()];
-      const k = content.items.size;
-      const variance = populationVariance(scores);
-      let kr20: number | null = null;
-      if (k >= 2 && scores.length >= 2 && variance > 0) {
-        const sumPQ = [...content.items.values()].reduce((sum, item) => {
-          const p = item.correct / item.answers;
-          return sum + p * (1 - p);
-        }, 0);
-        kr20 = (k / (k - 1)) * (1 - sumPQ / variance);
-      }
-      return { contentId, items: k, administrations: scores.length, kr20 };
+      return {
+        contentId,
+        items: content.items.size,
+        administrations: scores.length,
+        kr20: kr20([...content.items.values()], scores),
+      };
     })
     .sort((a, b) => a.contentId.localeCompare(b.contentId));
+}
+
+// KR-20 (Kuder-Richardson 20), conta pura extraída de computeInstrumentStats
+// no APO-18 para ser reaproveitada pelo boletim do exame de meio de curso —
+// mesma matemática de antes, linha por linha. `items`: acertos/respostas de
+// cada item do instrumento; `scores`: a nota de cada aplicação (tentativa).
+// Mesma aproximação do APO-10 (aplicações repetidas no tempo fazem o papel
+// de "várias pessoas"); nulo com menos de 2 itens, menos de 2 aplicações ou
+// variância zero.
+export function kr20(items: { correct: number; answers: number }[], scores: number[]): number | null {
+  const k = items.length;
+  const variance = populationVariance(scores);
+  if (k < 2 || scores.length < 2 || variance <= 0) return null;
+  const sumPQ = items.reduce((sum, item) => {
+    const p = item.correct / item.answers;
+    return sum + p * (1 - p);
+  }, 0);
+  return (k / (k - 1)) * (1 - sumPQ / variance);
 }
 
 export function detectAlerts(stats: ItemStat[], thresholds: AlertThresholds = DEFAULT_ALERT_THRESHOLDS): ItemAlert[] {

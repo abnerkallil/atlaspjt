@@ -134,6 +134,20 @@
       "when": 1791494000000,
       "tag": "0018_moldes_apo16",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "6",
+      "when": 1791500000000,
+      "tag": "0019_niveis_apo18",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "6",
+      "when": 1791500100000,
+      "tag": "0020_exames_apo18",
+      "breakpoints": true
     }
   ]
 }

@@ -391,3 +391,134 @@ quizzes/:id`, que já corrige por id da tentativa sem olhar o `purpose`
 ainda). `isPrerequisiteMet` por atividade (gatilho de pré-requisito entre
 conteúdos) fica explicitamente em aberto, como o DEC-018 definiu. Gate:
 não (coberto pelo DEC-018, ACCEPTED).
+
+## Exame de meio de curso (APO-18)
+
+Primeira prova **por disciplina** do Atlas — quiz, revisão, corretivo e
+atividade são todos por conteúdo (`atlas_quiz_attempts`). Tudo em
+`lib/apolo/exam.ts`, com tabela própria `atlas_exam_attempts` (migration
+`0020_exames_apo18.sql`): uma linha por disciplina e instrumento, com o
+escopo fotografado no início (`scope_json`), as questões, as respostas, o
+resultado e o boletim (`result_json`), nota, aprovação, versão do plano e
+versão do corretor.
+
+**Liberação e início pela FSM que já existia** (DEC-03, `lib/pedagogy/
+states.ts`), sem nenhuma transição nova (DEC-018 proíbe mexer em
+`DISCIPLINE_TRANSITIONS`) — estes eventos só existiam na definição e nos
+testes; é a primeira vez que código de produção os dispara:
+
+1. `conteudo-50` (sistema, sem confirmação): disparado por
+   `syncDisciplineState` quando pelo menos 50% dos conteúdos da disciplina
+   estão cobertos — mesma lista `COVERED_STATES` do componente Cobertura de
+   `lib/progress.ts`, não uma régua nova. Roda depois de todo quiz enviado
+   (`app/api/quizzes/[id]/route.ts`, no mesmo esquema do corte do APO-10:
+   uma falha aqui nunca derruba a resposta do quiz), a cada `GET
+   /api/exames` e antes de iniciar o exame. Idempotente; corrida com outra
+   chamada é ignorada do mesmo jeito que `submitQuiz` ignora `conflict`.
+2. `iniciar-exame-meio` (usuário, **exige confirmação explícita**):
+   `startExameMeio(db, disciplina, { confirmed })`. Sem `confirmed: true`,
+   sai o mesmo `TransitionError` `'confirmation'` de qualquer transição
+   (409 com `code: 'confirmation'` via `quizErrorResponse`) — conferido pela
+   regra pura `planTransition` antes de montar a prova, então nada é gravado.
+3. `exame-meio-entregue` (sistema): disparado pelo envio (`submitExam`),
+   depois que o resultado já foi gravado.
+
+**Tentativa única**, garantida no banco: índice único **não parcial** em
+`(discipline_id, instrument)` — nem uma tentativa enviada, nem uma em
+andamento, permitem uma segunda. Chamar `startExameMeio` de novo devolve a
+tentativa existente (em andamento ou já entregue), sem nova transição; se
+duas chamadas correrem, a que perder o `INSERT` devolve a da outra.
+
+**Escopo ("primeira metade")**: todo conteúdo da disciplina com nível
+curado `iniciante` ou `intermediario` — coluna nova
+`atlas_contents.level` (migration `0019_niveis_apo18.sql`), texto livre no
+banco e validado em código (`isContentLevel`), mesmo padrão de `theme`
+(DEC-014). O nível é **curadoria humana** (`setContentLevel`), nunca
+classificação automática — classificar por IA violaria o DEC-014. Conteúdo
+`avancado` fica de fora; conteúdo sem nível também, quando a disciplina já
+tem algum conteúdo nivelado. O escopo é gravado no início da tentativa
+(`scope_json`, com a regra usada) e nunca recalculado — o boletim continua
+reconstituível a partir do que ele mesmo guardou (DEC-016).
+
+**Montagem da prova**: plano `exame_meio` (APO-11; 60 questões e corte de
+70% já confirmados no DEC-10, intercalação ligada) + perfil do aluno
+(APO-09) no seletor do Apolo (APO-12), com um parâmetro novo e opcional no
+seletor, `perContentQuota`: um teto de questões por conteúdo, valendo em
+todos os passos (recuperação vencida, subtópico fraco, cobertura) — sem ele,
+recuperação vencida concentrada num conteúdo tomaria o exame inteiro.
+`allocateContentQuotas` divide as 60 questões o mais igual possível entre os
+conteúdos do escopo, sem passar do banco ativo de cada um (quem tem pouco
+entrega tudo, a sobra vai para quem tem mais). A ordem final é embaralhada
+com semente (intercalação de conteúdos). Para isso, `listQuestions` e
+`listCandidateQuestions` (`lib/quizzes.ts`) passaram a aceitar também uma
+lista de conteúdos (com um id só, a consulta é exatamente a de antes; lista
+longa vai em lotes por causa do limite de 100 parâmetros do D1).
+
+**Tempo**: 90 s por questão, somados no tempo total (`secondsByKind` do
+plano `exame_meio`, que por isso passou à versão 2 — a versão 1 era o
+rascunho com o tempo do quiz), **sem rolagem** de sobra para a questão
+seguinte (essa regra é só da atividade final, APO-19). Cálculo e lacuna
+numérica continuam sem limite, como em todo o Atlas — com uma delas na
+prova, o exame não tem prazo. Entregar depois do prazo marca `late`, igual
+ao quiz.
+
+**Nota própria**: corrigida pelo corretor único (`gradeQuestion`/
+`scoreResults`, APO-13), aprovada com nota >= 70% (`passingScore` do plano,
+gravado na tentativa). Dissertativa segue o mesmo fluxo do quiz: `travar`
+libera o gabarito para a autoavaliação (DEC-04), `enviar` corrige. O
+resultado e o boletim são gravados uma única vez, sob guarda de status
+(DEC-016). O boletim (`buildBoletim`) ganhou um campo opcional
+`reliability: { kr20, basis, administrations }` — quiz e atividade seguem
+sem ele.
+
+**KR-20**: a conta pura saiu de dentro de `computeInstrumentStats` para
+`kr20()` (`lib/apolo/item-stats.ts`), linha por linha a mesma matemática —
+os números de referência de `tests/apolo-item-stats.test.ts` não mudaram.
+O exame usa a mesma aproximação do APO-10 (aplicações repetidas no tempo no
+lugar de várias pessoas), sobre todas as tentativas enviadas do exame de
+meio de curso da disciplina, com a mesma guarda: nulo com menos de 2
+aplicações ou variância zero.
+
+**Progresso**: o componente Avaliações (peso 30, DEC-02) deixou de ser
+fixo em "indisponível": com o exame entregue, vale nota do exame / 100
+(aprovado ou não — é a nota emitida no boletim); sem exame, continua
+indisponível. `loadProgressInput` lê `atlas_exam_attempts` enviados.
+
+**Simplificação assumida (disclosed):**
+
+- **Escopo por posição enquanto nada está nivelado.** Até a disciplina ter
+  pelo menos um conteúdo com nível curado, o escopo é a primeira metade dos
+  conteúdos pela posição no roadmap (⌈n/2⌉) — para o exame não ficar
+  travado esperando a curadoria. É o mesmo padrão de "degradação graciosa
+  enquanto a curadoria não chega" do APO-15 ("conforme o banco permitir").
+  Basta nivelar um conteúdo para a disciplina inteira passar à regra por
+  nível — conteúdo ainda sem nível fica fora do escopo a partir daí.
+- **Banco curto.** Quando os conteúdos do escopo têm menos de 60 questões
+  ativas, o exame sai com o que existe (aviso gravado em `questions_json`),
+  sem inventar questão — mesmo princípio do APO-11/APO-15. Escopo sem
+  nenhuma questão recusa o início (409) sem disparar `iniciar-exame-meio`.
+- **KR-20 nulo na prática.** Com tentativa única por disciplina, só existe
+  uma aplicação do exame por disciplina — pela guarda herdada do APO-10, o
+  KR-20 do boletim fica sempre nulo hoje. O campo, a base e a contagem de
+  aplicações já ficam gravados para quando houver mais de uma aplicação
+  comparável (ex.: uma regra de refação ou uma base entre disciplinas, que
+  este card não decide).
+- **Sem evidência.** `atlas_evidences` é por conteúdo (`content_id NOT
+  NULL`) e `exame-meio-entregue` não exige evidência; o registro durável do
+  exame é a própria tentativa com o boletim. Nenhuma evidência é gravada.
+- **Sem curadoria de nível na tela.** `setContentLevel` existe (valida e
+  grava), mas nenhuma rota nem tela chama ainda — o nível é preenchido
+  direto no banco até um card de curadoria ligar isso.
+- **Sem UI.** `GET/POST /api/exames` e `GET/POST /api/exames/:id` existem,
+  mas nenhuma tela usa ainda — mesmo padrão de toda rota do Apolo até aqui.
+- **Fora deste card:** `conteudo-100` (que pelo DEC-018 também precisa de
+  todas as atividades aprovadas), a fórmula 50/50 entre exame de meio e
+  atividade final na nota da disciplina e a rolagem de tempo da atividade
+  final — todos do APO-19.
+
+API: `GET /api/exames` (situação por disciplina, já sincronizada, e
+tentativas; `?disciplina=` só as tentativas daquela), `POST /api/exames {
+disciplineId, confirmar: true }`, `GET /api/exames/:id` e `POST
+/api/exames/:id { action: travar | enviar, answers?, selfAssessments? }`.
+
+Gate: não (DEC-016 e DEC-018 já ACEITOS cobrem; nenhuma transição nova).

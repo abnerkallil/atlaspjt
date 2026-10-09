@@ -48,7 +48,7 @@ export const VERIFICATION_SIZE = 5;
 // VERIFICATION_MINIMUM e PASSING_SCORE moraram aqui; a partir do APO-13 vivem
 // em lib/apolo/corrector.ts (DEC-016) e são só reexportados acima.
 // Folga para o envio automático que chega logo depois do fim do tempo.
-const DEADLINE_GRACE_SECONDS = 30;
+export const DEADLINE_GRACE_SECONDS = 30;
 
 export type VerificationQuestion = {
   prompt: string;
@@ -310,17 +310,47 @@ function questionFromRow(row: QuestionRow): Question {
   };
 }
 
+// APO-18: aceita também uma lista de conteúdos (exame de meio de curso cobre
+// vários). Com um id só, a consulta é exatamente a de sempre.
+// O D1 limita a 100 parâmetros por consulta: listas longas vão em lotes.
+const CONTENT_IDS_PER_QUERY = 90;
+
+async function queryByContent<T>(
+  db: D1Like,
+  contentIds: string | string[],
+  sql: (clause: string) => string,
+): Promise<{ rows: T[]; chunked: boolean }> {
+  const ids = typeof contentIds === 'string' ? [contentIds] : contentIds;
+  const rows: T[] = [];
+  for (let start = 0; start < ids.length; start += CONTENT_IDS_PER_QUERY) {
+    const chunk = ids.slice(start, start + CONTENT_IDS_PER_QUERY);
+    const clause =
+      chunk.length === 1
+        ? 'content_id = ?1'
+        : `content_id IN (${chunk.map((_, index) => `?${index + 1}`).join(', ')})`;
+    const { results } = await db
+      .prepare(sql(clause))
+      .bind(...chunk)
+      .all<T>();
+    rows.push(...results);
+  }
+  return { rows, chunked: ids.length > CONTENT_IDS_PER_QUERY };
+}
+
 export async function listQuestions(
   db: D1Like,
-  contentId: string,
+  contentIds: string | string[],
 ): Promise<Question[]> {
-  const { results } = await db
-    .prepare(
-      'SELECT * FROM atlas_questions WHERE content_id = ?1 AND active = 1 ORDER BY position, id',
-    )
-    .bind(contentId)
-    .all<QuestionRow>();
-  return results.map(questionFromRow);
+  const { rows, chunked } = await queryByContent<QuestionRow>(
+    db,
+    contentIds,
+    (clause) =>
+      `SELECT * FROM atlas_questions WHERE ${clause} AND active = 1 ORDER BY position, id`,
+  );
+  const questions = rows.map(questionFromRow);
+  return chunked
+    ? questions.sort((a, b) => a.position - b.position || a.id.localeCompare(b.id))
+    : questions;
 }
 
 type CandidateQuestionRow = {
@@ -356,18 +386,18 @@ function candidateFromRow(row: CandidateQuestionRow): CandidateQuestion {
 // só para alimentar o seletor (lib/apolo/selector.ts); a prova em si continua
 // vindo de `listQuestions`/`Question`, sem mudar o formato gravado na
 // tentativa.
-async function listCandidateQuestions(
+export async function listCandidateQuestions(
   db: D1Like,
-  contentId: string,
+  contentIds: string | string[],
 ): Promise<CandidateQuestion[]> {
-  const { results } = await db
-    .prepare(
+  const { rows } = await queryByContent<CandidateQuestionRow>(
+    db,
+    contentIds,
+    (clause) =>
       `SELECT id, content_id, kind, theme, subtopic_id, bloom_level, difficulty_nominal, lifecycle_state, item_model_id
-       FROM atlas_questions WHERE content_id = ?1 AND active = 1`,
-    )
-    .bind(contentId)
-    .all<CandidateQuestionRow>();
-  return results.map(candidateFromRow);
+       FROM atlas_questions WHERE ${clause} AND active = 1`,
+  );
+  return rows.map(candidateFromRow);
 }
 
 // APO-14: um conteúdo só usa o seletor do Apolo quando o banco já tem tema
@@ -709,7 +739,7 @@ export async function startAtividade(
   return createAttemptRecord(db, contentId, 'atividade', 'atividade', null, now, id);
 }
 
-function sanitizeAnswers(raw: unknown, ids: Set<string>): Answers {
+export function sanitizeAnswers(raw: unknown, ids: Set<string>): Answers {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {};
   const answers: Answers = {};
   for (const [id, value] of Object.entries(raw as Record<string, unknown>)) {
@@ -962,7 +992,7 @@ export async function submitQuiz(
 
 // Inclui questões desativadas depois do sorteio: a tentativa é corrigida pelo
 // banco do momento em que começou.
-async function listAllQuestions(
+export async function listAllQuestions(
   db: D1Like,
   ids: string[],
 ): Promise<Question[]> {

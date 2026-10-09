@@ -8,11 +8,11 @@
 // `docs/ATLAS_DECISIONS.md`. O plano de 'quiz' abaixo só espelha, sem mudar
 // nada, o comportamento que `lib/quizzes.ts` já tem hoje (QUIZ_SIZE,
 // QUESTION_SECONDS, PASSING_SCORE); os perfis por área de conhecimento e os
-// planos dos instrumentos ainda sem motor próprio (atividade, exame de meio
-// de curso, atividade final, recuperação, proficiência — todos "fora da
-// espinha" hoje, só existem como estado da FSM em `lib/pedagogy/states.ts`)
-// são a primeira definição deles: um ponto de partida documentado, não uma
-// decisão de produto fechada. Ver `docs/APOLO.md`.
+// planos dos instrumentos ainda sem motor próprio (atividade final,
+// recuperação, proficiência — só existem como estado da FSM em
+// `lib/pedagogy/states.ts`) são a primeira definição deles: um ponto de
+// partida documentado, não uma decisão de produto fechada. Atividade (APO-17)
+// e exame de meio de curso (APO-18) já têm motor. Ver `docs/APOLO.md`.
 import { PASSING_SCORE } from './corrector.js';
 import {
   QUESTION_SECONDS,
@@ -130,15 +130,29 @@ function reviewPlan(instrument: 'revisao_24h' | 'revisao_7d' | 'revisao_30d'): E
   };
 }
 
-// Planos dos instrumentos sem motor próprio ainda (DEC-018: atividade, exame
-// de meio de curso, atividade final, recuperação, proficiência existem só
-// como estado da FSM, `lib/pedagogy/states.ts` — nenhum código monta essas
-// provas hoje). Tamanho de exame_meio (60 questões) é DEC-10 confirmado pelo
-// Abner em 2026-10-08 (ver docs/APOLO.md) — o peso 50/50 que ele confirmou
-// junto é entre exame_meio e atividade_final na nota da disciplina, não o
-// tamanho da atividade_final, que segue sem confirmação. O resto é ponto de
-// partida razoável, não uma decisão fechada — cada um ganha motor e revisão
-// própria num card futuro (APO-17 em diante).
+// APO-18: o exame de meio de curso tem tempo próprio — 90 s por questão,
+// somados no tempo total, sem "sobra" passando para a questão seguinte (a
+// regra de rolagem é só da atividade final, APO-19). Cálculo e lacuna
+// numérica continuam sem limite, igual a todo o resto do Atlas (DEC-10).
+export const EXAM_QUESTION_SECONDS = 90;
+const EXAM_SECONDS_BY_KIND: Record<QuestionKind, number | null> = {
+  multipla: EXAM_QUESTION_SECONDS,
+  dissertativa: EXAM_QUESTION_SECONDS,
+  certo_errado: EXAM_QUESTION_SECONDS,
+  calculo: null,
+  lacuna_numerica: null,
+};
+
+// Planos dos instrumentos. exame_meio deixou de ser rascunho no APO-18 e tem
+// motor próprio (`lib/apolo/exam.ts`): 60 questões e corte de 70% (DEC-10
+// confirmado pelo Abner em 2026-10-08, ver docs/APOLO.md), nota própria (o
+// peso 50/50 que ele confirmou junto é entre exame_meio e atividade_final na
+// nota da disciplina — fórmula do APO-19, não deste plano) e 90 s por
+// questão (versão 2 do plano: a versão 1 era o rascunho com o tempo do
+// quiz). atividade tem motor desde o APO-17. atividade_final, recuperação e
+// proficiência seguem sem motor (só existem como estado da FSM,
+// `lib/pedagogy/states.ts`) — ponto de partida razoável, não uma decisão
+// fechada; cada um ganha motor e revisão própria num card futuro.
 const DRAFT_PLANS: Record<
   'atividade' | 'exame_meio' | 'atividade_final' | 'recuperacao' | 'proficiencia',
   ExamPlan
@@ -149,9 +163,9 @@ const DRAFT_PLANS: Record<
     secondsByKind: QUESTION_SECONDS, passingScore: PASSING_SCORE,
   },
   exame_meio: {
-    instrument: 'exame_meio', version: 1, size: 60, kindMix: NEUTRAL_KIND_MIX,
+    instrument: 'exame_meio', version: 2, size: 60, kindMix: NEUTRAL_KIND_MIX,
     bloomMix: {}, difficultyMix: { facil: 0.2, media: 0.5, dificil: 0.3 },
-    interleaving: true, secondsByKind: QUESTION_SECONDS, passingScore: PASSING_SCORE,
+    interleaving: true, secondsByKind: EXAM_SECONDS_BY_KIND, passingScore: PASSING_SCORE,
   },
   atividade_final: {
     // Tamanho NÃO confirmado pelo DEC-10: a resposta do Abner ("final 50/50")
