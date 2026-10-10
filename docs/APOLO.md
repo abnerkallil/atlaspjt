@@ -215,6 +215,11 @@ o conteúdo continua exatamente no sorteio local de sempre
 (`selectQuestions`/`directedSelection`, MVP-08) — nada muda até o Abner
 classificar o banco daquele conteúdo.
 
+**Atualizado pelo APO-24**: esse gate e o sorteio local
+(`selectQuestions`/`directedSelection`) foram removidos — ver a seção
+"Lançamento completo do Apolo (APO-24)" mais abaixo. O seletor do Apolo
+passa a ser o único caminho, para todo conteúdo, desde o primeiro quiz.
+
 Quando ligado: `resolvePlan('quiz')` (APO-11, mesmo tamanho/tempo/corte de
 hoje) + `getStudentProfile` (APO-09) alimentam `selectQuestions` do Apolo
 (APO-12), que prioriza recuperação vencida, depois subtópico fraco, depois
@@ -899,5 +904,56 @@ curadoria por Abner). Prova, com números medidos (`tests/apolo-simulator.test.t
    (θ espalhado só 100 pontos), o KR-20 cai para ≈ 0,74-0,77, abaixo da
    meta — confirmando que 0,80 é informativo (depende da calibração
    item↔população), não um resultado automático da conta.
+
+Gate: não.
+
+## Lançamento completo do Apolo (APO-24)
+
+**O que mudou.** O APO-14 criava o quiz pelo seletor do Apolo só quando o
+banco já tinha questões suficientes do tema certo (`isApoloReady`); caso
+contrário caía num sorteio local antigo (`selectQuestions` em
+`lib/quizzes.ts`) e, no quiz dirigido, num segundo sorteio local
+(`directedSelection` em `lib/recovery.ts`). Esse gate e as duas funções
+foram **removidos**: `createAttemptRecord` (compartilhada por
+`startQuiz`/`startAtividade`) chama o seletor do Apolo incondicionalmente,
+para todo conteúdo, desde o primeiro quiz — sem banco mínimo nem tema
+cadastrado como pré-requisito. As questões erradas da última reprovação
+continuam entrando como recuperação forçada ("vencidas agora"), só que
+agora como entrada do seletor (fila de recuperação, DEC-017), não como um
+sorteio dirigido separado. A correção (`gradeQuestion`/`scoreResults`/
+`buildBoletim`) já vivia inteiramente em `lib/apolo/corrector.ts` desde o
+APO-13 — não havia caminho antigo de correção para remover.
+
+**Como ficou garantido que não existe mais caminho sem o Apolo.**
+`tests/apolo-no-legacy-path.test.ts` varre o texto fonte de toda rota que
+cria tentativa/nota (`/api/quizzes`, `/api/atividades`, `/api/exames`,
+`/api/proficiencia`) e dos módulos por trás delas, confirmando que
+`isApoloReady`/`directedSelection` não aparecem mais em lugar nenhum — nem
+como texto, nem como export em runtime (`quizzes.selectQuestions` e
+`recovery.directedSelection` ficam `undefined` depois da remoção). O
+conjunto de testes passa sem nenhuma regressão depois da remoção (os casos
+de banco pequeno, sem tema e de recuperação que antes exercitavam só o
+caminho antigo agora passam pelo seletor do Apolo e continuam corretos).
+
+**Backup e restauração.** Não precisou de nenhuma mudança de código: o dump
+do D1 já lista as tabelas dinamicamente (`TABLES_SQL`, consulta a
+`sqlite_master`, sem lista fixa), e a cópia de objetos do R2
+(`objectsSql`/`OBJECT_TABLES`) já incluía `atlas_question_sources` — o
+acervo de fontes do Apolo (APO-05, prefixo `apolo/fontes/`) — desde aquele
+card. `tests/backup.test.ts` ganhou um teste de integração contra o
+esquema real das migrations (`migratedDatabase()`, não uma tabela ad-hoc):
+confirma que as tabelas do Apolo aparecem na varredura do `TABLES_SQL`,
+que uma fonte com `object_key` em `apolo/fontes/...` é copiada pelo
+`objectsSql`, e faz um dump + restauração completos nesse esquema com as
+chaves estrangeiras do Apolo ligadas, comparando as contagens por tabela
+como o `restore-local.mjs` faz em produção.
+
+**O que ainda não está pronto para produção.** O banco de fontes do Apolo
+ainda está pequeno (curadoria manual do Abner, APO-08, e uma base inicial
+de provas autorais tratada numa thread separada) — sem um banco por tema
+com volume suficiente, o seletor roda, mas escolhe entre poucas opções.
+Recomendação: só fazer o deploy desta mudança depois que a base inicial
+estiver carregada e com o tema classificado; antes disso, o comportamento
+é correto porém pouco variado.
 
 Gate: não.

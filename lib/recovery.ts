@@ -4,9 +4,12 @@
 // fica bloqueado ou em revisão ativa até o usuário passar com 70%: refaz o quiz
 // direto ou revisa as notas antes, quantas vezes precisar.
 // Este módulo lê o histórico de tentativas para dizer o que errou (estudo
-// dirigido), quantas reprovações seguidas houve (reincidência) e quais questões
-// voltam primeiro no próximo quiz (quiz dirigido). Desbloqueio continua sendo a
-// transição do DEC-03 ao passar; nada aqui muda estado.
+// dirigido) e quantas reprovações seguidas houve (reincidência). Quais
+// questões voltam primeiro no próximo quiz (quiz dirigido) é decidido pelo
+// seletor do Apolo (lib/apolo/selector.ts, via lib/quizzes.ts), que lê
+// `missed` daqui como fila de recuperação forçada — não mais aqui (APO-24).
+// Desbloqueio continua sendo a transição do DEC-03 ao passar; nada aqui
+// muda estado.
 import type { D1Like } from './pedagogy/transitions.js';
 
 export type MissedQuestion = {
@@ -114,20 +117,6 @@ export async function recoveryStatus(db: D1Like, contentId: string): Promise<Rec
     lastScore: Number(last.score),
     missed,
   };
-}
-
-// Quiz dirigido: as questões erradas voltam primeiro (até o tamanho do quiz) e o
-// resto vem do sorteio normal, sem repetir.
-export function directedSelection<T extends { id: string }>(missedIds: string[], bank: T[], drawn: T[], size: number): T[] {
-  const byId = new Map(bank.map((item) => [item.id, item]));
-  const first = missedIds.flatMap((id) => byId.get(id) ?? []).slice(0, size);
-  const taken = new Set(first.map((item) => item.id));
-  const rest = [...drawn, ...bank].filter((item) => {
-    if (taken.has(item.id)) return false;
-    taken.add(item.id);
-    return true;
-  });
-  return [...first, ...rest].slice(0, size);
 }
 
 export function recoveryReason(status: RecoveryStatus | null, base: string): string {

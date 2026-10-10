@@ -11,7 +11,6 @@ import {
   listQuizQueue,
   optionOrder,
   scoreResults,
-  selectQuestions,
   lockQuiz,
   shuffleQuestion,
   startQuiz,
@@ -100,21 +99,6 @@ void test('DEC-10: tempo de 1 min por múltipla e 5 min por dissertativa; cálcu
     360,
   );
   assert.equal(totalSeconds([{ kind: 'multipla' }, { kind: 'calculo' }]), null);
-});
-
-void test('sorteio: até 10 questões, determinístico pela tentativa e na ordem do banco', () => {
-  const bank = Array.from({ length: 14 }, (_, index) => ({
-    id: `Q${index}`,
-    position: index + 1,
-  }));
-  const first = selectQuestions(bank, 'tentativa-1');
-  assert.equal(first.length, 10);
-  assert.deepEqual(selectQuestions(bank, 'tentativa-1'), first);
-  assert.deepEqual(
-    first.map((item) => item.position),
-    first.map((item) => item.position).sort((a, b) => a - b),
-  );
-  assert.equal(selectQuestions(bank.slice(0, 6), 'x').length, 6);
 });
 
 void test('alternativas embaralhadas: a correção segue a ordem exibida', () => {
