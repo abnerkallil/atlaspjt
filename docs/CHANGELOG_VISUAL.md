@@ -643,6 +643,25 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
   remove os dados e o script; nenhuma fonte ou rascunho já carregado em
   produção seria desfeito por isso (a reversão é só do repositório).
 
+## PR #69 — Carregador do banco adicional de 1.800 questões (curadoria em dupla sessão de IA)
+
+- Ponto de restauração: branch `restore/pre-apolo-banco-novo` (commit `7036989`, main antes do merge).
+- O que muda no site: nada visível ainda. As 1.800 questões entram como
+  rascunhos "pendente" em `/rascunhos`, igual a qualquer outra fonte — cada
+  uma só fica disponível aos alunos depois de aprovada manualmente, uma a
+  uma, como sempre.
+- O que muda fora do site: novo script `scripts/apolo-banco-novo.mjs`
+  (`pnpm run apolo:banco-novo -- --check|--target local|--target production`),
+  que carrega esse lote específico sem precisar de um PDF — diferente de
+  `apolo-fontes-autorais.mjs`, que sobe um PDF real por prova ao R2, este lote
+  nasceu direto como JSON (duas sessões de Claude: uma gerou as questões, a
+  outra verificou cada cálculo por script e revisou o conteúdo de domínio
+  antes de aceitar). Grava uma única fonte tipo `lista` sem arquivo real no
+  R2 (metadados descrevem o próprio JSON) e os 1.800 rascunhos.
+- Se algo der errado: a fonte é idempotente pelo sha256 do JSON de entrada —
+  rodar de novo não duplica nada; a exclusão da fonte pela tela de
+  `/rascunhos` remove os rascunhos pendentes ligados a ela.
+
 ## PR #68 — Bagagem de temas e sugestão de Bloom em /rascunhos
 
 - Ponto de restauração: branch `restore/pre-apolo-bagagem-temas-bloom`
