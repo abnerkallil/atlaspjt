@@ -6,6 +6,7 @@ import { join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { pathToFileURL } from 'node:url';
 import test from 'node:test';
+import { migratedDatabase } from './support/migrated-db.js';
 
 // Backup do DEC-011 (scripts/backup.mjs e scripts/restore-local.mjs). Os testes
 // usam só as peças puras e as paradas de uso; nunca chegam ao wrangler nem à rede.
@@ -126,6 +127,56 @@ void test('APO-05/DEC-015: backup também copia o acervo de fontes (prefixo apol
     INSERT INTO atlas_question_sources VALUES ('s1', 'apolo/fontes/direito/s1', 'application/pdf', 7);`);
   const sql = lib.objectsSql(['atlas_question_sources'])!;
   assert.deepEqual(db.prepare(sql).all().map((row) => row.object_key), ['apolo/fontes/direito/s1']);
+});
+
+void test('APO-24: TABLES_SQL e objectsSql cobrem o esquema real (migrations), tabelas e R2 do Apolo inclusos', () => {
+  // Esquema real das migrations (drizzle), não uma tabela ad-hoc: prova que o
+  // backup enxerga as tabelas do Apolo sem precisar de nenhuma lista nova
+  // (TABLES_SQL varre sqlite_master) e que o dump restaura com as chaves
+  // estrangeiras do Apolo (atlas_item_models -> atlas_questions etc.) ligadas.
+  const db = migratedDatabase();
+  const tables = (db.prepare('SELECT name FROM sqlite_master WHERE type = \'table\' AND name NOT LIKE \'sqlite_%\'').all() as { name: string }[]).map((row) => row.name);
+  for (const expected of ['atlas_questions', 'atlas_item_models', 'atlas_question_sources', 'atlas_quiz_attempts']) {
+    assert.ok(tables.includes(expected), `${expected} deveria existir no esquema migrado`);
+  }
+  const tablesFromQuery = (db.prepare(lib.TABLES_SQL).all() as { name: string }[]).map((row) => row.name);
+  assert.deepEqual(tablesFromQuery, [...tables].sort());
+
+  const now = '2026-10-10T12:00:00.000Z';
+  db.exec(
+    `INSERT INTO atlas_question_sources
+       (id, title, theme, source_type, exam_board, exam_org, exam_year, page_count, file_name, mime_type, size_bytes, sha256, object_key, created_at)
+     VALUES
+       ('src1', 'Prova CFC 2024', 'contabilidade-geral', 'concurso', 'CFC', 'CFC', 2024, 12, 'prova.pdf', 'application/pdf', 1024, 'abc123', 'apolo/fontes/contabilidade-geral/src1', '${now}')`,
+  );
+  const counts = lib.rowCounts(db.prepare(lib.countRowsSql(tables)).all() as Record<string, unknown>[]);
+  assert.equal(counts.atlas_question_sources, 1);
+
+  const objectsFromApolo = db.prepare(lib.objectsSql(['atlas_note_attachments', 'atlas_content_materials', 'atlas_question_sources'])!).all();
+  assert.deepEqual(objectsFromApolo.map((row) => row.object_key), ['apolo/fontes/contabilidade-geral/src1']);
+
+  // Round-trip: dump + restaura num banco vazio com o esquema de produção, as
+  // contagens batem (DEC-011 compara backup x restaurado desse jeito).
+  const dumpParts: string[] = ['PRAGMA defer_foreign_keys=TRUE;'];
+  for (const table of tables) {
+    const create = (db.prepare("SELECT sql FROM sqlite_master WHERE type = 'table' AND name = ?").get(table) as { sql: string }).sql;
+    dumpParts.push(`${create};`);
+    const rows = db.prepare(`SELECT * FROM "${table.replaceAll('"', '""')}"`).all() as Record<string, unknown>[];
+    for (const row of rows) {
+      const values = Object.values(row).map((value) => {
+        if (value === null) return 'NULL';
+        if (typeof value === 'number') return String(value);
+        const text = typeof value === 'string' ? value : String(value as string | number);
+        return `'${text.replaceAll("'", "''")}'`;
+      });
+      dumpParts.push(`INSERT INTO "${table.replaceAll('"', '""')}" VALUES(${values.join(',')});`);
+    }
+  }
+  const restored = new DatabaseSync(':memory:');
+  restored.exec('PRAGMA foreign_keys = ON;');
+  restored.exec(`BEGIN;\n${lib.restoreOrder(dumpParts.join('\n'))}COMMIT;`);
+  const restoredCounts = lib.rowCounts(restored.prepare(lib.countRowsSql(tables)).all() as Record<string, unknown>[]);
+  assert.deepEqual(lib.compareCounts(counts, restoredCounts), []);
 });
 
 void test('DEC-009/DEC-011: backup e restauração param sem ambiente explícito', () => {

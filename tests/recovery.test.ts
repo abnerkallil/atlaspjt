@@ -6,7 +6,7 @@ import { addDays, listAgenda, syncAgenda } from '../lib/agenda.js';
 import { currentState } from '../lib/pedagogy/transitions.js';
 import { computeProgress, loadProgressInput } from '../lib/progress.js';
 import { listQuestions, shuffleQuestion, startQuiz, submitQuiz, type Answers } from '../lib/quizzes.js';
-import { directedSelection, failureStreak, recoveryStatus, wrongQuestionIds } from '../lib/recovery.js';
+import { failureStreak, recoveryStatus, wrongQuestionIds } from '../lib/recovery.js';
 import { concludeSession, startSession } from '../lib/study-sessions.js';
 import { d1 } from './support/d1-sqlite.js';
 import { migratedDatabase } from './support/migrated-db.js';
@@ -48,17 +48,12 @@ async function studyAgain(db: Db, id: string, hour: number) {
   await concludeSession(db, id, { now: at(hour + 1) });
 }
 
-void test('regras puras: reprovações seguidas, questões erradas e seleção dirigida', () => {
+void test('regras puras: reprovações seguidas e questões erradas', () => {
   assert.equal(failureStreak([{ passed: false }, { passed: false }, { passed: true }, { passed: false }]), 2);
   assert.equal(failureStreak([{ passed: true }, { passed: false }]), 0);
   assert.deepEqual(
     wrongQuestionIds(JSON.stringify({ results: [{ questionId: 'a', correct: false, voided: false }, { questionId: 'b', correct: false, voided: true }, { questionId: 'c', correct: true, voided: false }] })),
     ['a'],
-  );
-  const bank = ['q1', 'q2', 'q3', 'q4', 'q5'].map((id) => ({ id }));
-  assert.deepEqual(
-    directedSelection(['q5', 'q4'], bank, [bank[0], bank[4], bank[1]], 3).map((item) => item.id),
-    ['q5', 'q4', 'q1'],
   );
 });
 

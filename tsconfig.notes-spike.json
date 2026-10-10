@@ -112,7 +112,8 @@
     "tests/atividade-final.test.ts",
     "tests/apolo-proficiency.test.ts",
     "tests/apolo-dashboard.test.ts",
-    "tests/apolo-simulator.test.ts"
+    "tests/apolo-simulator.test.ts",
+    "tests/apolo-no-legacy-path.test.ts"
   ],
   "exclude": [
     "node_modules"

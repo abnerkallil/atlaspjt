@@ -14,7 +14,7 @@ import {
   type ReviewStage,
   type ReviewSummary,
 } from './reviews.js';
-import { directedSelection, recoveryStatus } from './recovery.js';
+import { recoveryStatus } from './recovery.js';
 import {
   gradeQuestion,
   scoreResults,
@@ -169,27 +169,6 @@ function seededRandom(seed: string) {
     t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
-}
-
-// Até QUIZ_SIZE questões do banco do conteúdo; com mais, sorteia e mantém a
-// ordem do banco (do básico ao mais aplicado).
-export function selectQuestions<T extends { id: string; position: number }>(
-  bank: T[],
-  seed: string,
-  size = QUIZ_SIZE,
-): T[] {
-  const ordered = [...bank].sort(
-    (a, b) => a.position - b.position || a.id.localeCompare(b.id),
-  );
-  if (ordered.length <= size) return ordered;
-  const random = seededRandom(seed);
-  const pool = [...ordered];
-  for (let i = pool.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(random() * (i + 1));
-    [pool[i], pool[j]] = [pool[j], pool[i]];
-  }
-  const chosen = new Set(pool.slice(0, size).map((item) => item.id));
-  return ordered.filter((item) => chosen.has(item.id));
 }
 
 // Tempo total = soma dos tempos por questão (DEC-10). Com questão de cálculo
@@ -400,20 +379,6 @@ export async function listCandidateQuestions(
   return rows.map(candidateFromRow);
 }
 
-// APO-14: um conteúdo só usa o seletor do Apolo quando o banco já tem tema
-// classificado em quantidade suficiente para o plano de hoje (DEC-10, 10
-// questões) — ligação por conteúdo, a mitigação que o próprio card pede
-// (banco pequeno/sem classificação repete questão). Sem isso, nada muda:
-// segue o sorteio local de sempre (`selectQuestions`/`directedSelection`).
-// Content classificado pelo APO-08 (carga inicial) e sem alerta do APO-10
-// passa a usar o Apolo sozinho, sem precisar de outro código aqui.
-function isApoloReady(candidates: CandidateQuestion[], size: number): boolean {
-  return (
-    candidates.filter((q) => q.lifecycleState === 'ativa' && q.theme !== null)
-      .length >= size
-  );
-}
-
 type AttemptRow = {
   id: string;
   content_id: string;
@@ -591,47 +556,38 @@ async function createAttemptRecord(
   const missedIds = recovery?.missed.map((item) => item.id) ?? [];
   const plan = resolvePlan(instrument);
   const candidates = await listCandidateQuestions(db, contentId);
-  let chosen: Question[];
-  let directed: number;
-  if (isApoloReady(candidates, plan.size)) {
-    // APO-14: seletor do Apolo (APO-12) — recuperação vencida > subtópico
-    // fraco (APO-09) > cobertura do plano (APO-11). As erradas da última
-    // reprovação (MVP-08) entram forçadas como "vencidas agora": o FSRS do
-    // Apolo (lib/apolo/skill.ts) só vence depois de meio dia de estabilidade
-    // mínima, e aqui elas precisam voltar na hora, igual sempre foi.
-    const profile = await getStudentProfile(db);
-    const forcedDue = new Set(missedIds);
-    const filaRecuperacao = [
-      ...profile.filaRecuperacao.filter((item) => !forcedDue.has(item.questionId)),
-      ...missedIds.map((questionId) => ({
-        questionId,
-        difficulty: 5,
-        stability: 0.5,
-        reviewedAt: now,
-        dueAt: now,
-      })),
-    ];
-    const selection = selectApoloQuestions({
-      plan,
-      profile: { ...profile, filaRecuperacao },
-      bank: candidates,
-      recentlySeen: [],
-      seed: id,
-      now,
-    });
-    const pickedIds = new Set(selection.map((item) => item.questionId));
-    chosen = bank.filter((item) => pickedIds.has(item.id));
-    directed = selection.filter(
-      (item) => item.reason === 'recuperacao-vencida' && forcedDue.has(item.questionId),
-    ).length;
-  } else {
-    const drawn = selectQuestions(bank, id, plan.size);
-    const picked = new Set(
-      directedSelection(missedIds, bank, drawn, plan.size).map((item) => item.id),
-    );
-    chosen = missedIds.length ? bank.filter((item) => picked.has(item.id)) : drawn;
-    directed = missedIds.filter((questionId) => picked.has(questionId)).length;
-  }
+  // APO-24: seletor do Apolo (APO-12) é o único caminho, sem mais gate de
+  // "banco pequeno/sem tema" (APO-14) caindo num sorteio local — recuperação
+  // vencida > subtópico fraco (APO-09) > cobertura do plano (APO-11). As
+  // erradas da última reprovação (MVP-08) entram forçadas como "vencidas
+  // agora": o FSRS do Apolo (lib/apolo/skill.ts) só vence depois de meio dia
+  // de estabilidade mínima, e aqui elas precisam voltar na hora, igual
+  // sempre foi.
+  const profile = await getStudentProfile(db);
+  const forcedDue = new Set(missedIds);
+  const filaRecuperacao = [
+    ...profile.filaRecuperacao.filter((item) => !forcedDue.has(item.questionId)),
+    ...missedIds.map((questionId) => ({
+      questionId,
+      difficulty: 5,
+      stability: 0.5,
+      reviewedAt: now,
+      dueAt: now,
+    })),
+  ];
+  const selection = selectApoloQuestions({
+    plan,
+    profile: { ...profile, filaRecuperacao },
+    bank: candidates,
+    recentlySeen: [],
+    seed: id,
+    now,
+  });
+  const pickedIds = new Set(selection.map((item) => item.questionId));
+  const chosen = bank.filter((item) => pickedIds.has(item.id));
+  const directed = selection.filter(
+    (item) => item.reason === 'recuperacao-vencida' && forcedDue.has(item.questionId),
+  ).length;
   if (chosen.length === 0) {
     throw new QuizError(
       'Este conteúdo ainda não tem questões cadastradas.',
