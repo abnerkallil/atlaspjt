@@ -626,3 +626,19 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 - Se algo der errado: reverter para `restore/pre-apo-24` traz de volta o
   gate `isApoloReady` e os dois sorteios locais; nenhuma nota ou tentativa
   existente é afetada.
+
+## PR #67 — Base mista inicial de 30 provas autorais no banco de fontes
+
+- Ponto de restauração: branch `restore/pre-apolo-fontes-autorais` (commit
+  `26c7fb1`, main antes do merge).
+- Migrations: nenhuma — só dados (`data/apolo/fontes-autorais/`) e um
+  script de carga novo (`scripts/apolo-fontes-autorais.mjs`).
+- O que muda no site: nada ainda — este PR só guarda os dados no
+  repositório. Carregar de fato no acervo de fontes (R2 + D1 de produção)
+  continua sendo um passo manual do Abner (`wrangler login`), igual a
+  qualquer outro script do Apolo; só depois disso as 1800 questões
+  (classificadas por tema, aprovação pendente) aparecem em `/rascunhos`
+  para curadoria.
+- Se algo der errado: reverter para `restore/pre-apolo-fontes-autorais`
+  remove os dados e o script; nenhuma fonte ou rascunho já carregado em
+  produção seria desfeito por isso (a reversão é só do repositório).
