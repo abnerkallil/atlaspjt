@@ -609,3 +609,20 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
   chega à meta de 0,80. Documentado em `docs/APOLO.md`.
 - Se algo der errado: reverter para `restore/pre-apo-23` remove o
   simulador e seus testes; nenhum outro código do Apolo é afetado.
+
+## PR #66 — Lançamento completo do Apolo (APO-24)
+
+- Ponto de restauração: branch `restore/pre-apo-24` (commit `ec49141`, main
+  antes do merge).
+- Migrations: nenhuma — remoção de código só (`lib/quizzes.ts`,
+  `lib/recovery.ts`) e testes novos, sem tocar D1.
+- O que muda no site: nada visível para um conteúdo que já tinha banco
+  grande/temado (todo conteúdo em produção hoje). Para um conteúdo com
+  banco pequeno ou sem tema, o quiz/atividade agora é montado sempre pelo
+  seletor do Apolo (não mais um sorteio local de reserva) — mesmo
+  comportamento de recuperação (as erradas voltam primeiro), só que pelo
+  caminho do Apolo em vez de um sorteio separado. Documentado em
+  `docs/APOLO.md`.
+- Se algo der errado: reverter para `restore/pre-apo-24` traz de volta o
+  gate `isApoloReady` e os dois sorteios locais; nenhuma nota ou tentativa
+  existente é afetada.
