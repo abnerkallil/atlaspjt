@@ -1,0 +1,798 @@
+{
+  "examId": "ATLAS-SIM-12",
+  "title": "Simulado autoral Atlas 12/30",
+  "questions": [
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Qual e a negacao logica correta da proposicao \"o processo foi protocolado e o prazo foi cumprido\"?",
+      "options": [
+        "o processo foi protocolado e nao e verdade que o prazo foi cumprido",
+        "o processo foi protocolado e o prazo foi cumprido",
+        "Nao e verdade que o processo foi protocolado, e nao e verdade que o prazo foi cumprido",
+        "Nao e verdade que o processo foi protocolado, ou nao e verdade que o prazo foi cumprido"
+      ],
+      "correctOption": 3,
+      "explanation": "Pela Lei de De Morgan, a negacao de 'P e Q' e 'nao P ou nao Q' (troca 'e' por 'ou' e nega as duas partes).",
+      "index": 1
+    },
+    {
+      "theme": "direito-eleitoral",
+      "kind": "certo_errado",
+      "prompt": "Sao condicoes de elegibilidade, entre outras, a nacionalidade brasileira, o pleno exercicio dos direitos politicos, o alistamento eleitoral e a idade minima para o cargo pretendido.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 14, par. 3o, da CF/88 fixa idades minimas diferentes conforme o cargo (ex.: 35 anos para Presidente e Senador, 21 para Deputado e Prefeito, 18 para Vereador).",
+      "index": 2
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Um terreno retangular mede 30 metros de frente por 6 metros de fundo. Qual o perimetro, em metros?",
+      "options": [
+        "180",
+        "74",
+        "70",
+        "72"
+      ],
+      "correctOption": 3,
+      "explanation": "Perimetro do retangulo = 2 x (base + altura) = 2 x (30 + 6) = 72 m.",
+      "index": 3
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "multipla",
+      "prompt": "Sobre contraditorio e ampla defesa, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O habeas corpus se destina a proteger o acesso a informacoes de interesse pessoal ou coletivo.",
+        "O contraditorio e a ampla defesa sao garantidos apenas em processos judiciais, nunca em processos administrativos.",
+        "Aos litigantes, em processo judicial ou administrativo, sao assegurados o contraditorio e a ampla defesa.",
+        "O orcamento publico no Brasil e aprovado exclusivamente pelo Poder Executivo, sem participacao do Legislativo."
+      ],
+      "correctOption": 2,
+      "explanation": "Art. 5o, LV, da CF/88 estende expressamente a garantia aos processos administrativos.",
+      "index": 4
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "certo_errado",
+      "prompt": "No regime normal de apuracao do ICMS, a empresa credita o imposto pago nas entradas e debita o imposto devido nas saidas, recolhendo a diferenca (nao cumulatividade).",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "O principio da nao cumulatividade do ICMS (art. 155, par. 2o, I, CF/88) permite o credito do imposto pago nas entradas, compensando com o debito das saidas.",
+      "index": 5
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "multipla",
+      "prompt": "Sobre jornada de trabalho, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A duracao normal do trabalho, para os empregados em geral, nao excedera oito horas diarias e quarenta e quatro semanais, salvo disposicao em contrario.",
+        "O direito a ferias surge apenas apos cinco anos continuos de trabalho na mesma empresa.",
+        "O adicional de ferias e sempre de 50% do salario normal, nunca de um terco.",
+        "A CLT fixa a jornada normal em dez horas diarias para todos os empregados, sem excecao."
+      ],
+      "correctOption": 0,
+      "explanation": "Art. 58 da CLT fixa o limite geral em 8 horas diarias e 44 semanais, admitindo compensacoes e acordos dentro da lei.",
+      "index": 6
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "Sobre indice de liquidez corrente, qual das alternativas a seguir esta correta?",
+      "options": [
+        "As notas explicativas sao documentos internos confidenciais que nunca acompanham as demonstracoes contabeis publicadas.",
+        "Capital social e o lucro acumulado pela entidade ao longo dos anos.",
+        "O indice de liquidez corrente (ativo circulante / passivo circulante) mede a capacidade de a entidade pagar suas obrigacoes de curto prazo com seus bens e direitos de curto prazo.",
+        "O indice de liquidez corrente mede a rentabilidade da entidade sobre o patrimonio liquido."
+      ],
+      "correctOption": 2,
+      "explanation": "Rentabilidade sobre o patrimonio liquido e medida por indices como ROE, nao pelo indice de liquidez corrente, que mede capacidade de pagamento de curto prazo.",
+      "index": 7
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre pontuacao - virgula antes de 'que' explicativo, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O verbo preferir deve ser sempre seguido de 'do que' na norma culta tradicional (ex.: 'prefiro cafe do que cha').",
+        "Nenhuma palavra paroxitona recebe acento grafico, segundo a norma ortografica vigente.",
+        "Nunca se usa virgula antes de qualquer oracao introduzida por 'que', seja ela restritiva ou explicativa.",
+        "Usa-se virgula antes de oracao subordinada adjetiva explicativa, que acrescenta uma informacao extra sobre o antecedente."
+      ],
+      "correctOption": 3,
+      "explanation": "A oracao explicativa (acrescenta informacao nao essencial, geralmente entre virgulas) se distingue da restritiva (sem virgula, define o antecedente).",
+      "index": 8
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "multipla",
+      "prompt": "Sobre sociedade limitada - responsabilidade dos socios, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Os titulos de credito, por definicao, nunca podem ser representados ou transmitidos por meios eletronicos.",
+        "A desconsideracao da personalidade juridica e aplicada automaticamente sempre que a sociedade nao consegue pagar uma divida, independentemente de abuso.",
+        "Na sociedade limitada, os socios respondem sempre com seu patrimonio pessoal por toda e qualquer divida da sociedade, sem limite.",
+        "Na sociedade limitada, a responsabilidade de cada socio e restrita ao valor de suas quotas, mas todos respondem solidariamente pela integralizacao do capital social."
+      ],
+      "correctOption": 3,
+      "explanation": "Art. 1.052 do Codigo Civil limita a responsabilidade dos socios ao valor de suas quotas, com solidariedade apenas quanto a integralizacao do capital.",
+      "index": 9
+    },
+    {
+      "theme": "dados",
+      "kind": "multipla",
+      "prompt": "Sobre dados abertos governamentais, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Big data se refere exclusivamente a quantidade de paginas impressas em relatorios de uma organizacao.",
+        "Dados abertos governamentais sao informacoes sigilosas que o governo nunca pode divulgar, por definicao.",
+        "O comando SELECT em SQL e usado para excluir permanentemente registros de uma tabela.",
+        "Dados abertos governamentais sao informacoes publicas disponibilizadas em formato acessivel e processavel por maquina, para uso livre pela sociedade."
+      ],
+      "correctOption": 3,
+      "explanation": "O conceito de dados abertos e exatamente o oposto do sigilo: trata-se de informacao publica, disponibilizada livremente a sociedade.",
+      "index": 10
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Em uma repartição com 6 servidores, serao escolhidos 3 para ocupar cargos distintos (presidente e secretario, por exemplo). De quantas formas diferentes essa escolha pode ser feita?",
+      "options": [
+        "123",
+        "240",
+        "120",
+        "117"
+      ],
+      "correctOption": 2,
+      "explanation": "Como os cargos sao distintos, a ordem importa: usa-se arranjo A(6,3) = 6! / (6-3)! = 120.",
+      "index": 11
+    },
+    {
+      "theme": "estatistica",
+      "kind": "multipla",
+      "prompt": "Uma moeda honesta e lancada 2 vezes. Qual a probabilidade de sair cara em todos os lancamentos?",
+      "options": [
+        "1/2",
+        "1/2 (1)",
+        "2/4",
+        "1/4"
+      ],
+      "correctOption": 3,
+      "explanation": "Cada lancamento tem probabilidade 1/2 de dar cara; lancamentos independentes se multiplicam: (1/2)^2 = 1/4.",
+      "index": 12
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "certo_errado",
+      "prompt": "A falencia pode ser decretada para qualquer pessoa, empresaria ou nao, pelo simples atraso de uma unica conta domestica.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A falencia e instituto proprio do devedor empresario; pessoas nao empresarias nao se submetem a falencia, mas a outros institutos (como a insolvencia civil).",
+      "index": 13
+    },
+    {
+      "theme": "direito-eleitoral",
+      "kind": "multipla",
+      "prompt": "Sobre domicilio eleitoral, qual das alternativas a seguir esta correta?",
+      "options": [
+        "No Brasil, candidaturas independentes, sem filiacao a partido politico, sao plenamente admitidas para qualquer cargo eletivo.",
+        "O domicilio eleitoral e o local de residencia ou vinculo do eleitor com a comunidade, exigido para fins de alistamento e elegibilidade naquela circunscricao.",
+        "A Lei da Ficha Limpa (LC 135/2010) exige sempre o transito em julgado da condenacao para gerar inelegibilidade, nunca bastando decisao de orgao colegiado.",
+        "O domicilio eleitoral e irrelevante para a elegibilidade de um candidato a cargo municipal."
+      ],
+      "correctOption": 1,
+      "explanation": "A legislacao eleitoral exige, em regra, prazo minimo de domicilio eleitoral na circunscricao para que o candidato possa concorrer a cargo naquela localidade.",
+      "index": 14
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "certo_errado",
+      "prompt": "Obrigacoes acessorias fiscais sempre exigem o pagamento de valores em dinheiro ao Fisco, da mesma forma que a obrigacao principal.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "O pagamento em dinheiro caracteriza a obrigacao principal; a acessoria e instrumental, sem pagamento direto associado a ela mesma.",
+      "index": 15
+    },
+    {
+      "theme": "ingles",
+      "kind": "multipla",
+      "prompt": "Sobre comparativos e superlativos, qual das alternativas a seguir esta correta?",
+      "options": [
+        "For most one-syllable adjectives, the comparative form adds '-er' and the superlative adds '-est' (e.g., 'tall' -> 'taller' -> 'tallest').",
+        "The word 'actually' in English always means the same as 'atualmente' in Portuguese, referring to the present moment.",
+        "The passive voice is formed with the verb 'to be' plus the base form (infinitive) of the main verb.",
+        "For every adjective in English, the comparative and superlative are always formed by adding 'more' and 'the most', regardless of length."
+      ],
+      "correctOption": 0,
+      "explanation": "Short (one-syllable) adjectives typically use -er/-est; longer adjectives use 'more'/'the most' (e.g., 'more intelligent').",
+      "index": 16
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "certo_errado",
+      "prompt": "O principio da capacidade contributiva se aplica exclusivamente as taxas, nunca aos impostos.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "O dispositivo constitucional trata do caráter pessoal e da graduacao conforme a capacidade economica para os impostos, nao para as taxas.",
+      "index": 17
+    },
+    {
+      "theme": "espanhol",
+      "kind": "multipla",
+      "prompt": "Sobre ser vs estar, qual das alternativas a seguir esta correta?",
+      "options": [
+        "El futuro simple en espanol se forma siempre quitando la terminacion '-ar', '-er' o '-ir' del verbo antes de agregar la terminacion de futuro.",
+        "El verbo 'ser' se usa, en general, para caracteristicas permanentes o esenciales (ej.: 'ella es alta'), mientras que 'estar' se usa para estados temporales o ubicacion (ej.: 'ella esta cansada').",
+        "El preterito perfecto simple y el preterito imperfecto se usan siempre de forma intercambiable, sin ninguna diferencia de significado.",
+        "Los verbos 'ser' y 'estar' tienen exactamente el mismo significado en espanol y pueden sustituirse libremente en cualquier frase."
+      ],
+      "correctOption": 1,
+      "explanation": "La distincion entre caracteristica permanente ('ser') y estado temporal/ubicacion ('estar') es una de las reglas gramaticales mas conocidas del espanol.",
+      "index": 18
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Uma comissao de 3 servidores sera escolhida, sem distincao de funcao, entre 8 servidores disponiveis. De quantas formas diferentes essa comissao pode ser formada?",
+      "options": [
+        "112",
+        "59",
+        "56",
+        "53"
+      ],
+      "correctOption": 2,
+      "explanation": "Como a ordem nao importa (comissao, sem funcoes distintas), usa-se combinacao: C(8,3) = 8! / (3! x (8-k)!) = 56.",
+      "index": 19
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Resolva para x: 2x + 50 = 56. Qual o valor de x?",
+      "options": [
+        "3",
+        "5",
+        "4",
+        "2"
+      ],
+      "correctOption": 0,
+      "explanation": "2x = 56 - 50 = 6; x = 6 / 2 = 3.",
+      "index": 20
+    },
+    {
+      "theme": "tributacao",
+      "kind": "certo_errado",
+      "prompt": "O parcelamento e causa de suspensao da exigibilidade do credito tributario, conforme previsto no CTN.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 151, VI, do CTN classifica o parcelamento como causa de suspensao (nao extincao) da exigibilidade do credito tributario.",
+      "index": 21
+    },
+    {
+      "theme": "matematica-financeira",
+      "kind": "multipla",
+      "prompt": "Um capital de R$ 5.788,00 foi aplicado a juros compostos de 5% por periodo, durante 2 periodos. Qual o montante final (aproximado)?",
+      "options": [
+        "R$ 6.265,51",
+        "R$ 6.381,27",
+        "R$ 6.554,91",
+        "R$ 6.366,80"
+      ],
+      "correctOption": 1,
+      "explanation": "Juros compostos: M = C x (1 + i)^t = 5788 x (1,05)^2 = R$ 6.381,27 (aproximado).",
+      "index": 22
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "multipla",
+      "prompt": "Sobre principio da eficiencia, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O principio da eficiencia autoriza a Administracao a descumprir a legalidade quando isso tornar o servico mais rapido.",
+        "O silencio da Administracao Publica sempre significa indeferimento tacito do pedido do interessado, em qualquer situacao.",
+        "O principio da eficiencia exige que a Administracao busque os melhores resultados com os recursos disponiveis.",
+        "Pelo principio da legalidade, a Administracao Publica pode atuar livremente, desde que nao exista lei proibindo expressamente."
+      ],
+      "correctOption": 2,
+      "explanation": "A eficiencia e um principio que se soma a legalidade, nao a substitui; busca o melhor resultado dentro dos limites legais.",
+      "index": 23
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "certo_errado",
+      "prompt": "As notas explicativas complementam as demonstracoes contabeis, detalhando politicas contabeis, criterios de mensuracao e informacoes adicionais relevantes.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "As notas explicativas sao parte integrante das demonstracoes contabeis publicadas, nao documentos confidenciais apartados.",
+      "index": 24
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "certo_errado",
+      "prompt": "Ativo e qualquer bem que a entidade possua, mesmo sem capacidade de gerar beneficio economico futuro.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Sem expectativa de beneficio economico futuro, o item nao se qualifica como ativo pela estrutura conceitual contabil.",
+      "index": 25
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "certo_errado",
+      "prompt": "O metodo das partidas dobradas exige que todo lancamento contabil tenha, no minimo, um debito e um credito de valores iguais.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A partida dobrada exige igualdade entre debitos e creditos em cada lancamento individual, nao apenas no total do periodo.",
+      "index": 26
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "certo_errado",
+      "prompt": "O mandado de seguranca protege direito liquido e certo nao amparado por habeas corpus ou habeas data, violado por autoridade publica.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 5o, LXIX, da CF/88 exige que o direito nao seja amparado por habeas corpus ou habeas data.",
+      "index": 27
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "certo_errado",
+      "prompt": "O eSocial e o sistema unificado de escrituracao digital de obrigacoes fiscais, previdenciarias e trabalhistas, usado por empregadores para prestar informacoes ao governo.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "O eSocial unifica o envio de eventos trabalhistas (admissao, ferias, afastamentos, rescisao etc.), previdenciarios e fiscais relacionados a folha de pagamento.",
+      "index": 28
+    },
+    {
+      "theme": "espanhol",
+      "kind": "certo_errado",
+      "prompt": "En espanol, las palabras esdrujulas (acento en la antepenultima silaba) siempre llevan tilde escrita, como en 'rapido' y 'telefono'.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "La regla de acentuacion espanola exige tilde en todas las palabras esdrujulas, sin excepcion.",
+      "index": 29
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "certo_errado",
+      "prompt": "A taxa pode ser calculada com base exclusivamente no capital social da empresa contribuinte, como se fosse um imposto.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A Sumula Vinculante 29 do STF admite elementos da base de calculo de impostos na taxa, mas a base nao pode ser integralmente identica a de um imposto, como o capital social.",
+      "index": 30
+    },
+    {
+      "theme": "ingles",
+      "kind": "multipla",
+      "prompt": "Sobre conditional sentences - first conditional, qual das alternativas a seguir esta correta?",
+      "options": [
+        "'Must' and 'should' always express exactly the same degree of obligation in English.",
+        "In the simple present tense, every subject pronoun requires the verb to end in -s, including 'I' and 'you'.",
+        "The first conditional ('if' + simple present, 'will' + base form) is used to talk about real or likely future situations.",
+        "The first conditional is used exclusively to talk about hypothetical situations that are impossible in the present."
+      ],
+      "correctOption": 2,
+      "explanation": "Impossible present hypothetical situations correspond to the second conditional ('if' + simple past, 'would' + base form), not the first.",
+      "index": 31
+    },
+    {
+      "theme": "portugues",
+      "kind": "certo_errado",
+      "prompt": "Com a expressao 'a maioria de', a concordancia verbal so pode ser feita no plural, sendo erro gramatical a concordancia no singular.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A norma culta tradicional aceita a concordancia no singular com o nucleo do sujeito ('a maioria'), nao sendo correta a afirmacao de que so o plural e aceito.",
+      "index": 32
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "Uma empresa tem ativo circulante de R$ 215.000,00 e passivo circulante de R$ 128.000,00. Qual o indice de liquidez corrente (aproximado, com 2 casas decimais)?",
+      "options": [
+        "1.38",
+        "0.60",
+        "1.98",
+        "1.68"
+      ],
+      "correctOption": 3,
+      "explanation": "Liquidez corrente = ativo circulante / passivo circulante = 215000/128000 = 1.68.",
+      "index": 33
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "certo_errado",
+      "prompt": "O trabalho noturno tera remuneracao superior a do diurno, com adicional minimo de 20% sobre a hora diurna, para o trabalhador urbano em geral.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 73 da CLT garante o adicional noturno como direito do trabalhador urbano, nao uma condicao suprimivel por acordo individual simples.",
+      "index": 34
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre concordancia verbal - verbo haver no sentido de existir, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A ambiguidade e sempre um recurso estilistico desejavel em qualquer tipo de texto, inclusive em documentos oficiais.",
+        "O verbo haver, no sentido de existir, concorda normalmente com o sujeito no plural (ex.: 'Haviam muitos candidatos').",
+        "Conectivos como 'porem' e 'contudo' estabelecem sempre relacao de adicao, equivalendo a 'e tambem'.",
+        "O verbo haver, no sentido de existir, e impessoal e permanece sempre na terceira pessoa do singular (ex.: 'Havia muitos candidatos na sala')."
+      ],
+      "correctOption": 3,
+      "explanation": "No sentido de existir, 'haver' e verbo impessoal e fica sempre na 3a pessoa do singular; a forma 'haviam' nesse sentido e considerada erro pela norma culta.",
+      "index": 35
+    },
+    {
+      "theme": "matematica-financeira",
+      "kind": "multipla",
+      "prompt": "Um titulo com valor nominal de R$ 14.540,00 sera descontado 4 meses antes do vencimento, a uma taxa de desconto simples de 1% ao mes. Qual o valor liquido recebido?",
+      "options": [
+        "R$ 14.540,00",
+        "R$ 13.813,00",
+        "R$ 13.958,40",
+        "R$ 14.103,80"
+      ],
+      "correctOption": 2,
+      "explanation": "Desconto simples por fora: D = N x i x t = 14540 x 0.01 x 4 = R$ 581,60. Valor liquido = N - D = R$ 14.540,00 - R$ 581,60 = R$ 13.958,40.",
+      "index": 36
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "certo_errado",
+      "prompt": "A estabilidade do servidor publico e adquirida automaticamente no ato da nomeacao, antes mesmo da posse.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A estabilidade exige o cumprimento do estagio probatorio (3 anos) e avaliacao de desempenho; nao existe antes disso, muito menos na nomeacao.",
+      "index": 37
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre ambiguidade textual, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A ambiguidade e sempre um recurso estilistico desejavel em qualquer tipo de texto, inclusive em documentos oficiais.",
+        "A ambiguidade ocorre quando uma construcao permite mais de uma interpretacao, o que, em textos tecnicos e oficiais, deve ser evitado para garantir clareza.",
+        "Nunca se usa virgula antes de qualquer oracao introduzida por 'que', seja ela restritiva ou explicativa.",
+        "O paralelismo sintatico e uma regra exclusiva da linguagem juridica, sem aplicacao na redacao de textos administrativos ou dissertativos."
+      ],
+      "correctOption": 1,
+      "explanation": "Em textos tecnicos, administrativos e oficiais, a clareza e objetividade sao desejadas; a ambiguidade, nesses contextos, e vista como um defeito a ser evitado.",
+      "index": 38
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "certo_errado",
+      "prompt": "A DRE apresenta a posicao do ativo, passivo e patrimonio liquido em uma unica data.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A DRE e uma demonstracao de fluxo (receitas/despesas no periodo), diferente do balanco, que e estatico em uma data.",
+      "index": 39
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "multipla",
+      "prompt": "Sobre principio da legalidade administrativa, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A Lei de Improbidade Administrativa se aplica apenas a servidores publicos efetivos, nunca a agentes politicos.",
+        "Pelo principio da legalidade, a Administracao Publica so pode atuar com base em autorizacao legal previa.",
+        "Pelo principio da legalidade, a Administracao Publica pode atuar livremente, desde que nao exista lei proibindo expressamente.",
+        "A Administracao Publica pode contratar livremente, sem licitacao, sempre que o valor do contrato for considerado pequeno pelo gestor."
+      ],
+      "correctOption": 1,
+      "explanation": "A Administracao se submete a legalidade estrita (atuar com base em lei), diferente do particular, que pode atuar enquanto a lei nao proibir.",
+      "index": 40
+    },
+    {
+      "theme": "dados",
+      "kind": "certo_errado",
+      "prompt": "A normalizacao de banco de dados tem como objetivo duplicar o maximo possivel de informacoes entre as tabelas, para facilitar o acesso.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Maximizar a duplicacao de dados contraria o objetivo central da normalizacao, que e reduzir redundancia e inconsistencia.",
+      "index": 41
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "certo_errado",
+      "prompt": "O mandado de injuncao e cabivel quando a falta de norma regulamentadora torna inviavel o exercicio de direitos e liberdades constitucionais.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 5o, LXXI, da CF/88 vincula o mandado de injuncao a inviabilidade do exercicio de direitos e liberdades constitucionais por falta de norma.",
+      "index": 42
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Quanto e 5% de 646?",
+      "options": [
+        "37",
+        "32",
+        "614",
+        "27"
+      ],
+      "correctOption": 1,
+      "explanation": "5% de 646 = 646 x 5/100 = 32.",
+      "index": 43
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "multipla",
+      "prompt": "Sobre mandado de injuncao, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O mandado de injuncao e cabivel quando a falta de norma regulamentadora torna inviavel o exercicio de direitos e liberdades constitucionais.",
+        "O orcamento publico no Brasil e aprovado exclusivamente pelo Poder Executivo, sem participacao do Legislativo.",
+        "O mandado de injuncao serve para suprir a ausencia de qualquer lei, mesmo sem relacao com direitos constitucionais especificos.",
+        "A eficiencia nao e um principio constitucional expresso da administracao publica, apenas uma meta de gestao."
+      ],
+      "correctOption": 0,
+      "explanation": "Art. 5o, LXXI, da CF/88 vincula o mandado de injuncao a inviabilidade do exercicio de direitos e liberdades constitucionais por falta de norma.",
+      "index": 44
+    },
+    {
+      "theme": "estatistica",
+      "kind": "multipla",
+      "prompt": "Em uma pesquisa, os valores coletados foram: 8, 16, 8, 4, 7, 8. Qual e a moda (valor mais frequente)?",
+      "options": [
+        "16",
+        "7",
+        "8",
+        "4"
+      ],
+      "correctOption": 2,
+      "explanation": "O valor 8 aparece 3 vezes, mais que qualquer outro da lista — portanto a moda e 8.",
+      "index": 45
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre colocacao pronominal - proclise, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Com a expressao 'a maioria de', a concordancia verbal so pode ser feita no plural, sendo erro gramatical a concordancia no singular.",
+        "Em oracoes com palavra atrativa (como advertios de negacao, pronomes relativos ou conjuncoes subordinativas), a norma culta tende a exigir a proclise (pronome antes do verbo).",
+        "A colocacao pronominal e sempre livre em portugues, sem influencia de palavras atrativas na frase.",
+        "Com sujeito composto anteposto ao verbo, a concordancia verbal deve ser sempre no singular."
+      ],
+      "correctOption": 1,
+      "explanation": "Palavras atrativas (nao, que, quando, se etc.) tendem a exigir proclise na norma culta tradicional, influenciando diretamente a posicao do pronome.",
+      "index": 46
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "O ativo circulante de uma empresa e R$ 79.000,00 e o passivo circulante e R$ 30.000,00. Qual o capital circulante liquido (CCL)?",
+      "options": [
+        "R$ 109.000,00",
+        "R$ 49.000,00",
+        "R$ 48.000,00",
+        "R$ 54.000,00"
+      ],
+      "correctOption": 1,
+      "explanation": "CCL = ativo circulante - passivo circulante = R$ 79.000,00 - R$ 30.000,00 = R$ 49.000,00.",
+      "index": 47
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Qual e a negacao logica correta da proposicao \"o contrato foi assinado ou a garantia foi depositada\"?",
+      "options": [
+        "o contrato foi assinado e a garantia foi depositada",
+        "o contrato foi assinado e nao e verdade que a garantia foi depositada",
+        "Nao e verdade que o contrato foi assinado, ou nao e verdade que a garantia foi depositada",
+        "Nao e verdade que o contrato foi assinado, e nao e verdade que a garantia foi depositada"
+      ],
+      "correctOption": 3,
+      "explanation": "Pela Lei de De Morgan, a negacao de 'P ou Q' e 'nao P e nao Q' (troca 'ou' por 'e' e nega as duas partes).",
+      "index": 48
+    },
+    {
+      "theme": "tributacao",
+      "kind": "multipla",
+      "prompt": "Sobre simples nacional - natureza, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O Simples Nacional e regime unificado de arrecadacao de tributos destinado a microempresas e empresas de pequeno porte.",
+        "O Simples Nacional e regime tributario obrigatorio para todas as empresas, independente do porte.",
+        "A retencao na fonte dispensa definitivamente o beneficiario do pagamento de qualquer obrigacao relacionada aquele tributo retido, em qualquer hipotese.",
+        "PIS e COFINS sao impostos de competencia dos Estados, incidentes sobre a circulacao de mercadorias."
+      ],
+      "correctOption": 0,
+      "explanation": "A Lei Complementar 123/2006 destina o Simples Nacional especificamente a microempresas e empresas de pequeno porte que optem pelo regime, dentro dos limites de receita bruta.",
+      "index": 49
+    },
+    {
+      "theme": "dados",
+      "kind": "certo_errado",
+      "prompt": "Dados abertos governamentais sao informacoes publicas disponibilizadas em formato acessivel e processavel por maquina, para uso livre pela sociedade.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "O conceito de dados abertos e exatamente o oposto do sigilo: trata-se de informacao publica, disponibilizada livremente a sociedade.",
+      "index": 50
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "multipla",
+      "prompt": "Sobre especies tributarias, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Segundo o CTN, existe apenas uma especie tributaria, chamada genericamente de imposto.",
+        "O imposto exige sempre uma contraprestacao direta e especifica do Estado ao contribuinte que o paga.",
+        "Sao especies tributarias os impostos, as taxas e as contribuicoes de melhoria, segundo a classificacao tripartite do CTN.",
+        "A lei tributaria pode retroagir livremente para cobrar tributo sobre fatos geradores passados, sem qualquer limitacao."
+      ],
+      "correctOption": 2,
+      "explanation": "O art. 5o do CTN (e a doutrina majoritaria, com base na CF/88) reconhece pelo menos impostos, taxas e contribuicoes de melhoria como especies distintas.",
+      "index": 51
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "multipla",
+      "prompt": "Sobre titulos de credito - cartularidade, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A recuperacao judicial tem por unico objetivo liquidar os bens do devedor para pagar os credores, da mesma forma que a falencia.",
+        "O principio da cartularidade, tradicionalmente, condiciona o exercicio dos direitos representados pelo titulo de credito a posse do documento (cartula), com atenuacoes para titulos eletronicos.",
+        "O registro na Junta Comercial e facultativo e nao gera nenhuma consequencia juridica para o empresario que nao se registrar.",
+        "Os titulos de credito, por definicao, nunca podem ser representados ou transmitidos por meios eletronicos."
+      ],
+      "correctOption": 1,
+      "explanation": "A legislacao e a pratica comercial admitem titulos eletronicos (como a duplicata eletronica e a nota promissoria eletronica em certos contextos), atenuando a cartularidade classica.",
+      "index": 52
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "certo_errado",
+      "prompt": "Compete a Uniao instituir o Imposto de Renda, que incide sobre a renda e proventos de qualquer natureza.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 153, III, da CF/88 atribui a competencia do Imposto de Renda a Uniao.",
+      "index": 53
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "certo_errado",
+      "prompt": "No metodo PEPS, os ultimos itens adquiridos sao os primeiros a serem baixados do estoque na venda.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Baixar os ultimos itens adquiridos primeiro descreve o metodo UEPS, nao o PEPS.",
+      "index": 54
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "multipla",
+      "prompt": "Sobre duplicata, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A duplicata e titulo de credito tipicamente emitido em razao de uma compra e venda mercantil ou de uma prestacao de servicos, com base em fatura.",
+        "A duplicata e titulo de credito que so pode ser emitido por instituicoes financeiras, nunca por empresas comerciais comuns.",
+        "Na sociedade limitada, os socios respondem sempre com seu patrimonio pessoal por toda e qualquer divida da sociedade, sem limite.",
+        "Toda pessoa que presta um servico, mesmo de forma eventual e sem organizacao, e considerada empresaria pelo Codigo Civil."
+      ],
+      "correctOption": 0,
+      "explanation": "A duplicata e emitida pelo proprio vendedor/prestador de servico (sacador) em razao da fatura correspondente a venda ou servico prestado.",
+      "index": 55
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "A idade de Pedro e igual ao dobro da idade de Joana somado a 6 anos. Se Joana tem 28 anos, qual e a idade de Pedro?",
+      "options": [
+        "62",
+        "34",
+        "60",
+        "64"
+      ],
+      "correctOption": 0,
+      "explanation": "Pedro = 2 x idade de Joana + 6 = 2 x 28 + 6 = 62 anos.",
+      "index": 56
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "certo_errado",
+      "prompt": "O substituto tributario so tem responsabilidade pelo recolhimento do tributo, nunca por qualquer obrigacao acessoria relacionada.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A responsabilidade do substituto nao se limita ao recolhimento; ele tambem responde por obrigacoes acessorias relacionadas ao regime.",
+      "index": 57
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "certo_errado",
+      "prompt": "Os bens publicos de uso comum do povo e de uso especial sao, em regra, inalienaveis enquanto conservarem essa qualificacao.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Bens de uso comum e de uso especial sao inalienaveis enquanto tiverem essa destinacao; ja os bens dominicais podem ser alienados, observadas as exigencias legais.",
+      "index": 58
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Um terreno retangular tem 27 metros de frente por 25 metros de fundo. Qual a area, em metros quadrados?",
+      "options": [
+        "675",
+        "650",
+        "702",
+        "104"
+      ],
+      "correctOption": 0,
+      "explanation": "Area do retangulo = base x altura = 27 x 25 = 675 m2.",
+      "index": 59
+    },
+    {
+      "theme": "tributacao",
+      "kind": "multipla",
+      "prompt": "Sobre regimes de apuracao do imposto de renda - lucro presumido, qual das alternativas a seguir esta correta?",
+      "options": [
+        "No Lucro Presumido, a empresa deve necessariamente apurar o lucro liquido contabil detalhado para calcular o imposto.",
+        "A retencao na fonte dispensa definitivamente o beneficiario do pagamento de qualquer obrigacao relacionada aquele tributo retido, em qualquer hipotese.",
+        "No Lucro Presumido, a base de calculo do Imposto de Renda e estimada por percentuais legais aplicados sobre a receita bruta, conforme a atividade.",
+        "O SPED e um sistema exclusivo para a declaracao do Imposto de Renda de pessoas fisicas."
+      ],
+      "correctOption": 2,
+      "explanation": "O Lucro Presumido dispensa a apuracao detalhada do lucro contabil para fins do imposto, usando percentuais de presuncao sobre a receita bruta por atividade.",
+      "index": 60
+    }
+  ]
+}

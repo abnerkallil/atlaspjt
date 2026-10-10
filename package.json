@@ -16,6 +16,7 @@
     "questoes:importar": "node scripts/import-questions.mjs",
     "apolo:fonte": "node scripts/apolo-fonte.mjs",
     "apolo:extrair": "node scripts/apolo-extrair.mjs",
+    "apolo:fontes-autorais": "node scripts/apolo-fontes-autorais.mjs",
     "db:generate": "drizzle-kit generate",
     "db:catalog": "tsc -p tsconfig.notes-spike.json && node .notes-spike-dist/tools/write-catalog-seed.js",
     "db:migrate:local": "wrangler d1 migrations apply site-creator-d1 --local --config wrangler.local.jsonc",

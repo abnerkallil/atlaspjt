@@ -1,0 +1,806 @@
+{
+  "examId": "ATLAS-SIM-05",
+  "title": "Simulado autoral Atlas 5/30",
+  "questions": [
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "Uma DRE mostra receita liquida de R$ 264.000,00 e custo dos produtos vendidos (CPV) de R$ 184.800,00. Qual o lucro bruto?",
+      "options": [
+        "R$ 97.680,00",
+        "R$ 264.000,00",
+        "R$ 60.720,00",
+        "R$ 79.200,00"
+      ],
+      "correctOption": 3,
+      "explanation": "Lucro bruto = receita liquida - CPV = R$ 264.000,00 - R$ 184.800,00 = R$ 79.200,00.",
+      "index": 1
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "multipla",
+      "prompt": "Sobre sociedade anonima - capital social, qual das alternativas a seguir esta correta?",
+      "options": [
+        "No contrato de franquia, o franqueado se torna empregado do franqueador, perdendo sua autonomia juridica.",
+        "O capital social da sociedade anonima se divide em acoes, e a responsabilidade do acionista e limitada ao preco de emissao das acoes subscritas ou adquiridas.",
+        "Na sociedade anonima, o capital social se divide em quotas, nos mesmos termos da sociedade limitada.",
+        "O registro na Junta Comercial e facultativo e nao gera nenhuma consequencia juridica para o empresario que nao se registrar."
+      ],
+      "correctOption": 1,
+      "explanation": "Lei 6.404/1976 (Lei das S.A.) estabelece que o capital social se divide em acoes, nao em quotas.",
+      "index": 2
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "certo_errado",
+      "prompt": "O poder de policia e a prerrogativa da Administracao de restringir e condicionar o exercicio de direitos individuais em favor do interesse publico.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "O poder de policia e tipicamente exercido pela propria Administracao (ex.: fiscalizacao sanitaria, de transito, ambiental).",
+      "index": 3
+    },
+    {
+      "theme": "tributacao",
+      "kind": "multipla",
+      "prompt": "Sobre parcelamento tributario, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O planejamento tributario, para ser valido, pode utilizar simulacao de negocios juridicos para reduzir tributos.",
+        "Na substituicao tributaria 'para frente', o consumidor final e quem recolhe diretamente o ICMS ao Estado apos a compra.",
+        "O parcelamento tributario extingue definitivamente o credito tributario no momento da adesao, independentemente do pagamento das parcelas.",
+        "O parcelamento e causa de suspensao da exigibilidade do credito tributario, conforme previsto no CTN."
+      ],
+      "correctOption": 3,
+      "explanation": "Art. 151, VI, do CTN classifica o parcelamento como causa de suspensao (nao extincao) da exigibilidade do credito tributario.",
+      "index": 4
+    },
+    {
+      "theme": "matematica-financeira",
+      "kind": "multipla",
+      "prompt": "Qual o valor presente (aproximado) de R$ 14.100,00 a receber dentro de 4 periodos, descontado a uma taxa de 2% por periodo (juros compostos)?",
+      "options": [
+        "R$ 14.100,00",
+        "R$ 13.308,22",
+        "R$ 13.026,22",
+        "R$ 12.885,22"
+      ],
+      "correctOption": 2,
+      "explanation": "VP = VF / (1+i)^t = 14100 / (1,02)^4 = R$ 13.026,22 (aproximado).",
+      "index": 5
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre concordancia verbal - sujeito composto, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Com sujeito composto anteposto ao verbo, a concordancia verbal deve ser sempre no singular.",
+        "Com a expressao 'a maioria de', a concordancia verbal so pode ser feita no plural, sendo erro gramatical a concordancia no singular.",
+        "As quatro formas (porque, por que, por quê, porquê) sao sempre intercambiaveis, sem distincao de uso na norma culta.",
+        "Com sujeito composto anteposto ao verbo, a concordancia verbal, em regra, se faz no plural."
+      ],
+      "correctOption": 3,
+      "explanation": "A regra geral de concordancia verbal com sujeito composto anteposto e o plural (os elementos somados exigem verbo plural).",
+      "index": 6
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Se 11 maquinas identicas produzem 80 pecas por hora, quantas pecas 16 maquinas identicas produzem no mesmo intervalo de tempo (mantendo a mesma proporcao)?",
+      "options": [
+        "105",
+        "116",
+        "132",
+        "96"
+      ],
+      "correctOption": 1,
+      "explanation": "Regra de tres simples direta: 11 maquinas -> 80 pecas; 16 maquinas -> x. x = (80 x 16) / 11 = 116.",
+      "index": 7
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "certo_errado",
+      "prompt": "A substituicao tributaria e exclusiva do Imposto de Renda e nao se aplica a outros tributos, como o ICMS.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A substituicao tributaria e tecnica usada em diversos tributos, com destaque historico para o ICMS (substituicao tributaria 'para frente'), nao exclusiva do Imposto de Renda.",
+      "index": 8
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "certo_errado",
+      "prompt": "O empregado tem direito a remuneracao de ferias acrescida de, no minimo, um terco do salario normal.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 7o, XVII, da CF/88 garante o adicional de pelo menos um terco (1/3) sobre a remuneracao de ferias.",
+      "index": 9
+    },
+    {
+      "theme": "tributacao",
+      "kind": "multipla",
+      "prompt": "Sobre regimes de apuracao do imposto de renda - lucro presumido, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Na substituicao tributaria 'para frente', o consumidor final e quem recolhe diretamente o ICMS ao Estado apos a compra.",
+        "No Lucro Presumido, a empresa deve necessariamente apurar o lucro liquido contabil detalhado para calcular o imposto.",
+        "No Lucro Presumido, a base de calculo do Imposto de Renda e estimada por percentuais legais aplicados sobre a receita bruta, conforme a atividade.",
+        "O SPED e um sistema exclusivo para a declaracao do Imposto de Renda de pessoas fisicas."
+      ],
+      "correctOption": 2,
+      "explanation": "O Lucro Presumido dispensa a apuracao detalhada do lucro contabil para fins do imposto, usando percentuais de presuncao sobre a receita bruta por atividade.",
+      "index": 10
+    },
+    {
+      "theme": "ingles",
+      "kind": "certo_errado",
+      "prompt": "In the simple present tense, every subject pronoun requires the verb to end in -s, including 'I' and 'you'.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "The -s/-es ending is restricted to third person singular; adding it to 'I' or 'you' forms is a grammar mistake.",
+      "index": 11
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "multipla",
+      "prompt": "Sobre jornada de trabalho, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O salario-familia e pago a todos os trabalhadores com filhos, independentemente da faixa de renda.",
+        "A duracao normal do trabalho, para os empregados em geral, nao excedera oito horas diarias e quarenta e quatro semanais, salvo disposicao em contrario.",
+        "As horas extras podem ser pagas pelo mesmo valor da hora normal, sem nenhum adicional.",
+        "A CLT fixa a jornada normal em dez horas diarias para todos os empregados, sem excecao."
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 58 da CLT fixa o limite geral em 8 horas diarias e 44 semanais, admitindo compensacoes e acordos dentro da lei.",
+      "index": 12
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre paralelismo sintatico, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Com a expressao 'a maioria de', a concordancia verbal so pode ser feita no plural, sendo erro gramatical a concordancia no singular.",
+        "O paralelismo sintatico exige que estruturas coordenadas (como itens de uma lista) sigam a mesma forma gramatical, para manter a clareza e a coesao do texto.",
+        "Nunca se usa crase antes de locucoes adverbiais, independentemente do genero da palavra.",
+        "O paralelismo sintatico e uma regra exclusiva da linguagem juridica, sem aplicacao na redacao de textos administrativos ou dissertativos."
+      ],
+      "correctOption": 1,
+      "explanation": "O paralelismo e princípio geral de clareza textual, aplicavel a qualquer genero textual (administrativo, dissertativo, juridico etc.), nao exclusivo de um unico genero.",
+      "index": 13
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Um bem foi adquirido por R$ 47.000,00 e tem vida util estimada de 8 anos, sem valor residual. Pelo metodo linear, qual a depreciacao anual?",
+      "options": [
+        "R$ 4.700,00",
+        "R$ 5.875,00",
+        "R$ 5.405,00",
+        "R$ 6.815,00"
+      ],
+      "correctOption": 1,
+      "explanation": "Depreciacao linear anual = valor do bem / vida util = 47000 / 8 = R$ 5.875,00.",
+      "index": 14
+    },
+    {
+      "theme": "direito-eleitoral",
+      "kind": "multipla",
+      "prompt": "Sobre condicoes de elegibilidade, qual das alternativas a seguir esta correta?",
+      "options": [
+        "As emissoras de radio e televisao podem excluir arbitrariamente qualquer candidato registrado dos debates eleitorais, sem criterio objetivo.",
+        "A idade minima para concorrer a qualquer cargo eletivo no Brasil e a mesma, de 18 anos, independentemente do cargo.",
+        "A propaganda eleitoral pode comecar em qualquer momento do mandato anterior, sem qualquer restricao de prazo.",
+        "Sao condicoes de elegibilidade, entre outras, a nacionalidade brasileira, o pleno exercicio dos direitos politicos, o alistamento eleitoral e a idade minima para o cargo pretendido."
+      ],
+      "correctOption": 3,
+      "explanation": "Art. 14, par. 3o, da CF/88 fixa idades minimas diferentes conforme o cargo (ex.: 35 anos para Presidente e Senador, 21 para Deputado e Prefeito, 18 para Vereador).",
+      "index": 15
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "O custo dos produtos vendidos (CPV) no ano foi R$ 545.000,00 e o estoque medio foi R$ 29.000,00. Qual o giro de estoque (aproximado, em vezes ao ano)?",
+      "options": [
+        "18.8 vezes ao ano",
+        "0.1 vezes ao ano",
+        "19.8 vezes ao ano",
+        "17.8 vezes ao ano"
+      ],
+      "correctOption": 0,
+      "explanation": "Giro de estoque = CPV / estoque medio = 545000/29000 = 18.8 vezes ao ano.",
+      "index": 16
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "certo_errado",
+      "prompt": "No regime normal de apuracao do ICMS, a empresa credita o imposto pago nas entradas e debita o imposto devido nas saidas, recolhendo a diferenca (nao cumulatividade).",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "O principio da nao cumulatividade do ICMS (art. 155, par. 2o, I, CF/88) permite o credito do imposto pago nas entradas, compensando com o debito das saidas.",
+      "index": 17
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "certo_errado",
+      "prompt": "A inscricao do empresario e da sociedade empresaria deve ser feita na Junta Comercial da respectiva sede, antes do inicio da atividade.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 967 e seguintes do Codigo Civil exigem o registro para a regularidade da atividade empresarial, com consequencias (como a nao fruicao de certos beneficios legais) para quem nao se registra.",
+      "index": 18
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "A idade de Pedro e igual ao dobro da idade de Joana somado a 3 anos. Se Joana tem 15 anos, qual e a idade de Pedro?",
+      "options": [
+        "33",
+        "31",
+        "18",
+        "35"
+      ],
+      "correctOption": 0,
+      "explanation": "Pedro = 2 x idade de Joana + 3 = 2 x 15 + 3 = 33 anos.",
+      "index": 19
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "certo_errado",
+      "prompt": "O Estado so responde civilmente quando ficar provada a culpa pessoal do agente publico causador do dano.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A responsabilidade objetiva do Estado dispensa a prova de culpa do agente; basta o dano, a conduta do agente e o nexo causal.",
+      "index": 20
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Quanto e 40% de 1923?",
+      "options": [
+        "1154",
+        "729",
+        "769",
+        "809"
+      ],
+      "correctOption": 2,
+      "explanation": "40% de 1923 = 1923 x 40/100 = 769.",
+      "index": 21
+    },
+    {
+      "theme": "matematica-financeira",
+      "kind": "multipla",
+      "prompt": "Um titulo com valor nominal de R$ 4.237,00 sera descontado 5 meses antes do vencimento, a uma taxa de desconto simples de 1% ao mes. Qual o valor liquido recebido?",
+      "options": [
+        "R$ 3.982,78",
+        "R$ 4.025,15",
+        "R$ 4.237,00",
+        "R$ 4.067,52"
+      ],
+      "correctOption": 1,
+      "explanation": "Desconto simples por fora: D = N x i x t = 4237 x 0.01 x 5 = R$ 211,85. Valor liquido = N - D = R$ 4.237,00 - R$ 211,85 = R$ 4.025,15.",
+      "index": 22
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Observe a sequencia numerica: 15, 45, 135, 405, 1215, ... Qual e o proximo termo?",
+      "options": [
+        "3648",
+        "3646",
+        "3642",
+        "3645"
+      ],
+      "correctOption": 3,
+      "explanation": "A sequencia e geometrica de razao 3 (cada termo e multiplicado por 3). O ultimo termo mostrado e 1215, logo o proximo e 1215 x 3 = 3645.",
+      "index": 23
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "multipla",
+      "prompt": "Sobre processo administrativo disciplinar, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O processo administrativo disciplinar pode aplicar penalidade de demissao sem que o servidor seja ouvido previamente.",
+        "O processo administrativo disciplinar deve assegurar ao servidor acusado o contraditorio e a ampla defesa antes da aplicacao de penalidade.",
+        "Os contratos administrativos seguem exatamente as mesmas regras dos contratos privados, sem nenhuma prerrogativa especial da Administracao.",
+        "A autoexecutoriedade e atributo presente em todo e qualquer ato administrativo, sem excecao."
+      ],
+      "correctOption": 1,
+      "explanation": "O contraditorio e a ampla defesa sao garantias constitucionais (art. 5o, LV) aplicaveis a qualquer processo administrativo, inclusive disciplinar.",
+      "index": 24
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Sobre demonstracao do resultado do exercicio, qual das alternativas a seguir esta correta?",
+      "options": [
+        "As atividades operacionais no fluxo de caixa referem-se exclusivamente a compra e venda de imobilizado.",
+        "A DRE apresenta de forma ordenada as receitas, custos e despesas de um periodo, apurando o lucro ou prejuizo do exercicio.",
+        "Pelo principio da entidade, os bens pessoais dos socios podem ser registrados livremente na contabilidade da empresa.",
+        "A DRE apresenta a posicao do ativo, passivo e patrimonio liquido em uma unica data."
+      ],
+      "correctOption": 1,
+      "explanation": "Apresentar ativo, passivo e patrimonio liquido em uma data e funcao do balanco patrimonial, nao da DRE.",
+      "index": 25
+    },
+    {
+      "theme": "tributacao",
+      "kind": "multipla",
+      "prompt": "Sobre planejamento tributario licito, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O planejamento tributario licito busca a menor carga tributaria possivel por meios legais, sem simulacao ou fraude.",
+        "Na substituicao tributaria 'para frente', o consumidor final e quem recolhe diretamente o ICMS ao Estado apos a compra.",
+        "A retencao na fonte dispensa definitivamente o beneficiario do pagamento de qualquer obrigacao relacionada aquele tributo retido, em qualquer hipotese.",
+        "O planejamento tributario, para ser valido, pode utilizar simulacao de negocios juridicos para reduzir tributos."
+      ],
+      "correctOption": 0,
+      "explanation": "O planejamento tributario licito (elisao fiscal) usa apenas meios legais e negocios juridicos reais, diferentemente da evasao fiscal (fraude/simulacao).",
+      "index": 26
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "O custo dos produtos vendidos (CPV) no ano foi R$ 342.000,00 e o estoque medio foi R$ 42.000,00. Qual o giro de estoque (aproximado, em vezes ao ano)?",
+      "options": [
+        "0.1 vezes ao ano",
+        "9.1 vezes ao ano",
+        "7.1 vezes ao ano",
+        "8.1 vezes ao ano"
+      ],
+      "correctOption": 3,
+      "explanation": "Giro de estoque = CPV / estoque medio = 342000/42000 = 8.1 vezes ao ano.",
+      "index": 27
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Sobre fluxo de caixa - atividades operacionais, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A DRE apresenta a posicao do ativo, passivo e patrimonio liquido em uma unica data.",
+        "Patrimonio liquido e sempre igual ao caixa disponivel da entidade.",
+        "As atividades operacionais no fluxo de caixa referem-se exclusivamente a compra e venda de imobilizado.",
+        "As atividades operacionais no fluxo de caixa refletem os efeitos de caixa das transacoes que entram na apuracao do lucro ou prejuizo (ex.: recebimento de clientes, pagamento a fornecedores)."
+      ],
+      "correctOption": 3,
+      "explanation": "Compra e venda de imobilizado e classificada como atividade de investimento, nao operacional.",
+      "index": 28
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "certo_errado",
+      "prompt": "Quando a lei nao atribui efeito especifico ao silencio da Administracao, este nao pode ser interpretado automaticamente como deferimento ou indeferimento do pedido.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Na ausencia de previsao legal especifica, o silencio administrativo e, em regra, omissao que pode ser impugnada, nao uma manifestacao de vontade presumida.",
+      "index": 29
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "multipla",
+      "prompt": "Sobre remedios constitucionais - habeas corpus, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O habeas corpus e concedido sempre que alguem sofrer ou se achar ameacado de sofrer violencia ou coacao em sua liberdade de locomocao.",
+        "O direito a propriedade e absoluto e nao admite qualquer limitacao constitucional.",
+        "Os agentes publicos podem fazer tudo o que a lei nao proibir, da mesma forma que os particulares.",
+        "O habeas corpus se destina a proteger o acesso a informacoes de interesse pessoal ou coletivo."
+      ],
+      "correctOption": 0,
+      "explanation": "Art. 5o, LXVIII, da CF/88 define exatamente essa finalidade para o habeas corpus.",
+      "index": 30
+    },
+    {
+      "theme": "estatistica",
+      "kind": "multipla",
+      "prompt": "Um servidor obteve as seguintes notas em 5 avaliacoes: 4, 10, 6, 2, 10. Qual a media aritmetica?",
+      "options": [
+        "10.0",
+        "6.4",
+        "6.0",
+        "6.8"
+      ],
+      "correctOption": 1,
+      "explanation": "Media = soma dos valores / quantidade = 32 / 5 = 6.4.",
+      "index": 31
+    },
+    {
+      "theme": "direito-eleitoral",
+      "kind": "multipla",
+      "prompt": "Sobre domicilio eleitoral, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O domicilio eleitoral e o local de residencia ou vinculo do eleitor com a comunidade, exigido para fins de alistamento e elegibilidade naquela circunscricao.",
+        "O voto no Brasil e obrigatorio para absolutamente todos os cidadaos, sem qualquer excecao de idade ou condicao.",
+        "No Brasil, candidaturas independentes, sem filiacao a partido politico, sao plenamente admitidas para qualquer cargo eletivo.",
+        "O domicilio eleitoral e irrelevante para a elegibilidade de um candidato a cargo municipal."
+      ],
+      "correctOption": 0,
+      "explanation": "A legislacao eleitoral exige, em regra, prazo minimo de domicilio eleitoral na circunscricao para que o candidato possa concorrer a cargo naquela localidade.",
+      "index": 32
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Qual e a negacao logica correta da proposicao \"a prova tem gabarito preliminar e o recurso foi aceito\"?",
+      "options": [
+        "Nao e verdade que a prova tem gabarito preliminar, e nao e verdade que o recurso foi aceito",
+        "a prova tem gabarito preliminar e o recurso foi aceito",
+        "a prova tem gabarito preliminar e nao e verdade que o recurso foi aceito",
+        "Nao e verdade que a prova tem gabarito preliminar, ou nao e verdade que o recurso foi aceito"
+      ],
+      "correctOption": 3,
+      "explanation": "Pela Lei de De Morgan, a negacao de 'P e Q' e 'nao P ou nao Q' (troca 'e' por 'ou' e nega as duas partes).",
+      "index": 33
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "Sobre lucro liquido, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Lucro liquido e o resultado final apos deduzidas todas as despesas, custos e tributos sobre o lucro, incluindo participacoes, do total das receitas do periodo.",
+        "Passivo circulante compreende apenas emprestimos bancarios de qualquer prazo.",
+        "As notas explicativas sao documentos internos confidenciais que nunca acompanham as demonstracoes contabeis publicadas.",
+        "Lucro liquido e o mesmo que receita bruta da entidade no periodo."
+      ],
+      "correctOption": 0,
+      "explanation": "Receita bruta e apenas o ponto de partida da DRE; o lucro liquido e o resultado final apos todas as deducoes.",
+      "index": 34
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "A idade de Pedro e igual ao dobro da idade de Joana somado a 10 anos. Se Joana tem 26 anos, qual e a idade de Pedro?",
+      "options": [
+        "64",
+        "36",
+        "62",
+        "60"
+      ],
+      "correctOption": 2,
+      "explanation": "Pedro = 2 x idade de Joana + 10 = 2 x 26 + 10 = 62 anos.",
+      "index": 35
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "multipla",
+      "prompt": "Sobre direitos sociais, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O habeas corpus se destina a proteger o acesso a informacoes de interesse pessoal ou coletivo.",
+        "O orcamento publico no Brasil e aprovado exclusivamente pelo Poder Executivo, sem participacao do Legislativo.",
+        "Os direitos sociais previstos na CF/88 nao incluem o lazer nem a previdencia social.",
+        "Sao direitos sociais, entre outros, a educacao, a saude, a alimentacao, o trabalho, a moradia e a seguranca."
+      ],
+      "correctOption": 3,
+      "explanation": "Art. 6o da CF/88 lista um rol amplo de direitos sociais, que inclui tambem lazer e previdencia social.",
+      "index": 36
+    },
+    {
+      "theme": "espanhol",
+      "kind": "certo_errado",
+      "prompt": "La idea principal de un texto es siempre la ultima frase del ultimo parrafo, sin importar el contenido del resto del texto.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Reducir la idea principal a la ultima frase ignora que la tesis central puede estar en otra parte o construirse a lo largo de todo el texto.",
+      "index": 37
+    },
+    {
+      "theme": "ingles",
+      "kind": "certo_errado",
+      "prompt": "The present perfect is always used with a specific past time expression, such as 'yesterday' or 'last year'.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Using a specific past time expression with the present perfect ('I have arrived yesterday') is a common grammar mistake; the simple past is required there.",
+      "index": 38
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "certo_errado",
+      "prompt": "Ninguem sera privado da liberdade ou de seus bens sem o devido processo legal.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 5o, LIV, da CF/88 nao restringe a garantia a processos criminais.",
+      "index": 39
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "multipla",
+      "prompt": "Sobre fgts - aliquota, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A comunicacao de admissao de empregado e facultativa e pode ser feita em qualquer prazo, a criterio do empregador.",
+        "O empregador pode dispensar por justa causa sempre que considerar o desempenho do empregado insatisfatorio, sem necessidade de falta especifica.",
+        "O empregador deposita mensalmente, em regra, o equivalente a 8% da remuneracao do empregado na conta vinculada do FGTS.",
+        "O FGTS e descontado do salario do empregado, reduzindo o valor liquido recebido por ele."
+      ],
+      "correctOption": 2,
+      "explanation": "O FGTS e encargo do empregador (deposito de 8% sobre a remuneracao), nao desconto do salario do empregado.",
+      "index": 40
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "multipla",
+      "prompt": "Sobre personalidade juridica, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A personalidade juridica da sociedade empresaria se confunde sempre com a personalidade de seus socios, em qualquer situacao.",
+        "Na sociedade limitada, os socios respondem sempre com seu patrimonio pessoal por toda e qualquer divida da sociedade, sem limite.",
+        "Na sociedade anonima, o capital social se divide em quotas, nos mesmos termos da sociedade limitada.",
+        "A sociedade empresaria regularmente registrada adquire personalidade juridica distinta da de seus socios."
+      ],
+      "correctOption": 3,
+      "explanation": "O registro da sociedade empresaria cria um ente autonomo, com patrimonio e personalidade juridica propria, distinta da dos socios (salvo casos de desconsideracao da personalidade juridica).",
+      "index": 41
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "certo_errado",
+      "prompt": "E vedado exigir ou aumentar tributo sem lei que o estabeleca, salvo as excecoes constitucionais expressas.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 150, I, da CF/88 exige lei para instituir ou aumentar tributo; so excecoes expressas (como II, IE, IPI, IOF) admitem alteracao de aliquota por ato do Executivo, dentro de limites legais.",
+      "index": 42
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "multipla",
+      "prompt": "Sobre isencao tributaria, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A isencao tributaria tem sede constitucional e nunca pode ser revogada.",
+        "O imposto exige sempre uma contraprestacao direta e especifica do Estado ao contribuinte que o paga.",
+        "A anterioridade nonagesimal dispensa a observancia simultanea da anterioridade anual para os tributos em geral.",
+        "A isencao e causa de exclusao do credito tributario, prevista em lei, que dispensa o pagamento do tributo devido."
+      ],
+      "correctOption": 3,
+      "explanation": "Art. 175 do CTN trata a isencao como exclusao do credito tributario, concedida por lei (nao pela Constituicao), podendo em regra ser revogada por lei.",
+      "index": 43
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "certo_errado",
+      "prompt": "A lei tributaria pode retroagir livremente para cobrar tributo sobre fatos geradores passados, sem qualquer limitacao.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A irretroatividade e garantia constitucional do contribuinte; a lei tributaria que cria ou aumenta tributo nao pode retroagir para atingir fatos geradores passados.",
+      "index": 44
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Se 6 maquinas identicas produzem 64 pecas por hora, quantas pecas 8 maquinas identicas produzem no mesmo intervalo de tempo (mantendo a mesma proporcao)?",
+      "options": [
+        "85",
+        "72",
+        "79",
+        "93"
+      ],
+      "correctOption": 0,
+      "explanation": "Regra de tres simples direta: 6 maquinas -> 64 pecas; 8 maquinas -> x. x = (64 x 8) / 6 = 85.",
+      "index": 45
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "multipla",
+      "prompt": "Sobre regime de apuracao do icms - debito e credito, qual das alternativas a seguir esta correta?",
+      "options": [
+        "No ICMS, a empresa nunca pode se creditar do imposto pago nas aquisicoes, pagando sempre o valor total das saidas.",
+        "O substituto tributario so tem responsabilidade pelo recolhimento do tributo, nunca por qualquer obrigacao acessoria relacionada.",
+        "No regime normal de apuracao do ICMS, a empresa credita o imposto pago nas entradas e debita o imposto devido nas saidas, recolhendo a diferenca (nao cumulatividade).",
+        "A ECD e documento interno que nunca precisa ser transmitido a nenhum orgao publico."
+      ],
+      "correctOption": 2,
+      "explanation": "O principio da nao cumulatividade do ICMS (art. 155, par. 2o, I, CF/88) permite o credito do imposto pago nas entradas, compensando com o debito das saidas.",
+      "index": 46
+    },
+    {
+      "theme": "dados",
+      "kind": "multipla",
+      "prompt": "Sobre sql - comando select, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A LGPD se aplica apenas a dados de pessoas juridicas, nunca a dados de pessoas fisicas.",
+        "O comando SELECT em SQL e usado para consultar e recuperar dados armazenados em uma ou mais tabelas de um banco de dados relacional.",
+        "O comando SELECT em SQL e usado para excluir permanentemente registros de uma tabela.",
+        "Segundo a LGPD, todos os dados pessoais recebem exatamente o mesmo nivel de protecao, sem categoria diferenciada para dados sensiveis."
+      ],
+      "correctOption": 1,
+      "explanation": "A exclusao de registros em SQL e feita pelo comando DELETE, nao pelo SELECT, que apenas consulta dados.",
+      "index": 47
+    },
+    {
+      "theme": "dados",
+      "kind": "certo_errado",
+      "prompt": "Governanca de dados se refere apenas ao armazenamento fisico dos servidores onde os dados ficam guardados.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Infraestrutura fisica de servidores e apenas um aspecto tecnico; governanca de dados abrange politicas e processos organizacionais mais amplos.",
+      "index": 48
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "certo_errado",
+      "prompt": "Na sociedade limitada, os socios respondem sempre com seu patrimonio pessoal por toda e qualquer divida da sociedade, sem limite.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A responsabilidade ilimitada e irrestrita descreve a sociedade simples pura ou outros tipos, nao a sociedade limitada, cujo tracos distintivo e justamente a limitacao da responsabilidade.",
+      "index": 49
+    },
+    {
+      "theme": "estatistica",
+      "kind": "multipla",
+      "prompt": "Em uma pesquisa, os valores coletados foram: 5, 18, 12, 7, 7, 7. Qual e a moda (valor mais frequente)?",
+      "options": [
+        "18",
+        "5",
+        "7",
+        "12"
+      ],
+      "correctOption": 2,
+      "explanation": "O valor 7 aparece 3 vezes, mais que qualquer outro da lista — portanto a moda e 7.",
+      "index": 50
+    },
+    {
+      "theme": "portugues",
+      "kind": "certo_errado",
+      "prompt": "Identificar a ideia principal de um texto exige distinguir a tese central defendida pelo autor dos argumentos e exemplos que a sustentam.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A ideia principal pode estar em qualquer parte do texto (inclusive subentendida); identifica-la exige compreensao global, nao apenas a leitura da primeira frase.",
+      "index": 51
+    },
+    {
+      "theme": "portugues",
+      "kind": "certo_errado",
+      "prompt": "A metafora e figura de linguagem que estabelece uma comparacao implicita entre dois elementos, sem o uso de conectivo comparativo.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A comparacao com 'como' caracteriza o simile (comparacao explicita), nao a metafora, que e implicita (sem conectivo comparativo).",
+      "index": 52
+    },
+    {
+      "theme": "espanhol",
+      "kind": "certo_errado",
+      "prompt": "En espanol, ninguna palabra esdrujula lleva tilde escrita, independientemente de su acentuacion.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Las palabras esdrujulas son, por regla general y sin excepciones, siempre tildadas en espanol.",
+      "index": 53
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Uma empresa teve receita liquida de R$ 277.000,00 e lucro liquido de R$ 27.700,00 no periodo. Qual foi a margem liquida (lucro liquido / receita liquida), em percentual?",
+      "options": [
+        "12%",
+        "10%",
+        "8%",
+        "20%"
+      ],
+      "correctOption": 1,
+      "explanation": "Margem liquida = lucro liquido / receita liquida x 100 = 27700/277000 x 100 = 10%.",
+      "index": 54
+    },
+    {
+      "theme": "dados",
+      "kind": "certo_errado",
+      "prompt": "Big data se refere exclusivamente a quantidade de paginas impressas em relatorios de uma organizacao.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Paginas impressas nao se relacionam ao conceito de big data, que trata de processamento de grandes volumes de dados digitais.",
+      "index": 55
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "multipla",
+      "prompt": "Sobre malha fiscal, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A malha fiscal e o processo de cruzamento de informacoes declaradas pelo contribuinte com dados de terceiros, usado pelo Fisco para identificar inconsistencias.",
+        "Obrigacoes acessorias fiscais sempre exigem o pagamento de valores em dinheiro ao Fisco, da mesma forma que a obrigacao principal.",
+        "A emissao de nota fiscal so e obrigatoria para operacoes acima de determinado valor fixado livremente por cada empresa.",
+        "A malha fiscal e um beneficio fiscal concedido automaticamente a empresas em dia com suas obrigacoes."
+      ],
+      "correctOption": 0,
+      "explanation": "A malha fiscal e mecanismo de fiscalizacao (cruzamento de dados para identificar divergencias), nao um beneficio fiscal.",
+      "index": 56
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Uma comissao de 3 servidores sera escolhida, sem distincao de funcao, entre 9 servidores disponiveis. De quantas formas diferentes essa comissao pode ser formada?",
+      "options": [
+        "87",
+        "168",
+        "81",
+        "84"
+      ],
+      "correctOption": 3,
+      "explanation": "Como a ordem nao importa (comissao, sem funcoes distintas), usa-se combinacao: C(9,3) = 9! / (3! x (9-k)!) = 84.",
+      "index": 57
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Resolva para x: 8x + 27 = 123. Qual o valor de x?",
+      "options": [
+        "20",
+        "12",
+        "11",
+        "13"
+      ],
+      "correctOption": 1,
+      "explanation": "8x = 123 - 27 = 96; x = 96 / 8 = 12.",
+      "index": 58
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre pontuacao - virgula antes de 'que' explicativo, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O verbo preferir deve ser sempre seguido de 'do que' na norma culta tradicional (ex.: 'prefiro cafe do que cha').",
+        "Nunca se usa virgula antes de qualquer oracao introduzida por 'que', seja ela restritiva ou explicativa.",
+        "Usa-se virgula antes de oracao subordinada adjetiva explicativa, que acrescenta uma informacao extra sobre o antecedente.",
+        "Nenhuma palavra paroxitona recebe acento grafico, segundo a norma ortografica vigente."
+      ],
+      "correctOption": 2,
+      "explanation": "A oracao explicativa (acrescenta informacao nao essencial, geralmente entre virgulas) se distingue da restritiva (sem virgula, define o antecedente).",
+      "index": 59
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "certo_errado",
+      "prompt": "Sao direitos sociais, entre outros, a educacao, a saude, a alimentacao, o trabalho, a moradia e a seguranca.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 6o da CF/88 lista um rol amplo de direitos sociais, que inclui tambem lazer e previdencia social.",
+      "index": 60
+    }
+  ]
+}

@@ -1,0 +1,796 @@
+{
+  "examId": "ATLAS-SIM-29",
+  "title": "Simulado autoral Atlas 29/30",
+  "questions": [
+    {
+      "theme": "direito-constitucional",
+      "kind": "certo_errado",
+      "prompt": "Qualquer cargo publico, inclusive os efetivos, pode ser provido por indicacao politica sem concurso.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Cargos efetivos exigem concurso publico; a livre nomeacao e exclusiva para os cargos em comissao de direcao, chefia e assessoramento.",
+      "index": 1
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Se 12 maquinas identicas produzem 114 pecas por hora, quantas pecas 17 maquinas identicas produzem no mesmo intervalo de tempo (mantendo a mesma proporcao)?",
+      "options": [
+        "150",
+        "178",
+        "162",
+        "131"
+      ],
+      "correctOption": 2,
+      "explanation": "Regra de tres simples direta: 12 maquinas -> 114 pecas; 17 maquinas -> x. x = (114 x 17) / 12 = 162.",
+      "index": 2
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "multipla",
+      "prompt": "Sobre iss - competencia, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O principio da capacidade contributiva se aplica exclusivamente as taxas, nunca aos impostos.",
+        "Compete aos Municipios e ao Distrito Federal instituir o ISS, imposto sobre servicos de qualquer natureza nao abrangidos pelo ICMS.",
+        "O ISS incide sobre a circulacao de mercadorias, da mesma forma que o ICMS.",
+        "A isencao tributaria tem sede constitucional e nunca pode ser revogada."
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 156, III, da CF/88 atribui o ISS aos Municipios e ao DF, incidindo sobre servicos, nao sobre circulacao de mercadorias.",
+      "index": 3
+    },
+    {
+      "theme": "tributacao",
+      "kind": "multipla",
+      "prompt": "Sobre certidao negativa de debitos, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A Certidao Negativa de Debitos, uma vez emitida, tem validade permanente e nunca precisa ser renovada.",
+        "O Simples Nacional e regime tributario obrigatorio para todas as empresas, independente do porte.",
+        "A Certidao Negativa de Debitos (CND) atesta que o contribuinte nao possui debitos tributarios pendentes com o ente que a emite, na data de sua expedicao.",
+        "O parcelamento tributario extingue definitivamente o credito tributario no momento da adesao, independentemente do pagamento das parcelas."
+      ],
+      "correctOption": 2,
+      "explanation": "A CND e emitida com validade por prazo determinado, sendo uma fotografia da situacao fiscal do contribuinte naquele momento.",
+      "index": 4
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Qual e a negacao logica correta da proposicao \"o estagio probatorio foi cumprido ou a estabilidade foi adquirida\"?",
+      "options": [
+        "Nao e verdade que o estagio probatorio foi cumprido, ou nao e verdade que a estabilidade foi adquirida",
+        "Nao e verdade que o estagio probatorio foi cumprido, e nao e verdade que a estabilidade foi adquirida",
+        "o estagio probatorio foi cumprido e a estabilidade foi adquirida",
+        "o estagio probatorio foi cumprido e nao e verdade que a estabilidade foi adquirida"
+      ],
+      "correctOption": 1,
+      "explanation": "Pela Lei de De Morgan, a negacao de 'P ou Q' e 'nao P e nao Q' (troca 'ou' por 'e' e nega as duas partes).",
+      "index": 5
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "certo_errado",
+      "prompt": "A Administracao Publica pode contratar livremente, sem licitacao, sempre que o valor do contrato for considerado pequeno pelo gestor.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "As hipoteses de dispensa e inexigibilidade de licitacao sao definidas taxativamente em lei, nao a criterio discricionario do gestor pelo valor que ele considerar pequeno.",
+      "index": 6
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "Uma empresa tem ativo circulante de R$ 60.000,00 e passivo circulante de R$ 171.000,00. Qual o indice de liquidez corrente (aproximado, com 2 casas decimais)?",
+      "options": [
+        "0.05",
+        "0.35",
+        "0.65",
+        "2.85"
+      ],
+      "correctOption": 1,
+      "explanation": "Liquidez corrente = ativo circulante / passivo circulante = 60000/171000 = 0.35.",
+      "index": 7
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "multipla",
+      "prompt": "Sobre direito de regresso, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O principio da eficiencia autoriza a Administracao a descumprir a legalidade quando isso tornar o servico mais rapido.",
+        "Todos os bens publicos, sem excecao, sao sempre inalienaveis, mesmo apos serem desafetados.",
+        "Quando o Estado indeniza um terceiro por dano causado por agente publico, tem direito de regresso contra esse agente em caso de dolo ou culpa.",
+        "O Estado nunca pode cobrar de volta do agente publico o valor pago a titulo de indenizacao."
+      ],
+      "correctOption": 2,
+      "explanation": "Art. 37, par. 6o, da CF/88 assegura o direito de regresso do Estado contra o agente responsavel, nos casos de dolo ou culpa.",
+      "index": 8
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Se 5 maquinas identicas produzem 103 pecas por hora, quantas pecas 9 maquinas identicas produzem no mesmo intervalo de tempo (mantendo a mesma proporcao)?",
+      "options": [
+        "194",
+        "180",
+        "112",
+        "185"
+      ],
+      "correctOption": 3,
+      "explanation": "Regra de tres simples direta: 5 maquinas -> 103 pecas; 9 maquinas -> x. x = (103 x 9) / 5 = 185.",
+      "index": 9
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "multipla",
+      "prompt": "Sobre obrigacao acessoria fiscal, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Obrigacoes acessorias fiscais sempre exigem o pagamento de valores em dinheiro ao Fisco, da mesma forma que a obrigacao principal.",
+        "Obrigacoes acessorias fiscais sao deveres instrumentais (emitir documentos, entregar declaracoes, manter escrituracao) exigidos pela legislacao tributaria para possibilitar a fiscalizacao.",
+        "A EFD-Contribuicoes e usada exclusivamente para declarar o ICMS devido pela empresa.",
+        "A ECD e documento interno que nunca precisa ser transmitido a nenhum orgao publico."
+      ],
+      "correctOption": 1,
+      "explanation": "A obrigacao acessoria tem natureza de fazer ou nao fazer (deveres instrumentais), nao de pagamento em dinheiro, que caracteriza a obrigacao principal.",
+      "index": 10
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "O custo dos produtos vendidos (CPV) no ano foi R$ 356.000,00 e o estoque medio foi R$ 44.000,00. Qual o giro de estoque (aproximado, em vezes ao ano)?",
+      "options": [
+        "7.1 vezes ao ano",
+        "8.1 vezes ao ano",
+        "9.1 vezes ao ano",
+        "0.1 vezes ao ano"
+      ],
+      "correctOption": 1,
+      "explanation": "Giro de estoque = CPV / estoque medio = 356000/44000 = 8.1 vezes ao ano.",
+      "index": 11
+    },
+    {
+      "theme": "ingles",
+      "kind": "certo_errado",
+      "prompt": "The first conditional ('if' + simple present, 'will' + base form) is used to talk about real or likely future situations.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Impossible present hypothetical situations correspond to the second conditional ('if' + simple past, 'would' + base form), not the first.",
+      "index": 12
+    },
+    {
+      "theme": "matematica-financeira",
+      "kind": "multipla",
+      "prompt": "Um titulo com valor nominal de R$ 3.212,00 sera descontado 5 meses antes do vencimento, a uma taxa de desconto simples de 1% ao mes. Qual o valor liquido recebido?",
+      "options": [
+        "R$ 3.212,00",
+        "R$ 3.083,52",
+        "R$ 3.019,28",
+        "R$ 3.051,40"
+      ],
+      "correctOption": 3,
+      "explanation": "Desconto simples por fora: D = N x i x t = 3212 x 0.01 x 5 = R$ 160,60. Valor liquido = N - D = R$ 3.212,00 - R$ 160,60 = R$ 3.051,40.",
+      "index": 13
+    },
+    {
+      "theme": "direito-eleitoral",
+      "kind": "certo_errado",
+      "prompt": "Oferecer dinheiro ou bens a eleitores em troca de voto e pratica legal, desde que o candidato declare o gasto na prestacao de contas.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A compra de voto (captacao ilicita de sufragio) e ilicita e gera inelegibilidade, independentemente de o gasto ser ou nao declarado na prestacao de contas.",
+      "index": 14
+    },
+    {
+      "theme": "portugues",
+      "kind": "certo_errado",
+      "prompt": "No sentido de 'ver, presenciar', o verbo assistir e transitivo indireto, regendo a preposicao 'a' (ex.: 'assistir ao jogo').",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A norma culta tradicional exige a preposicao 'a' com 'assistir' no sentido de ver/presenciar.",
+      "index": 15
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Observe a sequencia numerica: 10, 30, 90, 270, 810, ... Qual e o proximo termo?",
+      "options": [
+        "2433",
+        "2427",
+        "2430",
+        "2431"
+      ],
+      "correctOption": 2,
+      "explanation": "A sequencia e geometrica de razao 3 (cada termo e multiplicado por 3). O ultimo termo mostrado e 810, logo o proximo e 810 x 3 = 2430.",
+      "index": 16
+    },
+    {
+      "theme": "espanhol",
+      "kind": "multipla",
+      "prompt": "Sobre futuro simple, qual das alternativas a seguir esta correta?",
+      "options": [
+        "El futuro simple en espanol se forma siempre quitando la terminacion '-ar', '-er' o '-ir' del verbo antes de agregar la terminacion de futuro.",
+        "El futuro simple en espanol se forma, para los verbos regulares, agregando terminaciones (-e, -as, -a, -emos, -eis, -an) al infinitivo completo del verbo.",
+        "La palabra 'embarazada' en espanol significa exactamente lo mismo que 'embaraçada' en portugues (confusa, enredada).",
+        "En espanol, nunca existen contracciones entre preposicion y articulo, a diferencia del portugues."
+      ],
+      "correctOption": 1,
+      "explanation": "Para los verbos regulares, el futuro simple se forma sobre el infinitivo completo (ej.: 'hablar' + 'e' = 'hablare'), sin quitar la terminacion del infinitivo.",
+      "index": 17
+    },
+    {
+      "theme": "tributacao",
+      "kind": "multipla",
+      "prompt": "Sobre substituicao tributaria no varejo, qual das alternativas a seguir esta correta?",
+      "options": [
+        "No Lucro Presumido, a empresa deve necessariamente apurar o lucro liquido contabil detalhado para calcular o imposto.",
+        "Na substituicao tributaria 'para frente', o consumidor final e quem recolhe diretamente o ICMS ao Estado apos a compra.",
+        "Na substituicao tributaria do ICMS 'para frente', o fabricante ou importador recolhe antecipadamente o imposto devido nas etapas seguintes da cadeia, até o consumidor final.",
+        "O parcelamento tributario extingue definitivamente o credito tributario no momento da adesao, independentemente do pagamento das parcelas."
+      ],
+      "correctOption": 2,
+      "explanation": "Na substituicao 'para frente', o recolhimento e antecipado por um elo anterior da cadeia (fabricante/importador), nao pelo consumidor final diretamente.",
+      "index": 18
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "multipla",
+      "prompt": "Sobre repartição de competencias - comum, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A saude publica e competencia exclusiva dos Municipios, sem participacao da Uniao ou dos Estados.",
+        "O mandado de seguranca pode ser usado para proteger qualquer direito, mesmo quando cabivel habeas corpus.",
+        "O habeas data serve para impugnar diretamente a constitucionalidade de uma lei.",
+        "Compete a Uniao, aos Estados, ao Distrito Federal e aos Municipios cuidar da saude e assistencia publica, de forma comum."
+      ],
+      "correctOption": 3,
+      "explanation": "Art. 23, II, da CF/88 estabelece competencia comum entre os quatro entes para saude e assistencia publica.",
+      "index": 19
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre ortografia - uso do hifen em compostos, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O emprego do hifen em palavras compostas segue regras especificas do Acordo Ortografico, como a duplicacao de letra ao juntar prefixo terminado e palavra iniciada pela mesma letra.",
+        "O uso do hifen em compostos e totalmente livre, a criterio de quem escreve, sem regras definidas.",
+        "Com a expressao 'a maioria de', a concordancia verbal so pode ser feita no plural, sendo erro gramatical a concordancia no singular.",
+        "As quatro formas (porque, por que, por quê, porquê) sao sempre intercambiaveis, sem distincao de uso na norma culta."
+      ],
+      "correctOption": 0,
+      "explanation": "O Acordo Ortografico de 1990 estabelece regras especificas (como com prefixos 'auto-', 'super-', 'inter-' etc.) para o uso do hifen.",
+      "index": 20
+    },
+    {
+      "theme": "tributacao",
+      "kind": "certo_errado",
+      "prompt": "A retencao na fonte dispensa definitivamente o beneficiario do pagamento de qualquer obrigacao relacionada aquele tributo retido, em qualquer hipotese.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Em diversos casos (como o Imposto de Renda de pessoa fisica), a retencao na fonte e apenas uma antecipacao, sujeita a ajuste na declaracao anual, nao uma dispensa definitiva e automatica de toda obrigacao.",
+      "index": 21
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "certo_errado",
+      "prompt": "A acao popular pode ser proposta por qualquer pessoa juridica interessada em fiscalizar o poder publico.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A legitimidade para acao popular e do cidadao (pessoa fisica), nao de pessoa juridica.",
+      "index": 22
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "multipla",
+      "prompt": "Sobre falencia - pressupostos, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Na sociedade limitada, os socios respondem sempre com seu patrimonio pessoal por toda e qualquer divida da sociedade, sem limite.",
+        "A personalidade juridica da sociedade empresaria se confunde sempre com a personalidade de seus socios, em qualquer situacao.",
+        "A falencia pode ser decretada para qualquer pessoa, empresaria ou nao, pelo simples atraso de uma unica conta domestica.",
+        "A falencia pressupoe a insolvencia do devedor empresario, caracterizada nas hipoteses previstas na Lei 11.101/2005, como a impontualidade injustificada no pagamento de obrigacao liquida."
+      ],
+      "correctOption": 3,
+      "explanation": "A Lei 11.101/2005 restringe a falencia a devedores empresarios (e sociedades empresarias), exigindo hipoteses especificas de insolvencia, nao qualquer atraso de pessoa nao empresaria.",
+      "index": 23
+    },
+    {
+      "theme": "ingles",
+      "kind": "certo_errado",
+      "prompt": "In the simple present tense, every subject pronoun requires the verb to end in -s, including 'I' and 'you'.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "The -s/-es ending is restricted to third person singular; adding it to 'I' or 'you' forms is a grammar mistake.",
+      "index": 24
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "certo_errado",
+      "prompt": "A recuperacao judicial tem por unico objetivo liquidar os bens do devedor para pagar os credores, da mesma forma que a falencia.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Liquidar bens para pagar credores e a logica da falencia; a recuperacao judicial busca o oposto: preservar a atividade empresarial viavel.",
+      "index": 25
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "multipla",
+      "prompt": "Sobre horas extras, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A remuneracao da hora extra sera, no minimo, 50% superior a da hora normal, salvo norma coletiva ou constitucional mais favoravel.",
+        "O empregador pode dispensar por justa causa sempre que considerar o desempenho do empregado insatisfatorio, sem necessidade de falta especifica.",
+        "O vale-transporte e sempre totalmente gratuito para o empregado, sem qualquer desconto permitido em lei.",
+        "As horas extras podem ser pagas pelo mesmo valor da hora normal, sem nenhum adicional."
+      ],
+      "correctOption": 0,
+      "explanation": "Art. 7o, XVI, da CF/88 garante adicional minimo de 50% sobre a hora normal para o trabalho extraordinario.",
+      "index": 26
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "multipla",
+      "prompt": "Sobre aviso previo, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O aviso previo, proporcional ao tempo de servico, e devido na rescisao sem justa causa por iniciativa do empregador ou do empregado, nos termos da lei.",
+        "O aviso previo so e devido quando o empregado pede demissao, nunca quando o empregador dispensa sem justa causa.",
+        "A comunicacao de admissao de empregado e facultativa e pode ser feita em qualquer prazo, a criterio do empregador.",
+        "O vale-transporte e sempre totalmente gratuito para o empregado, sem qualquer desconto permitido em lei."
+      ],
+      "correctOption": 0,
+      "explanation": "A Lei 12.506/2011 e a CLT preveem aviso previo tanto na dispensa sem justa causa pelo empregador quanto no pedido de demissao pelo empregado.",
+      "index": 27
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "A idade de Pedro e igual ao dobro da idade de Joana somado a 10 anos. Se Joana tem 24 anos, qual e a idade de Pedro?",
+      "options": [
+        "60",
+        "58",
+        "34",
+        "56"
+      ],
+      "correctOption": 1,
+      "explanation": "Pedro = 2 x idade de Joana + 10 = 2 x 24 + 10 = 58 anos.",
+      "index": 28
+    },
+    {
+      "theme": "espanhol",
+      "kind": "certo_errado",
+      "prompt": "En espanol, nunca existen contracciones entre preposicion y articulo, a diferencia del portugues.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "El espanol si tiene contracciones obligatorias especificas ('al' y 'del'), aunque en menor numero que el portugues.",
+      "index": 29
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "Sobre capital circulante liquido, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Passivo circulante compreende apenas emprestimos bancarios de qualquer prazo.",
+        "O capital circulante liquido e sempre igual ao patrimonio liquido total da entidade.",
+        "Lucro liquido e o mesmo que receita bruta da entidade no periodo.",
+        "O capital circulante liquido (ativo circulante menos passivo circulante) indica a folga ou a insuficiencia de recursos de curto prazo da entidade."
+      ],
+      "correctOption": 3,
+      "explanation": "Capital circulante liquido = ativo circulante - passivo circulante, um conceito de curto prazo, diferente do patrimonio liquido (ativo total - passivo total).",
+      "index": 30
+    },
+    {
+      "theme": "estatistica",
+      "kind": "multipla",
+      "prompt": "Uma moeda honesta e lancada 2 vezes. Qual a probabilidade de sair cara em todos os lancamentos?",
+      "options": [
+        "1/4",
+        "1/2",
+        "2/4",
+        "1/2 (1)"
+      ],
+      "correctOption": 0,
+      "explanation": "Cada lancamento tem probabilidade 1/2 de dar cara; lancamentos independentes se multiplicam: (1/2)^2 = 1/4.",
+      "index": 31
+    },
+    {
+      "theme": "dados",
+      "kind": "certo_errado",
+      "prompt": "A anonimizacao de dados consiste em apenas remover o nome da pessoa, mantendo todos os demais dados que poderiam identifica-la de outra forma.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Remover apenas o nome, mantendo outros identificadores indiretos (como CPF, endereco completo), pode nao configurar anonimizacao efetiva, permitindo reidentificacao.",
+      "index": 32
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Uma empresa tem custos fixos mensais de R$ 46.000,00 e margem de contribuicao de R$ 37,00 por unidade vendida. Quantas unidades precisa vender por mes para atingir o ponto de equilibrio (lucro zero)?",
+      "options": [
+        "1233 unidades",
+        "1243 unidades",
+        "46 unidades",
+        "1253 unidades"
+      ],
+      "correctOption": 1,
+      "explanation": "Ponto de equilibrio em unidades = custo fixo / margem de contribuicao unitaria = 46000 / 37 = 1243 unidades.",
+      "index": 33
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "certo_errado",
+      "prompt": "A divida ativa tributaria regularmente inscrita goza de presuncao de certeza e liquidez, que pode ser ilidida por prova em contrario.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 204 do CTN atribui presuncao relativa (nao absoluta) de certeza e liquidez a divida ativa regularmente inscrita.",
+      "index": 34
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Qual e a negacao logica correta da proposicao \"a nota de empenho foi emitida e o pagamento foi liberado\"?",
+      "options": [
+        "a nota de empenho foi emitida e o pagamento foi liberado",
+        "a nota de empenho foi emitida e nao e verdade que o pagamento foi liberado",
+        "Nao e verdade que a nota de empenho foi emitida, ou nao e verdade que o pagamento foi liberado",
+        "Nao e verdade que a nota de empenho foi emitida, e nao e verdade que o pagamento foi liberado"
+      ],
+      "correctOption": 2,
+      "explanation": "Pela Lei de De Morgan, a negacao de 'P e Q' e 'nao P ou nao Q' (troca 'e' por 'ou' e nega as duas partes).",
+      "index": 35
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Resolva para x: 4x + 19 = 135. Qual o valor de x?",
+      "options": [
+        "33",
+        "28",
+        "29",
+        "30"
+      ],
+      "correctOption": 2,
+      "explanation": "4x = 135 - 19 = 116; x = 116 / 4 = 29.",
+      "index": 36
+    },
+    {
+      "theme": "direito-eleitoral",
+      "kind": "certo_errado",
+      "prompt": "A Lei da Ficha Limpa (LC 135/2010) exige sempre o transito em julgado da condenacao para gerar inelegibilidade, nunca bastando decisao de orgao colegiado.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Um dos principais pontos da Lei da Ficha Limpa foi justamente permitir a inelegibilidade a partir de condenacao por orgao colegiado, sem exigir transito em julgado.",
+      "index": 37
+    },
+    {
+      "theme": "estatistica",
+      "kind": "multipla",
+      "prompt": "Em uma pesquisa, os valores coletados foram: 15, 15, 11, 16, 15, 9. Qual e a moda (valor mais frequente)?",
+      "options": [
+        "15",
+        "9",
+        "11",
+        "16"
+      ],
+      "correctOption": 0,
+      "explanation": "O valor 15 aparece 3 vezes, mais que qualquer outro da lista — portanto a moda e 15.",
+      "index": 38
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "multipla",
+      "prompt": "Sobre principio da anterioridade anual, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Em regra, e vedado cobrar tributo no mesmo exercicio financeiro em que haja sido publicada a lei que o instituiu ou aumentou.",
+        "O principio da anterioridade anual se aplica sem excecao a todos os tributos, inclusive aos impostos extraordinarios de guerra.",
+        "O ICMS e tributo de competencia exclusiva dos Municipios.",
+        "O imposto exige sempre uma contraprestacao direta e especifica do Estado ao contribuinte que o paga."
+      ],
+      "correctOption": 0,
+      "explanation": "Art. 150, III, 'b', da CF/88 estabelece a anterioridade anual como regra, mas a propria Constituicao lista excecoes (como o imposto extraordinario de guerra, II, IE, IOF).",
+      "index": 39
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "certo_errado",
+      "prompt": "A emissao de nota fiscal so e obrigatoria para operacoes acima de determinado valor fixado livremente por cada empresa.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Nao cabe a empresa decidir livremente a partir de que valor emitira nota fiscal; a obrigatoriedade decorre da legislacao tributaria aplicavel.",
+      "index": 40
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "certo_errado",
+      "prompt": "A equacao contabil fundamental estabelece que Ativo = Passivo - Patrimonio Liquido.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A relacao correta soma passivo e patrimonio liquido para igualar ao ativo, nao subtrai.",
+      "index": 41
+    },
+    {
+      "theme": "matematica-financeira",
+      "kind": "multipla",
+      "prompt": "Um capital de R$ 4.773,00 foi aplicado a juros compostos de 2% por periodo, durante 4 periodos. Qual o montante final (aproximado)?",
+      "options": [
+        "R$ 5.070,99",
+        "R$ 5.166,45",
+        "R$ 5.154,84",
+        "R$ 5.309,64"
+      ],
+      "correctOption": 1,
+      "explanation": "Juros compostos: M = C x (1 + i)^t = 4773 x (1,02)^4 = R$ 5.166,45 (aproximado).",
+      "index": 42
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "certo_errado",
+      "prompt": "Os contratos administrativos seguem exatamente as mesmas regras dos contratos privados, sem nenhuma prerrogativa especial da Administracao.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Os contratos administrativos tem regime juridico proprio, com prerrogativas (clausulas exorbitantes) que nao existem nos contratos regidos puramente pelo direito privado.",
+      "index": 43
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Uma comissao de 2 servidores sera escolhida, sem distincao de funcao, entre 7 servidores disponiveis. De quantas formas diferentes essa comissao pode ser formada?",
+      "options": [
+        "19",
+        "21",
+        "42",
+        "23"
+      ],
+      "correctOption": 1,
+      "explanation": "Como a ordem nao importa (comissao, sem funcoes distintas), usa-se combinacao: C(7,2) = 7! / (2! x (7-k)!) = 21.",
+      "index": 44
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "multipla",
+      "prompt": "Sobre recuperacao judicial - finalidade, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A recuperacao judicial tem por unico objetivo liquidar os bens do devedor para pagar os credores, da mesma forma que a falencia.",
+        "A recuperacao judicial visa viabilizar a superacao da situacao de crise economico-financeira do devedor, permitindo a manutencao da fonte produtora e dos empregos.",
+        "A desconsideracao da personalidade juridica e aplicada automaticamente sempre que a sociedade nao consegue pagar uma divida, independentemente de abuso.",
+        "No contrato de franquia, o franqueado se torna empregado do franqueador, perdendo sua autonomia juridica."
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 47 da Lei 11.101/2005 define a recuperacao judicial como instrumento de superacao da crise, preservando a empresa, diferente da falencia, que e liquidatoria.",
+      "index": 45
+    },
+    {
+      "theme": "portugues",
+      "kind": "certo_errado",
+      "prompt": "O verbo preferir deve ser sempre seguido de 'do que' na norma culta tradicional (ex.: 'prefiro cafe do que cha').",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A construcao com 'do que' apos 'preferir' e tradicionalmente apontada como desvio da norma culta, que recomenda a preposicao 'a'.",
+      "index": 46
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "certo_errado",
+      "prompt": "A desapropriacao, no regime geral da CF/88, pode ser feita sem qualquer indenizacao ao proprietario.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A regra geral exige indenizacao previa e justa; a ausencia de indenizacao nao e a regra do instituto.",
+      "index": 47
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "certo_errado",
+      "prompt": "A responsabilidade tributaria so pode recair sobre o contribuinte que praticou diretamente o fato gerador, nunca sobre terceiros.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "O CTN admite expressamente a responsabilizacao de terceiros vinculados ao fato gerador, como na sucessao empresarial ou na responsabilidade de socios em certos casos.",
+      "index": 48
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Uma empresa teve receita liquida de R$ 278.000,00 e lucro liquido de R$ 22.240,00 no periodo. Qual foi a margem liquida (lucro liquido / receita liquida), em percentual?",
+      "options": [
+        "16%",
+        "8%",
+        "10%",
+        "6%"
+      ],
+      "correctOption": 1,
+      "explanation": "Margem liquida = lucro liquido / receita liquida x 100 = 22240/278000 x 100 = 8%.",
+      "index": 49
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "certo_errado",
+      "prompt": "A remuneracao da hora extra sera, no minimo, 50% superior a da hora normal, salvo norma coletiva ou constitucional mais favoravel.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 7o, XVI, da CF/88 garante adicional minimo de 50% sobre a hora normal para o trabalho extraordinario.",
+      "index": 50
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Um produto custa R$ 274,00 para ser produzido e a empresa aplica um markup de 80% sobre o custo para formar o preco de venda. Qual o preco de venda?",
+      "options": [
+        "R$ 465,80",
+        "R$ 493,20",
+        "R$ 354,00",
+        "R$ 520,60"
+      ],
+      "correctOption": 1,
+      "explanation": "Preco de venda = custo x (1 + markup) = 274 x (1 + 0.8) = R$ 493,20.",
+      "index": 51
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Quanto e 30% de 1752?",
+      "options": [
+        "1226",
+        "526",
+        "556",
+        "496"
+      ],
+      "correctOption": 1,
+      "explanation": "30% de 1752 = 1752 x 30/100 = 526.",
+      "index": 52
+    },
+    {
+      "theme": "portugues",
+      "kind": "certo_errado",
+      "prompt": "Nunca se usa virgula antes de qualquer oracao introduzida por 'que', seja ela restritiva ou explicativa.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A distincao entre restritiva (sem virgula) e explicativa (com virgula) e justamente o que orienta o uso da pontuacao antes do 'que'.",
+      "index": 53
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "multipla",
+      "prompt": "Sobre empresario - conceito, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A falencia pode ser decretada para qualquer pessoa, empresaria ou nao, pelo simples atraso de uma unica conta domestica.",
+        "Empresario e quem exerce profissionalmente atividade economica organizada para a producao ou circulacao de bens ou de servicos.",
+        "A duplicata e titulo de credito que so pode ser emitido por instituicoes financeiras, nunca por empresas comerciais comuns.",
+        "Toda pessoa que presta um servico, mesmo de forma eventual e sem organizacao, e considerada empresaria pelo Codigo Civil."
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 966 do Codigo Civil exige exercicio profissional, organizado e com finalidade economica para a caracterizacao de empresario.",
+      "index": 54
+    },
+    {
+      "theme": "dados",
+      "kind": "certo_errado",
+      "prompt": "Dados abertos governamentais sao informacoes sigilosas que o governo nunca pode divulgar, por definicao.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Dados sigilosos sao, por definicao, protegidos e nao divulgados; dados abertos sao o contrario, voltados a transparencia e acesso livre.",
+      "index": 55
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre uso de 'mal' e 'mau', qual das alternativas a seguir esta correta?",
+      "options": [
+        "'Mal' e, em regra, adverbio (antonimo de 'bem') ou substantivo abstrato; 'mau' e adjetivo (antonimo de 'bom').",
+        "Com sujeito composto anteposto ao verbo, a concordancia verbal deve ser sempre no singular.",
+        "'Mal' e 'mau' sao sempre sinonimos perfeitos e podem ser usados indistintamente em qualquer contexto.",
+        "Nenhuma palavra paroxitona recebe acento grafico, segundo a norma ortografica vigente."
+      ],
+      "correctOption": 0,
+      "explanation": "A distincao classica e funcional: 'mal' opoe-se a 'bem' (adverbio) e 'mau' opoe-se a 'bom' (adjetivo), nao sao intercambiaveis em qualquer contexto.",
+      "index": 56
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "certo_errado",
+      "prompt": "O capital circulante liquido e sempre igual ao patrimonio liquido total da entidade.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Patrimonio liquido considera todo o ativo e passivo (curto e longo prazo); capital circulante liquido e restrito aos itens de curto prazo.",
+      "index": 57
+    },
+    {
+      "theme": "dados",
+      "kind": "certo_errado",
+      "prompt": "A chave estrangeira sempre cria uma nova tabela independente, sem relacao com nenhuma outra.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "O proprio conceito de chave estrangeira pressupoe uma relacao entre tabelas, nao independencia total.",
+      "index": 58
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "certo_errado",
+      "prompt": "O devido processo legal se aplica apenas a processos criminais, nao a processos administrativos.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "O devido processo legal e garantia geral, aplicavel tambem a processos administrativos e civis, nao apenas criminais.",
+      "index": 59
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "multipla",
+      "prompt": "Sobre efd-contribuicoes, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A EFD-Contribuicoes e usada exclusivamente para declarar o ICMS devido pela empresa.",
+        "O substituto tributario so tem responsabilidade pelo recolhimento do tributo, nunca por qualquer obrigacao acessoria relacionada.",
+        "A EFD-Contribuicoes e escrituracao digital que detalha a apuracao de PIS e COFINS (e, quando aplicavel, da Contribuicao Previdenciaria sobre a Receita Bruta).",
+        "Obrigacoes acessorias fiscais sempre exigem o pagamento de valores em dinheiro ao Fisco, da mesma forma que a obrigacao principal."
+      ],
+      "correctOption": 2,
+      "explanation": "A EFD-Contribuicoes e voltada a PIS/COFINS/CPRB, obrigacoes federais; a escrituracao de ICMS/IPI tem seu proprio bloco (EFD ICMS/IPI).",
+      "index": 60
+    }
+  ]
+}

@@ -1,0 +1,812 @@
+{
+  "examId": "ATLAS-SIM-07",
+  "title": "Simulado autoral Atlas 7/30",
+  "questions": [
+    {
+      "theme": "contabilidade",
+      "kind": "certo_errado",
+      "prompt": "As atividades operacionais no fluxo de caixa referem-se exclusivamente a compra e venda de imobilizado.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A classificacao de compra/venda de imobilizado e nas atividades de investimento do fluxo de caixa, nao nas operacionais.",
+      "index": 1
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "certo_errado",
+      "prompt": "A EFD-Contribuicoes e usada exclusivamente para declarar o ICMS devido pela empresa.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "ICMS e tributo estadual com escrituracao propria (EFD ICMS/IPI); a EFD-Contribuicoes trata de PIS/COFINS, tributos federais.",
+      "index": 2
+    },
+    {
+      "theme": "dados",
+      "kind": "certo_errado",
+      "prompt": "A chave primaria de uma tabela pode se repetir em varios registros diferentes, sem restricao.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A unicidade e requisito essencial da chave primaria; valores repetidos violam essa restricao.",
+      "index": 3
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "multipla",
+      "prompt": "Sobre empresario - conceito, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Toda sociedade empresaria e obrigada a usar exclusivamente firma, nunca denominacao, como nome empresarial.",
+        "Na sociedade limitada, os socios respondem sempre com seu patrimonio pessoal por toda e qualquer divida da sociedade, sem limite.",
+        "Toda pessoa que presta um servico, mesmo de forma eventual e sem organizacao, e considerada empresaria pelo Codigo Civil.",
+        "Empresario e quem exerce profissionalmente atividade economica organizada para a producao ou circulacao de bens ou de servicos."
+      ],
+      "correctOption": 3,
+      "explanation": "Art. 966 do Codigo Civil exige exercicio profissional, organizado e com finalidade economica para a caracterizacao de empresario.",
+      "index": 4
+    },
+    {
+      "theme": "direito-eleitoral",
+      "kind": "multipla",
+      "prompt": "Sobre capacidade eleitoral ativa, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Oferecer dinheiro ou bens a eleitores em troca de voto e pratica legal, desde que o candidato declare o gasto na prestacao de contas.",
+        "No Brasil, candidaturas independentes, sem filiacao a partido politico, sao plenamente admitidas para qualquer cargo eletivo.",
+        "O alistamento eleitoral e o voto sao obrigatorios para os maiores de dezoito anos e facultativos para os analfabetos, os maiores de setenta anos e os maiores de dezesseis e menores de dezoito anos.",
+        "O voto no Brasil e obrigatorio para absolutamente todos os cidadaos, sem qualquer excecao de idade ou condicao."
+      ],
+      "correctOption": 2,
+      "explanation": "Art. 14, par. 1o, da CF/88 lista expressamente as hipoteses de voto facultativo (analfabetos, maiores de 70 e jovens de 16 e 17 anos).",
+      "index": 5
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre paralelismo sintatico, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Nunca se usa crase antes de locucoes adverbiais, independentemente do genero da palavra.",
+        "O paralelismo sintatico e uma regra exclusiva da linguagem juridica, sem aplicacao na redacao de textos administrativos ou dissertativos.",
+        "O paralelismo sintatico exige que estruturas coordenadas (como itens de uma lista) sigam a mesma forma gramatical, para manter a clareza e a coesao do texto.",
+        "No sentido de 'ver, presenciar', o verbo assistir e transitivo direto, sem preposicao (ex.: 'assistir o jogo' e sempre a forma preferida pela norma culta)."
+      ],
+      "correctOption": 2,
+      "explanation": "O paralelismo e princípio geral de clareza textual, aplicavel a qualquer genero textual (administrativo, dissertativo, juridico etc.), nao exclusivo de um unico genero.",
+      "index": 6
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "certo_errado",
+      "prompt": "A malha fiscal e um beneficio fiscal concedido automaticamente a empresas em dia com suas obrigacoes.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Nao se trata de beneficio; a malha fiscal e ferramenta de controle e cruzamento de informacoes para identificar possiveis irregularidades.",
+      "index": 7
+    },
+    {
+      "theme": "estatistica",
+      "kind": "multipla",
+      "prompt": "Considere o conjunto de valores (ja ordenados): 22, 31, 36, 57, 59. Qual e a mediana?",
+      "options": [
+        "31",
+        "57",
+        "41",
+        "36"
+      ],
+      "correctOption": 3,
+      "explanation": "Com 5 valores ordenados, a mediana e o valor central (3o elemento): 36.",
+      "index": 8
+    },
+    {
+      "theme": "estatistica",
+      "kind": "multipla",
+      "prompt": "Em uma pesquisa, os valores coletados foram: 14, 2, 16, 14, 14, 14. Qual e a moda (valor mais frequente)?",
+      "options": [
+        "15",
+        "2",
+        "16",
+        "14"
+      ],
+      "correctOption": 3,
+      "explanation": "O valor 14 aparece 3 vezes, mais que qualquer outro da lista — portanto a moda e 14.",
+      "index": 9
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "multipla",
+      "prompt": "Sobre atributos do ato administrativo - imperatividade, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A imperatividade permite que a Administracao imponha obrigacoes a terceiros independentemente da concordancia deles.",
+        "O Estado so responde civilmente quando ficar provada a culpa pessoal do agente publico causador do dano.",
+        "A imperatividade exige que todo ato administrativo seja previamente aceito pelo particular destinatario.",
+        "O principio da eficiencia autoriza a Administracao a descumprir a legalidade quando isso tornar o servico mais rapido."
+      ],
+      "correctOption": 0,
+      "explanation": "A imperatividade e justamente a capacidade de a Administracao impor obrigacoes unilateralmente, sem depender da concordancia do particular.",
+      "index": 10
+    },
+    {
+      "theme": "ingles",
+      "kind": "multipla",
+      "prompt": "Sobre comparativos e superlativos, qual das alternativas a seguir esta correta?",
+      "options": [
+        "The choice between 'a' and 'an' depends only on the first letter of the word, never on its pronunciation.",
+        "For most one-syllable adjectives, the comparative form adds '-er' and the superlative adds '-est' (e.g., 'tall' -> 'taller' -> 'tallest').",
+        "For every adjective in English, the comparative and superlative are always formed by adding 'more' and 'the most', regardless of length.",
+        "'Must' and 'should' always express exactly the same degree of obligation in English."
+      ],
+      "correctOption": 1,
+      "explanation": "Short (one-syllable) adjectives typically use -er/-est; longer adjectives use 'more'/'the most' (e.g., 'more intelligent').",
+      "index": 11
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "multipla",
+      "prompt": "Sobre principio da capacidade contributiva, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A anterioridade nonagesimal dispensa a observancia simultanea da anterioridade anual para os tributos em geral.",
+        "Sempre que possivel, os impostos terao caracter pessoal e serao graduados segundo a capacidade economica do contribuinte.",
+        "Segundo o CTN, existe apenas uma especie tributaria, chamada genericamente de imposto.",
+        "O principio da capacidade contributiva se aplica exclusivamente as taxas, nunca aos impostos."
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 145, par. 1o, da CF/88 vincula expressamente o principio da capacidade contributiva aos impostos.",
+      "index": 12
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Uma empresa tem custos fixos mensais de R$ 10.000,00 e margem de contribuicao de R$ 10,00 por unidade vendida. Quantas unidades precisa vender por mes para atingir o ponto de equilibrio (lucro zero)?",
+      "options": [
+        "1010 unidades",
+        "1000 unidades",
+        "990 unidades",
+        "10 unidades"
+      ],
+      "correctOption": 1,
+      "explanation": "Ponto de equilibrio em unidades = custo fixo / margem de contribuicao unitaria = 10000 / 10 = 1000 unidades.",
+      "index": 13
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre crase - locucoes femininas, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Usa-se crase antes de locucoes adverbiais femininas de instrumento, modo ou lugar, como 'a mao', 'as pressas', 'a noite'.",
+        "O paralelismo sintatico e uma regra exclusiva da linguagem juridica, sem aplicacao na redacao de textos administrativos ou dissertativos.",
+        "Nunca se usa virgula antes de qualquer oracao introduzida por 'que', seja ela restritiva ou explicativa.",
+        "Nunca se usa crase antes de locucoes adverbiais, independentemente do genero da palavra."
+      ],
+      "correctOption": 0,
+      "explanation": "A regra classica de crase inclui expressamente as locucoes adverbiais femininas de instrumento, modo e lugar.",
+      "index": 14
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "multipla",
+      "prompt": "Sobre bens publicos - inalienabilidade, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O processo administrativo disciplinar pode aplicar penalidade de demissao sem que o servidor seja ouvido previamente.",
+        "Todos os bens publicos, sem excecao, sao sempre inalienaveis, mesmo apos serem desafetados.",
+        "Pelo principio da legalidade, a Administracao Publica pode atuar livremente, desde que nao exista lei proibindo expressamente.",
+        "Os bens publicos de uso comum do povo e de uso especial sao, em regra, inalienaveis enquanto conservarem essa qualificacao."
+      ],
+      "correctOption": 3,
+      "explanation": "Bens de uso comum e de uso especial sao inalienaveis enquanto tiverem essa destinacao; ja os bens dominicais podem ser alienados, observadas as exigencias legais.",
+      "index": 15
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Qual e a negacao logica correta da proposicao \"a declaracao foi entregue ou a multa foi aplicada\"?",
+      "options": [
+        "a declaracao foi entregue e nao e verdade que a multa foi aplicada",
+        "Nao e verdade que a declaracao foi entregue, ou nao e verdade que a multa foi aplicada",
+        "Nao e verdade que a declaracao foi entregue, e nao e verdade que a multa foi aplicada",
+        "a declaracao foi entregue e a multa foi aplicada"
+      ],
+      "correctOption": 2,
+      "explanation": "Pela Lei de De Morgan, a negacao de 'P ou Q' e 'nao P e nao Q' (troca 'ou' por 'e' e nega as duas partes).",
+      "index": 16
+    },
+    {
+      "theme": "tributacao",
+      "kind": "certo_errado",
+      "prompt": "PIS e COFINS sao contribuicoes sociais incidentes, em regra, sobre a receita ou o faturamento das pessoas juridicas.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "PIS e COFINS sao contribuicoes sociais de competencia da Uniao, incidentes sobre receita/faturamento, nao impostos estaduais sobre circulacao de mercadorias.",
+      "index": 17
+    },
+    {
+      "theme": "ingles",
+      "kind": "multipla",
+      "prompt": "Sobre passive voice, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Skimming means reading a text word by word, very slowly, to understand every single detail before moving forward.",
+        "The choice between 'a' and 'an' depends only on the first letter of the word, never on its pronunciation.",
+        "The passive voice is formed with the verb 'to be' plus the base form (infinitive) of the main verb.",
+        "The passive voice is formed with the verb 'to be' plus the past participle of the main verb (e.g., 'The report was written by the team')."
+      ],
+      "correctOption": 3,
+      "explanation": "The correct passive voice structure uses the past participle after 'to be', not the base form of the verb.",
+      "index": 18
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "certo_errado",
+      "prompt": "O Estado nunca pode cobrar de volta do agente publico o valor pago a titulo de indenizacao.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "O direito de regresso contra o agente, em caso de dolo ou culpa, e expressamente assegurado pela CF/88.",
+      "index": 19
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Dois setores de uma repartição fazem rondas: um a cada 9 dias e outro a cada 18 dias. Partindo juntos hoje, depois de quantos dias eles voltarao a coincidir?",
+      "options": [
+        "27",
+        "18",
+        "162",
+        "36"
+      ],
+      "correctOption": 1,
+      "explanation": "A resposta e o MMC(9,18) = 18 dias.",
+      "index": 20
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Um terreno retangular mede 28 metros de frente por 19 metros de fundo. Qual o perimetro, em metros?",
+      "options": [
+        "532",
+        "94",
+        "96",
+        "92"
+      ],
+      "correctOption": 1,
+      "explanation": "Perimetro do retangulo = 2 x (base + altura) = 2 x (28 + 19) = 94 m.",
+      "index": 21
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "multipla",
+      "prompt": "Sobre concurso publico, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Os direitos sociais previstos na CF/88 nao incluem o lazer nem a previdencia social.",
+        "Garantir o desenvolvimento nacional e um fundamento, nao um objetivo fundamental, da Republica.",
+        "Qualquer cargo publico, inclusive os efetivos, pode ser provido por indicacao politica sem concurso.",
+        "A investidura em cargo ou emprego publico depende de aprovacao previa em concurso publico de provas ou de provas e titulos, salvo as nomeacoes para cargo em comissao."
+      ],
+      "correctOption": 3,
+      "explanation": "Art. 37, II, da CF/88 exige concurso publico para investidura em cargo ou emprego publico efetivo, ressalvados os cargos em comissao.",
+      "index": 22
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "Uma empresa tem ativo circulante de R$ 127.000,00 e passivo circulante de R$ 176.000,00. Qual o indice de liquidez corrente (aproximado, com 2 casas decimais)?",
+      "options": [
+        "0.42",
+        "1.39",
+        "0.72",
+        "1.02"
+      ],
+      "correctOption": 2,
+      "explanation": "Liquidez corrente = ativo circulante / passivo circulante = 127000/176000 = 0.72.",
+      "index": 23
+    },
+    {
+      "theme": "tributacao",
+      "kind": "multipla",
+      "prompt": "Sobre retencao na fonte, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A retencao de tributos na fonte transfere ao pagador a obrigacao de descontar e recolher o tributo devido pelo beneficiario do pagamento.",
+        "O planejamento tributario, para ser valido, pode utilizar simulacao de negocios juridicos para reduzir tributos.",
+        "A retencao na fonte dispensa definitivamente o beneficiario do pagamento de qualquer obrigacao relacionada aquele tributo retido, em qualquer hipotese.",
+        "A Nota Fiscal Eletronica pode ser emitida e considerada valida mesmo sem autorizacao do Fisco, bastando a vontade do emitente."
+      ],
+      "correctOption": 0,
+      "explanation": "A retencao na fonte e tecnica de arrecadacao que transfere o dever de recolhimento ao pagador; dependendo do tributo, pode haver ajuste posterior (como no ajuste anual do Imposto de Renda).",
+      "index": 24
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "multipla",
+      "prompt": "Sobre direitos e garantias fundamentais, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O orcamento publico no Brasil e aprovado exclusivamente pelo Poder Executivo, sem participacao do Legislativo.",
+        "Todos sao iguais perante a lei, sem distincao de qualquer natureza, segundo o caput do art. 5o da CF/88.",
+        "O direito a propriedade e absoluto e nao admite qualquer limitacao constitucional.",
+        "A igualdade do art. 5o da CF/88 se aplica apenas aos cidadaos brasileiros natos."
+      ],
+      "correctOption": 1,
+      "explanation": "O caput do art. 5o garante a igualdade a brasileiros e estrangeiros residentes no Pais.",
+      "index": 25
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Sobre depreciacao, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A depreciacao representa o aumento de valor de um ativo imobilizado ao longo do tempo.",
+        "A equacao contabil fundamental estabelece que Ativo = Passivo - Patrimonio Liquido.",
+        "A depreciacao representa a perda de valor de um ativo imobilizado ao longo de sua vida util, em razao de uso, desgaste ou obsolescencia.",
+        "Patrimonio liquido e sempre igual ao caixa disponivel da entidade."
+      ],
+      "correctOption": 2,
+      "explanation": "Depreciacao e a reducao do valor contabil do ativo imobilizado ao longo da vida util, nao um aumento.",
+      "index": 26
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "multipla",
+      "prompt": "Sobre silencio administrativo, qual das alternativas a seguir esta correta?",
+      "options": [
+        "No ato vinculado, o administrador tem liberdade total para decidir conforme seu juizo de conveniencia e oportunidade.",
+        "O silencio da Administracao Publica sempre significa indeferimento tacito do pedido do interessado, em qualquer situacao.",
+        "A autoexecutoriedade e atributo presente em todo e qualquer ato administrativo, sem excecao.",
+        "Quando a lei nao atribui efeito especifico ao silencio da Administracao, este nao pode ser interpretado automaticamente como deferimento ou indeferimento do pedido."
+      ],
+      "correctOption": 3,
+      "explanation": "Na ausencia de previsao legal especifica, o silencio administrativo e, em regra, omissao que pode ser impugnada, nao uma manifestacao de vontade presumida.",
+      "index": 27
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "certo_errado",
+      "prompt": "O eSocial e o sistema unificado de escrituracao digital de obrigacoes fiscais, previdenciarias e trabalhistas, usado por empregadores para prestar informacoes ao governo.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "O eSocial unifica o envio de eventos trabalhistas (admissao, ferias, afastamentos, rescisao etc.), previdenciarios e fiscais relacionados a folha de pagamento.",
+      "index": 28
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Uma empresa teve receita liquida de R$ 61.000,00 e lucro liquido de R$ 10.980,00 no periodo. Qual foi a margem liquida (lucro liquido / receita liquida), em percentual?",
+      "options": [
+        "16%",
+        "18%",
+        "36%",
+        "20%"
+      ],
+      "correctOption": 1,
+      "explanation": "Margem liquida = lucro liquido / receita liquida x 100 = 10980/61000 x 100 = 18%.",
+      "index": 29
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "multipla",
+      "prompt": "Sobre recuperacao judicial - finalidade, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A duplicata e titulo de credito que so pode ser emitido por instituicoes financeiras, nunca por empresas comerciais comuns.",
+        "A desconsideracao da personalidade juridica e aplicada automaticamente sempre que a sociedade nao consegue pagar uma divida, independentemente de abuso.",
+        "A recuperacao judicial visa viabilizar a superacao da situacao de crise economico-financeira do devedor, permitindo a manutencao da fonte produtora e dos empregos.",
+        "A recuperacao judicial tem por unico objetivo liquidar os bens do devedor para pagar os credores, da mesma forma que a falencia."
+      ],
+      "correctOption": 2,
+      "explanation": "Art. 47 da Lei 11.101/2005 define a recuperacao judicial como instrumento de superacao da crise, preservando a empresa, diferente da falencia, que e liquidatoria.",
+      "index": 30
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Observe a sequencia numerica: 14, 20, 26, 32, 38, ... Qual e o proximo termo?",
+      "options": [
+        "38",
+        "45",
+        "50",
+        "44"
+      ],
+      "correctOption": 3,
+      "explanation": "A sequencia e aritmetica de razao 6 (cada termo soma 6 ao anterior). O ultimo termo mostrado e 38, logo o proximo e 38 + 6 = 44.",
+      "index": 31
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre coesao textual - conectivos, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Conectivos como 'porem' e 'contudo' estabelecem sempre relacao de adicao, equivalendo a 'e tambem'.",
+        "Conectivos como 'porem', 'todavia' e 'contudo' estabelecem relacao de oposicao/contraste entre as ideias do texto.",
+        "Com a expressao 'a maioria de', a concordancia verbal so pode ser feita no plural, sendo erro gramatical a concordancia no singular.",
+        "O verbo haver, no sentido de existir, concorda normalmente com o sujeito no plural (ex.: 'Haviam muitos candidatos')."
+      ],
+      "correctOption": 1,
+      "explanation": "Esses conectivos sao classificados como adversativos, marcando contraste ou oposicao, nao adicao.",
+      "index": 32
+    },
+    {
+      "theme": "espanhol",
+      "kind": "multipla",
+      "prompt": "Sobre acentuacion - palabras agudas, graves y esdrujulas, qual das alternativas a seguir esta correta?",
+      "options": [
+        "En espanol, ninguna palabra esdrujula lleva tilde escrita, independientemente de su acentuacion.",
+        "En el espanol estandar, el uso de 'le' como objeto directo masculino (leismo) es siempre la forma preferida y recomendada por la norma academica.",
+        "La palabra 'embarazada' en espanol significa exactamente lo mismo que 'embaraçada' en portugues (confusa, enredada).",
+        "En espanol, las palabras esdrujulas (acento en la antepenultima silaba) siempre llevan tilde escrita, como en 'rapido' y 'telefono'."
+      ],
+      "correctOption": 3,
+      "explanation": "La regla de acentuacion espanola exige tilde en todas las palabras esdrujulas, sin excepcion.",
+      "index": 33
+    },
+    {
+      "theme": "matematica-financeira",
+      "kind": "multipla",
+      "prompt": "Um capital de R$ 10.098,00 foi aplicado a juros simples de 2,50% ao mes, durante 11 meses. Qual o montante final?",
+      "options": [
+        "R$ 12.975,93",
+        "R$ 11.486,48",
+        "R$ 12.672,99",
+        "R$ 12.874,95"
+      ],
+      "correctOption": 3,
+      "explanation": "Juros simples: J = C x i x t = 10098 x 0.025 x 11 = R$ 2.776,95. Montante M = C + J = R$ 10.098,00 + R$ 2.776,95 = R$ 12.874,95.",
+      "index": 34
+    },
+    {
+      "theme": "portugues",
+      "kind": "certo_errado",
+      "prompt": "Conjuncoes subordinativas ligam duas oracoes independentes entre si, sem relacao de subordinacao.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Ligar oracoes independentes, sem dependencia, e funcao das conjuncoes coordenativas, nao das subordinativas.",
+      "index": 35
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "certo_errado",
+      "prompt": "Compete exclusivamente aos Estados legislar sobre direito civil e comercial.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Direito civil e comercial sao de competencia privativa da Uniao, nao dos Estados.",
+      "index": 36
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "certo_errado",
+      "prompt": "O adicional de ferias e sempre de 50% do salario normal, nunca de um terco.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "O percentual constitucional garantido e de um terco (1/3), nao de 50%.",
+      "index": 37
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "certo_errado",
+      "prompt": "A inscricao do empresario e da sociedade empresaria deve ser feita na Junta Comercial da respectiva sede, antes do inicio da atividade.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 967 e seguintes do Codigo Civil exigem o registro para a regularidade da atividade empresarial, com consequencias (como a nao fruicao de certos beneficios legais) para quem nao se registra.",
+      "index": 38
+    },
+    {
+      "theme": "espanhol",
+      "kind": "multipla",
+      "prompt": "Sobre futuro simple, qual das alternativas a seguir esta correta?",
+      "options": [
+        "El futuro simple en espanol se forma, para los verbos regulares, agregando terminaciones (-e, -as, -a, -emos, -eis, -an) al infinitivo completo del verbo.",
+        "La palabra 'embarazada' en espanol significa exactamente lo mismo que 'embaraçada' en portugues (confusa, enredada).",
+        "En espanol, ninguna palabra esdrujula lleva tilde escrita, independientemente de su acentuacion.",
+        "El futuro simple en espanol se forma siempre quitando la terminacion '-ar', '-er' o '-ir' del verbo antes de agregar la terminacion de futuro."
+      ],
+      "correctOption": 0,
+      "explanation": "Para los verbos regulares, el futuro simple se forma sobre el infinitivo completo (ej.: 'hablar' + 'e' = 'hablare'), sin quitar la terminacion del infinitivo.",
+      "index": 39
+    },
+    {
+      "theme": "matematica-financeira",
+      "kind": "multipla",
+      "prompt": "Qual o valor presente (aproximado) de R$ 29.195,00 a receber dentro de 4 periodos, descontado a uma taxa de 1% por periodo (juros compostos)?",
+      "options": [
+        "R$ 27.763,87",
+        "R$ 28.055,82",
+        "R$ 28.639,72",
+        "R$ 29.195,00"
+      ],
+      "correctOption": 1,
+      "explanation": "VP = VF / (1+i)^t = 29195 / (1,01)^4 = R$ 28.055,82 (aproximado).",
+      "index": 40
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "multipla",
+      "prompt": "Sobre sociedade anonima - capital social, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A duplicata e titulo de credito que so pode ser emitido por instituicoes financeiras, nunca por empresas comerciais comuns.",
+        "Toda pessoa que presta um servico, mesmo de forma eventual e sem organizacao, e considerada empresaria pelo Codigo Civil.",
+        "Na sociedade anonima, o capital social se divide em quotas, nos mesmos termos da sociedade limitada.",
+        "O capital social da sociedade anonima se divide em acoes, e a responsabilidade do acionista e limitada ao preco de emissao das acoes subscritas ou adquiridas."
+      ],
+      "correctOption": 3,
+      "explanation": "Lei 6.404/1976 (Lei das S.A.) estabelece que o capital social se divide em acoes, nao em quotas.",
+      "index": 41
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Se 6 maquinas identicas produzem 133 pecas por hora, quantas pecas 11 maquinas identicas produzem no mesmo intervalo de tempo (mantendo a mesma proporcao)?",
+      "options": [
+        "238",
+        "244",
+        "144",
+        "255"
+      ],
+      "correctOption": 1,
+      "explanation": "Regra de tres simples direta: 6 maquinas -> 133 pecas; 11 maquinas -> x. x = (133 x 11) / 6 = 244.",
+      "index": 42
+    },
+    {
+      "theme": "direito-eleitoral",
+      "kind": "multipla",
+      "prompt": "Sobre debates eleitorais, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O voto no Brasil e obrigatorio para absolutamente todos os cidadaos, sem qualquer excecao de idade ou condicao.",
+        "No Brasil, candidaturas independentes, sem filiacao a partido politico, sao plenamente admitidas para qualquer cargo eletivo.",
+        "As emissoras de radio e televisao podem excluir arbitrariamente qualquer candidato registrado dos debates eleitorais, sem criterio objetivo.",
+        "As emissoras de radio e televisao que realizarem debates entre candidatos devem assegurar tratamento isonomico aos postulantes, conforme criterios objetivos definidos previamente."
+      ],
+      "correctOption": 3,
+      "explanation": "A legislacao e a jurisprudencia eleitoral exigem criterios objetivos e isonomicos para a participacao em debates, vedando exclusao arbitraria de candidatos registrados.",
+      "index": 43
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "multipla",
+      "prompt": "Sobre ferias - periodo aquisitivo, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A comunicacao de admissao de empregado e facultativa e pode ser feita em qualquer prazo, a criterio do empregador.",
+        "Apos cada periodo de doze meses de vigencia do contrato de trabalho, o empregado tera direito a ferias, na forma do capitulo proprio da CLT.",
+        "O vale-transporte e sempre totalmente gratuito para o empregado, sem qualquer desconto permitido em lei.",
+        "O direito a ferias surge apenas apos cinco anos continuos de trabalho na mesma empresa."
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 130 da CLT fixa o periodo aquisitivo em 12 meses de trabalho, nao 5 anos.",
+      "index": 44
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "multipla",
+      "prompt": "Sobre domicilio tributario eletronico, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A EFD-Contribuicoes e usada exclusivamente para declarar o ICMS devido pela empresa.",
+        "O Domicilio Tributario Eletronico (DTE) e o canal pelo qual o Fisco realiza comunicacoes oficiais ao contribuinte, substituindo, em muitos casos, a notificacao por via postal.",
+        "O Domicilio Tributario Eletronico e um endereco fisico obrigatorio que a empresa deve manter proximo ao orgao fazendario.",
+        "O substituto tributario so tem responsabilidade pelo recolhimento do tributo, nunca por qualquer obrigacao acessoria relacionada."
+      ],
+      "correctOption": 1,
+      "explanation": "O DTE e um canal eletronico de comunicacao (caixa postal eletronica), nao um endereco fisico.",
+      "index": 45
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "A idade de Pedro e igual ao dobro da idade de Joana somado a 9 anos. Se Joana tem 21 anos, qual e a idade de Pedro?",
+      "options": [
+        "30",
+        "53",
+        "51",
+        "49"
+      ],
+      "correctOption": 2,
+      "explanation": "Pedro = 2 x idade de Joana + 9 = 2 x 21 + 9 = 51 anos.",
+      "index": 46
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "certo_errado",
+      "prompt": "O principio da anterioridade anual se aplica sem excecao a todos os tributos, inclusive aos impostos extraordinarios de guerra.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A CF/88 lista excecoes expressas a anterioridade anual, entre elas o imposto extraordinario de guerra, II, IE e IOF.",
+      "index": 47
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "certo_errado",
+      "prompt": "Os direitos sociais previstos na CF/88 nao incluem o lazer nem a previdencia social.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "O art. 6o inclui expressamente lazer e previdencia social entre os direitos sociais, ao lado de educacao, saude etc.",
+      "index": 48
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Em uma repartição com 9 servidores, serao escolhidos 3 para ocupar cargos distintos (presidente e secretario, por exemplo). De quantas formas diferentes essa escolha pode ser feita?",
+      "options": [
+        "507",
+        "504",
+        "501",
+        "1008"
+      ],
+      "correctOption": 1,
+      "explanation": "Como os cargos sao distintos, a ordem importa: usa-se arranjo A(9,3) = 9! / (9-3)! = 504.",
+      "index": 49
+    },
+    {
+      "theme": "portugues",
+      "kind": "certo_errado",
+      "prompt": "Palavras paroxitonas terminadas em ditongo crescente (como 'serie', 'area', 'magoa') recebem acento grafico, segundo a norma ortografica vigente.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A regra de acentuacao das paroxitonas prevê acento para determinadas terminacoes, entre elas o ditongo crescente, como em 'serie' e 'area'.",
+      "index": 50
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "Uma DRE mostra receita liquida de R$ 429.000,00 e custo dos produtos vendidos (CPV) de R$ 235.950,00. Qual o lucro bruto?",
+      "options": [
+        "R$ 429.000,00",
+        "R$ 169.455,00",
+        "R$ 216.645,00",
+        "R$ 193.050,00"
+      ],
+      "correctOption": 3,
+      "explanation": "Lucro bruto = receita liquida - CPV = R$ 429.000,00 - R$ 235.950,00 = R$ 193.050,00.",
+      "index": 51
+    },
+    {
+      "theme": "dados",
+      "kind": "certo_errado",
+      "prompt": "A chave estrangeira sempre cria uma nova tabela independente, sem relacao com nenhuma outra.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "O proprio conceito de chave estrangeira pressupoe uma relacao entre tabelas, nao independencia total.",
+      "index": 52
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "multipla",
+      "prompt": "Sobre credito tributario - lancamento, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Segundo o CTN, existe apenas uma especie tributaria, chamada genericamente de imposto.",
+        "A isencao tributaria tem sede constitucional e nunca pode ser revogada.",
+        "O lancamento e o procedimento administrativo que verifica a ocorrencia do fato gerador, determina a materia tributavel e calcula o montante do tributo devido.",
+        "O lancamento tributario e sempre feito pelo proprio contribuinte, sem qualquer participacao da autoridade administrativa."
+      ],
+      "correctOption": 2,
+      "explanation": "Art. 142 do CTN atribui o lancamento, em regra, a autoridade administrativa (ainda que em modalidades como o lancamento por homologacao haja participacao relevante do contribuinte).",
+      "index": 53
+    },
+    {
+      "theme": "tributacao",
+      "kind": "multipla",
+      "prompt": "Sobre pis e cofins - natureza, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A retencao na fonte dispensa definitivamente o beneficiario do pagamento de qualquer obrigacao relacionada aquele tributo retido, em qualquer hipotese.",
+        "Na substituicao tributaria 'para frente', o consumidor final e quem recolhe diretamente o ICMS ao Estado apos a compra.",
+        "PIS e COFINS sao impostos de competencia dos Estados, incidentes sobre a circulacao de mercadorias.",
+        "PIS e COFINS sao contribuicoes sociais incidentes, em regra, sobre a receita ou o faturamento das pessoas juridicas."
+      ],
+      "correctOption": 3,
+      "explanation": "PIS e COFINS sao contribuicoes sociais de competencia da Uniao, incidentes sobre receita/faturamento, nao impostos estaduais sobre circulacao de mercadorias.",
+      "index": 54
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "Uma DRE mostra receita liquida de R$ 482.000,00 e custo dos produtos vendidos (CPV) de R$ 289.200,00. Qual o lucro bruto?",
+      "options": [
+        "R$ 482.000,00",
+        "R$ 221.720,00",
+        "R$ 163.880,00",
+        "R$ 192.800,00"
+      ],
+      "correctOption": 3,
+      "explanation": "Lucro bruto = receita liquida - CPV = R$ 482.000,00 - R$ 289.200,00 = R$ 192.800,00.",
+      "index": 55
+    },
+    {
+      "theme": "dados",
+      "kind": "certo_errado",
+      "prompt": "Big data e frequentemente caracterizado por volume, velocidade e variedade de dados, exigindo tecnologias especificas de processamento.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "O conceito de big data trata de grandes volumes de dados digitais, com velocidade e variedade, nao de paginas impressas em papel.",
+      "index": 56
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "multipla",
+      "prompt": "Sobre imunidade tributaria, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A responsabilidade tributaria so pode recair sobre o contribuinte que praticou diretamente o fato gerador, nunca sobre terceiros.",
+        "A imunidade tributaria e uma limitacao constitucional ao poder de tributar que impede, desde a origem, a incidencia do tributo sobre determinadas situacoes ou pessoas.",
+        "O lancamento tributario e sempre feito pelo proprio contribuinte, sem qualquer participacao da autoridade administrativa.",
+        "A imunidade tributaria e concedida por lei ordinaria e pode ser revogada livremente pelo legislador infraconstitucional."
+      ],
+      "correctOption": 1,
+      "explanation": "A imunidade tem sede constitucional (ex.: art. 150, VI, da CF/88) e nao pode ser suprimida por lei ordinaria, por ser limitacao ao poder de tributar prevista na propria Constituicao.",
+      "index": 57
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "A idade de Pedro e igual ao dobro da idade de Joana somado a 4 anos. Se Joana tem 17 anos, qual e a idade de Pedro?",
+      "options": [
+        "21",
+        "40",
+        "38",
+        "36"
+      ],
+      "correctOption": 2,
+      "explanation": "Pedro = 2 x idade de Joana + 4 = 2 x 17 + 4 = 38 anos.",
+      "index": 58
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "certo_errado",
+      "prompt": "O capital circulante liquido e sempre igual ao patrimonio liquido total da entidade.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Patrimonio liquido considera todo o ativo e passivo (curto e longo prazo); capital circulante liquido e restrito aos itens de curto prazo.",
+      "index": 59
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Um terreno retangular tem 11 metros de frente por 6 metros de fundo. Qual a area, em metros quadrados?",
+      "options": [
+        "60",
+        "34",
+        "66",
+        "77"
+      ],
+      "correctOption": 2,
+      "explanation": "Area do retangulo = base x altura = 11 x 6 = 66 m2.",
+      "index": 60
+    }
+  ]
+}

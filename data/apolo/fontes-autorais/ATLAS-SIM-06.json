@@ -1,0 +1,794 @@
+{
+  "examId": "ATLAS-SIM-06",
+  "title": "Simulado autoral Atlas 6/30",
+  "questions": [
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "Uma DRE mostra receita liquida de R$ 220.000,00 e custo dos produtos vendidos (CPV) de R$ 121.000,00. Qual o lucro bruto?",
+      "options": [
+        "R$ 220.000,00",
+        "R$ 111.100,00",
+        "R$ 86.900,00",
+        "R$ 99.000,00"
+      ],
+      "correctOption": 3,
+      "explanation": "Lucro bruto = receita liquida - CPV = R$ 220.000,00 - R$ 121.000,00 = R$ 99.000,00.",
+      "index": 1
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Uma comissao de 2 servidores sera escolhida, sem distincao de funcao, entre 5 servidores disponiveis. De quantas formas diferentes essa comissao pode ser formada?",
+      "options": [
+        "20",
+        "8",
+        "12",
+        "10"
+      ],
+      "correctOption": 3,
+      "explanation": "Como a ordem nao importa (comissao, sem funcoes distintas), usa-se combinacao: C(5,2) = 5! / (2! x (5-k)!) = 10.",
+      "index": 2
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Um produto custa R$ 344,00 para ser produzido e a empresa aplica um markup de 30% sobre o custo para formar o preco de venda. Qual o preco de venda?",
+      "options": [
+        "R$ 447,20",
+        "R$ 412,80",
+        "R$ 481,60",
+        "R$ 374,00"
+      ],
+      "correctOption": 0,
+      "explanation": "Preco de venda = custo x (1 + markup) = 344 x (1 + 0.3) = R$ 447,20.",
+      "index": 3
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "certo_errado",
+      "prompt": "A recuperacao judicial tem por unico objetivo liquidar os bens do devedor para pagar os credores, da mesma forma que a falencia.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Liquidar bens para pagar credores e a logica da falencia; a recuperacao judicial busca o oposto: preservar a atividade empresarial viavel.",
+      "index": 4
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "certo_errado",
+      "prompt": "Os documentos fiscais podem ser descartados pela empresa um ano apos a emissao, independentemente de qualquer prazo de fiscalizacao.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "O descarte apos apenas um ano pode comprometer a defesa da empresa em fiscalizacoes dentro do prazo decadencial/prescricional, que normalmente e maior que um ano.",
+      "index": 5
+    },
+    {
+      "theme": "tributacao",
+      "kind": "certo_errado",
+      "prompt": "A retencao na fonte dispensa definitivamente o beneficiario do pagamento de qualquer obrigacao relacionada aquele tributo retido, em qualquer hipotese.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Em diversos casos (como o Imposto de Renda de pessoa fisica), a retencao na fonte e apenas uma antecipacao, sujeita a ajuste na declaracao anual, nao uma dispensa definitiva e automatica de toda obrigacao.",
+      "index": 6
+    },
+    {
+      "theme": "direito-eleitoral",
+      "kind": "multipla",
+      "prompt": "Sobre filiacao partidaria, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A filiacao partidaria, dentro do prazo legal antes da eleicao, e condicao de elegibilidade para concorrer a cargos eletivos no Brasil.",
+        "O domicilio eleitoral e irrelevante para a elegibilidade de um candidato a cargo municipal.",
+        "No Brasil, candidaturas independentes, sem filiacao a partido politico, sao plenamente admitidas para qualquer cargo eletivo.",
+        "A propaganda eleitoral pode comecar em qualquer momento do mandato anterior, sem qualquer restricao de prazo."
+      ],
+      "correctOption": 0,
+      "explanation": "O sistema eleitoral brasileiro nao admite, em regra, candidatura avulsa (sem partido) para a maioria dos cargos eletivos, exigindo filiacao partidaria previa.",
+      "index": 7
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre crase - antes de palavra masculina, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A metafora exige obrigatoriamente o uso da palavra 'como' para estabelecer a comparacao entre dois elementos.",
+        "Conectivos como 'porem' e 'contudo' estabelecem sempre relacao de adicao, equivalendo a 'e tambem'.",
+        "Usa-se crase antes de qualquer palavra masculina, sem excecao.",
+        "Em regra, nao se usa crase antes de palavra masculina, salvo em locucoes fixas como 'a vontade' ou expressoes consagradas."
+      ],
+      "correctOption": 3,
+      "explanation": "A crase marca a fusao da preposicao 'a' com o artigo feminino 'a'; palavras masculinas, em regra, nao exigem artigo feminino antes.",
+      "index": 8
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "certo_errado",
+      "prompt": "A desconsideracao da personalidade juridica e aplicada automaticamente sempre que a sociedade nao consegue pagar uma divida, independentemente de abuso.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A simples inadimplencia da sociedade nao e suficiente; a desconsideracao exige a comprovacao de abuso da personalidade juridica (desvio de finalidade ou confusao patrimonial).",
+      "index": 9
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Qual e a negacao logica correta da proposicao \"o balanco foi auditado e o resultado foi publicado\"?",
+      "options": [
+        "o balanco foi auditado e nao e verdade que o resultado foi publicado",
+        "Nao e verdade que o balanco foi auditado, e nao e verdade que o resultado foi publicado",
+        "o balanco foi auditado e o resultado foi publicado",
+        "Nao e verdade que o balanco foi auditado, ou nao e verdade que o resultado foi publicado"
+      ],
+      "correctOption": 3,
+      "explanation": "Pela Lei de De Morgan, a negacao de 'P e Q' e 'nao P ou nao Q' (troca 'e' por 'ou' e nega as duas partes).",
+      "index": 10
+    },
+    {
+      "theme": "dados",
+      "kind": "certo_errado",
+      "prompt": "Governanca de dados e o conjunto de politicas, processos e responsabilidades que garantem o uso adequado, seguro e consistente dos dados em uma organizacao.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Governanca de dados e um conceito organizacional (politicas, papeis, processos de qualidade e seguranca), mais amplo do que apenas a infraestrutura fisica de armazenamento.",
+      "index": 11
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "multipla",
+      "prompt": "Sobre modalidades de licitacao, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A concorrencia e modalidade exclusiva para contratos de valor irrisorio.",
+        "O Estado nunca pode cobrar de volta do agente publico o valor pago a titulo de indenizacao.",
+        "O pregao e modalidade de licitacao voltada preferencialmente a aquisicao de bens e servicos comuns.",
+        "Pelo principio da legalidade, a Administracao Publica pode atuar livremente, desde que nao exista lei proibindo expressamente."
+      ],
+      "correctOption": 2,
+      "explanation": "A lei de licitacoes destina o pregao a bens e servicos comuns, com criterio de menor preco ou maior desconto como regra.",
+      "index": 12
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "certo_errado",
+      "prompt": "A inscricao em divida ativa torna o credito tributario incontestavel, sem possibilidade de defesa do contribuinte.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A presuncao e relativa; o contribuinte pode contestar a divida ativa por meio de embargos a execucao fiscal ou outros meios de defesa.",
+      "index": 13
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Quanto e 20% de 462?",
+      "options": [
+        "370",
+        "92",
+        "72",
+        "112"
+      ],
+      "correctOption": 1,
+      "explanation": "20% de 462 = 462 x 20/100 = 92.",
+      "index": 14
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "certo_errado",
+      "prompt": "No ICMS, a empresa nunca pode se creditar do imposto pago nas aquisicoes, pagando sempre o valor total das saidas.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A nao cumulatividade e principio constitucional do ICMS; o credito nas entradas e justamente o mecanismo que evita a cobranca em cascata.",
+      "index": 15
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "certo_errado",
+      "prompt": "O principio da cartularidade, tradicionalmente, condiciona o exercicio dos direitos representados pelo titulo de credito a posse do documento (cartula), com atenuacoes para titulos eletronicos.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A legislacao e a pratica comercial admitem titulos eletronicos (como a duplicata eletronica e a nota promissoria eletronica em certos contextos), atenuando a cartularidade classica.",
+      "index": 16
+    },
+    {
+      "theme": "tributacao",
+      "kind": "multipla",
+      "prompt": "Sobre substituicao tributaria no varejo, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Na substituicao tributaria 'para frente', o consumidor final e quem recolhe diretamente o ICMS ao Estado apos a compra.",
+        "O planejamento tributario, para ser valido, pode utilizar simulacao de negocios juridicos para reduzir tributos.",
+        "No Lucro Presumido, a empresa deve necessariamente apurar o lucro liquido contabil detalhado para calcular o imposto.",
+        "Na substituicao tributaria do ICMS 'para frente', o fabricante ou importador recolhe antecipadamente o imposto devido nas etapas seguintes da cadeia, até o consumidor final."
+      ],
+      "correctOption": 3,
+      "explanation": "Na substituicao 'para frente', o recolhimento e antecipado por um elo anterior da cadeia (fabricante/importador), nao pelo consumidor final diretamente.",
+      "index": 17
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Observe a sequencia numerica: 17, 19, 21, 23, 25, ... Qual e o proximo termo?",
+      "options": [
+        "25",
+        "28",
+        "27",
+        "29"
+      ],
+      "correctOption": 2,
+      "explanation": "A sequencia e aritmetica de razao 2 (cada termo soma 2 ao anterior). O ultimo termo mostrado e 25, logo o proximo e 25 + 2 = 27.",
+      "index": 18
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "multipla",
+      "prompt": "Sobre silencio administrativo, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Quando a lei nao atribui efeito especifico ao silencio da Administracao, este nao pode ser interpretado automaticamente como deferimento ou indeferimento do pedido.",
+        "A hierarquia administrativa impede qualquer delegacao de competencia entre orgaos da Administracao Publica.",
+        "A presuncao de legitimidade dos atos administrativos e absoluta e nunca pode ser contestada.",
+        "O silencio da Administracao Publica sempre significa indeferimento tacito do pedido do interessado, em qualquer situacao."
+      ],
+      "correctOption": 0,
+      "explanation": "Na ausencia de previsao legal especifica, o silencio administrativo e, em regra, omissao que pode ser impugnada, nao uma manifestacao de vontade presumida.",
+      "index": 19
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Qual e a negacao logica correta da proposicao \"o balanco foi auditado ou o resultado foi publicado\"?",
+      "options": [
+        "o balanco foi auditado e o resultado foi publicado",
+        "Nao e verdade que o balanco foi auditado, ou nao e verdade que o resultado foi publicado",
+        "o balanco foi auditado e nao e verdade que o resultado foi publicado",
+        "Nao e verdade que o balanco foi auditado, e nao e verdade que o resultado foi publicado"
+      ],
+      "correctOption": 3,
+      "explanation": "Pela Lei de De Morgan, a negacao de 'P ou Q' e 'nao P e nao Q' (troca 'ou' por 'e' e nega as duas partes).",
+      "index": 20
+    },
+    {
+      "theme": "espanhol",
+      "kind": "certo_errado",
+      "prompt": "El futuro simple en espanol se forma, para los verbos regulares, agregando terminaciones (-e, -as, -a, -emos, -eis, -an) al infinitivo completo del verbo.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Para los verbos regulares, el futuro simple se forma sobre el infinitivo completo (ej.: 'hablar' + 'e' = 'hablare'), sin quitar la terminacion del infinitivo.",
+      "index": 21
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "multipla",
+      "prompt": "Sobre improbidade administrativa, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A Lei de Improbidade Administrativa se aplica apenas a servidores publicos efetivos, nunca a agentes politicos.",
+        "A Administracao Publica pode contratar livremente, sem licitacao, sempre que o valor do contrato for considerado pequeno pelo gestor.",
+        "A Lei de Improbidade Administrativa (Lei 8.429/1992) estabelece sancoes para atos que causem lesao ao patrimonio publico ou violem principios da administracao.",
+        "O principio da impessoalidade permite que o agente publico promova sua propria imagem pessoal em publicidade de atos oficiais."
+      ],
+      "correctOption": 2,
+      "explanation": "A lei de improbidade se aplica a todo agente publico, inclusive agentes politicos (como prefeitos e secretarios), nao apenas a servidores efetivos.",
+      "index": 22
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Um produto custa R$ 194,00 para ser produzido e a empresa aplica um markup de 80% sobre o custo para formar o preco de venda. Qual o preco de venda?",
+      "options": [
+        "R$ 349,20",
+        "R$ 274,00",
+        "R$ 368,60",
+        "R$ 329,80"
+      ],
+      "correctOption": 0,
+      "explanation": "Preco de venda = custo x (1 + markup) = 194 x (1 + 0.8) = R$ 349,20.",
+      "index": 23
+    },
+    {
+      "theme": "matematica-financeira",
+      "kind": "multipla",
+      "prompt": "Um capital de R$ 1.233,00 foi aplicado a juros compostos de 5% por periodo, durante 3 periodos. Qual o montante final (aproximado)?",
+      "options": [
+        "R$ 1.402,69",
+        "R$ 1.464,34",
+        "R$ 1.427,35",
+        "R$ 1.417,95"
+      ],
+      "correctOption": 2,
+      "explanation": "Juros compostos: M = C x (1 + i)^t = 1233 x (1,05)^3 = R$ 1.427,35 (aproximado).",
+      "index": 24
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "certo_errado",
+      "prompt": "A comunicacao de admissao de empregado e facultativa e pode ser feita em qualquer prazo, a criterio do empregador.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A comunicacao de admissao e obrigacao legal com prazo definido, nao uma faculdade do empregador.",
+      "index": 25
+    },
+    {
+      "theme": "portugues",
+      "kind": "certo_errado",
+      "prompt": "Usa-se crase antes de locucoes adverbiais femininas de instrumento, modo ou lugar, como 'a mao', 'as pressas', 'a noite'.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A regra classica de crase inclui expressamente as locucoes adverbiais femininas de instrumento, modo e lugar.",
+      "index": 26
+    },
+    {
+      "theme": "ingles",
+      "kind": "certo_errado",
+      "prompt": "In business English, a 'deadline' refers to the starting date of a project, before any work has begun.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "The starting point of a project is sometimes called the 'kick-off' date, not the 'deadline', which refers to the final limit.",
+      "index": 27
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "multipla",
+      "prompt": "Sobre presuncao de inocencia, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A presuncao de inocencia se encerra com a condenacao em primeira instancia, antes de qualquer recurso.",
+        "Ninguem sera considerado culpado até o transito em julgado de sentenca penal condenatoria.",
+        "A acao popular pode ser proposta por qualquer pessoa juridica interessada em fiscalizar o poder publico.",
+        "A funcao social da propriedade e apenas uma recomendacao moral, sem efeitos juridicos."
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 5o, LVII, da CF/88 exige o transito em julgado (esgotamento de recursos) para afastar a presuncao de inocencia.",
+      "index": 28
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Observe a sequencia numerica: 20, 26, 32, 38, 44, ... Qual e o proximo termo?",
+      "options": [
+        "50",
+        "51",
+        "44",
+        "56"
+      ],
+      "correctOption": 0,
+      "explanation": "A sequencia e aritmetica de razao 6 (cada termo soma 6 ao anterior). O ultimo termo mostrado e 44, logo o proximo e 44 + 6 = 50.",
+      "index": 29
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Deseja-se dividir 6 processos de um setor e 15 processos de outro em lotes iguais, do maior tamanho possivel, sem misturar processos dos dois setores. Qual o tamanho de cada lote?",
+      "options": [
+        "6",
+        "3",
+        "4",
+        "5"
+      ],
+      "correctOption": 1,
+      "explanation": "A resposta e o MDC(6,15) = 3.",
+      "index": 30
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "certo_errado",
+      "prompt": "O salario-familia e pago a todos os trabalhadores com filhos, independentemente da faixa de renda.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A legislacao condiciona o salario-familia a faixa de renda do trabalhador, nao e um beneficio universal a todos com filhos.",
+      "index": 31
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "multipla",
+      "prompt": "Sobre responsabilidade civil do estado, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O Estado responde objetivamente pelos danos que seus agentes, nessa qualidade, causarem a terceiros.",
+        "O Estado so responde civilmente quando ficar provada a culpa pessoal do agente publico causador do dano.",
+        "O Estado nunca pode cobrar de volta do agente publico o valor pago a titulo de indenizacao.",
+        "O principio da impessoalidade permite que o agente publico promova sua propria imagem pessoal em publicidade de atos oficiais."
+      ],
+      "correctOption": 0,
+      "explanation": "Art. 37, par. 6o, da CF/88 adota a responsabilidade objetiva do Estado (teoria do risco administrativo), dispensando prova de culpa do agente.",
+      "index": 32
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Uma empresa tem custos fixos mensais de R$ 40.000,00 e margem de contribuicao de R$ 73,00 por unidade vendida. Quantas unidades precisa vender por mes para atingir o ponto de equilibrio (lucro zero)?",
+      "options": [
+        "558 unidades",
+        "40 unidades",
+        "548 unidades",
+        "538 unidades"
+      ],
+      "correctOption": 2,
+      "explanation": "Ponto de equilibrio em unidades = custo fixo / margem de contribuicao unitaria = 40000 / 73 = 548 unidades.",
+      "index": 33
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "certo_errado",
+      "prompt": "O habeas corpus e concedido sempre que alguem sofrer ou se achar ameacado de sofrer violencia ou coacao em sua liberdade de locomocao.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 5o, LXVIII, da CF/88 define exatamente essa finalidade para o habeas corpus.",
+      "index": 34
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Se 5 maquinas identicas produzem 143 pecas por hora, quantas pecas 16 maquinas identicas produzem no mesmo intervalo de tempo (mantendo a mesma proporcao)?",
+      "options": [
+        "458",
+        "453",
+        "159",
+        "474"
+      ],
+      "correctOption": 0,
+      "explanation": "Regra de tres simples direta: 5 maquinas -> 143 pecas; 16 maquinas -> x. x = (143 x 16) / 5 = 458.",
+      "index": 35
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "multipla",
+      "prompt": "Sobre administracao publica - principios, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A eficiencia nao e um principio constitucional expresso da administracao publica, apenas uma meta de gestao.",
+        "O contraditorio e a ampla defesa sao garantidos apenas em processos judiciais, nunca em processos administrativos.",
+        "O principio da legalidade permite que atos infralegais criem obrigacoes novas sem base em lei.",
+        "A administracao publica direta e indireta obedecera aos principios de legalidade, impessoalidade, moralidade, publicidade e eficiencia."
+      ],
+      "correctOption": 3,
+      "explanation": "Art. 37, caput, da CF/88 (apos a EC 19/1998) lista a eficiencia como principio expresso.",
+      "index": 36
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "multipla",
+      "prompt": "Sobre titulos de credito - cartularidade, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O registro na Junta Comercial e facultativo e nao gera nenhuma consequencia juridica para o empresario que nao se registrar.",
+        "Os titulos de credito, por definicao, nunca podem ser representados ou transmitidos por meios eletronicos.",
+        "O principio da cartularidade, tradicionalmente, condiciona o exercicio dos direitos representados pelo titulo de credito a posse do documento (cartula), com atenuacoes para titulos eletronicos.",
+        "A personalidade juridica da sociedade empresaria se confunde sempre com a personalidade de seus socios, em qualquer situacao."
+      ],
+      "correctOption": 2,
+      "explanation": "A legislacao e a pratica comercial admitem titulos eletronicos (como a duplicata eletronica e a nota promissoria eletronica em certos contextos), atenuando a cartularidade classica.",
+      "index": 37
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "certo_errado",
+      "prompt": "Capital social e o valor dos recursos investidos pelos socios ou acionistas na constituicao ou em aumentos de capital da entidade.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Lucro acumulado e reserva distinta do capital social; capital social reflete o aporte original dos socios/acionistas.",
+      "index": 38
+    },
+    {
+      "theme": "estatistica",
+      "kind": "multipla",
+      "prompt": "Considere o conjunto de valores (ja ordenados): 25, 31, 42, 46, 47. Qual e a mediana?",
+      "options": [
+        "38",
+        "31",
+        "46",
+        "42"
+      ],
+      "correctOption": 3,
+      "explanation": "Com 5 valores ordenados, a mediana e o valor central (3o elemento): 42.",
+      "index": 39
+    },
+    {
+      "theme": "ingles",
+      "kind": "certo_errado",
+      "prompt": "For most one-syllable adjectives, the comparative form adds '-er' and the superlative adds '-est' (e.g., 'tall' -> 'taller' -> 'tallest').",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Short (one-syllable) adjectives typically use -er/-est; longer adjectives use 'more'/'the most' (e.g., 'more intelligent').",
+      "index": 40
+    },
+    {
+      "theme": "matematica-financeira",
+      "kind": "multipla",
+      "prompt": "Um capital de R$ 6.883,00 foi aplicado a juros compostos de 5% por periodo, durante 3 periodos. Qual o montante final (aproximado)?",
+      "options": [
+        "R$ 7.830,27",
+        "R$ 8.174,42",
+        "R$ 7.967,93",
+        "R$ 7.915,45"
+      ],
+      "correctOption": 2,
+      "explanation": "Juros compostos: M = C x (1 + i)^t = 6883 x (1,05)^3 = R$ 7.967,93 (aproximado).",
+      "index": 41
+    },
+    {
+      "theme": "direito-eleitoral",
+      "kind": "certo_errado",
+      "prompt": "As emissoras de radio e televisao podem excluir arbitrariamente qualquer candidato registrado dos debates eleitorais, sem criterio objetivo.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A exclusao de candidatos registrados dos debates deve seguir criterios objetivos previamente definidos, nao pode ser arbitraria.",
+      "index": 42
+    },
+    {
+      "theme": "tributacao",
+      "kind": "multipla",
+      "prompt": "Sobre obrigacoes acessorias eletronicas, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O parcelamento tributario extingue definitivamente o credito tributario no momento da adesao, independentemente do pagamento das parcelas.",
+        "A retencao na fonte dispensa definitivamente o beneficiario do pagamento de qualquer obrigacao relacionada aquele tributo retido, em qualquer hipotese.",
+        "O SPED (Sistema Publico de Escrituracao Digital) unifica a prestacao de obrigacoes acessorias fiscais e contabeis das empresas ao Fisco, por meio eletronico.",
+        "O SPED e um sistema exclusivo para a declaracao do Imposto de Renda de pessoas fisicas."
+      ],
+      "correctOption": 2,
+      "explanation": "O SPED abrange obrigacoes de pessoas juridicas (ECD, ECF, EFD-Contribuicoes, NF-e etc.), nao a declaracao de pessoa fisica.",
+      "index": 43
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "certo_errado",
+      "prompt": "O principio da prudencia recomenda que, havendo duvida razoavel entre duas alternativas para a mensuracao de um elemento, adote-se o valor menor para o ativo e o maior para o passivo.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A prudencia orienta cautela diante de incerteza: menor valor para ativos e maior para passivos em caso de duvida razoavel, nao a maximizacao do ativo.",
+      "index": 44
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "multipla",
+      "prompt": "Sobre controle externo, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O principio da legalidade permite que atos infralegais criem obrigacoes novas sem base em lei.",
+        "O Tribunal de Contas da Uniao e um orgao do Poder Judiciario, subordinado ao Supremo Tribunal Federal.",
+        "O controle externo e exercido pelo Congresso Nacional com o auxilio do Tribunal de Contas da Uniao.",
+        "A presuncao de inocencia se encerra com a condenacao em primeira instancia, antes de qualquer recurso."
+      ],
+      "correctOption": 2,
+      "explanation": "Art. 71 da CF/88 define o TCU como auxiliar do controle externo exercido pelo Congresso Nacional, e nao orgao do Judiciario.",
+      "index": 45
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "certo_errado",
+      "prompt": "A admissao de um empregado deve ser comunicada aos orgaos competentes, atualmente por meio de evento proprio do eSocial, dentro do prazo legal.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A comunicacao de admissao tem prazo legal definido (via eSocial), sendo obrigatoria, nao facultativa.",
+      "index": 46
+    },
+    {
+      "theme": "portugues",
+      "kind": "certo_errado",
+      "prompt": "A ambiguidade ocorre quando uma construcao permite mais de uma interpretacao, o que, em textos tecnicos e oficiais, deve ser evitado para garantir clareza.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Em textos tecnicos, administrativos e oficiais, a clareza e objetividade sao desejadas; a ambiguidade, nesses contextos, e vista como um defeito a ser evitado.",
+      "index": 47
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre regencia verbal - preferir, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O verbo preferir, na norma culta tradicional, rege a preposicao 'a' e nao deve ser seguido de 'do que' (ex.: 'prefiro cafe a cha').",
+        "Nunca se usa crase antes de locucoes adverbiais, independentemente do genero da palavra.",
+        "O verbo preferir deve ser sempre seguido de 'do que' na norma culta tradicional (ex.: 'prefiro cafe do que cha').",
+        "A colocacao pronominal e sempre livre em portugues, sem influencia de palavras atrativas na frase."
+      ],
+      "correctOption": 0,
+      "explanation": "A regencia tradicional de 'preferir' e com a preposicao 'a', nao com 'do que', que e considerado desvio pela gramatica normativa tradicional.",
+      "index": 48
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Resolva para x: 7x + 63 = 182. Qual o valor de x?",
+      "options": [
+        "17",
+        "16",
+        "24",
+        "18"
+      ],
+      "correctOption": 0,
+      "explanation": "7x = 182 - 63 = 119; x = 119 / 7 = 17.",
+      "index": 49
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "Sobre capital circulante liquido, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Lucro bruto e a diferenca entre a receita liquida e todas as despesas da entidade, inclusive as administrativas e financeiras.",
+        "O capital circulante liquido e sempre igual ao patrimonio liquido total da entidade.",
+        "Ativo nao circulante e o grupo que reune apenas as dividas de longo prazo da entidade.",
+        "O capital circulante liquido (ativo circulante menos passivo circulante) indica a folga ou a insuficiencia de recursos de curto prazo da entidade."
+      ],
+      "correctOption": 3,
+      "explanation": "Capital circulante liquido = ativo circulante - passivo circulante, um conceito de curto prazo, diferente do patrimonio liquido (ativo total - passivo total).",
+      "index": 50
+    },
+    {
+      "theme": "estatistica",
+      "kind": "multipla",
+      "prompt": "Em um lancamento de um dado honesto de 6 faces, qual a probabilidade de sair um numero par?",
+      "options": [
+        "2/3",
+        "1/3",
+        "1/6",
+        "1/2"
+      ],
+      "correctOption": 3,
+      "explanation": "Numeros pares entre 1 e 6: {2,4,6}, ou seja 3 dos 6 resultados possiveis. Probabilidade = 3/6 = 1/2.",
+      "index": 51
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "multipla",
+      "prompt": "Sobre guarda de documentos fiscais, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O Domicilio Tributario Eletronico e um endereco fisico obrigatorio que a empresa deve manter proximo ao orgao fazendario.",
+        "A ECD e documento interno que nunca precisa ser transmitido a nenhum orgao publico.",
+        "Os documentos fiscais podem ser descartados pela empresa um ano apos a emissao, independentemente de qualquer prazo de fiscalizacao.",
+        "Os documentos fiscais e contabeis devem ser conservados pela empresa até que ocorra a decadencia ou prescricao dos creditos tributarios a eles relacionados."
+      ],
+      "correctOption": 3,
+      "explanation": "A pratica e a orientacao fiscal exigem guarda por prazo suficiente para cobrir eventual fiscalizacao (em regra, ao menos 5 anos, podendo variar conforme o tributo).",
+      "index": 52
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "certo_errado",
+      "prompt": "O direito de a Fazenda Publica constituir o credito tributario extingue-se, em regra, em cinco anos contados do fato gerador ou do exercicio seguinte, conforme o caso (decadencia).",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 173 do CTN fixa prazo decadencial, em regra de cinco anos, para a constituicao do credito tributario.",
+      "index": 53
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "certo_errado",
+      "prompt": "As notas explicativas complementam as demonstracoes contabeis, detalhando politicas contabeis, criterios de mensuracao e informacoes adicionais relevantes.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "As notas explicativas sao parte integrante das demonstracoes contabeis publicadas, nao documentos confidenciais apartados.",
+      "index": 54
+    },
+    {
+      "theme": "dados",
+      "kind": "multipla",
+      "prompt": "Sobre big data - caracteristicas, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Segundo a LGPD, todos os dados pessoais recebem exatamente o mesmo nivel de protecao, sem categoria diferenciada para dados sensiveis.",
+        "A chave primaria de uma tabela pode se repetir em varios registros diferentes, sem restricao.",
+        "Big data se refere exclusivamente a quantidade de paginas impressas em relatorios de uma organizacao.",
+        "Big data e frequentemente caracterizado por volume, velocidade e variedade de dados, exigindo tecnologias especificas de processamento."
+      ],
+      "correctOption": 3,
+      "explanation": "O conceito de big data trata de grandes volumes de dados digitais, com velocidade e variedade, nao de paginas impressas em papel.",
+      "index": 55
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "certo_errado",
+      "prompt": "A substituicao tributaria e exclusiva do Imposto de Renda e nao se aplica a outros tributos, como o ICMS.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A substituicao tributaria e tecnica usada em diversos tributos, com destaque historico para o ICMS (substituicao tributaria 'para frente'), nao exclusiva do Imposto de Renda.",
+      "index": 56
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "certo_errado",
+      "prompt": "A taxa pode ser calculada com base exclusivamente no capital social da empresa contribuinte, como se fosse um imposto.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A Sumula Vinculante 29 do STF admite elementos da base de calculo de impostos na taxa, mas a base nao pode ser integralmente identica a de um imposto, como o capital social.",
+      "index": 57
+    },
+    {
+      "theme": "espanhol",
+      "kind": "certo_errado",
+      "prompt": "El futuro simple en espanol se forma siempre quitando la terminacion '-ar', '-er' o '-ir' del verbo antes de agregar la terminacion de futuro.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A diferencia de otros tiempos verbales, el futuro simple regular no quita la terminacion del infinitivo; la agrega directamente sobre el infinitivo completo.",
+      "index": 58
+    },
+    {
+      "theme": "dados",
+      "kind": "multipla",
+      "prompt": "Sobre governanca de dados, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Governanca de dados e o conjunto de politicas, processos e responsabilidades que garantem o uso adequado, seguro e consistente dos dados em uma organizacao.",
+        "O backup de dados substitui definitivamente a necessidade de controle de acesso e seguranca da informacao nos sistemas.",
+        "Segundo a LGPD, todos os dados pessoais recebem exatamente o mesmo nivel de protecao, sem categoria diferenciada para dados sensiveis.",
+        "Governanca de dados se refere apenas ao armazenamento fisico dos servidores onde os dados ficam guardados."
+      ],
+      "correctOption": 0,
+      "explanation": "Governanca de dados e um conceito organizacional (politicas, papeis, processos de qualidade e seguranca), mais amplo do que apenas a infraestrutura fisica de armazenamento.",
+      "index": 59
+    },
+    {
+      "theme": "portugues",
+      "kind": "certo_errado",
+      "prompt": "O verbo haver, no sentido de existir, concorda normalmente com o sujeito no plural (ex.: 'Haviam muitos candidatos').",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A norma culta considera incorreta a flexao no plural de 'haver' no sentido de existir; a forma correta e sempre no singular ('havia').",
+      "index": 60
+    }
+  ]
+}

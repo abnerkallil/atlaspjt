@@ -1,0 +1,810 @@
+{
+  "examId": "ATLAS-SIM-11",
+  "title": "Simulado autoral Atlas 11/30",
+  "questions": [
+    {
+      "theme": "ingles",
+      "kind": "certo_errado",
+      "prompt": "The passive voice is formed with the verb 'to be' plus the past participle of the main verb (e.g., 'The report was written by the team').",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "The correct passive voice structure uses the past participle after 'to be', not the base form of the verb.",
+      "index": 1
+    },
+    {
+      "theme": "direito-eleitoral",
+      "kind": "certo_errado",
+      "prompt": "O alistamento eleitoral e o voto sao obrigatorios para os maiores de dezoito anos e facultativos para os analfabetos, os maiores de setenta anos e os maiores de dezesseis e menores de dezoito anos.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 14, par. 1o, da CF/88 lista expressamente as hipoteses de voto facultativo (analfabetos, maiores de 70 e jovens de 16 e 17 anos).",
+      "index": 2
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "multipla",
+      "prompt": "Sobre 13o salario, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A gratificacao natalina (13o salario) corresponde a um doze avos da remuneracao devida em dezembro, por mes de servico no ano, ou fracao igual ou superior a quinze dias.",
+        "O vale-transporte e sempre totalmente gratuito para o empregado, sem qualquer desconto permitido em lei.",
+        "O FGTS e descontado do salario do empregado, reduzindo o valor liquido recebido por ele.",
+        "O 13o salario e beneficio facultativo, que o empregador pode decidir pagar ou nao a cada ano."
+      ],
+      "correctOption": 0,
+      "explanation": "A Lei 4.090/1962 e a CF/88 (art. 7o, VIII) garantem o 13o salario como direito obrigatorio do empregado, nao facultativo ao empregador.",
+      "index": 3
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Dois setores de uma repartição fazem rondas: um a cada 9 dias e outro a cada 6 dias. Partindo juntos hoje, depois de quantos dias eles voltarao a coincidir?",
+      "options": [
+        "12",
+        "54",
+        "27",
+        "18"
+      ],
+      "correctOption": 3,
+      "explanation": "A resposta e o MMC(9,6) = 18 dias.",
+      "index": 4
+    },
+    {
+      "theme": "tributacao",
+      "kind": "multipla",
+      "prompt": "Sobre simples nacional - natureza, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O Simples Nacional e regime tributario obrigatorio para todas as empresas, independente do porte.",
+        "PIS e COFINS sao impostos de competencia dos Estados, incidentes sobre a circulacao de mercadorias.",
+        "O Simples Nacional e regime unificado de arrecadacao de tributos destinado a microempresas e empresas de pequeno porte.",
+        "O SPED e um sistema exclusivo para a declaracao do Imposto de Renda de pessoas fisicas."
+      ],
+      "correctOption": 2,
+      "explanation": "A Lei Complementar 123/2006 destina o Simples Nacional especificamente a microempresas e empresas de pequeno porte que optem pelo regime, dentro dos limites de receita bruta.",
+      "index": 5
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Qual e a negacao logica correta da proposicao \"o tributo foi recolhido ou a certidao negativa foi emitida\"?",
+      "options": [
+        "o tributo foi recolhido e nao e verdade que a certidao negativa foi emitida",
+        "Nao e verdade que o tributo foi recolhido, ou nao e verdade que a certidao negativa foi emitida",
+        "Nao e verdade que o tributo foi recolhido, e nao e verdade que a certidao negativa foi emitida",
+        "o tributo foi recolhido e a certidao negativa foi emitida"
+      ],
+      "correctOption": 2,
+      "explanation": "Pela Lei de De Morgan, a negacao de 'P ou Q' e 'nao P e nao Q' (troca 'ou' por 'e' e nega as duas partes).",
+      "index": 6
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre concordancia verbal - expressao 'a maioria de', qual das alternativas a seguir esta correta?",
+      "options": [
+        "Com a expressao 'a maioria de', a concordancia verbal so pode ser feita no plural, sendo erro gramatical a concordancia no singular.",
+        "Com sujeito composto anteposto ao verbo, a concordancia verbal deve ser sempre no singular.",
+        "Com a expressao 'a maioria de' seguida de substantivo plural, a norma culta admite tanto a concordancia no singular (com 'maioria') quanto no plural (com o substantivo que a acompanha).",
+        "O paralelismo sintatico e uma regra exclusiva da linguagem juridica, sem aplicacao na redacao de textos administrativos ou dissertativos."
+      ],
+      "correctOption": 2,
+      "explanation": "Gramaticas normativas admitem ambas as concordancias (singular com o nucleo 'maioria' ou plural por atracao com o especificador), nao apenas o plural.",
+      "index": 7
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Considere verdadeira a proposicao condicional: \"Se o documento esta assinado, entao o processo pode tramitar.\" Sabendo que o processo pode tramitar NAO ocorreu (ou seja, o processo nao pode tramitar), o que se pode concluir pela contrapositiva?",
+      "options": [
+        "Nao e possivel concluir nada a partir dessas informacoes.",
+        "Conclui-se que nao e verdade que o documento esta assinado.",
+        "A proposicao condicional se torna falsa.",
+        "Conclui-se que o documento esta assinado, mesmo assim."
+      ],
+      "correctOption": 1,
+      "explanation": "Em uma condicional verdadeira 'se P entao Q', negar Q (modus tollens / contrapositiva) permite concluir 'nao P'. A condicional continua verdadeira; o que muda e a conclusao sobre P.",
+      "index": 8
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "multipla",
+      "prompt": "Sobre duplicata, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A desconsideracao da personalidade juridica e aplicada automaticamente sempre que a sociedade nao consegue pagar uma divida, independentemente de abuso.",
+        "Na sociedade limitada, os socios respondem sempre com seu patrimonio pessoal por toda e qualquer divida da sociedade, sem limite.",
+        "A duplicata e titulo de credito que so pode ser emitido por instituicoes financeiras, nunca por empresas comerciais comuns.",
+        "A duplicata e titulo de credito tipicamente emitido em razao de uma compra e venda mercantil ou de uma prestacao de servicos, com base em fatura."
+      ],
+      "correctOption": 3,
+      "explanation": "A duplicata e emitida pelo proprio vendedor/prestador de servico (sacador) em razao da fatura correspondente a venda ou servico prestado.",
+      "index": 9
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre uso de 'mal' e 'mau', qual das alternativas a seguir esta correta?",
+      "options": [
+        "'Mal' e, em regra, adverbio (antonimo de 'bem') ou substantivo abstrato; 'mau' e adjetivo (antonimo de 'bom').",
+        "O verbo haver, no sentido de existir, concorda normalmente com o sujeito no plural (ex.: 'Haviam muitos candidatos').",
+        "'Mal' e 'mau' sao sempre sinonimos perfeitos e podem ser usados indistintamente em qualquer contexto.",
+        "Com sujeito composto anteposto ao verbo, a concordancia verbal deve ser sempre no singular."
+      ],
+      "correctOption": 0,
+      "explanation": "A distincao classica e funcional: 'mal' opoe-se a 'bem' (adverbio) e 'mau' opoe-se a 'bom' (adjetivo), nao sao intercambiaveis em qualquer contexto.",
+      "index": 10
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "certo_errado",
+      "prompt": "A duplicata e titulo de credito que so pode ser emitido por instituicoes financeiras, nunca por empresas comerciais comuns.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A duplicata e emitida pelo credor da relacao comercial (vendedor ou prestador de servico), nao exclusivamente por instituicoes financeiras.",
+      "index": 11
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "certo_errado",
+      "prompt": "A dispensa por justa causa exige a comprovacao de falta grave do empregado, prevista taxativamente no art. 482 da CLT.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "O art. 482 da CLT lista taxativamente as hipoteses de justa causa (ex.: ato de improbidade, indisciplina, abandono de emprego), nao bastando insatisfacao generica com o desempenho.",
+      "index": 12
+    },
+    {
+      "theme": "espanhol",
+      "kind": "certo_errado",
+      "prompt": "En el espanol estandar, el uso de 'le' como objeto directo masculino (leismo) es siempre la forma preferida y recomendada por la norma academica.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "El leismo es una variacion dialectal aceptada en ciertas regiones, pero no es la forma preferida por la norma academica estandar.",
+      "index": 13
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "multipla",
+      "prompt": "Sobre registro de empresas, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Na sociedade anonima, o capital social se divide em quotas, nos mesmos termos da sociedade limitada.",
+        "O registro na Junta Comercial e facultativo e nao gera nenhuma consequencia juridica para o empresario que nao se registrar.",
+        "A inscricao do empresario e da sociedade empresaria deve ser feita na Junta Comercial da respectiva sede, antes do inicio da atividade.",
+        "Os titulos de credito, por definicao, nunca podem ser representados ou transmitidos por meios eletronicos."
+      ],
+      "correctOption": 2,
+      "explanation": "Art. 967 e seguintes do Codigo Civil exigem o registro para a regularidade da atividade empresarial, com consequencias (como a nao fruicao de certos beneficios legais) para quem nao se registra.",
+      "index": 14
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "multipla",
+      "prompt": "Sobre contraditorio e ampla defesa, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O contraditorio e a ampla defesa sao garantidos apenas em processos judiciais, nunca em processos administrativos.",
+        "O mandado de seguranca pode ser usado para proteger qualquer direito, mesmo quando cabivel habeas corpus.",
+        "Aos litigantes, em processo judicial ou administrativo, sao assegurados o contraditorio e a ampla defesa.",
+        "O devido processo legal se aplica apenas a processos criminais, nao a processos administrativos."
+      ],
+      "correctOption": 2,
+      "explanation": "Art. 5o, LV, da CF/88 estende expressamente a garantia aos processos administrativos.",
+      "index": 15
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "multipla",
+      "prompt": "Sobre prescricao e decadencia tributarias, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O principio da capacidade contributiva se aplica exclusivamente as taxas, nunca aos impostos.",
+        "A inscricao em divida ativa torna o credito tributario incontestavel, sem possibilidade de defesa do contribuinte.",
+        "O direito de a Fazenda Publica constituir o credito tributario extingue-se, em regra, em cinco anos contados do fato gerador ou do exercicio seguinte, conforme o caso (decadencia).",
+        "Nao existe prazo para a Fazenda Publica constituir o credito tributario; o lancamento pode ser feito em qualquer tempo."
+      ],
+      "correctOption": 2,
+      "explanation": "Art. 173 do CTN fixa prazo decadencial, em regra de cinco anos, para a constituicao do credito tributario.",
+      "index": 16
+    },
+    {
+      "theme": "tributacao",
+      "kind": "multipla",
+      "prompt": "Sobre obrigacoes acessorias eletronicas, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A retencao na fonte dispensa definitivamente o beneficiario do pagamento de qualquer obrigacao relacionada aquele tributo retido, em qualquer hipotese.",
+        "O SPED (Sistema Publico de Escrituracao Digital) unifica a prestacao de obrigacoes acessorias fiscais e contabeis das empresas ao Fisco, por meio eletronico.",
+        "No Lucro Presumido, a empresa deve necessariamente apurar o lucro liquido contabil detalhado para calcular o imposto.",
+        "O SPED e um sistema exclusivo para a declaracao do Imposto de Renda de pessoas fisicas."
+      ],
+      "correctOption": 1,
+      "explanation": "O SPED abrange obrigacoes de pessoas juridicas (ECD, ECF, EFD-Contribuicoes, NF-e etc.), nao a declaracao de pessoa fisica.",
+      "index": 17
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Considere verdadeira a proposicao condicional: \"Se a declaracao foi entregue, entao a multa por atraso nao incide.\" Sabendo que a multa por atraso incide NAO ocorreu (ou seja, a multa por atraso incide), o que se pode concluir pela contrapositiva?",
+      "options": [
+        "Conclui-se que nao e verdade que a declaracao foi entregue.",
+        "A proposicao condicional se torna falsa.",
+        "Nao e possivel concluir nada a partir dessas informacoes.",
+        "Conclui-se que a declaracao foi entregue, mesmo assim."
+      ],
+      "correctOption": 0,
+      "explanation": "Em uma condicional verdadeira 'se P entao Q', negar Q (modus tollens / contrapositiva) permite concluir 'nao P'. A condicional continua verdadeira; o que muda e a conclusao sobre P.",
+      "index": 18
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "certo_errado",
+      "prompt": "A ECD e documento interno que nunca precisa ser transmitido a nenhum orgao publico.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A ECD e obrigatoriamente transmitida ao SPED, nao permanece apenas como documento interno da empresa.",
+      "index": 19
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Um produto custa R$ 339,00 para ser produzido e a empresa aplica um markup de 50% sobre o custo para formar o preco de venda. Qual o preco de venda?",
+      "options": [
+        "R$ 474,60",
+        "R$ 508,50",
+        "R$ 389,00",
+        "R$ 542,40"
+      ],
+      "correctOption": 1,
+      "explanation": "Preco de venda = custo x (1 + markup) = 339 x (1 + 0.5) = R$ 508,50.",
+      "index": 20
+    },
+    {
+      "theme": "direito-eleitoral",
+      "kind": "certo_errado",
+      "prompt": "As emissoras de radio e televisao podem excluir arbitrariamente qualquer candidato registrado dos debates eleitorais, sem criterio objetivo.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A exclusao de candidatos registrados dos debates deve seguir criterios objetivos previamente definidos, nao pode ser arbitraria.",
+      "index": 21
+    },
+    {
+      "theme": "ingles",
+      "kind": "multipla",
+      "prompt": "Sobre modal verbs - 'must' vs 'should', qual das alternativas a seguir esta correta?",
+      "options": [
+        "For every adjective in English, the comparative and superlative are always formed by adding 'more' and 'the most', regardless of length.",
+        "'Must' expresses strong obligation or necessity, while 'should' expresses advice or recommendation, a weaker degree of obligation.",
+        "The present perfect is always used with a specific past time expression, such as 'yesterday' or 'last year'.",
+        "'Must' and 'should' always express exactly the same degree of obligation in English."
+      ],
+      "correctOption": 1,
+      "explanation": "'Must' conveys stronger obligation/necessity; 'should' conveys advice/recommendation — they differ in degree of obligation.",
+      "index": 22
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Resolva para x: 2x + 61 = 103. Qual o valor de x?",
+      "options": [
+        "20",
+        "22",
+        "23",
+        "21"
+      ],
+      "correctOption": 3,
+      "explanation": "2x = 103 - 61 = 42; x = 42 / 2 = 21.",
+      "index": 23
+    },
+    {
+      "theme": "dados",
+      "kind": "multipla",
+      "prompt": "Sobre lgpd - dado pessoal sensivel, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O comando SELECT em SQL e usado para excluir permanentemente registros de uma tabela.",
+        "Dados sobre origem racial ou etnica, convicção religiosa, saude ou vida sexual sao exemplos de dados pessoais sensiveis segundo a LGPD, exigindo cuidados reforcados.",
+        "Em um banco de dados relacional, os dados sao organizados exclusivamente em arquivos de texto sem estrutura, sem relacoes entre eles.",
+        "Segundo a LGPD, todos os dados pessoais recebem exatamente o mesmo nivel de protecao, sem categoria diferenciada para dados sensiveis."
+      ],
+      "correctOption": 1,
+      "explanation": "A LGPD cria a categoria de dados pessoais sensiveis (art. 5o, II), com regras de tratamento mais rigorosas que os dados pessoais comuns.",
+      "index": 24
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "multipla",
+      "prompt": "Sobre responsabilidade civil do estado, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O principio da eficiencia autoriza a Administracao a descumprir a legalidade quando isso tornar o servico mais rapido.",
+        "O Estado responde objetivamente pelos danos que seus agentes, nessa qualidade, causarem a terceiros.",
+        "O Estado so responde civilmente quando ficar provada a culpa pessoal do agente publico causador do dano.",
+        "O processo administrativo disciplinar pode aplicar penalidade de demissao sem que o servidor seja ouvido previamente."
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 37, par. 6o, da CF/88 adota a responsabilidade objetiva do Estado (teoria do risco administrativo), dispensando prova de culpa do agente.",
+      "index": 25
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Uma comissao de 2 servidores sera escolhida, sem distincao de funcao, entre 6 servidores disponiveis. De quantas formas diferentes essa comissao pode ser formada?",
+      "options": [
+        "17",
+        "13",
+        "15",
+        "30"
+      ],
+      "correctOption": 2,
+      "explanation": "Como a ordem nao importa (comissao, sem funcoes distintas), usa-se combinacao: C(6,2) = 6! / (2! x (6-k)!) = 15.",
+      "index": 26
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "O ativo circulante de uma empresa e R$ 217.000,00 e o passivo circulante e R$ 148.000,00. Qual o capital circulante liquido (CCL)?",
+      "options": [
+        "R$ 74.000,00",
+        "R$ 69.000,00",
+        "R$ 365.000,00",
+        "R$ 68.000,00"
+      ],
+      "correctOption": 1,
+      "explanation": "CCL = ativo circulante - passivo circulante = R$ 217.000,00 - R$ 148.000,00 = R$ 69.000,00.",
+      "index": 27
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "Sobre giro de estoque, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O giro de estoque indica o valor total do estoque fisico armazenado no deposito da entidade.",
+        "O giro de estoque (custo das vendas / estoque medio) indica quantas vezes, em media, o estoque e renovado em um periodo.",
+        "As notas explicativas sao documentos internos confidenciais que nunca acompanham as demonstracoes contabeis publicadas.",
+        "Lucro bruto e a diferenca entre a receita liquida e todas as despesas da entidade, inclusive as administrativas e financeiras."
+      ],
+      "correctOption": 1,
+      "explanation": "O giro de estoque e um indicador de velocidade de renovacao (quantas vezes o estoque 'gira'), nao o valor fisico armazenado.",
+      "index": 28
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "certo_errado",
+      "prompt": "O estado de defesa e decretado pelo Presidente da Republica para preservar ou restabelecer a ordem publica em locais restritos e determinados.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Arts. 136 e 137 da CF/88 preveem que o estado de defesa pode ser decretado pelo Presidente (com posterior controle do Congresso) e que o estado de sitio exige autorizacao previa do Congresso Nacional.",
+      "index": 29
+    },
+    {
+      "theme": "espanhol",
+      "kind": "certo_errado",
+      "prompt": "Identificar la idea principal de un texto exige distinguir la tesis central del autor de los ejemplos y argumentos que la sostienen.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "La idea principal puede estar en cualquier parte del texto; identificarla exige comprension global, no solo la lectura de la ultima frase.",
+      "index": 30
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "multipla",
+      "prompt": "Sobre principio da impessoalidade, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Os contratos administrativos seguem exatamente as mesmas regras dos contratos privados, sem nenhuma prerrogativa especial da Administracao.",
+        "A presuncao de legitimidade dos atos administrativos e absoluta e nunca pode ser contestada.",
+        "O principio da impessoalidade veda que a atuacao administrativa beneficie ou prejudique pessoas determinadas por razoes pessoais.",
+        "O principio da impessoalidade permite que o agente publico promova sua propria imagem pessoal em publicidade de atos oficiais."
+      ],
+      "correctOption": 2,
+      "explanation": "A impessoalidade exige que a atuacao administrativa seja voltada ao interesse publico, sem favorecimentos pessoais.",
+      "index": 31
+    },
+    {
+      "theme": "dados",
+      "kind": "multipla",
+      "prompt": "Sobre qualidade de dados - acuracia, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A acuracia, como dimensao da qualidade de dados, refere-se exclusivamente a velocidade com que o dado e processado pelo sistema.",
+        "A anonimizacao de dados consiste em apenas remover o nome da pessoa, mantendo todos os demais dados que poderiam identifica-la de outra forma.",
+        "A acuracia, como dimensao da qualidade de dados, refere-se ao grau em que um dado reflete corretamente a realidade que pretende representar.",
+        "Big data se refere exclusivamente a quantidade de paginas impressas em relatorios de uma organizacao."
+      ],
+      "correctOption": 2,
+      "explanation": "Velocidade de processamento e dimensao de desempenho (performance), nao de acuracia, que trata da correcao do dado em relacao a realidade.",
+      "index": 32
+    },
+    {
+      "theme": "dados",
+      "kind": "multipla",
+      "prompt": "Sobre anonimizacao de dados, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Segundo a LGPD, todos os dados pessoais recebem exatamente o mesmo nivel de protecao, sem categoria diferenciada para dados sensiveis.",
+        "A normalizacao de banco de dados tem como objetivo duplicar o maximo possivel de informacoes entre as tabelas, para facilitar o acesso.",
+        "A anonimizacao de dados consiste em apenas remover o nome da pessoa, mantendo todos os demais dados que poderiam identifica-la de outra forma.",
+        "A anonimizacao e o processo de utilizar meios tecnicos razoaveis para que um dado perca a possibilidade de associacao, direta ou indireta, a um individuo."
+      ],
+      "correctOption": 3,
+      "explanation": "A anonimizacao efetiva exige que nenhum dado remanescente permita a reidentificacao, direta ou indireta, nao apenas a remocao do nome.",
+      "index": 33
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "certo_errado",
+      "prompt": "Patrimonio liquido e a diferenca entre o total do ativo e o total do passivo da entidade.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Patrimonio liquido = Ativo - Passivo, por definicao da equacao contabil fundamental.",
+      "index": 34
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Dois setores de uma repartição fazem rondas: um a cada 8 dias e outro a cada 10 dias. Partindo juntos hoje, depois de quantos dias eles voltarao a coincidir?",
+      "options": [
+        "80",
+        "48",
+        "30",
+        "40"
+      ],
+      "correctOption": 3,
+      "explanation": "A resposta e o MMC(8,10) = 40 dias.",
+      "index": 35
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "certo_errado",
+      "prompt": "No metodo do custo medio, usa-se sempre o preco da ultima compra para valorizar todo o estoque.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Usar apenas o ultimo preco de compra para todo o estoque nao e custo medio; seria uma forma de PEPS/UEPS invertido, nao a media ponderada.",
+      "index": 36
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Uma empresa tem custos fixos mensais de R$ 21.000,00 e margem de contribuicao de R$ 24,00 por unidade vendida. Quantas unidades precisa vender por mes para atingir o ponto de equilibrio (lucro zero)?",
+      "options": [
+        "885 unidades",
+        "865 unidades",
+        "21 unidades",
+        "875 unidades"
+      ],
+      "correctOption": 3,
+      "explanation": "Ponto de equilibrio em unidades = custo fixo / margem de contribuicao unitaria = 21000 / 24 = 875 unidades.",
+      "index": 37
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "certo_errado",
+      "prompt": "Passivo circulante compreende apenas emprestimos bancarios de qualquer prazo.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Emprestimos sao apenas um tipo de obrigacao; o passivo circulante reune diversas obrigacoes de curto prazo, independente de serem bancarias.",
+      "index": 38
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "multipla",
+      "prompt": "Sobre taxa - fato gerador, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A taxa pode ser calculada com base exclusivamente no capital social da empresa contribuinte, como se fosse um imposto.",
+        "A taxa tem como fato gerador o exercicio regular do poder de policia ou a prestacao de servico publico especifico e divisivel.",
+        "Compete aos Municipios instituir o Imposto de Renda sobre os rendimentos de seus servidores.",
+        "O ISS incide sobre a circulacao de mercadorias, da mesma forma que o ICMS."
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 77 do CTN vincula a taxa ao poder de policia ou a servico publico especifico e divisivel, prestado ou posto a disposicao do contribuinte.",
+      "index": 39
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "Sobre ativo circulante, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Ativo circulante compreende os bens e direitos que se espera realizar no ciclo operacional normal da entidade ou em ate doze meses apos a data do balanco.",
+        "O capital circulante liquido e sempre igual ao patrimonio liquido total da entidade.",
+        "Ativo circulante compreende apenas o dinheiro em caixa da entidade.",
+        "Passivo circulante compreende apenas emprestimos bancarios de qualquer prazo."
+      ],
+      "correctOption": 0,
+      "explanation": "O ativo circulante inclui caixa, mas tambem estoques, clientes e outros itens realizaveis no curto prazo.",
+      "index": 40
+    },
+    {
+      "theme": "matematica-financeira",
+      "kind": "multipla",
+      "prompt": "Qual o valor presente (aproximado) de R$ 6.200,00 a receber dentro de 2 periodos, descontado a uma taxa de 3% por periodo (juros compostos)?",
+      "options": [
+        "R$ 5.844,09",
+        "R$ 5.968,09",
+        "R$ 5.782,09",
+        "R$ 6.200,00"
+      ],
+      "correctOption": 0,
+      "explanation": "VP = VF / (1+i)^t = 6200 / (1,03)^2 = R$ 5.844,09 (aproximado).",
+      "index": 41
+    },
+    {
+      "theme": "tributacao",
+      "kind": "multipla",
+      "prompt": "Sobre planejamento tributario licito, qual das alternativas a seguir esta correta?",
+      "options": [
+        "PIS e COFINS sao impostos de competencia dos Estados, incidentes sobre a circulacao de mercadorias.",
+        "A Nota Fiscal Eletronica pode ser emitida e considerada valida mesmo sem autorizacao do Fisco, bastando a vontade do emitente.",
+        "O planejamento tributario, para ser valido, pode utilizar simulacao de negocios juridicos para reduzir tributos.",
+        "O planejamento tributario licito busca a menor carga tributaria possivel por meios legais, sem simulacao ou fraude."
+      ],
+      "correctOption": 3,
+      "explanation": "O planejamento tributario licito (elisao fiscal) usa apenas meios legais e negocios juridicos reais, diferentemente da evasao fiscal (fraude/simulacao).",
+      "index": 42
+    },
+    {
+      "theme": "portugues",
+      "kind": "certo_errado",
+      "prompt": "Conjuncoes subordinativas (como 'porque', 'embora', 'se', 'quando') ligam uma oracao subordinada a oracao principal, estabelecendo relacao de dependencia entre elas.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Por definicao, a conjuncao subordinativa cria uma relacao de dependencia (subordinacao) entre as oracoes, diferente da conjuncao coordenativa.",
+      "index": 43
+    },
+    {
+      "theme": "estatistica",
+      "kind": "multipla",
+      "prompt": "Um servidor obteve as seguintes notas em 5 avaliacoes: 10, 6, 2, 8, 3. Qual a media aritmetica?",
+      "options": [
+        "6.2",
+        "5.8",
+        "5.4",
+        "10.0"
+      ],
+      "correctOption": 1,
+      "explanation": "Media = soma dos valores / quantidade = 29 / 5 = 5.8.",
+      "index": 44
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre concordancia nominal - 'bastante', qual das alternativas a seguir esta correta?",
+      "options": [
+        "Quando 'bastante' funciona como adverbio (modificando verbo ou adjetivo), permanece invariavel (ex.: 'eles trabalham bastante').",
+        "A palavra 'bastante' e sempre invariavel, mesmo quando funciona como adjetivo concordando com um substantivo.",
+        "'Mal' e 'mau' sao sempre sinonimos perfeitos e podem ser usados indistintamente em qualquer contexto.",
+        "O uso do hifen em compostos e totalmente livre, a criterio de quem escreve, sem regras definidas."
+      ],
+      "correctOption": 0,
+      "explanation": "Quando 'bastante' e adjetivo (concordando com substantivo), ele varia em numero (ex.: 'bastantes motivos'); quando e adverbio, fica invariavel.",
+      "index": 45
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "certo_errado",
+      "prompt": "Os contratos administrativos admitem clausulas exorbitantes, como a possibilidade de alteracao e rescisao unilateral pela Administracao, em prol do interesse publico.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "As clausulas exorbitantes (alteracao unilateral, rescisao unilateral, fiscalizacao, aplicacao de penalidades) sao tracos distintivos do contrato administrativo frente ao contrato privado.",
+      "index": 46
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "certo_errado",
+      "prompt": "O lancamento tributario e sempre feito pelo proprio contribuinte, sem qualquer participacao da autoridade administrativa.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "O lancamento e, por definicao legal, ato (ou procedimento) da autoridade administrativa, mesmo quando conta com a colaboracao do contribuinte (lancamento por homologacao).",
+      "index": 47
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "multipla",
+      "prompt": "Sobre nome empresarial, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Na sociedade anonima, o capital social se divide em quotas, nos mesmos termos da sociedade limitada.",
+        "O nome empresarial pode ser firma (composta pelo nome do empresario ou socios) ou denominacao, conforme o tipo societario e a opcao legal.",
+        "Toda sociedade empresaria e obrigada a usar exclusivamente firma, nunca denominacao, como nome empresarial.",
+        "No contrato de franquia, o franqueado se torna empregado do franqueador, perdendo sua autonomia juridica."
+      ],
+      "correctOption": 1,
+      "explanation": "O Codigo Civil admite firma ou denominacao conforme o tipo societario (por exemplo, a sociedade anonima usa obrigatoriamente denominacao).",
+      "index": 48
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "certo_errado",
+      "prompt": "A comunicacao de admissao de empregado e facultativa e pode ser feita em qualquer prazo, a criterio do empregador.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A comunicacao de admissao e obrigacao legal com prazo definido, nao uma faculdade do empregador.",
+      "index": 49
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "multipla",
+      "prompt": "Sobre competencia tributaria, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A lei tributaria pode retroagir livremente para cobrar tributo sobre fatos geradores passados, sem qualquer limitacao.",
+        "Compete a Uniao instituir o Imposto de Renda, que incide sobre a renda e proventos de qualquer natureza.",
+        "A obrigacao tributaria acessoria sempre exige o pagamento de uma quantia em dinheiro ao Fisco.",
+        "Compete aos Municipios instituir o Imposto de Renda sobre os rendimentos de seus servidores."
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 153, III, da CF/88 atribui a competencia do Imposto de Renda a Uniao.",
+      "index": 50
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "certo_errado",
+      "prompt": "A administracao publica direta e indireta obedecera aos principios de legalidade, impessoalidade, moralidade, publicidade e eficiencia.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 37, caput, da CF/88 (apos a EC 19/1998) lista a eficiencia como principio expresso.",
+      "index": 51
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre acentuacao grafica - paroxítonas terminadas em ditongo, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Palavras paroxitonas terminadas em ditongo crescente (como 'serie', 'area', 'magoa') recebem acento grafico, segundo a norma ortografica vigente.",
+        "'Mal' e 'mau' sao sempre sinonimos perfeitos e podem ser usados indistintamente em qualquer contexto.",
+        "O uso do hifen em compostos e totalmente livre, a criterio de quem escreve, sem regras definidas.",
+        "Nenhuma palavra paroxitona recebe acento grafico, segundo a norma ortografica vigente."
+      ],
+      "correctOption": 0,
+      "explanation": "A regra de acentuacao das paroxitonas prevê acento para determinadas terminacoes, entre elas o ditongo crescente, como em 'serie' e 'area'.",
+      "index": 52
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "certo_errado",
+      "prompt": "Ninguem sera considerado culpado até o transito em julgado de sentenca penal condenatoria.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 5o, LVII, da CF/88 exige o transito em julgado (esgotamento de recursos) para afastar a presuncao de inocencia.",
+      "index": 53
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "multipla",
+      "prompt": "Sobre escrituracao contabil fiscal (ecf), qual das alternativas a seguir esta correta?",
+      "options": [
+        "A ECF e obrigacao acessoria que substituiu a antiga Declaracao de Informacoes Economico-Fiscais da Pessoa Juridica (DIPJ), apurando o IRPJ e a CSLL.",
+        "Obrigacoes acessorias fiscais sempre exigem o pagamento de valores em dinheiro ao Fisco, da mesma forma que a obrigacao principal.",
+        "A ECF e obrigacao exclusiva de pessoas fisicas para declarar seus rendimentos anuais.",
+        "A ECD e documento interno que nunca precisa ser transmitido a nenhum orgao publico."
+      ],
+      "correctOption": 0,
+      "explanation": "A ECF e obrigacao de pessoas juridicas (parte do SPED), relacionada a apuracao de IRPJ/CSLL, nao de pessoas fisicas.",
+      "index": 54
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "multipla",
+      "prompt": "Sobre efd-contribuicoes, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A EFD-Contribuicoes e escrituracao digital que detalha a apuracao de PIS e COFINS (e, quando aplicavel, da Contribuicao Previdenciaria sobre a Receita Bruta).",
+        "A emissao de nota fiscal so e obrigatoria para operacoes acima de determinado valor fixado livremente por cada empresa.",
+        "O substituto tributario so tem responsabilidade pelo recolhimento do tributo, nunca por qualquer obrigacao acessoria relacionada.",
+        "A EFD-Contribuicoes e usada exclusivamente para declarar o ICMS devido pela empresa."
+      ],
+      "correctOption": 0,
+      "explanation": "A EFD-Contribuicoes e voltada a PIS/COFINS/CPRB, obrigacoes federais; a escrituracao de ICMS/IPI tem seu proprio bloco (EFD ICMS/IPI).",
+      "index": 55
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Uma comissao de 3 servidores sera escolhida, sem distincao de funcao, entre 8 servidores disponiveis. De quantas formas diferentes essa comissao pode ser formada?",
+      "options": [
+        "112",
+        "59",
+        "53",
+        "56"
+      ],
+      "correctOption": 3,
+      "explanation": "Como a ordem nao importa (comissao, sem funcoes distintas), usa-se combinacao: C(8,3) = 8! / (3! x (8-k)!) = 56.",
+      "index": 56
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Se 5 maquinas identicas produzem 115 pecas por hora, quantas pecas 45 maquinas identicas produzem no mesmo intervalo de tempo (mantendo a mesma proporcao)?",
+      "options": [
+        "1030",
+        "1080",
+        "1035",
+        "160"
+      ],
+      "correctOption": 2,
+      "explanation": "Regra de tres simples direta: 5 maquinas -> 115 pecas; 45 maquinas -> x. x = (115 x 45) / 5 = 1035.",
+      "index": 57
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "multipla",
+      "prompt": "Sobre bens publicos - inalienabilidade, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O Estado nunca pode cobrar de volta do agente publico o valor pago a titulo de indenizacao.",
+        "A hierarquia administrativa impede qualquer delegacao de competencia entre orgaos da Administracao Publica.",
+        "Os bens publicos de uso comum do povo e de uso especial sao, em regra, inalienaveis enquanto conservarem essa qualificacao.",
+        "Todos os bens publicos, sem excecao, sao sempre inalienaveis, mesmo apos serem desafetados."
+      ],
+      "correctOption": 2,
+      "explanation": "Bens de uso comum e de uso especial sao inalienaveis enquanto tiverem essa destinacao; ja os bens dominicais podem ser alienados, observadas as exigencias legais.",
+      "index": 58
+    },
+    {
+      "theme": "matematica-financeira",
+      "kind": "multipla",
+      "prompt": "Um capital de R$ 9.525,00 foi aplicado a juros compostos de 5% por periodo, durante 4 periodos. Qual o montante final (aproximado)?",
+      "options": [
+        "R$ 11.430,00",
+        "R$ 11.387,20",
+        "R$ 11.863,45",
+        "R$ 11.577,70"
+      ],
+      "correctOption": 3,
+      "explanation": "Juros compostos: M = C x (1 + i)^t = 9525 x (1,05)^4 = R$ 11.577,70 (aproximado).",
+      "index": 59
+    },
+    {
+      "theme": "estatistica",
+      "kind": "multipla",
+      "prompt": "Um servidor obteve as seguintes notas em 5 avaliacoes: 4, 7, 9, 5, 4. Qual a media aritmetica?",
+      "options": [
+        "9.0",
+        "5.4",
+        "6.2",
+        "5.8"
+      ],
+      "correctOption": 3,
+      "explanation": "Media = soma dos valores / quantidade = 29 / 5 = 5.8.",
+      "index": 60
+    }
+  ]
+}
