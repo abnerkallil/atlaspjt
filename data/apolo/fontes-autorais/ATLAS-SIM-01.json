@@ -1,0 +1,806 @@
+{
+  "examId": "ATLAS-SIM-01",
+  "title": "Simulado autoral Atlas 1/30",
+  "questions": [
+    {
+      "theme": "departamento-pessoal",
+      "kind": "multipla",
+      "prompt": "Sobre salario-familia, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O 13o salario e beneficio facultativo, que o empregador pode decidir pagar ou nao a cada ano.",
+        "O salario-familia e pago a todos os trabalhadores com filhos, independentemente da faixa de renda.",
+        "O direito a ferias surge apenas apos cinco anos continuos de trabalho na mesma empresa.",
+        "O salario-familia e beneficio pago ao trabalhador de baixa renda em razao de cada filho ou equiparado, de acordo com os limites de renda fixados em lei."
+      ],
+      "correctOption": 3,
+      "explanation": "O salario-familia e devido apenas a trabalhadores cuja remuneracao esteja dentro do limite de renda estabelecido pela legislacao previdenciaria, nao a todos indistintamente.",
+      "index": 1
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "certo_errado",
+      "prompt": "O mandado de injuncao e cabivel quando a falta de norma regulamentadora torna inviavel o exercicio de direitos e liberdades constitucionais.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 5o, LXXI, da CF/88 vincula o mandado de injuncao a inviabilidade do exercicio de direitos e liberdades constitucionais por falta de norma.",
+      "index": 2
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "multipla",
+      "prompt": "Sobre nome empresarial, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Toda pessoa que presta um servico, mesmo de forma eventual e sem organizacao, e considerada empresaria pelo Codigo Civil.",
+        "O nome empresarial pode ser firma (composta pelo nome do empresario ou socios) ou denominacao, conforme o tipo societario e a opcao legal.",
+        "Na sociedade anonima, o capital social se divide em quotas, nos mesmos termos da sociedade limitada.",
+        "Toda sociedade empresaria e obrigada a usar exclusivamente firma, nunca denominacao, como nome empresarial."
+      ],
+      "correctOption": 1,
+      "explanation": "O Codigo Civil admite firma ou denominacao conforme o tipo societario (por exemplo, a sociedade anonima usa obrigatoriamente denominacao).",
+      "index": 3
+    },
+    {
+      "theme": "ingles",
+      "kind": "multipla",
+      "prompt": "Sobre passive voice, qual das alternativas a seguir esta correta?",
+      "options": [
+        "The passive voice is formed with the verb 'to be' plus the past participle of the main verb (e.g., 'The report was written by the team').",
+        "In business English, a 'deadline' refers to the starting date of a project, before any work has begun.",
+        "The passive voice is formed with the verb 'to be' plus the base form (infinitive) of the main verb.",
+        "The first conditional is used exclusively to talk about hypothetical situations that are impossible in the present."
+      ],
+      "correctOption": 0,
+      "explanation": "The correct passive voice structure uses the past participle after 'to be', not the base form of the verb.",
+      "index": 4
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "certo_errado",
+      "prompt": "A desconsideracao da personalidade juridica e aplicada automaticamente sempre que a sociedade nao consegue pagar uma divida, independentemente de abuso.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A simples inadimplencia da sociedade nao e suficiente; a desconsideracao exige a comprovacao de abuso da personalidade juridica (desvio de finalidade ou confusao patrimonial).",
+      "index": 5
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "certo_errado",
+      "prompt": "Toda pessoa que presta um servico, mesmo de forma eventual e sem organizacao, e considerada empresaria pelo Codigo Civil.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A atividade eventual, sem organizacao e sem profissionalismo nao se qualifica como atividade empresarial pelo conceito do art. 966 do Codigo Civil.",
+      "index": 6
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "certo_errado",
+      "prompt": "Lucro bruto e a diferenca entre a receita liquida de vendas e o custo dos produtos ou mercadorias vendidas.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Lucro bruto considera apenas o custo direto dos produtos/mercadorias vendidas; despesas administrativas e financeiras sao descontadas depois, para chegar ao lucro operacional/liquido.",
+      "index": 7
+    },
+    {
+      "theme": "dados",
+      "kind": "certo_errado",
+      "prompt": "A Lei Geral de Protecao de Dados (Lei 13.709/2018) define dado pessoal como informacao relacionada a pessoa natural identificada ou identificavel.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A LGPD e voltada a protecao de dados de pessoas naturais (fisicas), nao de pessoas juridicas.",
+      "index": 8
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Quanto e 25% de 624?",
+      "options": [
+        "131",
+        "468",
+        "181",
+        "156"
+      ],
+      "correctOption": 3,
+      "explanation": "25% de 624 = 624 x 25/100 = 156.",
+      "index": 9
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "certo_errado",
+      "prompt": "A organizacao politico-administrativa da Republica Federativa do Brasil compreende a Uniao, os Estados, o Distrito Federal e os Municipios.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 18 da CF/88 inclui expressamente os Municipios como entes da federacao, todos autonomos.",
+      "index": 10
+    },
+    {
+      "theme": "portugues",
+      "kind": "certo_errado",
+      "prompt": "A ambiguidade ocorre quando uma construcao permite mais de uma interpretacao, o que, em textos tecnicos e oficiais, deve ser evitado para garantir clareza.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Em textos tecnicos, administrativos e oficiais, a clareza e objetividade sao desejadas; a ambiguidade, nesses contextos, e vista como um defeito a ser evitado.",
+      "index": 11
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "multipla",
+      "prompt": "Sobre regime de apuracao do icms - debito e credito, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Obrigacoes acessorias fiscais sempre exigem o pagamento de valores em dinheiro ao Fisco, da mesma forma que a obrigacao principal.",
+        "No ICMS, a empresa nunca pode se creditar do imposto pago nas aquisicoes, pagando sempre o valor total das saidas.",
+        "No regime normal de apuracao do ICMS, a empresa credita o imposto pago nas entradas e debita o imposto devido nas saidas, recolhendo a diferenca (nao cumulatividade).",
+        "A ECD e documento interno que nunca precisa ser transmitido a nenhum orgao publico."
+      ],
+      "correctOption": 2,
+      "explanation": "O principio da nao cumulatividade do ICMS (art. 155, par. 2o, I, CF/88) permite o credito do imposto pago nas entradas, compensando com o debito das saidas.",
+      "index": 12
+    },
+    {
+      "theme": "portugues",
+      "kind": "certo_errado",
+      "prompt": "Em oracoes com palavra atrativa (como advertios de negacao, pronomes relativos ou conjuncoes subordinativas), a norma culta tende a exigir a proclise (pronome antes do verbo).",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Palavras atrativas (nao, que, quando, se etc.) tendem a exigir proclise na norma culta tradicional, influenciando diretamente a posicao do pronome.",
+      "index": 13
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Se 9 maquinas identicas produzem 33 pecas por hora, quantas pecas 90 maquinas identicas produzem no mesmo intervalo de tempo (mantendo a mesma proporcao)?",
+      "options": [
+        "123",
+        "420",
+        "321",
+        "330"
+      ],
+      "correctOption": 3,
+      "explanation": "Regra de tres simples direta: 9 maquinas -> 33 pecas; 90 maquinas -> x. x = (33 x 90) / 9 = 330.",
+      "index": 14
+    },
+    {
+      "theme": "estatistica",
+      "kind": "multipla",
+      "prompt": "Em uma pesquisa, os valores coletados foram: 11, 12, 11, 11, 15, 6. Qual e a moda (valor mais frequente)?",
+      "options": [
+        "15",
+        "6",
+        "11",
+        "12"
+      ],
+      "correctOption": 2,
+      "explanation": "O valor 11 aparece 3 vezes, mais que qualquer outro da lista — portanto a moda e 11.",
+      "index": 15
+    },
+    {
+      "theme": "tributacao",
+      "kind": "certo_errado",
+      "prompt": "PIS e COFINS sao impostos de competencia dos Estados, incidentes sobre a circulacao de mercadorias.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Imposto estadual sobre circulacao de mercadorias e o ICMS; PIS e COFINS sao contribuicoes federais, nao impostos estaduais.",
+      "index": 16
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "certo_errado",
+      "prompt": "Segundo o CTN, existe apenas uma especie tributaria, chamada genericamente de imposto.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "O ordenamento reconhece multiplas especies tributarias (impostos, taxas, contribuicoes de melhoria, emprestimos compulsorios e contribuicoes especiais), nao apenas 'imposto'.",
+      "index": 17
+    },
+    {
+      "theme": "portugues",
+      "kind": "certo_errado",
+      "prompt": "O emprego do hifen em palavras compostas segue regras especificas do Acordo Ortografico, como a duplicacao de letra ao juntar prefixo terminado e palavra iniciada pela mesma letra.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "O Acordo Ortografico de 1990 estabelece regras especificas (como com prefixos 'auto-', 'super-', 'inter-' etc.) para o uso do hifen.",
+      "index": 18
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "multipla",
+      "prompt": "Sobre improbidade administrativa, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A Lei de Improbidade Administrativa se aplica apenas a servidores publicos efetivos, nunca a agentes politicos.",
+        "A imperatividade exige que todo ato administrativo seja previamente aceito pelo particular destinatario.",
+        "O Estado nunca pode cobrar de volta do agente publico o valor pago a titulo de indenizacao.",
+        "A Lei de Improbidade Administrativa (Lei 8.429/1992) estabelece sancoes para atos que causem lesao ao patrimonio publico ou violem principios da administracao."
+      ],
+      "correctOption": 3,
+      "explanation": "A lei de improbidade se aplica a todo agente publico, inclusive agentes politicos (como prefeitos e secretarios), nao apenas a servidores efetivos.",
+      "index": 19
+    },
+    {
+      "theme": "direito-eleitoral",
+      "kind": "multipla",
+      "prompt": "Sobre inelegibilidades, qual das alternativas a seguir esta correta?",
+      "options": [
+        "No Brasil, candidaturas independentes, sem filiacao a partido politico, sao plenamente admitidas para qualquer cargo eletivo.",
+        "A Lei da Ficha Limpa (LC 135/2010) exige sempre o transito em julgado da condenacao para gerar inelegibilidade, nunca bastando decisao de orgao colegiado.",
+        "A propaganda eleitoral pode comecar em qualquer momento do mandato anterior, sem qualquer restricao de prazo.",
+        "A Lei Complementar 64/1990 (Lei das Inelegibilidades) estabelece hipoteses de inelegibilidade, como a condenacao por determinados crimes com decisao transitada em julgado ou proferida por orgao colegiado."
+      ],
+      "correctOption": 3,
+      "explanation": "A Lei da Ficha Limpa (que alterou a LC 64/1990) admitiu expressamente que a condenacao por orgao colegiado, ainda sem transito em julgado, pode gerar inelegibilidade.",
+      "index": 20
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Sobre patrimonio liquido, qual das alternativas a seguir esta correta?",
+      "options": [
+        "No metodo do custo medio, usa-se sempre o preco da ultima compra para valorizar todo o estoque.",
+        "Patrimonio liquido e sempre igual ao caixa disponivel da entidade.",
+        "A distribuicao de lucros aos socios (dividendos) e classificada como despesa na demonstracao do resultado.",
+        "Patrimonio liquido e a diferenca entre o total do ativo e o total do passivo da entidade."
+      ],
+      "correctOption": 3,
+      "explanation": "Patrimonio liquido = Ativo - Passivo, por definicao da equacao contabil fundamental.",
+      "index": 21
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Um produto custa R$ 485,00 para ser produzido e a empresa aplica um markup de 100% sobre o custo para formar o preco de venda. Qual o preco de venda?",
+      "options": [
+        "R$ 585,00",
+        "R$ 1.018,50",
+        "R$ 921,50",
+        "R$ 970,00"
+      ],
+      "correctOption": 3,
+      "explanation": "Preco de venda = custo x (1 + markup) = 485 x (1 + 1.0) = R$ 970,00.",
+      "index": 22
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Um terreno retangular mede 25 metros de frente por 6 metros de fundo. Qual o perimetro, em metros?",
+      "options": [
+        "150",
+        "60",
+        "64",
+        "62"
+      ],
+      "correctOption": 3,
+      "explanation": "Perimetro do retangulo = 2 x (base + altura) = 2 x (25 + 6) = 62 m.",
+      "index": 23
+    },
+    {
+      "theme": "direito-eleitoral",
+      "kind": "multipla",
+      "prompt": "Sobre domicilio eleitoral, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O domicilio eleitoral e irrelevante para a elegibilidade de um candidato a cargo municipal.",
+        "O domicilio eleitoral e o local de residencia ou vinculo do eleitor com a comunidade, exigido para fins de alistamento e elegibilidade naquela circunscricao.",
+        "A Lei da Ficha Limpa (LC 135/2010) exige sempre o transito em julgado da condenacao para gerar inelegibilidade, nunca bastando decisao de orgao colegiado.",
+        "O voto no Brasil e obrigatorio para absolutamente todos os cidadaos, sem qualquer excecao de idade ou condicao."
+      ],
+      "correctOption": 1,
+      "explanation": "A legislacao eleitoral exige, em regra, prazo minimo de domicilio eleitoral na circunscricao para que o candidato possa concorrer a cargo naquela localidade.",
+      "index": 24
+    },
+    {
+      "theme": "ingles",
+      "kind": "multipla",
+      "prompt": "Sobre artigos definidos e indefinidos, qual das alternativas a seguir esta correta?",
+      "options": [
+        "The indefinite article 'a' is used before a word that starts with a consonant sound, while 'an' is used before a word that starts with a vowel sound.",
+        "The choice between 'a' and 'an' depends only on the first letter of the word, never on its pronunciation.",
+        "In the simple present tense, every subject pronoun requires the verb to end in -s, including 'I' and 'you'.",
+        "The passive voice is formed with the verb 'to be' plus the base form (infinitive) of the main verb."
+      ],
+      "correctOption": 0,
+      "explanation": "The rule is based on sound, not spelling (e.g., 'an hour' because 'hour' starts with a vowel sound, despite the silent 'h').",
+      "index": 25
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "certo_errado",
+      "prompt": "Qualquer tributo pode ter sua aliquota alterada por decreto do Poder Executivo, sem excecao.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A regra geral exige lei; apenas tributos extrafiscais especificos (II, IE, IPI, IOF e alguns outros) admitem alteracao de aliquota por ato do Executivo, dentro dos limites e condicoes da lei.",
+      "index": 26
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Qual e a negacao logica correta da proposicao \"o tributo foi recolhido ou a certidao negativa foi emitida\"?",
+      "options": [
+        "o tributo foi recolhido e nao e verdade que a certidao negativa foi emitida",
+        "Nao e verdade que o tributo foi recolhido, ou nao e verdade que a certidao negativa foi emitida",
+        "Nao e verdade que o tributo foi recolhido, e nao e verdade que a certidao negativa foi emitida",
+        "o tributo foi recolhido e a certidao negativa foi emitida"
+      ],
+      "correctOption": 2,
+      "explanation": "Pela Lei de De Morgan, a negacao de 'P ou Q' e 'nao P e nao Q' (troca 'ou' por 'e' e nega as duas partes).",
+      "index": 27
+    },
+    {
+      "theme": "matematica-financeira",
+      "kind": "multipla",
+      "prompt": "Um capital de R$ 9.296,00 foi aplicado a juros simples de 3% ao mes, durante 8 meses. Qual o montante final?",
+      "options": [
+        "R$ 11.620,00",
+        "R$ 10.411,52",
+        "R$ 11.341,12",
+        "R$ 11.527,04"
+      ],
+      "correctOption": 3,
+      "explanation": "Juros simples: J = C x i x t = 9296 x 0.03 x 8 = R$ 2.231,04. Montante M = C + J = R$ 9.296,00 + R$ 2.231,04 = R$ 11.527,04.",
+      "index": 28
+    },
+    {
+      "theme": "estatistica",
+      "kind": "multipla",
+      "prompt": "Uma urna tem 4 bolas azuis e 5 bolas vermelhas. Ao sortear uma bola ao acaso, qual a probabilidade de ela ser azul?",
+      "options": [
+        "5/9",
+        "9/4",
+        "4/5",
+        "4/9"
+      ],
+      "correctOption": 3,
+      "explanation": "Probabilidade = bolas azuis / total de bolas = 4/9.",
+      "index": 29
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Sobre principio da continuidade, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Passivo e qualquer valor que a entidade planeja gastar no futuro, mesmo sem obrigacao presente.",
+        "O principio da continuidade exige que toda entidade seja avaliada como se fosse encerrar suas atividades no fim de cada exercicio.",
+        "O principio da continuidade pressupoe que a entidade continuara em operacao no futuro previsivel, salvo evidencia em contrario.",
+        "A DRE apresenta a posicao do ativo, passivo e patrimonio liquido em uma unica data."
+      ],
+      "correctOption": 2,
+      "explanation": "A continuidade pressupoe a entidade em funcionamento normal; a avaliacao de liquidacao so se aplica quando ha evidencia de que a continuidade esta comprometida.",
+      "index": 30
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "multipla",
+      "prompt": "Sobre ferias - terco constitucional, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O empregado tem direito a remuneracao de ferias acrescida de, no minimo, um terco do salario normal.",
+        "O adicional noturno e opcional e pode ser suprimido por acordo individual entre empregado e empregador.",
+        "A CLT fixa a jornada normal em dez horas diarias para todos os empregados, sem excecao.",
+        "O adicional de ferias e sempre de 50% do salario normal, nunca de um terco."
+      ],
+      "correctOption": 0,
+      "explanation": "Art. 7o, XVII, da CF/88 garante o adicional de pelo menos um terco (1/3) sobre a remuneracao de ferias.",
+      "index": 31
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre concordancia verbal - expressao 'a maioria de', qual das alternativas a seguir esta correta?",
+      "options": [
+        "Com a expressao 'a maioria de' seguida de substantivo plural, a norma culta admite tanto a concordancia no singular (com 'maioria') quanto no plural (com o substantivo que a acompanha).",
+        "Com a expressao 'a maioria de', a concordancia verbal so pode ser feita no plural, sendo erro gramatical a concordancia no singular.",
+        "O uso do hifen em compostos e totalmente livre, a criterio de quem escreve, sem regras definidas.",
+        "Nunca se usa crase antes de locucoes adverbiais, independentemente do genero da palavra."
+      ],
+      "correctOption": 0,
+      "explanation": "Gramaticas normativas admitem ambas as concordancias (singular com o nucleo 'maioria' ou plural por atracao com o especificador), nao apenas o plural.",
+      "index": 32
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Dois setores de uma repartição fazem rondas: um a cada 9 dias e outro a cada 6 dias. Partindo juntos hoje, depois de quantos dias eles voltarao a coincidir?",
+      "options": [
+        "54",
+        "18",
+        "27",
+        "12"
+      ],
+      "correctOption": 1,
+      "explanation": "A resposta e o MMC(9,6) = 18 dias.",
+      "index": 33
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "multipla",
+      "prompt": "Sobre icms - competencia, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Compete aos Estados e ao Distrito Federal instituir o ICMS, imposto sobre circulacao de mercadorias e certos servicos.",
+        "O principio da anterioridade anual se aplica sem excecao a todos os tributos, inclusive aos impostos extraordinarios de guerra.",
+        "A substituicao tributaria e exclusiva do Imposto de Renda e nao se aplica a outros tributos, como o ICMS.",
+        "O ICMS e tributo de competencia exclusiva dos Municipios."
+      ],
+      "correctOption": 0,
+      "explanation": "Art. 155, II, da CF/88 atribui o ICMS a competencia dos Estados e do Distrito Federal.",
+      "index": 34
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "multipla",
+      "prompt": "Sobre escrituracao contabil fiscal (ecf), qual das alternativas a seguir esta correta?",
+      "options": [
+        "A ECF e obrigacao exclusiva de pessoas fisicas para declarar seus rendimentos anuais.",
+        "A ECD e documento interno que nunca precisa ser transmitido a nenhum orgao publico.",
+        "A emissao de nota fiscal so e obrigatoria para operacoes acima de determinado valor fixado livremente por cada empresa.",
+        "A ECF e obrigacao acessoria que substituiu a antiga Declaracao de Informacoes Economico-Fiscais da Pessoa Juridica (DIPJ), apurando o IRPJ e a CSLL."
+      ],
+      "correctOption": 3,
+      "explanation": "A ECF e obrigacao de pessoas juridicas (parte do SPED), relacionada a apuracao de IRPJ/CSLL, nao de pessoas fisicas.",
+      "index": 35
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "certo_errado",
+      "prompt": "A concorrencia e modalidade exclusiva para contratos de valor irrisorio.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A concorrencia e usada para contratacoes de maior complexidade/valor, nao para valores irrisorios (que comportam modalidades mais simples).",
+      "index": 36
+    },
+    {
+      "theme": "espanhol",
+      "kind": "multipla",
+      "prompt": "Sobre acentuacion - palabras agudas, graves y esdrujulas, qual das alternativas a seguir esta correta?",
+      "options": [
+        "En espanol, ninguna palabra esdrujula lleva tilde escrita, independientemente de su acentuacion.",
+        "En espanol, las palabras esdrujulas (acento en la antepenultima silaba) siempre llevan tilde escrita, como en 'rapido' y 'telefono'.",
+        "En espanol, nunca existen contracciones entre preposicion y articulo, a diferencia del portugues.",
+        "El preterito perfecto simple y el preterito imperfecto se usan siempre de forma intercambiable, sin ninguna diferencia de significado."
+      ],
+      "correctOption": 1,
+      "explanation": "La regla de acentuacion espanola exige tilde en todas las palabras esdrujulas, sin excepcion.",
+      "index": 37
+    },
+    {
+      "theme": "tributacao",
+      "kind": "multipla",
+      "prompt": "Sobre substituicao tributaria no varejo, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O planejamento tributario, para ser valido, pode utilizar simulacao de negocios juridicos para reduzir tributos.",
+        "Na substituicao tributaria do ICMS 'para frente', o fabricante ou importador recolhe antecipadamente o imposto devido nas etapas seguintes da cadeia, até o consumidor final.",
+        "Na substituicao tributaria 'para frente', o consumidor final e quem recolhe diretamente o ICMS ao Estado apos a compra.",
+        "PIS e COFINS sao impostos de competencia dos Estados, incidentes sobre a circulacao de mercadorias."
+      ],
+      "correctOption": 1,
+      "explanation": "Na substituicao 'para frente', o recolhimento e antecipado por um elo anterior da cadeia (fabricante/importador), nao pelo consumidor final diretamente.",
+      "index": 38
+    },
+    {
+      "theme": "matematica-financeira",
+      "kind": "multipla",
+      "prompt": "Qual o valor presente (aproximado) de R$ 23.667,00 a receber dentro de 4 periodos, descontado a uma taxa de 1% por periodo (juros compostos)?",
+      "options": [
+        "R$ 22.506,85",
+        "R$ 23.667,00",
+        "R$ 23.216,86",
+        "R$ 22.743,52"
+      ],
+      "correctOption": 3,
+      "explanation": "VP = VF / (1+i)^t = 23667 / (1,01)^4 = R$ 22.743,52 (aproximado).",
+      "index": 39
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "certo_errado",
+      "prompt": "O ICMS e tributo de competencia exclusiva dos Municipios.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "O ICMS e estadual/distrital; o imposto municipal sobre servicos e o ISS, tributo diferente.",
+      "index": 40
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Qual e a negacao logica correta da proposicao \"Marcos passou no concurso ou Marcos foi promovido\"?",
+      "options": [
+        "Nao e verdade que Marcos passou no concurso, ou nao e verdade que Marcos foi promovido",
+        "Marcos passou no concurso e Marcos foi promovido",
+        "Marcos passou no concurso e nao e verdade que Marcos foi promovido",
+        "Nao e verdade que Marcos passou no concurso, e nao e verdade que Marcos foi promovido"
+      ],
+      "correctOption": 3,
+      "explanation": "Pela Lei de De Morgan, a negacao de 'P ou Q' e 'nao P e nao Q' (troca 'ou' por 'e' e nega as duas partes).",
+      "index": 41
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "certo_errado",
+      "prompt": "O processo administrativo disciplinar deve assegurar ao servidor acusado o contraditorio e a ampla defesa antes da aplicacao de penalidade.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "O contraditorio e a ampla defesa sao garantias constitucionais (art. 5o, LV) aplicaveis a qualquer processo administrativo, inclusive disciplinar.",
+      "index": 42
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "A idade de Pedro e igual ao dobro da idade de Joana somado a 3 anos. Se Joana tem 18 anos, qual e a idade de Pedro?",
+      "options": [
+        "39",
+        "21",
+        "41",
+        "37"
+      ],
+      "correctOption": 0,
+      "explanation": "Pedro = 2 x idade de Joana + 3 = 2 x 18 + 3 = 39 anos.",
+      "index": 43
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "multipla",
+      "prompt": "Sobre direito de peticao, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O direito de peticao previsto na CF/88 exige o pagamento de taxas para ser exercido.",
+        "A eficiencia nao e um principio constitucional expresso da administracao publica, apenas uma meta de gestao.",
+        "E garantido a todos o direito de peticao aos Poderes Publicos em defesa de direitos ou contra ilegalidade ou abuso de poder.",
+        "O mandado de seguranca pode ser usado para proteger qualquer direito, mesmo quando cabivel habeas corpus."
+      ],
+      "correctOption": 2,
+      "explanation": "Art. 5o, XXXIV, 'a', da CF/88 garante o direito de peticao independentemente do pagamento de taxas.",
+      "index": 44
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "multipla",
+      "prompt": "Sobre titulos de credito - cartularidade, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O principio da cartularidade, tradicionalmente, condiciona o exercicio dos direitos representados pelo titulo de credito a posse do documento (cartula), com atenuacoes para titulos eletronicos.",
+        "Os titulos de credito, por definicao, nunca podem ser representados ou transmitidos por meios eletronicos.",
+        "Toda pessoa que presta um servico, mesmo de forma eventual e sem organizacao, e considerada empresaria pelo Codigo Civil.",
+        "A falencia pode ser decretada para qualquer pessoa, empresaria ou nao, pelo simples atraso de uma unica conta domestica."
+      ],
+      "correctOption": 0,
+      "explanation": "A legislacao e a pratica comercial admitem titulos eletronicos (como a duplicata eletronica e a nota promissoria eletronica em certos contextos), atenuando a cartularidade classica.",
+      "index": 45
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre paralelismo sintatico, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O paralelismo sintatico e uma regra exclusiva da linguagem juridica, sem aplicacao na redacao de textos administrativos ou dissertativos.",
+        "O verbo haver, no sentido de existir, concorda normalmente com o sujeito no plural (ex.: 'Haviam muitos candidatos').",
+        "O paralelismo sintatico exige que estruturas coordenadas (como itens de uma lista) sigam a mesma forma gramatical, para manter a clareza e a coesao do texto.",
+        "A ideia principal de um texto e sempre a primeira frase do primeiro paragrafo, independentemente do conteudo do restante do texto."
+      ],
+      "correctOption": 2,
+      "explanation": "O paralelismo e princípio geral de clareza textual, aplicavel a qualquer genero textual (administrativo, dissertativo, juridico etc.), nao exclusivo de um unico genero.",
+      "index": 46
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "certo_errado",
+      "prompt": "O habeas corpus e concedido sempre que alguem sofrer ou se achar ameacado de sofrer violencia ou coacao em sua liberdade de locomocao.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 5o, LXVIII, da CF/88 define exatamente essa finalidade para o habeas corpus.",
+      "index": 47
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "multipla",
+      "prompt": "Sobre adicional noturno, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O adicional noturno e opcional e pode ser suprimido por acordo individual entre empregado e empregador.",
+        "O vale-transporte e sempre totalmente gratuito para o empregado, sem qualquer desconto permitido em lei.",
+        "O eSocial e um sistema exclusivo para o pagamento de tributos federais sobre lucro das empresas, sem relacao com informacoes trabalhistas.",
+        "O trabalho noturno tera remuneracao superior a do diurno, com adicional minimo de 20% sobre a hora diurna, para o trabalhador urbano em geral."
+      ],
+      "correctOption": 3,
+      "explanation": "Art. 73 da CLT garante o adicional noturno como direito do trabalhador urbano, nao uma condicao suprimivel por acordo individual simples.",
+      "index": 48
+    },
+    {
+      "theme": "dados",
+      "kind": "multipla",
+      "prompt": "Sobre lgpd - dado pessoal, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O comando SELECT em SQL e usado para excluir permanentemente registros de uma tabela.",
+        "A LGPD se aplica apenas a dados de pessoas juridicas, nunca a dados de pessoas fisicas.",
+        "A acuracia, como dimensao da qualidade de dados, refere-se exclusivamente a velocidade com que o dado e processado pelo sistema.",
+        "A Lei Geral de Protecao de Dados (Lei 13.709/2018) define dado pessoal como informacao relacionada a pessoa natural identificada ou identificavel."
+      ],
+      "correctOption": 3,
+      "explanation": "A LGPD e voltada a protecao de dados de pessoas naturais (fisicas), nao de pessoas juridicas.",
+      "index": 49
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "certo_errado",
+      "prompt": "O pregao e modalidade de licitacao voltada preferencialmente a aquisicao de bens e servicos comuns.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A lei de licitacoes destina o pregao a bens e servicos comuns, com criterio de menor preco ou maior desconto como regra.",
+      "index": 50
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "certo_errado",
+      "prompt": "A EFD-Contribuicoes e usada exclusivamente para declarar o ICMS devido pela empresa.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "ICMS e tributo estadual com escrituracao propria (EFD ICMS/IPI); a EFD-Contribuicoes trata de PIS/COFINS, tributos federais.",
+      "index": 51
+    },
+    {
+      "theme": "dados",
+      "kind": "certo_errado",
+      "prompt": "A anonimizacao e o processo de utilizar meios tecnicos razoaveis para que um dado perca a possibilidade de associacao, direta ou indireta, a um individuo.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A anonimizacao efetiva exige que nenhum dado remanescente permita a reidentificacao, direta ou indireta, nao apenas a remocao do nome.",
+      "index": 52
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Considere verdadeira a proposicao condicional: \"Se o tributo foi pago, entao a certidao e emitida.\" Sabendo que a certidao e emitida NAO ocorreu (ou seja, a certidao nao e emitida), o que se pode concluir pela contrapositiva?",
+      "options": [
+        "Nao e possivel concluir nada a partir dessas informacoes.",
+        "Conclui-se que o tributo foi pago, mesmo assim.",
+        "A proposicao condicional se torna falsa.",
+        "Conclui-se que nao e verdade que o tributo foi pago."
+      ],
+      "correctOption": 3,
+      "explanation": "Em uma condicional verdadeira 'se P entao Q', negar Q (modus tollens / contrapositiva) permite concluir 'nao P'. A condicional continua verdadeira; o que muda e a conclusao sobre P.",
+      "index": 53
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "Uma empresa tem ativo circulante de R$ 194.000,00 e passivo circulante de R$ 78.000,00. Qual o indice de liquidez corrente (aproximado, com 2 casas decimais)?",
+      "options": [
+        "0.40",
+        "2.19",
+        "2.79",
+        "2.49"
+      ],
+      "correctOption": 3,
+      "explanation": "Liquidez corrente = ativo circulante / passivo circulante = 194000/78000 = 2.49.",
+      "index": 54
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Considere verdadeira a proposicao condicional: \"Se o recurso foi protocolado no prazo, entao ele sera conhecido.\" Sabendo que ele sera conhecido NAO ocorreu (ou seja, ele nao sera conhecido), o que se pode concluir pela contrapositiva?",
+      "options": [
+        "Nao e possivel concluir nada a partir dessas informacoes.",
+        "Conclui-se que nao e verdade que o recurso foi protocolado no prazo.",
+        "Conclui-se que o recurso foi protocolado no prazo, mesmo assim.",
+        "A proposicao condicional se torna falsa."
+      ],
+      "correctOption": 1,
+      "explanation": "Em uma condicional verdadeira 'se P entao Q', negar Q (modus tollens / contrapositiva) permite concluir 'nao P'. A condicional continua verdadeira; o que muda e a conclusao sobre P.",
+      "index": 55
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "O ativo circulante de uma empresa e R$ 398.000,00 e o passivo circulante e R$ 244.000,00. Qual o capital circulante liquido (CCL)?",
+      "options": [
+        "R$ 642.000,00",
+        "R$ 153.000,00",
+        "R$ 154.000,00",
+        "R$ 159.000,00"
+      ],
+      "correctOption": 2,
+      "explanation": "CCL = ativo circulante - passivo circulante = R$ 398.000,00 - R$ 244.000,00 = R$ 154.000,00.",
+      "index": 56
+    },
+    {
+      "theme": "tributacao",
+      "kind": "certo_errado",
+      "prompt": "A Certidao Negativa de Debitos (CND) atesta que o contribuinte nao possui debitos tributarios pendentes com o ente que a emite, na data de sua expedicao.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A CND e emitida com validade por prazo determinado, sendo uma fotografia da situacao fiscal do contribuinte naquele momento.",
+      "index": 57
+    },
+    {
+      "theme": "espanhol",
+      "kind": "multipla",
+      "prompt": "Sobre preterito perfecto simple vs preterito imperfecto, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Los verbos 'ser' y 'estar' tienen exactamente el mismo significado en espanol y pueden sustituirse libremente en cualquier frase.",
+        "El preterito perfecto simple se usa para acciones puntuales y concluidas en el pasado (ej.: 'ayer llegue tarde'), mientras que el preterito imperfecto describe acciones habituales o en desarrollo (ej.: 'cuando era niño, jugaba mucho').",
+        "En espanol, nunca existen contracciones entre preposicion y articulo, a diferencia del portugues.",
+        "El preterito perfecto simple y el preterito imperfecto se usan siempre de forma intercambiable, sin ninguna diferencia de significado."
+      ],
+      "correctOption": 1,
+      "explanation": "Hay una diferencia clara de aspecto: el perfecto simple marca una accion puntual y concluida; el imperfecto marca una accion habitual o en desarrollo en el pasado.",
+      "index": 58
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Sobre estoques - metodo custo medio, qual das alternativas a seguir esta correta?",
+      "options": [
+        "No metodo do custo medio, usa-se sempre o preco da ultima compra para valorizar todo o estoque.",
+        "No metodo do custo medio ponderado, o custo unitario do estoque e recalculado a cada nova entrada, pela media entre o estoque existente e a nova compra.",
+        "O balanco patrimonial apresenta o resultado (lucro ou prejuizo) acumulado durante todo um periodo, como um fluxo.",
+        "Receita e qualquer entrada de dinheiro no caixa da entidade, inclusive emprestimos tomados."
+      ],
+      "correctOption": 1,
+      "explanation": "O custo medio ponderado recalcula a media entre o saldo anterior e a nova entrada, nao usa isoladamente o ultimo preco de compra.",
+      "index": 59
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "Sobre indice de liquidez corrente, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O indice de liquidez corrente (ativo circulante / passivo circulante) mede a capacidade de a entidade pagar suas obrigacoes de curto prazo com seus bens e direitos de curto prazo.",
+        "As notas explicativas sao documentos internos confidenciais que nunca acompanham as demonstracoes contabeis publicadas.",
+        "Lucro liquido e o mesmo que receita bruta da entidade no periodo.",
+        "O indice de liquidez corrente mede a rentabilidade da entidade sobre o patrimonio liquido."
+      ],
+      "correctOption": 0,
+      "explanation": "Rentabilidade sobre o patrimonio liquido e medida por indices como ROE, nao pelo indice de liquidez corrente, que mede capacidade de pagamento de curto prazo.",
+      "index": 60
+    }
+  ]
+}

@@ -1,0 +1,802 @@
+{
+  "examId": "ATLAS-SIM-28",
+  "title": "Simulado autoral Atlas 28/30",
+  "questions": [
+    {
+      "theme": "matematica-financeira",
+      "kind": "multipla",
+      "prompt": "Qual o valor presente (aproximado) de R$ 23.007,00 a receber dentro de 2 periodos, descontado a uma taxa de 2% por periodo (juros compostos)?",
+      "options": [
+        "R$ 21.883,54",
+        "R$ 22.573,75",
+        "R$ 23.007,00",
+        "R$ 22.113,61"
+      ],
+      "correctOption": 3,
+      "explanation": "VP = VF / (1+i)^t = 23007 / (1,02)^2 = R$ 22.113,61 (aproximado).",
+      "index": 1
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "multipla",
+      "prompt": "Sobre direito a vida, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Os Municipios nao sao entes federativos autonomos, apenas divisoes administrativas dos Estados.",
+        "E inviolavel o direito a vida, a liberdade, a igualdade, a seguranca e a propriedade, nos termos do art. 5o, caput.",
+        "A eficiencia nao e um principio constitucional expresso da administracao publica, apenas uma meta de gestao.",
+        "O direito a propriedade e absoluto e nao admite qualquer limitacao constitucional."
+      ],
+      "correctOption": 1,
+      "explanation": "O rol do art. 5o, caput, inclui exatamente esses cinco direitos.",
+      "index": 2
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "certo_errado",
+      "prompt": "Tributo e toda prestacao pecuniaria compulsoria, em moeda, que nao constitua sancao de ato ilicito, instituida em lei e cobrada mediante atividade administrativa plenamente vinculada.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 3o do CTN define tributo como prestacao pecuniaria (em moeda ou cujo valor nela se possa exprimir), nao como prestacao de servicos ao criterio do contribuinte.",
+      "index": 3
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "certo_errado",
+      "prompt": "O giro de estoque (custo das vendas / estoque medio) indica quantas vezes, em media, o estoque e renovado em um periodo.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "O giro de estoque e um indicador de velocidade de renovacao (quantas vezes o estoque 'gira'), nao o valor fisico armazenado.",
+      "index": 4
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Um terreno retangular tem 7 metros de frente por 7 metros de fundo. Qual a area, em metros quadrados?",
+      "options": [
+        "56",
+        "28",
+        "49",
+        "42"
+      ],
+      "correctOption": 2,
+      "explanation": "Area do retangulo = base x altura = 7 x 7 = 49 m2.",
+      "index": 5
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "certo_errado",
+      "prompt": "O principio da cartularidade, tradicionalmente, condiciona o exercicio dos direitos representados pelo titulo de credito a posse do documento (cartula), com atenuacoes para titulos eletronicos.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A legislacao e a pratica comercial admitem titulos eletronicos (como a duplicata eletronica e a nota promissoria eletronica em certos contextos), atenuando a cartularidade classica.",
+      "index": 6
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "certo_errado",
+      "prompt": "O principio da impessoalidade veda que a atuacao administrativa beneficie ou prejudique pessoas determinadas por razoes pessoais.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A impessoalidade exige que a atuacao administrativa seja voltada ao interesse publico, sem favorecimentos pessoais.",
+      "index": 7
+    },
+    {
+      "theme": "espanhol",
+      "kind": "certo_errado",
+      "prompt": "En espanol, nunca existen contracciones entre preposicion y articulo, a diferencia del portugues.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "El espanol si tiene contracciones obligatorias especificas ('al' y 'del'), aunque en menor numero que el portugues.",
+      "index": 8
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Sobre estoques - metodo custo medio, qual das alternativas a seguir esta correta?",
+      "options": [
+        "No metodo do custo medio ponderado, o custo unitario do estoque e recalculado a cada nova entrada, pela media entre o estoque existente e a nova compra.",
+        "O balanco patrimonial apresenta o resultado (lucro ou prejuizo) acumulado durante todo um periodo, como um fluxo.",
+        "A depreciacao representa o aumento de valor de um ativo imobilizado ao longo do tempo.",
+        "No metodo do custo medio, usa-se sempre o preco da ultima compra para valorizar todo o estoque."
+      ],
+      "correctOption": 0,
+      "explanation": "O custo medio ponderado recalcula a media entre o saldo anterior e a nova entrada, nao usa isoladamente o ultimo preco de compra.",
+      "index": 9
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "Uma empresa tem ativo circulante de R$ 102.000,00 e passivo circulante de R$ 61.000,00. Qual o indice de liquidez corrente (aproximado, com 2 casas decimais)?",
+      "options": [
+        "0.60",
+        "1.67",
+        "1.37",
+        "1.97"
+      ],
+      "correctOption": 1,
+      "explanation": "Liquidez corrente = ativo circulante / passivo circulante = 102000/61000 = 1.67.",
+      "index": 10
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Em uma repartição com 8 servidores, serao escolhidos 3 para ocupar cargos distintos (presidente e secretario, por exemplo). De quantas formas diferentes essa escolha pode ser feita?",
+      "options": [
+        "336",
+        "333",
+        "339",
+        "672"
+      ],
+      "correctOption": 0,
+      "explanation": "Como os cargos sao distintos, a ordem importa: usa-se arranjo A(8,3) = 8! / (8-3)! = 336.",
+      "index": 11
+    },
+    {
+      "theme": "espanhol",
+      "kind": "multipla",
+      "prompt": "Sobre articulos contractos - 'al' y 'del', qual das alternativas a seguir esta correta?",
+      "options": [
+        "La idea principal de un texto es siempre la ultima frase del ultimo parrafo, sin importar el contenido del resto del texto.",
+        "Los verbos 'ser' y 'estar' tienen exactamente el mismo significado en espanol y pueden sustituirse libremente en cualquier frase.",
+        "En espanol, nunca existen contracciones entre preposicion y articulo, a diferencia del portugues.",
+        "En espanol, la preposicion 'a' mas el articulo 'el' se contrae en 'al', y la preposicion 'de' mas el articulo 'el' se contrae en 'del'."
+      ],
+      "correctOption": 3,
+      "explanation": "Las contracciones 'al' (a + el) y 'del' (de + el) son obligatorias en espanol estandar siempre que se cumplan esas condiciones.",
+      "index": 12
+    },
+    {
+      "theme": "dados",
+      "kind": "multipla",
+      "prompt": "Sobre lgpd - finalidade, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A acuracia, como dimensao da qualidade de dados, refere-se exclusivamente a velocidade com que o dado e processado pelo sistema.",
+        "Governanca de dados se refere apenas ao armazenamento fisico dos servidores onde os dados ficam guardados.",
+        "O tratamento de dados pessoais deve ser realizado para propositos legitimos, especificos, explicitos e informados ao titular, sem possibilidade de tratamento posterior incompativel com essas finalidades.",
+        "A LGPD permite que uma empresa use os dados coletados para qualquer finalidade futura, mesmo que diferente da informada originalmente ao titular."
+      ],
+      "correctOption": 2,
+      "explanation": "O principio da finalidade (art. 6o, I, da LGPD) exige propositos legitimos e especificos, vedando o uso incompativel com a finalidade original informada.",
+      "index": 13
+    },
+    {
+      "theme": "tributacao",
+      "kind": "certo_errado",
+      "prompt": "O SPED e um sistema exclusivo para a declaracao do Imposto de Renda de pessoas fisicas.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A declaracao de Imposto de Renda de pessoa fisica (DIRPF) nao faz parte do SPED, que e voltado a escrituracao fiscal e contabil de pessoas juridicas.",
+      "index": 14
+    },
+    {
+      "theme": "tributacao",
+      "kind": "certo_errado",
+      "prompt": "A retencao de tributos na fonte transfere ao pagador a obrigacao de descontar e recolher o tributo devido pelo beneficiario do pagamento.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A retencao na fonte e tecnica de arrecadacao que transfere o dever de recolhimento ao pagador; dependendo do tributo, pode haver ajuste posterior (como no ajuste anual do Imposto de Renda).",
+      "index": 15
+    },
+    {
+      "theme": "matematica-financeira",
+      "kind": "multipla",
+      "prompt": "Um titulo com valor nominal de R$ 4.442,00 sera descontado 2 meses antes do vencimento, a uma taxa de desconto simples de 1% ao mes. Qual o valor liquido recebido?",
+      "options": [
+        "R$ 4.353,16",
+        "R$ 4.397,58",
+        "R$ 4.442,00",
+        "R$ 4.308,74"
+      ],
+      "correctOption": 0,
+      "explanation": "Desconto simples por fora: D = N x i x t = 4442 x 0.01 x 2 = R$ 88,84. Valor liquido = N - D = R$ 4.442,00 - R$ 88,84 = R$ 4.353,16.",
+      "index": 16
+    },
+    {
+      "theme": "estatistica",
+      "kind": "multipla",
+      "prompt": "Em um lancamento de um dado honesto de 6 faces, qual a probabilidade de sair um numero par?",
+      "options": [
+        "1/6",
+        "1/3",
+        "1/2",
+        "2/3"
+      ],
+      "correctOption": 2,
+      "explanation": "Numeros pares entre 1 e 6: {2,4,6}, ou seja 3 dos 6 resultados possiveis. Probabilidade = 3/6 = 1/2.",
+      "index": 17
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Considere verdadeira a proposicao condicional: \"Se o tributo foi pago, entao a certidao e emitida.\" Sabendo que a certidao e emitida NAO ocorreu (ou seja, a certidao nao e emitida), o que se pode concluir pela contrapositiva?",
+      "options": [
+        "Conclui-se que nao e verdade que o tributo foi pago.",
+        "Conclui-se que o tributo foi pago, mesmo assim.",
+        "Nao e possivel concluir nada a partir dessas informacoes.",
+        "A proposicao condicional se torna falsa."
+      ],
+      "correctOption": 0,
+      "explanation": "Em uma condicional verdadeira 'se P entao Q', negar Q (modus tollens / contrapositiva) permite concluir 'nao P'. A condicional continua verdadeira; o que muda e a conclusao sobre P.",
+      "index": 18
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "certo_errado",
+      "prompt": "Na sociedade limitada, os socios respondem sempre com seu patrimonio pessoal por toda e qualquer divida da sociedade, sem limite.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A responsabilidade ilimitada e irrestrita descreve a sociedade simples pura ou outros tipos, nao a sociedade limitada, cujo tracos distintivo e justamente a limitacao da responsabilidade.",
+      "index": 19
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "multipla",
+      "prompt": "Sobre principio da legalidade tributaria, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A isencao tributaria tem sede constitucional e nunca pode ser revogada.",
+        "O imposto exige sempre uma contraprestacao direta e especifica do Estado ao contribuinte que o paga.",
+        "Qualquer tributo pode ter sua aliquota alterada por decreto do Poder Executivo, sem excecao.",
+        "E vedado exigir ou aumentar tributo sem lei que o estabeleca, salvo as excecoes constitucionais expressas."
+      ],
+      "correctOption": 3,
+      "explanation": "Art. 150, I, da CF/88 exige lei para instituir ou aumentar tributo; so excecoes expressas (como II, IE, IPI, IOF) admitem alteracao de aliquota por ato do Executivo, dentro de limites legais.",
+      "index": 20
+    },
+    {
+      "theme": "ingles",
+      "kind": "certo_errado",
+      "prompt": "'Must' expresses strong obligation or necessity, while 'should' expresses advice or recommendation, a weaker degree of obligation.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "'Must' conveys stronger obligation/necessity; 'should' conveys advice/recommendation — they differ in degree of obligation.",
+      "index": 21
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "multipla",
+      "prompt": "Sobre domicilio tributario eletronico, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Os documentos fiscais podem ser descartados pela empresa um ano apos a emissao, independentemente de qualquer prazo de fiscalizacao.",
+        "O Domicilio Tributario Eletronico (DTE) e o canal pelo qual o Fisco realiza comunicacoes oficiais ao contribuinte, substituindo, em muitos casos, a notificacao por via postal.",
+        "A malha fiscal e um beneficio fiscal concedido automaticamente a empresas em dia com suas obrigacoes.",
+        "O Domicilio Tributario Eletronico e um endereco fisico obrigatorio que a empresa deve manter proximo ao orgao fazendario."
+      ],
+      "correctOption": 1,
+      "explanation": "O DTE e um canal eletronico de comunicacao (caixa postal eletronica), nao um endereco fisico.",
+      "index": 22
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "certo_errado",
+      "prompt": "A autoexecutoriedade permite que a Administracao execute diretamente suas decisoes, sem previa intervencao do Poder Judiciario, nos casos previstos em lei.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A autoexecutoriedade existe quando a lei expressamente autoriza ou em situacoes de urgencia; nao e atributo universal de todos os atos.",
+      "index": 23
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Uma empresa tem custos fixos mensais de R$ 14.000,00 e margem de contribuicao de R$ 46,00 por unidade vendida. Quantas unidades precisa vender por mes para atingir o ponto de equilibrio (lucro zero)?",
+      "options": [
+        "14 unidades",
+        "294 unidades",
+        "304 unidades",
+        "314 unidades"
+      ],
+      "correctOption": 2,
+      "explanation": "Ponto de equilibrio em unidades = custo fixo / margem de contribuicao unitaria = 14000 / 46 = 304 unidades.",
+      "index": 24
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "certo_errado",
+      "prompt": "Obrigacoes acessorias fiscais sempre exigem o pagamento de valores em dinheiro ao Fisco, da mesma forma que a obrigacao principal.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "O pagamento em dinheiro caracteriza a obrigacao principal; a acessoria e instrumental, sem pagamento direto associado a ela mesma.",
+      "index": 25
+    },
+    {
+      "theme": "tributacao",
+      "kind": "certo_errado",
+      "prompt": "A Certidao Negativa de Debitos, uma vez emitida, tem validade permanente e nunca precisa ser renovada.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A CND tem prazo de validade limitado; apos esse prazo, deve ser emitida uma nova certidao para comprovar a regularidade fiscal.",
+      "index": 26
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "multipla",
+      "prompt": "Sobre 13o salario, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O eSocial e um sistema exclusivo para o pagamento de tributos federais sobre lucro das empresas, sem relacao com informacoes trabalhistas.",
+        "O 13o salario e beneficio facultativo, que o empregador pode decidir pagar ou nao a cada ano.",
+        "O vale-transporte e sempre totalmente gratuito para o empregado, sem qualquer desconto permitido em lei.",
+        "A gratificacao natalina (13o salario) corresponde a um doze avos da remuneracao devida em dezembro, por mes de servico no ano, ou fracao igual ou superior a quinze dias."
+      ],
+      "correctOption": 3,
+      "explanation": "A Lei 4.090/1962 e a CF/88 (art. 7o, VIII) garantem o 13o salario como direito obrigatorio do empregado, nao facultativo ao empregador.",
+      "index": 27
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre uso do porque/por que/por quê/porquê, qual das alternativas a seguir esta correta?",
+      "options": [
+        "'Por que' (separado, sem acento) e usado em perguntas diretas ou indiretas e antes de substantivo oculto equivalente a 'motivo pelo qual'.",
+        "As quatro formas (porque, por que, por quê, porquê) sao sempre intercambiaveis, sem distincao de uso na norma culta.",
+        "O verbo preferir deve ser sempre seguido de 'do que' na norma culta tradicional (ex.: 'prefiro cafe do que cha').",
+        "'Mal' e 'mau' sao sempre sinonimos perfeitos e podem ser usados indistintamente em qualquer contexto."
+      ],
+      "correctOption": 0,
+      "explanation": "A norma culta distingue claramente os quatro usos: 'porque' (explicacao/causa), 'por que' (pergunta), 'por quê' (final de frase) e 'porquê' (substantivo).",
+      "index": 28
+    },
+    {
+      "theme": "dados",
+      "kind": "multipla",
+      "prompt": "Sobre banco de dados relacional, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Segundo a LGPD, todos os dados pessoais recebem exatamente o mesmo nivel de protecao, sem categoria diferenciada para dados sensiveis.",
+        "Em um banco de dados relacional, os dados sao organizados em tabelas compostas por linhas e colunas, relacionadas entre si por chaves.",
+        "A LGPD se aplica apenas a dados de pessoas juridicas, nunca a dados de pessoas fisicas.",
+        "Em um banco de dados relacional, os dados sao organizados exclusivamente em arquivos de texto sem estrutura, sem relacoes entre eles."
+      ],
+      "correctOption": 1,
+      "explanation": "O modelo relacional organiza dados em tabelas (relacoes) com linhas (tuplas) e colunas (atributos), ligadas por chaves primarias e estrangeiras.",
+      "index": 29
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "multipla",
+      "prompt": "Sobre divida ativa tributaria, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A inscricao em divida ativa torna o credito tributario incontestavel, sem possibilidade de defesa do contribuinte.",
+        "A divida ativa tributaria regularmente inscrita goza de presuncao de certeza e liquidez, que pode ser ilidida por prova em contrario.",
+        "A imunidade tributaria e concedida por lei ordinaria e pode ser revogada livremente pelo legislador infraconstitucional.",
+        "A responsabilidade tributaria so pode recair sobre o contribuinte que praticou diretamente o fato gerador, nunca sobre terceiros."
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 204 do CTN atribui presuncao relativa (nao absoluta) de certeza e liquidez a divida ativa regularmente inscrita.",
+      "index": 30
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Em uma repartição com 5 servidores, serao escolhidos 2 para ocupar cargos distintos (presidente e secretario, por exemplo). De quantas formas diferentes essa escolha pode ser feita?",
+      "options": [
+        "40",
+        "20",
+        "22",
+        "18"
+      ],
+      "correctOption": 1,
+      "explanation": "Como os cargos sao distintos, a ordem importa: usa-se arranjo A(5,2) = 5! / (5-2)! = 20.",
+      "index": 31
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "multipla",
+      "prompt": "Sobre imposto - fato gerador, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O lancamento tributario e sempre feito pelo proprio contribuinte, sem qualquer participacao da autoridade administrativa.",
+        "O imposto exige sempre uma contraprestacao direta e especifica do Estado ao contribuinte que o paga.",
+        "A lei tributaria pode retroagir livremente para cobrar tributo sobre fatos geradores passados, sem qualquer limitacao.",
+        "O imposto tem fato gerador uma situacao independente de qualquer atividade estatal especifica relativa ao contribuinte."
+      ],
+      "correctOption": 3,
+      "explanation": "Art. 16 do CTN define o imposto exatamente por essa desvinculacao de atividade estatal especifica (nao e contraprestacao direta).",
+      "index": 32
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "certo_errado",
+      "prompt": "No contrato de franquia, o franqueador cede ao franqueado o direito de uso de marca e know-how, mediante remuneracao, mantendo o franqueado sua autonomia juridica e patrimonial.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A Lei de Franquia (Lei 13.966/2019) preserva a autonomia juridica e patrimonial do franqueado, que nao se torna empregado do franqueador.",
+      "index": 33
+    },
+    {
+      "theme": "dados",
+      "kind": "certo_errado",
+      "prompt": "A acuracia, como dimensao da qualidade de dados, refere-se ao grau em que um dado reflete corretamente a realidade que pretende representar.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Velocidade de processamento e dimensao de desempenho (performance), nao de acuracia, que trata da correcao do dado em relacao a realidade.",
+      "index": 34
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "certo_errado",
+      "prompt": "Todos sao iguais perante a lei, sem distincao de qualquer natureza, segundo o caput do art. 5o da CF/88.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "O caput do art. 5o garante a igualdade a brasileiros e estrangeiros residentes no Pais.",
+      "index": 35
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "multipla",
+      "prompt": "Sobre sociedade limitada - responsabilidade dos socios, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Na sociedade anonima, o capital social se divide em quotas, nos mesmos termos da sociedade limitada.",
+        "A desconsideracao da personalidade juridica e aplicada automaticamente sempre que a sociedade nao consegue pagar uma divida, independentemente de abuso.",
+        "Na sociedade limitada, a responsabilidade de cada socio e restrita ao valor de suas quotas, mas todos respondem solidariamente pela integralizacao do capital social.",
+        "Na sociedade limitada, os socios respondem sempre com seu patrimonio pessoal por toda e qualquer divida da sociedade, sem limite."
+      ],
+      "correctOption": 2,
+      "explanation": "Art. 1.052 do Codigo Civil limita a responsabilidade dos socios ao valor de suas quotas, com solidariedade apenas quanto a integralizacao do capital.",
+      "index": 36
+    },
+    {
+      "theme": "direito-eleitoral",
+      "kind": "multipla",
+      "prompt": "Sobre propaganda eleitoral - prazo, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A propaganda eleitoral, em regra, somente e permitida apos a data fixada em lei (como a partir de 15 de agosto do ano da eleicao, no modelo vigente para eleicoes gerais).",
+        "Oferecer dinheiro ou bens a eleitores em troca de voto e pratica legal, desde que o candidato declare o gasto na prestacao de contas.",
+        "As emissoras de radio e televisao podem excluir arbitrariamente qualquer candidato registrado dos debates eleitorais, sem criterio objetivo.",
+        "A propaganda eleitoral pode comecar em qualquer momento do mandato anterior, sem qualquer restricao de prazo."
+      ],
+      "correctOption": 0,
+      "explanation": "A legislacao eleitoral fixa prazos especificos para o inicio da propaganda eleitoral, vedando propaganda antecipada fora desses prazos.",
+      "index": 37
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre crase - locucoes femininas, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Nunca se usa crase antes de locucoes adverbiais, independentemente do genero da palavra.",
+        "A colocacao pronominal e sempre livre em portugues, sem influencia de palavras atrativas na frase.",
+        "No sentido de 'ver, presenciar', o verbo assistir e transitivo direto, sem preposicao (ex.: 'assistir o jogo' e sempre a forma preferida pela norma culta).",
+        "Usa-se crase antes de locucoes adverbiais femininas de instrumento, modo ou lugar, como 'a mao', 'as pressas', 'a noite'."
+      ],
+      "correctOption": 3,
+      "explanation": "A regra classica de crase inclui expressamente as locucoes adverbiais femininas de instrumento, modo e lugar.",
+      "index": 38
+    },
+    {
+      "theme": "portugues",
+      "kind": "certo_errado",
+      "prompt": "O verbo haver, no sentido de existir, concorda normalmente com o sujeito no plural (ex.: 'Haviam muitos candidatos').",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A norma culta considera incorreta a flexao no plural de 'haver' no sentido de existir; a forma correta e sempre no singular ('havia').",
+      "index": 39
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Um produto custa R$ 105,00 para ser produzido e a empresa aplica um markup de 30% sobre o custo para formar o preco de venda. Qual o preco de venda?",
+      "options": [
+        "R$ 126,00",
+        "R$ 147,00",
+        "R$ 136,50",
+        "R$ 135,00"
+      ],
+      "correctOption": 2,
+      "explanation": "Preco de venda = custo x (1 + markup) = 105 x (1 + 0.3) = R$ 136,50.",
+      "index": 40
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "certo_errado",
+      "prompt": "Qualquer cidadao e parte legitima para propor acao popular que vise anular ato lesivo ao patrimonio publico.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 5o, LXXIII, da CF/88 exige a condicao de cidadao (pessoa fisica eleitora), nao de pessoa juridica.",
+      "index": 41
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "multipla",
+      "prompt": "Sobre vale-transporte, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A comunicacao de admissao de empregado e facultativa e pode ser feita em qualquer prazo, a criterio do empregador.",
+        "O vale-transporte e sempre totalmente gratuito para o empregado, sem qualquer desconto permitido em lei.",
+        "O FGTS e descontado do salario do empregado, reduzindo o valor liquido recebido por ele.",
+        "O vale-transporte e beneficio destinado ao custeio dos deslocamentos do trabalhador entre residencia e local de trabalho, podendo haver desconto limitado a 6% do salario basico do empregado."
+      ],
+      "correctOption": 3,
+      "explanation": "A Lei 7.418/1985 permite o desconto de ate 6% do salario basico do empregado a titulo de participacao no custeio do vale-transporte.",
+      "index": 42
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "Uma empresa tem ativo circulante de R$ 252.000,00 e passivo circulante de R$ 191.000,00. Qual o indice de liquidez corrente (aproximado, com 2 casas decimais)?",
+      "options": [
+        "1.32",
+        "0.76",
+        "1.62",
+        "1.02"
+      ],
+      "correctOption": 0,
+      "explanation": "Liquidez corrente = ativo circulante / passivo circulante = 252000/191000 = 1.32.",
+      "index": 43
+    },
+    {
+      "theme": "direito-eleitoral",
+      "kind": "certo_errado",
+      "prompt": "A Lei Complementar 64/1990 (Lei das Inelegibilidades) estabelece hipoteses de inelegibilidade, como a condenacao por determinados crimes com decisao transitada em julgado ou proferida por orgao colegiado.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A Lei da Ficha Limpa (que alterou a LC 64/1990) admitiu expressamente que a condenacao por orgao colegiado, ainda sem transito em julgado, pode gerar inelegibilidade.",
+      "index": 44
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Considere verdadeira a proposicao condicional: \"Se a declaracao foi entregue, entao a multa por atraso nao incide.\" Sabendo que a multa por atraso incide NAO ocorreu (ou seja, a multa por atraso incide), o que se pode concluir pela contrapositiva?",
+      "options": [
+        "Nao e possivel concluir nada a partir dessas informacoes.",
+        "A proposicao condicional se torna falsa.",
+        "Conclui-se que nao e verdade que a declaracao foi entregue.",
+        "Conclui-se que a declaracao foi entregue, mesmo assim."
+      ],
+      "correctOption": 2,
+      "explanation": "Em uma condicional verdadeira 'se P entao Q', negar Q (modus tollens / contrapositiva) permite concluir 'nao P'. A condicional continua verdadeira; o que muda e a conclusao sobre P.",
+      "index": 45
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Dois setores de uma repartição fazem rondas: um a cada 9 dias e outro a cada 6 dias. Partindo juntos hoje, depois de quantos dias eles voltarao a coincidir?",
+      "options": [
+        "12",
+        "54",
+        "18",
+        "27"
+      ],
+      "correctOption": 2,
+      "explanation": "A resposta e o MMC(9,6) = 18 dias.",
+      "index": 46
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "multipla",
+      "prompt": "Sobre escrituracao contabil digital (ecd), qual das alternativas a seguir esta correta?",
+      "options": [
+        "No ICMS, a empresa nunca pode se creditar do imposto pago nas aquisicoes, pagando sempre o valor total das saidas.",
+        "A ECD e documento interno que nunca precisa ser transmitido a nenhum orgao publico.",
+        "O Domicilio Tributario Eletronico e um endereco fisico obrigatorio que a empresa deve manter proximo ao orgao fazendario.",
+        "A ECD e a versao digital da escrituracao contabil (diario e livros auxiliares), transmitida ao SPED, substituindo a escrituracao em papel para fins fiscais."
+      ],
+      "correctOption": 3,
+      "explanation": "A ECD deve ser transmitida ao ambiente do SPED dentro do prazo legal, tendo validade juridica para fins fiscais e societarios.",
+      "index": 47
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Dois setores de uma repartição fazem rondas: um a cada 9 dias e outro a cada 18 dias. Partindo juntos hoje, depois de quantos dias eles voltarao a coincidir?",
+      "options": [
+        "18",
+        "27",
+        "36",
+        "162"
+      ],
+      "correctOption": 0,
+      "explanation": "A resposta e o MMC(9,18) = 18 dias.",
+      "index": 48
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Considere verdadeira a proposicao condicional: \"Se a licitacao foi homologada, entao o contrato pode ser assinado.\" Sabendo que o contrato pode ser assinado NAO ocorreu (ou seja, o contrato nao pode ser assinado), o que se pode concluir pela contrapositiva?",
+      "options": [
+        "Conclui-se que a licitacao foi homologada, mesmo assim.",
+        "A proposicao condicional se torna falsa.",
+        "Conclui-se que nao e verdade que a licitacao foi homologada.",
+        "Nao e possivel concluir nada a partir dessas informacoes."
+      ],
+      "correctOption": 2,
+      "explanation": "Em uma condicional verdadeira 'se P entao Q', negar Q (modus tollens / contrapositiva) permite concluir 'nao P'. A condicional continua verdadeira; o que muda e a conclusao sobre P.",
+      "index": 49
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "certo_errado",
+      "prompt": "O adicional noturno e opcional e pode ser suprimido por acordo individual entre empregado e empregador.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "O adicional noturno e garantia legal minima; nao pode ser simplesmente suprimido por acordo individual em prejuizo do trabalhador.",
+      "index": 50
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "multipla",
+      "prompt": "Sobre hierarquia administrativa, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O principio da eficiencia autoriza a Administracao a descumprir a legalidade quando isso tornar o servico mais rapido.",
+        "A hierarquia administrativa impede qualquer delegacao de competencia entre orgaos da Administracao Publica.",
+        "Todos os bens publicos, sem excecao, sao sempre inalienaveis, mesmo apos serem desafetados.",
+        "A hierarquia administrativa confere ao superior o poder de dar ordens, fiscalizar, rever e delegar atribuicoes aos subordinados."
+      ],
+      "correctOption": 3,
+      "explanation": "A hierarquia e justamente o que fundamenta a possibilidade de delegacao e avocacao de competencias entre niveis hierarquicos, nos termos da lei.",
+      "index": 51
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Um produto custa R$ 67,00 para ser produzido e a empresa aplica um markup de 40% sobre o custo para formar o preco de venda. Qual o preco de venda?",
+      "options": [
+        "R$ 93,80",
+        "R$ 107,00",
+        "R$ 87,10",
+        "R$ 100,50"
+      ],
+      "correctOption": 0,
+      "explanation": "Preco de venda = custo x (1 + markup) = 67 x (1 + 0.4) = R$ 93,80.",
+      "index": 52
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "certo_errado",
+      "prompt": "A Administracao Publica pode contratar livremente, sem licitacao, sempre que o valor do contrato for considerado pequeno pelo gestor.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "As hipoteses de dispensa e inexigibilidade de licitacao sao definidas taxativamente em lei, nao a criterio discricionario do gestor pelo valor que ele considerar pequeno.",
+      "index": 53
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Deseja-se dividir 4 processos de um setor e 18 processos de outro em lotes iguais, do maior tamanho possivel, sem misturar processos dos dois setores. Qual o tamanho de cada lote?",
+      "options": [
+        "3",
+        "4",
+        "5",
+        "2"
+      ],
+      "correctOption": 3,
+      "explanation": "A resposta e o MDC(4,18) = 2.",
+      "index": 54
+    },
+    {
+      "theme": "ingles",
+      "kind": "certo_errado",
+      "prompt": "Skimming is a reading strategy used to quickly get the general idea of a text, without reading every word in detail.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Skimming is, by definition, a fast reading strategy for general understanding, the opposite of a slow, detailed, word-by-word reading.",
+      "index": 55
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "Sobre passivo circulante, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Passivo circulante compreende as obrigacoes que se espera liquidar no ciclo operacional normal ou em ate doze meses apos a data do balanco.",
+        "Passivo circulante compreende apenas emprestimos bancarios de qualquer prazo.",
+        "O capital circulante liquido e sempre igual ao patrimonio liquido total da entidade.",
+        "Ativo nao circulante e o grupo que reune apenas as dividas de longo prazo da entidade."
+      ],
+      "correctOption": 0,
+      "explanation": "O passivo circulante inclui fornecedores, salarios a pagar, tributos a pagar, entre outras obrigacoes de curto prazo, nao apenas emprestimos.",
+      "index": 56
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "certo_errado",
+      "prompt": "O habeas data serve para impugnar diretamente a constitucionalidade de uma lei.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Impugnar a constitucionalidade de lei e objeto de acao direta de inconstitucionalidade, nao de habeas data.",
+      "index": 57
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre regencia verbal - assistir no sentido de ver, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A palavra 'bastante' e sempre invariavel, mesmo quando funciona como adjetivo concordando com um substantivo.",
+        "As quatro formas (porque, por que, por quê, porquê) sao sempre intercambiaveis, sem distincao de uso na norma culta.",
+        "No sentido de 'ver, presenciar', o verbo assistir e transitivo indireto, regendo a preposicao 'a' (ex.: 'assistir ao jogo').",
+        "No sentido de 'ver, presenciar', o verbo assistir e transitivo direto, sem preposicao (ex.: 'assistir o jogo' e sempre a forma preferida pela norma culta)."
+      ],
+      "correctOption": 2,
+      "explanation": "A norma culta tradicional exige a preposicao 'a' com 'assistir' no sentido de ver/presenciar.",
+      "index": 58
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre classes de palavras - conjuncoes subordinativas, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Conjuncoes subordinativas (como 'porque', 'embora', 'se', 'quando') ligam uma oracao subordinada a oracao principal, estabelecendo relacao de dependencia entre elas.",
+        "Conjuncoes subordinativas ligam duas oracoes independentes entre si, sem relacao de subordinacao.",
+        "Nunca se usa virgula antes de qualquer oracao introduzida por 'que', seja ela restritiva ou explicativa.",
+        "A metafora exige obrigatoriamente o uso da palavra 'como' para estabelecer a comparacao entre dois elementos."
+      ],
+      "correctOption": 0,
+      "explanation": "Por definicao, a conjuncao subordinativa cria uma relacao de dependencia (subordinacao) entre as oracoes, diferente da conjuncao coordenativa.",
+      "index": 59
+    },
+    {
+      "theme": "estatistica",
+      "kind": "multipla",
+      "prompt": "Considere o conjunto de valores (ja ordenados): 10, 12, 21, 35, 52. Qual e a mediana?",
+      "options": [
+        "12",
+        "21",
+        "35",
+        "26"
+      ],
+      "correctOption": 1,
+      "explanation": "Com 5 valores ordenados, a mediana e o valor central (3o elemento): 21.",
+      "index": 60
+    }
+  ]
+}

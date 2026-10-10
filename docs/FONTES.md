@@ -91,3 +91,41 @@ Remover uma fonte (pela tela ou DELETE `/api/apolo/fontes/:id`) apaga o PDF
 do R2 e a linha do D1 de imediato — sem soft-delete, seguindo o compromisso
 de exclusão em até 3 dias do DEC-08. O backup manual (`pnpm run backup:atlas`,
 DEC-011) já copia o acervo de fontes junto com os demais anexos do R2.
+
+## Base mista inicial: 30 provas autorais Atlas
+
+Pedido do Abner (thread "Cards em escada do Apolo", 2026-10-10): como a
+classificação por IA das fontes ficou em segundo plano (DEC-014 continua sem
+IA), o banco de fontes nasce com uma base mista escrita pela própria Atlas —
+30 "provas" de 60 questões (1800 no total), cadastradas como fonte tipo
+`lista` (sem banca/órgão/ano — não são provas de concurso reais digitalizadas,
+são material autoral, então nada inventado nesses campos).
+
+Temas cobertos (abertos, DEC-014): contabilidade, contabilidade geral, direito
+tributário, tributação, direito empresarial, direito eleitoral, direito
+administrativo, direito constitucional, matemática, matemática financeira,
+estatística, raciocínio lógico, dados, português, inglês, espanhol e
+departamento pessoal/fiscal. Metade das questões de matemática, matemática
+financeira, estatística, raciocínio lógico e metade de contabilidade/
+contabilidade geral vem de cálculo gerado e verificado em código (resultado
+nunca "chutado"); o restante vem de um banco de fatos escritos à mão, cada um
+gerando uma questão de múltipla escolha e uma de certo/errado.
+
+Arquivos em `data/apolo/fontes-autorais/` (`manifest.json` + um JSON por
+prova); os 30 PDFs (prova + gabarito comentado) ficam fora do git — estão nos
+arquivos do projeto, para baixar e colocar em `data/apolo/fontes-autorais/pdf/`
+antes de rodar o carregador.
+
+Carregar o lote (sobe o PDF no R2 e grava a fonte + os 60 rascunhos
+"pendentes" de cada prova — nunca em `atlas_questions` direto; a aprovação
+continua manual em `/rascunhos`, como qualquer outro rascunho):
+
+```
+pnpm run apolo:fontes-autorais -- --check
+pnpm run apolo:fontes-autorais -- --target production --dir data/apolo/fontes-autorais
+```
+
+Idempotente pelo sha256 do PDF: rodar de novo não duplica uma prova já
+carregada. Como os assuntos de direito e departamento fiscal/pessoal têm
+risco de erro técnico, vale uma amostragem antes de ativar muitas questões
+desses temas em massa pela tela de curadoria.

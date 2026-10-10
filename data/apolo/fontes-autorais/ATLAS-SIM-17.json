@@ -1,0 +1,790 @@
+{
+  "examId": "ATLAS-SIM-17",
+  "title": "Simulado autoral Atlas 17/30",
+  "questions": [
+    {
+      "theme": "direito-constitucional",
+      "kind": "multipla",
+      "prompt": "Sobre objetivos fundamentais, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Garantir o desenvolvimento nacional e um fundamento, nao um objetivo fundamental, da Republica.",
+        "O habeas corpus se destina a proteger o acesso a informacoes de interesse pessoal ou coletivo.",
+        "Erradicar a pobreza e a marginalizacao e reduzir as desigualdades sociais e regionais e um objetivo fundamental da Republica.",
+        "A funcao social da propriedade e apenas uma recomendacao moral, sem efeitos juridicos."
+      ],
+      "correctOption": 2,
+      "explanation": "Art. 3o, III, da CF/88 lista esse objetivo entre os objetivos fundamentais.",
+      "index": 1
+    },
+    {
+      "theme": "tributacao",
+      "kind": "certo_errado",
+      "prompt": "O SPED (Sistema Publico de Escrituracao Digital) unifica a prestacao de obrigacoes acessorias fiscais e contabeis das empresas ao Fisco, por meio eletronico.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "O SPED abrange obrigacoes de pessoas juridicas (ECD, ECF, EFD-Contribuicoes, NF-e etc.), nao a declaracao de pessoa fisica.",
+      "index": 2
+    },
+    {
+      "theme": "dados",
+      "kind": "multipla",
+      "prompt": "Sobre normalizacao de dados, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A normalizacao de banco de dados tem como objetivo duplicar o maximo possivel de informacoes entre as tabelas, para facilitar o acesso.",
+        "A normalizacao de banco de dados e o processo de organizar os dados para reduzir redundancia e evitar inconsistencias.",
+        "A acuracia, como dimensao da qualidade de dados, refere-se exclusivamente a velocidade com que o dado e processado pelo sistema.",
+        "O comando SELECT em SQL e usado para excluir permanentemente registros de uma tabela."
+      ],
+      "correctOption": 1,
+      "explanation": "A normalizacao busca justamente reduzir a redundancia de dados, nao maximiza-la.",
+      "index": 3
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "Uma empresa tem ativo circulante de R$ 66.000,00 e passivo circulante de R$ 136.000,00. Qual o indice de liquidez corrente (aproximado, com 2 casas decimais)?",
+      "options": [
+        "0.19",
+        "2.06",
+        "0.49",
+        "0.79"
+      ],
+      "correctOption": 2,
+      "explanation": "Liquidez corrente = ativo circulante / passivo circulante = 66000/136000 = 0.49.",
+      "index": 4
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "multipla",
+      "prompt": "Sobre principio da legalidade administrativa, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Os contratos administrativos seguem exatamente as mesmas regras dos contratos privados, sem nenhuma prerrogativa especial da Administracao.",
+        "Pelo principio da legalidade, a Administracao Publica pode atuar livremente, desde que nao exista lei proibindo expressamente.",
+        "O principio da eficiencia autoriza a Administracao a descumprir a legalidade quando isso tornar o servico mais rapido.",
+        "Pelo principio da legalidade, a Administracao Publica so pode atuar com base em autorizacao legal previa."
+      ],
+      "correctOption": 3,
+      "explanation": "A Administracao se submete a legalidade estrita (atuar com base em lei), diferente do particular, que pode atuar enquanto a lei nao proibir.",
+      "index": 5
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "multipla",
+      "prompt": "Sobre esocial, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O 13o salario e beneficio facultativo, que o empregador pode decidir pagar ou nao a cada ano.",
+        "O eSocial e o sistema unificado de escrituracao digital de obrigacoes fiscais, previdenciarias e trabalhistas, usado por empregadores para prestar informacoes ao governo.",
+        "As horas extras podem ser pagas pelo mesmo valor da hora normal, sem nenhum adicional.",
+        "O eSocial e um sistema exclusivo para o pagamento de tributos federais sobre lucro das empresas, sem relacao com informacoes trabalhistas."
+      ],
+      "correctOption": 1,
+      "explanation": "O eSocial unifica o envio de eventos trabalhistas (admissao, ferias, afastamentos, rescisao etc.), previdenciarios e fiscais relacionados a folha de pagamento.",
+      "index": 6
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "certo_errado",
+      "prompt": "A presuncao de inocencia se encerra com a condenacao em primeira instancia, antes de qualquer recurso.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A presuncao de inocencia so se encerra quando a sentenca condenatoria transita em julgado, e nao na condenacao de primeira instancia.",
+      "index": 7
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "multipla",
+      "prompt": "Sobre substituicao tributaria - obrigacoes do substituto, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O substituto tributario e responsavel por calcular, reter e recolher o tributo devido pelas operacoes subsequentes, cumprindo tambem as obrigacoes acessorias relacionadas.",
+        "Obrigacoes acessorias fiscais sempre exigem o pagamento de valores em dinheiro ao Fisco, da mesma forma que a obrigacao principal.",
+        "O substituto tributario so tem responsabilidade pelo recolhimento do tributo, nunca por qualquer obrigacao acessoria relacionada.",
+        "O Domicilio Tributario Eletronico e um endereco fisico obrigatorio que a empresa deve manter proximo ao orgao fazendario."
+      ],
+      "correctOption": 0,
+      "explanation": "O regime de substituicao tributaria tambem impoe obrigacoes acessorias ao substituto (como informar as operacoes em arquivos fiscais especificos), alem do recolhimento.",
+      "index": 8
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "certo_errado",
+      "prompt": "Na sociedade anonima, o capital social se divide em quotas, nos mesmos termos da sociedade limitada.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A divisao em quotas e caracteristica da sociedade limitada; na sociedade anonima, a divisao e em acoes.",
+      "index": 9
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Observe a sequencia numerica: 6, 12, 24, 48, 96, ... Qual e o proximo termo?",
+      "options": [
+        "190",
+        "193",
+        "192",
+        "194"
+      ],
+      "correctOption": 2,
+      "explanation": "A sequencia e geometrica de razao 2 (cada termo e multiplicado por 2). O ultimo termo mostrado e 96, logo o proximo e 96 x 2 = 192.",
+      "index": 10
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "O custo dos produtos vendidos (CPV) no ano foi R$ 541.000,00 e o estoque medio foi R$ 33.000,00. Qual o giro de estoque (aproximado, em vezes ao ano)?",
+      "options": [
+        "15.4 vezes ao ano",
+        "17.4 vezes ao ano",
+        "16.4 vezes ao ano",
+        "0.1 vezes ao ano"
+      ],
+      "correctOption": 2,
+      "explanation": "Giro de estoque = CPV / estoque medio = 541000/33000 = 16.4 vezes ao ano.",
+      "index": 11
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Sobre conservadorismo/prudencia, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O principio da prudencia recomenda sempre adotar o maior valor possivel para os ativos, para maximizar o patrimonio da entidade.",
+        "A distribuicao de lucros aos socios (dividendos) e classificada como despesa na demonstracao do resultado.",
+        "O principio da prudencia recomenda que, havendo duvida razoavel entre duas alternativas para a mensuracao de um elemento, adote-se o valor menor para o ativo e o maior para o passivo.",
+        "A depreciacao representa o aumento de valor de um ativo imobilizado ao longo do tempo."
+      ],
+      "correctOption": 2,
+      "explanation": "A prudencia orienta cautela diante de incerteza: menor valor para ativos e maior para passivos em caso de duvida razoavel, nao a maximizacao do ativo.",
+      "index": 12
+    },
+    {
+      "theme": "dados",
+      "kind": "certo_errado",
+      "prompt": "O comando SELECT em SQL e usado para excluir permanentemente registros de uma tabela.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "SELECT e um comando de consulta (leitura); DELETE e o comando usado para remover registros.",
+      "index": 13
+    },
+    {
+      "theme": "ingles",
+      "kind": "multipla",
+      "prompt": "Sobre simple present - terceira pessoa, qual das alternativas a seguir esta correta?",
+      "options": [
+        "In the simple present tense, every subject pronoun requires the verb to end in -s, including 'I' and 'you'.",
+        "In the simple present tense, verbs in the third person singular (he/she/it) usually take an -s or -es ending.",
+        "In business English, a 'deadline' refers to the starting date of a project, before any work has begun.",
+        "Skimming means reading a text word by word, very slowly, to understand every single detail before moving forward."
+      ],
+      "correctOption": 1,
+      "explanation": "Only third person singular (he/she/it) takes the -s/-es ending in the simple present; 'I' and 'you' do not.",
+      "index": 14
+    },
+    {
+      "theme": "direito-eleitoral",
+      "kind": "certo_errado",
+      "prompt": "O domicilio eleitoral e irrelevante para a elegibilidade de um candidato a cargo municipal.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "O domicilio eleitoral e requisito relevante de elegibilidade, especialmente para cargos municipais, exigindo vinculo comprovado com a circunscricao.",
+      "index": 15
+    },
+    {
+      "theme": "estatistica",
+      "kind": "multipla",
+      "prompt": "Um servidor obteve as seguintes notas em 5 avaliacoes: 2, 4, 5, 9, 7. Qual a media aritmetica?",
+      "options": [
+        "5.8",
+        "5.0",
+        "5.4",
+        "9.0"
+      ],
+      "correctOption": 2,
+      "explanation": "Media = soma dos valores / quantidade = 27 / 5 = 5.4.",
+      "index": 16
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Qual e a negacao logica correta da proposicao \"o estagio probatorio foi cumprido ou a estabilidade foi adquirida\"?",
+      "options": [
+        "Nao e verdade que o estagio probatorio foi cumprido, e nao e verdade que a estabilidade foi adquirida",
+        "o estagio probatorio foi cumprido e nao e verdade que a estabilidade foi adquirida",
+        "Nao e verdade que o estagio probatorio foi cumprido, ou nao e verdade que a estabilidade foi adquirida",
+        "o estagio probatorio foi cumprido e a estabilidade foi adquirida"
+      ],
+      "correctOption": 0,
+      "explanation": "Pela Lei de De Morgan, a negacao de 'P ou Q' e 'nao P e nao Q' (troca 'ou' por 'e' e nega as duas partes).",
+      "index": 17
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "certo_errado",
+      "prompt": "A malha fiscal e o processo de cruzamento de informacoes declaradas pelo contribuinte com dados de terceiros, usado pelo Fisco para identificar inconsistencias.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A malha fiscal e mecanismo de fiscalizacao (cruzamento de dados para identificar divergencias), nao um beneficio fiscal.",
+      "index": 18
+    },
+    {
+      "theme": "portugues",
+      "kind": "certo_errado",
+      "prompt": "A ambiguidade ocorre quando uma construcao permite mais de uma interpretacao, o que, em textos tecnicos e oficiais, deve ser evitado para garantir clareza.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Em textos tecnicos, administrativos e oficiais, a clareza e objetividade sao desejadas; a ambiguidade, nesses contextos, e vista como um defeito a ser evitado.",
+      "index": 19
+    },
+    {
+      "theme": "portugues",
+      "kind": "certo_errado",
+      "prompt": "Usa-se virgula antes de oracao subordinada adjetiva explicativa, que acrescenta uma informacao extra sobre o antecedente.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A oracao explicativa (acrescenta informacao nao essencial, geralmente entre virgulas) se distingue da restritiva (sem virgula, define o antecedente).",
+      "index": 20
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "multipla",
+      "prompt": "Sobre contratos administrativos - clausulas exorbitantes, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O poder de policia so pode ser exercido pelo Poder Judiciario, nunca diretamente pela Administracao.",
+        "O processo administrativo disciplinar pode aplicar penalidade de demissao sem que o servidor seja ouvido previamente.",
+        "Os contratos administrativos admitem clausulas exorbitantes, como a possibilidade de alteracao e rescisao unilateral pela Administracao, em prol do interesse publico.",
+        "Os contratos administrativos seguem exatamente as mesmas regras dos contratos privados, sem nenhuma prerrogativa especial da Administracao."
+      ],
+      "correctOption": 2,
+      "explanation": "As clausulas exorbitantes (alteracao unilateral, rescisao unilateral, fiscalizacao, aplicacao de penalidades) sao tracos distintivos do contrato administrativo frente ao contrato privado.",
+      "index": 21
+    },
+    {
+      "theme": "tributacao",
+      "kind": "certo_errado",
+      "prompt": "A Nota Fiscal Eletronica pode ser emitida e considerada valida mesmo sem autorizacao do Fisco, bastando a vontade do emitente.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Sem a autorizacao de uso do Fisco, a NF-e nao e considerada documento fiscal valido para a operacao.",
+      "index": 22
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Qual e a negacao logica correta da proposicao \"Ana foi aprovada na prova objetiva ou Ana foi convocada para a prova discursiva\"?",
+      "options": [
+        "Ana foi aprovada na prova objetiva e Ana foi convocada para a prova discursiva",
+        "Nao e verdade que Ana foi aprovada na prova objetiva, e nao e verdade que Ana foi convocada para a prova discursiva",
+        "Ana foi aprovada na prova objetiva e nao e verdade que Ana foi convocada para a prova discursiva",
+        "Nao e verdade que Ana foi aprovada na prova objetiva, ou nao e verdade que Ana foi convocada para a prova discursiva"
+      ],
+      "correctOption": 1,
+      "explanation": "Pela Lei de De Morgan, a negacao de 'P ou Q' e 'nao P e nao Q' (troca 'ou' por 'e' e nega as duas partes).",
+      "index": 23
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Resolva para x: 6x + 60 = 150. Qual o valor de x?",
+      "options": [
+        "14",
+        "15",
+        "16",
+        "21"
+      ],
+      "correctOption": 1,
+      "explanation": "6x = 150 - 60 = 90; x = 90 / 6 = 15.",
+      "index": 24
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "certo_errado",
+      "prompt": "Lucro bruto e a diferenca entre a receita liquida e todas as despesas da entidade, inclusive as administrativas e financeiras.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Descontar todas as despesas (administrativas, financeiras etc.) da receita liquida resulta no lucro operacional ou liquido, nao no lucro bruto.",
+      "index": 25
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "certo_errado",
+      "prompt": "As horas extras podem ser pagas pelo mesmo valor da hora normal, sem nenhum adicional.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A Constituicao garante adicional minimo de 50%; pagar pelo mesmo valor da hora normal descumpre essa garantia.",
+      "index": 26
+    },
+    {
+      "theme": "espanhol",
+      "kind": "certo_errado",
+      "prompt": "Los verbos 'ser' y 'estar' tienen exactamente el mismo significado en espanol y pueden sustituirse libremente en cualquier frase.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Sustituir libremente 'ser' por 'estar' cambia el significado de la frase (ej.: 'es cansado' = aburrido/cansador vs. 'esta cansado' = siente cansancio).",
+      "index": 27
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "certo_errado",
+      "prompt": "Os agentes publicos podem fazer tudo o que a lei nao proibir, da mesma forma que os particulares.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Essa logica (fazer tudo que a lei nao proibe) aplica-se aos particulares (art. 5o, II), nao a Administracao Publica, que exige autorizacao legal expressa.",
+      "index": 28
+    },
+    {
+      "theme": "estatistica",
+      "kind": "multipla",
+      "prompt": "Uma urna tem 6 bolas azuis e 5 bolas vermelhas. Ao sortear uma bola ao acaso, qual a probabilidade de ela ser azul?",
+      "options": [
+        "6/5",
+        "6/11",
+        "11/6",
+        "5/11"
+      ],
+      "correctOption": 1,
+      "explanation": "Probabilidade = bolas azuis / total de bolas = 6/11.",
+      "index": 29
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "certo_errado",
+      "prompt": "A equacao contabil fundamental estabelece que Ativo = Passivo - Patrimonio Liquido.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A relacao correta soma passivo e patrimonio liquido para igualar ao ativo, nao subtrai.",
+      "index": 30
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "multipla",
+      "prompt": "Sobre principio da irretroatividade, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A obrigacao tributaria acessoria sempre exige o pagamento de uma quantia em dinheiro ao Fisco.",
+        "A lei tributaria pode retroagir livremente para cobrar tributo sobre fatos geradores passados, sem qualquer limitacao.",
+        "A lei tributaria, em regra, nao se aplica a fatos geradores ocorridos antes do inicio de sua vigencia.",
+        "O ISS incide sobre a circulacao de mercadorias, da mesma forma que o ICMS."
+      ],
+      "correctOption": 2,
+      "explanation": "Art. 150, III, 'a', da CF/88 veda a cobranca de tributos em relacao a fatos geradores ocorridos antes do inicio da vigencia da lei que os instituiu ou aumentou.",
+      "index": 31
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "certo_errado",
+      "prompt": "Pelo regime de competencia, receitas e despesas so sao reconhecidas quando ha efetivo recebimento ou pagamento em dinheiro.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Reconhecer apenas no recebimento/pagamento efetivo descreve o regime de caixa, oposto ao de competencia.",
+      "index": 32
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Resolva para x: 2x + 13 = 57. Qual o valor de x?",
+      "options": [
+        "22",
+        "24",
+        "23",
+        "21"
+      ],
+      "correctOption": 0,
+      "explanation": "2x = 57 - 13 = 44; x = 44 / 2 = 22.",
+      "index": 33
+    },
+    {
+      "theme": "ingles",
+      "kind": "multipla",
+      "prompt": "Sobre artigos definidos e indefinidos, qual das alternativas a seguir esta correta?",
+      "options": [
+        "The first conditional is used exclusively to talk about hypothetical situations that are impossible in the present.",
+        "The choice between 'a' and 'an' depends only on the first letter of the word, never on its pronunciation.",
+        "The indefinite article 'a' is used before a word that starts with a consonant sound, while 'an' is used before a word that starts with a vowel sound.",
+        "In business English, a 'deadline' refers to the starting date of a project, before any work has begun."
+      ],
+      "correctOption": 2,
+      "explanation": "The rule is based on sound, not spelling (e.g., 'an hour' because 'hour' starts with a vowel sound, despite the silent 'h').",
+      "index": 34
+    },
+    {
+      "theme": "tributacao",
+      "kind": "multipla",
+      "prompt": "Sobre pis e cofins - natureza, qual das alternativas a seguir esta correta?",
+      "options": [
+        "No Lucro Presumido, a empresa deve necessariamente apurar o lucro liquido contabil detalhado para calcular o imposto.",
+        "PIS e COFINS sao impostos de competencia dos Estados, incidentes sobre a circulacao de mercadorias.",
+        "O parcelamento tributario extingue definitivamente o credito tributario no momento da adesao, independentemente do pagamento das parcelas.",
+        "PIS e COFINS sao contribuicoes sociais incidentes, em regra, sobre a receita ou o faturamento das pessoas juridicas."
+      ],
+      "correctOption": 3,
+      "explanation": "PIS e COFINS sao contribuicoes sociais de competencia da Uniao, incidentes sobre receita/faturamento, nao impostos estaduais sobre circulacao de mercadorias.",
+      "index": 35
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "certo_errado",
+      "prompt": "Na substituicao tributaria, a lei atribui a um terceiro a responsabilidade pelo recolhimento do tributo devido por outro contribuinte, antes ou depois da ocorrencia do fato gerador.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A substituicao tributaria, especialmente a 'para frente', e amplamente utilizada no ICMS, alem de outros tributos.",
+      "index": 36
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Um produto custa R$ 409,00 para ser produzido e a empresa aplica um markup de 100% sobre o custo para formar o preco de venda. Qual o preco de venda?",
+      "options": [
+        "R$ 818,00",
+        "R$ 777,10",
+        "R$ 858,90",
+        "R$ 509,00"
+      ],
+      "correctOption": 0,
+      "explanation": "Preco de venda = custo x (1 + markup) = 409 x (1 + 1.0) = R$ 818,00.",
+      "index": 37
+    },
+    {
+      "theme": "portugues",
+      "kind": "certo_errado",
+      "prompt": "Com a expressao 'a maioria de', a concordancia verbal so pode ser feita no plural, sendo erro gramatical a concordancia no singular.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A norma culta tradicional aceita a concordancia no singular com o nucleo do sujeito ('a maioria'), nao sendo correta a afirmacao de que so o plural e aceito.",
+      "index": 38
+    },
+    {
+      "theme": "portugues",
+      "kind": "certo_errado",
+      "prompt": "As quatro formas (porque, por que, por quê, porquê) sao sempre intercambiaveis, sem distincao de uso na norma culta.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Ha distincao de uso e funcao gramatical entre as quatro formas; tratar como intercambiaveis contraria a norma culta.",
+      "index": 39
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Quanto e 12% de 1811?",
+      "options": [
+        "1594",
+        "217",
+        "205",
+        "229"
+      ],
+      "correctOption": 1,
+      "explanation": "12% de 1811 = 1811 x 12/100 = 217.",
+      "index": 40
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "multipla",
+      "prompt": "Sobre duplicata, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Na sociedade limitada, os socios respondem sempre com seu patrimonio pessoal por toda e qualquer divida da sociedade, sem limite.",
+        "O registro na Junta Comercial e facultativo e nao gera nenhuma consequencia juridica para o empresario que nao se registrar.",
+        "A duplicata e titulo de credito tipicamente emitido em razao de uma compra e venda mercantil ou de uma prestacao de servicos, com base em fatura.",
+        "A duplicata e titulo de credito que so pode ser emitido por instituicoes financeiras, nunca por empresas comerciais comuns."
+      ],
+      "correctOption": 2,
+      "explanation": "A duplicata e emitida pelo proprio vendedor/prestador de servico (sacador) em razao da fatura correspondente a venda ou servico prestado.",
+      "index": 41
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "certo_errado",
+      "prompt": "O nome empresarial pode ser firma (composta pelo nome do empresario ou socios) ou denominacao, conforme o tipo societario e a opcao legal.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "O Codigo Civil admite firma ou denominacao conforme o tipo societario (por exemplo, a sociedade anonima usa obrigatoriamente denominacao).",
+      "index": 42
+    },
+    {
+      "theme": "direito-eleitoral",
+      "kind": "certo_errado",
+      "prompt": "No Brasil, candidaturas independentes, sem filiacao a partido politico, sao plenamente admitidas para qualquer cargo eletivo.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A candidatura avulsa nao e, como regra geral, admitida no sistema eleitoral brasileiro, que exige filiacao partidaria como condicao de elegibilidade.",
+      "index": 43
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Uma comissao de 2 servidores sera escolhida, sem distincao de funcao, entre 8 servidores disponiveis. De quantas formas diferentes essa comissao pode ser formada?",
+      "options": [
+        "30",
+        "26",
+        "28",
+        "56"
+      ],
+      "correctOption": 2,
+      "explanation": "Como a ordem nao importa (comissao, sem funcoes distintas), usa-se combinacao: C(8,2) = 8! / (2! x (8-k)!) = 28.",
+      "index": 44
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "certo_errado",
+      "prompt": "O indice de liquidez corrente (ativo circulante / passivo circulante) mede a capacidade de a entidade pagar suas obrigacoes de curto prazo com seus bens e direitos de curto prazo.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Rentabilidade sobre o patrimonio liquido e medida por indices como ROE, nao pelo indice de liquidez corrente, que mede capacidade de pagamento de curto prazo.",
+      "index": 45
+    },
+    {
+      "theme": "matematica-financeira",
+      "kind": "multipla",
+      "prompt": "Qual o valor presente (aproximado) de R$ 13.335,00 a receber dentro de 3 periodos, descontado a uma taxa de 3% por periodo (juros compostos)?",
+      "options": [
+        "R$ 12.203,41",
+        "R$ 12.470,11",
+        "R$ 12.070,06",
+        "R$ 13.335,00"
+      ],
+      "correctOption": 0,
+      "explanation": "VP = VF / (1+i)^t = 13335 / (1,03)^3 = R$ 12.203,41 (aproximado).",
+      "index": 46
+    },
+    {
+      "theme": "matematica-financeira",
+      "kind": "multipla",
+      "prompt": "Qual o valor presente (aproximado) de R$ 13.189,00 a receber dentro de 4 periodos, descontado a uma taxa de 1% por periodo (juros compostos)?",
+      "options": [
+        "R$ 12.674,37",
+        "R$ 12.938,15",
+        "R$ 13.189,00",
+        "R$ 12.542,48"
+      ],
+      "correctOption": 0,
+      "explanation": "VP = VF / (1+i)^t = 13189 / (1,01)^4 = R$ 12.674,37 (aproximado).",
+      "index": 47
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "certo_errado",
+      "prompt": "Obrigacoes acessorias fiscais sao deveres instrumentais (emitir documentos, entregar declaracoes, manter escrituracao) exigidos pela legislacao tributaria para possibilitar a fiscalizacao.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A obrigacao acessoria tem natureza de fazer ou nao fazer (deveres instrumentais), nao de pagamento em dinheiro, que caracteriza a obrigacao principal.",
+      "index": 48
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "multipla",
+      "prompt": "Sobre servidor publico - estabilidade, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A estabilidade do servidor publico e adquirida automaticamente no ato da nomeacao, antes mesmo da posse.",
+        "Apos tres anos de efetivo exercicio, o servidor nomeado para cargo de provimento efetivo adquire estabilidade, mediante avaliacao de desempenho.",
+        "A presuncao de legitimidade dos atos administrativos e absoluta e nunca pode ser contestada.",
+        "A desapropriacao, no regime geral da CF/88, pode ser feita sem qualquer indenizacao ao proprietario."
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 41 da CF/88 exige tres anos de efetivo exercicio (estagio probatorio) e avaliacao de desempenho para a estabilidade.",
+      "index": 49
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "certo_errado",
+      "prompt": "O direito de peticao previsto na CF/88 exige o pagamento de taxas para ser exercido.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "O proprio dispositivo constitucional (art. 5o, XXXIV) garante o exercicio independentemente do pagamento de taxas.",
+      "index": 50
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "certo_errado",
+      "prompt": "A obrigacao tributaria acessoria sempre exige o pagamento de uma quantia em dinheiro ao Fisco.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "O pagamento em dinheiro caracteriza a obrigacao principal; a acessoria tem natureza instrumental (deveres de fazer ou nao fazer), sem pagamento direto.",
+      "index": 51
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Um terreno retangular mede 16 metros de frente por 14 metros de fundo. Qual o perimetro, em metros?",
+      "options": [
+        "60",
+        "58",
+        "62",
+        "224"
+      ],
+      "correctOption": 0,
+      "explanation": "Perimetro do retangulo = 2 x (base + altura) = 2 x (16 + 14) = 60 m.",
+      "index": 52
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "certo_errado",
+      "prompt": "O ISS incide sobre a circulacao de mercadorias, da mesma forma que o ICMS.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Circulacao de mercadorias e fato gerador do ICMS (estadual), nao do ISS (municipal), que incide sobre prestacao de servicos.",
+      "index": 53
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "multipla",
+      "prompt": "Sobre registro de empresas, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A falencia pode ser decretada para qualquer pessoa, empresaria ou nao, pelo simples atraso de uma unica conta domestica.",
+        "Na sociedade limitada, os socios respondem sempre com seu patrimonio pessoal por toda e qualquer divida da sociedade, sem limite.",
+        "A inscricao do empresario e da sociedade empresaria deve ser feita na Junta Comercial da respectiva sede, antes do inicio da atividade.",
+        "O registro na Junta Comercial e facultativo e nao gera nenhuma consequencia juridica para o empresario que nao se registrar."
+      ],
+      "correctOption": 2,
+      "explanation": "Art. 967 e seguintes do Codigo Civil exigem o registro para a regularidade da atividade empresarial, com consequencias (como a nao fruicao de certos beneficios legais) para quem nao se registra.",
+      "index": 54
+    },
+    {
+      "theme": "portugues",
+      "kind": "certo_errado",
+      "prompt": "Com sujeito composto anteposto ao verbo, a concordancia verbal deve ser sempre no singular.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A concordancia no singular com sujeito composto anteposto contraria a regra geral de concordancia verbal.",
+      "index": 55
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Observe a sequencia numerica: 4, 9, 14, 19, 24, ... Qual e o proximo termo?",
+      "options": [
+        "30",
+        "24",
+        "34",
+        "29"
+      ],
+      "correctOption": 3,
+      "explanation": "A sequencia e aritmetica de razao 5 (cada termo soma 5 ao anterior). O ultimo termo mostrado e 24, logo o proximo e 24 + 5 = 29.",
+      "index": 56
+    },
+    {
+      "theme": "espanhol",
+      "kind": "multipla",
+      "prompt": "Sobre acentuacion - palabras agudas, graves y esdrujulas, qual das alternativas a seguir esta correta?",
+      "options": [
+        "En espanol, ninguna palabra esdrujula lleva tilde escrita, independientemente de su acentuacion.",
+        "La palabra 'embarazada' en espanol significa exactamente lo mismo que 'embaraçada' en portugues (confusa, enredada).",
+        "En espanol, las palabras esdrujulas (acento en la antepenultima silaba) siempre llevan tilde escrita, como en 'rapido' y 'telefono'.",
+        "Los verbos 'ser' y 'estar' tienen exactamente el mismo significado en espanol y pueden sustituirse libremente en cualquier frase."
+      ],
+      "correctOption": 2,
+      "explanation": "La regla de acentuacion espanola exige tilde en todas las palabras esdrujulas, sin excepcion.",
+      "index": 57
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "multipla",
+      "prompt": "Sobre fgts - aliquota, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O 13o salario e beneficio facultativo, que o empregador pode decidir pagar ou nao a cada ano.",
+        "O direito a ferias surge apenas apos cinco anos continuos de trabalho na mesma empresa.",
+        "O empregador deposita mensalmente, em regra, o equivalente a 8% da remuneracao do empregado na conta vinculada do FGTS.",
+        "O FGTS e descontado do salario do empregado, reduzindo o valor liquido recebido por ele."
+      ],
+      "correctOption": 2,
+      "explanation": "O FGTS e encargo do empregador (deposito de 8% sobre a remuneracao), nao desconto do salario do empregado.",
+      "index": 58
+    },
+    {
+      "theme": "dados",
+      "kind": "certo_errado",
+      "prompt": "A anonimizacao de dados consiste em apenas remover o nome da pessoa, mantendo todos os demais dados que poderiam identifica-la de outra forma.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Remover apenas o nome, mantendo outros identificadores indiretos (como CPF, endereco completo), pode nao configurar anonimizacao efetiva, permitindo reidentificacao.",
+      "index": 59
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "certo_errado",
+      "prompt": "O Estado nunca pode cobrar de volta do agente publico o valor pago a titulo de indenizacao.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "O direito de regresso contra o agente, em caso de dolo ou culpa, e expressamente assegurado pela CF/88.",
+      "index": 60
+    }
+  ]
+}

@@ -1,0 +1,798 @@
+{
+  "examId": "ATLAS-SIM-24",
+  "title": "Simulado autoral Atlas 24/30",
+  "questions": [
+    {
+      "theme": "direito-empresarial",
+      "kind": "multipla",
+      "prompt": "Sobre sociedade anonima - capital social, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Toda sociedade empresaria e obrigada a usar exclusivamente firma, nunca denominacao, como nome empresarial.",
+        "Os titulos de credito, por definicao, nunca podem ser representados ou transmitidos por meios eletronicos.",
+        "O capital social da sociedade anonima se divide em acoes, e a responsabilidade do acionista e limitada ao preco de emissao das acoes subscritas ou adquiridas.",
+        "Na sociedade anonima, o capital social se divide em quotas, nos mesmos termos da sociedade limitada."
+      ],
+      "correctOption": 2,
+      "explanation": "Lei 6.404/1976 (Lei das S.A.) estabelece que o capital social se divide em acoes, nao em quotas.",
+      "index": 1
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "multipla",
+      "prompt": "Sobre horas extras, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A remuneracao da hora extra sera, no minimo, 50% superior a da hora normal, salvo norma coletiva ou constitucional mais favoravel.",
+        "O empregador pode dispensar por justa causa sempre que considerar o desempenho do empregado insatisfatorio, sem necessidade de falta especifica.",
+        "O salario-familia e pago a todos os trabalhadores com filhos, independentemente da faixa de renda.",
+        "As horas extras podem ser pagas pelo mesmo valor da hora normal, sem nenhum adicional."
+      ],
+      "correctOption": 0,
+      "explanation": "Art. 7o, XVI, da CF/88 garante adicional minimo de 50% sobre a hora normal para o trabalho extraordinario.",
+      "index": 2
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "certo_errado",
+      "prompt": "A EFD-Contribuicoes e escrituracao digital que detalha a apuracao de PIS e COFINS (e, quando aplicavel, da Contribuicao Previdenciaria sobre a Receita Bruta).",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A EFD-Contribuicoes e voltada a PIS/COFINS/CPRB, obrigacoes federais; a escrituracao de ICMS/IPI tem seu proprio bloco (EFD ICMS/IPI).",
+      "index": 3
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "multipla",
+      "prompt": "Sobre organizacao politico-administrativa, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A organizacao politico-administrativa da Republica Federativa do Brasil compreende a Uniao, os Estados, o Distrito Federal e os Municipios.",
+        "Os Municipios nao sao entes federativos autonomos, apenas divisoes administrativas dos Estados.",
+        "O Tribunal de Contas da Uniao e um orgao do Poder Judiciario, subordinado ao Supremo Tribunal Federal.",
+        "O direito a propriedade e absoluto e nao admite qualquer limitacao constitucional."
+      ],
+      "correctOption": 0,
+      "explanation": "Art. 18 da CF/88 inclui expressamente os Municipios como entes da federacao, todos autonomos.",
+      "index": 4
+    },
+    {
+      "theme": "tributacao",
+      "kind": "certo_errado",
+      "prompt": "O planejamento tributario licito busca a menor carga tributaria possivel por meios legais, sem simulacao ou fraude.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "O planejamento tributario licito (elisao fiscal) usa apenas meios legais e negocios juridicos reais, diferentemente da evasao fiscal (fraude/simulacao).",
+      "index": 5
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Observe a sequencia numerica: 12, 15, 18, 21, 24, ... Qual e o proximo termo?",
+      "options": [
+        "27",
+        "30",
+        "28",
+        "24"
+      ],
+      "correctOption": 0,
+      "explanation": "A sequencia e aritmetica de razao 3 (cada termo soma 3 ao anterior). O ultimo termo mostrado e 24, logo o proximo e 24 + 3 = 27.",
+      "index": 6
+    },
+    {
+      "theme": "ingles",
+      "kind": "certo_errado",
+      "prompt": "The choice between 'a' and 'an' depends only on the first letter of the word, never on its pronunciation.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Pronunciation, not spelling, determines the choice between 'a' and 'an' (e.g., 'a university' despite 'u' being a vowel letter, because it sounds like 'you').",
+      "index": 7
+    },
+    {
+      "theme": "dados",
+      "kind": "certo_errado",
+      "prompt": "A LGPD se aplica apenas a dados de pessoas juridicas, nunca a dados de pessoas fisicas.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "O foco da LGPD e a pessoa natural (fisica); dados exclusivos de pessoa juridica, em geral, nao se submetem a essa lei.",
+      "index": 8
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "multipla",
+      "prompt": "Sobre isencao tributaria, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A isencao tributaria tem sede constitucional e nunca pode ser revogada.",
+        "A taxa pode ser calculada com base exclusivamente no capital social da empresa contribuinte, como se fosse um imposto.",
+        "A isencao e causa de exclusao do credito tributario, prevista em lei, que dispensa o pagamento do tributo devido.",
+        "A responsabilidade tributaria so pode recair sobre o contribuinte que praticou diretamente o fato gerador, nunca sobre terceiros."
+      ],
+      "correctOption": 2,
+      "explanation": "Art. 175 do CTN trata a isencao como exclusao do credito tributario, concedida por lei (nao pela Constituicao), podendo em regra ser revogada por lei.",
+      "index": 9
+    },
+    {
+      "theme": "portugues",
+      "kind": "certo_errado",
+      "prompt": "Conectivos como 'porem', 'todavia' e 'contudo' estabelecem relacao de oposicao/contraste entre as ideias do texto.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Esses conectivos sao classificados como adversativos, marcando contraste ou oposicao, nao adicao.",
+      "index": 10
+    },
+    {
+      "theme": "estatistica",
+      "kind": "multipla",
+      "prompt": "Em uma pesquisa, os valores coletados foram: 10, 5, 5, 14, 5, 5. Qual e a moda (valor mais frequente)?",
+      "options": [
+        "5",
+        "14",
+        "6",
+        "10"
+      ],
+      "correctOption": 0,
+      "explanation": "O valor 5 aparece 3 vezes, mais que qualquer outro da lista — portanto a moda e 5.",
+      "index": 11
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Em uma repartição com 7 servidores, serao escolhidos 3 para ocupar cargos distintos (presidente e secretario, por exemplo). De quantas formas diferentes essa escolha pode ser feita?",
+      "options": [
+        "207",
+        "210",
+        "420",
+        "213"
+      ],
+      "correctOption": 1,
+      "explanation": "Como os cargos sao distintos, a ordem importa: usa-se arranjo A(7,3) = 7! / (7-3)! = 210.",
+      "index": 12
+    },
+    {
+      "theme": "portugues",
+      "kind": "certo_errado",
+      "prompt": "Conjuncoes subordinativas ligam duas oracoes independentes entre si, sem relacao de subordinacao.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Ligar oracoes independentes, sem dependencia, e funcao das conjuncoes coordenativas, nao das subordinativas.",
+      "index": 13
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Observe a sequencia numerica: 17, 26, 35, 44, 53, ... Qual e o proximo termo?",
+      "options": [
+        "63",
+        "62",
+        "71",
+        "53"
+      ],
+      "correctOption": 1,
+      "explanation": "A sequencia e aritmetica de razao 9 (cada termo soma 9 ao anterior). O ultimo termo mostrado e 53, logo o proximo e 53 + 9 = 62.",
+      "index": 14
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "certo_errado",
+      "prompt": "O direito a propriedade e absoluto e nao admite qualquer limitacao constitucional.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A propria CF/88 condiciona a propriedade a sua funcao social (art. 5o, XXIII), entao nao e um direito absoluto.",
+      "index": 15
+    },
+    {
+      "theme": "direito-eleitoral",
+      "kind": "multipla",
+      "prompt": "Sobre inelegibilidades, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A Lei Complementar 64/1990 (Lei das Inelegibilidades) estabelece hipoteses de inelegibilidade, como a condenacao por determinados crimes com decisao transitada em julgado ou proferida por orgao colegiado.",
+        "O voto no Brasil e obrigatorio para absolutamente todos os cidadaos, sem qualquer excecao de idade ou condicao.",
+        "A propaganda eleitoral pode comecar em qualquer momento do mandato anterior, sem qualquer restricao de prazo.",
+        "A Lei da Ficha Limpa (LC 135/2010) exige sempre o transito em julgado da condenacao para gerar inelegibilidade, nunca bastando decisao de orgao colegiado."
+      ],
+      "correctOption": 0,
+      "explanation": "A Lei da Ficha Limpa (que alterou a LC 64/1990) admitiu expressamente que a condenacao por orgao colegiado, ainda sem transito em julgado, pode gerar inelegibilidade.",
+      "index": 16
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "certo_errado",
+      "prompt": "Pelo principio da entidade, o patrimonio da empresa e distinto do patrimonio pessoal de seus socios.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A entidade contabil e autonoma; os bens pessoais dos socios nao se confundem com o patrimonio da empresa.",
+      "index": 17
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "certo_errado",
+      "prompt": "A personalidade juridica da sociedade empresaria se confunde sempre com a personalidade de seus socios, em qualquer situacao.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A autonomia patrimonial e da personalidade juridica e a regra; a confusao so ocorre em hipoteses excepcionais de desconsideracao da personalidade juridica, previstas em lei.",
+      "index": 18
+    },
+    {
+      "theme": "dados",
+      "kind": "certo_errado",
+      "prompt": "Segundo a LGPD, todos os dados pessoais recebem exatamente o mesmo nivel de protecao, sem categoria diferenciada para dados sensiveis.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A LGPD distingue dados pessoais comuns de dados sensiveis, exigindo bases legais e cuidados especificos mais rigorosos para os sensiveis.",
+      "index": 19
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Observe a sequencia numerica: 16, 18, 20, 22, 24, ... Qual e o proximo termo?",
+      "options": [
+        "27",
+        "26",
+        "24",
+        "28"
+      ],
+      "correctOption": 1,
+      "explanation": "A sequencia e aritmetica de razao 2 (cada termo soma 2 ao anterior). O ultimo termo mostrado e 24, logo o proximo e 24 + 2 = 26.",
+      "index": 20
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "certo_errado",
+      "prompt": "Apos tres anos de efetivo exercicio, o servidor nomeado para cargo de provimento efetivo adquire estabilidade, mediante avaliacao de desempenho.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 41 da CF/88 exige tres anos de efetivo exercicio (estagio probatorio) e avaliacao de desempenho para a estabilidade.",
+      "index": 21
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "multipla",
+      "prompt": "Sobre regime de apuracao do icms - debito e credito, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A ECD e documento interno que nunca precisa ser transmitido a nenhum orgao publico.",
+        "No ICMS, a empresa nunca pode se creditar do imposto pago nas aquisicoes, pagando sempre o valor total das saidas.",
+        "Os documentos fiscais podem ser descartados pela empresa um ano apos a emissao, independentemente de qualquer prazo de fiscalizacao.",
+        "No regime normal de apuracao do ICMS, a empresa credita o imposto pago nas entradas e debita o imposto devido nas saidas, recolhendo a diferenca (nao cumulatividade)."
+      ],
+      "correctOption": 3,
+      "explanation": "O principio da nao cumulatividade do ICMS (art. 155, par. 2o, I, CF/88) permite o credito do imposto pago nas entradas, compensando com o debito das saidas.",
+      "index": 22
+    },
+    {
+      "theme": "matematica-financeira",
+      "kind": "multipla",
+      "prompt": "Um capital de R$ 13.926,00 foi aplicado a juros simples de 2% ao mes, durante 8 meses. Qual o montante final?",
+      "options": [
+        "R$ 16.154,16",
+        "R$ 16.293,42",
+        "R$ 15.875,64",
+        "R$ 15.040,08"
+      ],
+      "correctOption": 0,
+      "explanation": "Juros simples: J = C x i x t = 13926 x 0.02 x 8 = R$ 2.228,16. Montante M = C + J = R$ 13.926,00 + R$ 2.228,16 = R$ 16.154,16.",
+      "index": 23
+    },
+    {
+      "theme": "raciocinio-logico",
+      "kind": "multipla",
+      "prompt": "Observe a sequencia numerica: 5, 10, 20, 40, 80, ... Qual e o proximo termo?",
+      "options": [
+        "162",
+        "160",
+        "161",
+        "158"
+      ],
+      "correctOption": 1,
+      "explanation": "A sequencia e geometrica de razao 2 (cada termo e multiplicado por 2). O ultimo termo mostrado e 80, logo o proximo e 80 x 2 = 160.",
+      "index": 24
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Quanto e 12% de 688?",
+      "options": [
+        "83",
+        "605",
+        "71",
+        "95"
+      ],
+      "correctOption": 0,
+      "explanation": "12% de 688 = 688 x 12/100 = 83.",
+      "index": 25
+    },
+    {
+      "theme": "tributacao",
+      "kind": "multipla",
+      "prompt": "Sobre pis e cofins - natureza, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O Simples Nacional e regime tributario obrigatorio para todas as empresas, independente do porte.",
+        "PIS e COFINS sao impostos de competencia dos Estados, incidentes sobre a circulacao de mercadorias.",
+        "O parcelamento tributario extingue definitivamente o credito tributario no momento da adesao, independentemente do pagamento das parcelas.",
+        "PIS e COFINS sao contribuicoes sociais incidentes, em regra, sobre a receita ou o faturamento das pessoas juridicas."
+      ],
+      "correctOption": 3,
+      "explanation": "PIS e COFINS sao contribuicoes sociais de competencia da Uniao, incidentes sobre receita/faturamento, nao impostos estaduais sobre circulacao de mercadorias.",
+      "index": 26
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "certo_errado",
+      "prompt": "Em regra, e vedado cobrar tributo no mesmo exercicio financeiro em que haja sido publicada a lei que o instituiu ou aumentou.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 150, III, 'b', da CF/88 estabelece a anterioridade anual como regra, mas a propria Constituicao lista excecoes (como o imposto extraordinario de guerra, II, IE, IOF).",
+      "index": 27
+    },
+    {
+      "theme": "matematica-financeira",
+      "kind": "multipla",
+      "prompt": "Um titulo com valor nominal de R$ 12.371,00 sera descontado 6 meses antes do vencimento, a uma taxa de desconto simples de 2,50% ao mes. Qual o valor liquido recebido?",
+      "options": [
+        "R$ 12.371,00",
+        "R$ 10.391,64",
+        "R$ 10.515,35",
+        "R$ 10.639,06"
+      ],
+      "correctOption": 2,
+      "explanation": "Desconto simples por fora: D = N x i x t = 12371 x 0.025 x 6 = R$ 1.855,65. Valor liquido = N - D = R$ 12.371,00 - R$ 1.855,65 = R$ 10.515,35.",
+      "index": 28
+    },
+    {
+      "theme": "direito-eleitoral",
+      "kind": "certo_errado",
+      "prompt": "As emissoras de radio e televisao que realizarem debates entre candidatos devem assegurar tratamento isonomico aos postulantes, conforme criterios objetivos definidos previamente.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A legislacao e a jurisprudencia eleitoral exigem criterios objetivos e isonomicos para a participacao em debates, vedando exclusao arbitraria de candidatos registrados.",
+      "index": 29
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "certo_errado",
+      "prompt": "Em regra, a Administracao Publica e obrigada a licitar antes de contratar obras, servicos, compras e alienacoes.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 37, XXI, da CF/88 e a Lei de Licitacoes exigem licitacao como regra; a dispensa e excecao prevista taxativamente em lei, nao a criterio livre do gestor.",
+      "index": 30
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "certo_errado",
+      "prompt": "O silencio da Administracao Publica sempre significa indeferimento tacito do pedido do interessado, em qualquer situacao.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "O efeito do silencio depende do que a lei especifica previr; nao ha uma regra geral automatica de indeferimento tacito em toda e qualquer situacao.",
+      "index": 31
+    },
+    {
+      "theme": "ingles",
+      "kind": "multipla",
+      "prompt": "Sobre conditional sentences - first conditional, qual das alternativas a seguir esta correta?",
+      "options": [
+        "In the simple present tense, every subject pronoun requires the verb to end in -s, including 'I' and 'you'.",
+        "The word 'actually' in English always means the same as 'atualmente' in Portuguese, referring to the present moment.",
+        "The first conditional is used exclusively to talk about hypothetical situations that are impossible in the present.",
+        "The first conditional ('if' + simple present, 'will' + base form) is used to talk about real or likely future situations."
+      ],
+      "correctOption": 3,
+      "explanation": "Impossible present hypothetical situations correspond to the second conditional ('if' + simple past, 'would' + base form), not the first.",
+      "index": 32
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre interpretacao de texto - ideia principal, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Nenhuma palavra paroxitona recebe acento grafico, segundo a norma ortografica vigente.",
+        "Identificar a ideia principal de um texto exige distinguir a tese central defendida pelo autor dos argumentos e exemplos que a sustentam.",
+        "'Mal' e 'mau' sao sempre sinonimos perfeitos e podem ser usados indistintamente em qualquer contexto.",
+        "A ideia principal de um texto e sempre a primeira frase do primeiro paragrafo, independentemente do conteudo do restante do texto."
+      ],
+      "correctOption": 1,
+      "explanation": "A ideia principal pode estar em qualquer parte do texto (inclusive subentendida); identifica-la exige compreensao global, nao apenas a leitura da primeira frase.",
+      "index": 33
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "certo_errado",
+      "prompt": "Sao Poderes da Uniao, independentes e harmonicos entre si, o Legislativo, o Executivo e o Judiciario.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 2o da CF/88 estabelece a independencia e harmonia entre os tres Poderes, sem hierarquia entre eles.",
+      "index": 34
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "multipla",
+      "prompt": "Sobre registro de empresas, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O registro na Junta Comercial e facultativo e nao gera nenhuma consequencia juridica para o empresario que nao se registrar.",
+        "Os titulos de credito, por definicao, nunca podem ser representados ou transmitidos por meios eletronicos.",
+        "A inscricao do empresario e da sociedade empresaria deve ser feita na Junta Comercial da respectiva sede, antes do inicio da atividade.",
+        "Toda sociedade empresaria e obrigada a usar exclusivamente firma, nunca denominacao, como nome empresarial."
+      ],
+      "correctOption": 2,
+      "explanation": "Art. 967 e seguintes do Codigo Civil exigem o registro para a regularidade da atividade empresarial, com consequencias (como a nao fruicao de certos beneficios legais) para quem nao se registra.",
+      "index": 35
+    },
+    {
+      "theme": "dados",
+      "kind": "multipla",
+      "prompt": "Sobre anonimizacao de dados, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O comando SELECT em SQL e usado para excluir permanentemente registros de uma tabela.",
+        "A anonimizacao de dados consiste em apenas remover o nome da pessoa, mantendo todos os demais dados que poderiam identifica-la de outra forma.",
+        "A anonimizacao e o processo de utilizar meios tecnicos razoaveis para que um dado perca a possibilidade de associacao, direta ou indireta, a um individuo.",
+        "A LGPD permite que uma empresa use os dados coletados para qualquer finalidade futura, mesmo que diferente da informada originalmente ao titular."
+      ],
+      "correctOption": 2,
+      "explanation": "A anonimizacao efetiva exige que nenhum dado remanescente permita a reidentificacao, direta ou indireta, nao apenas a remocao do nome.",
+      "index": 36
+    },
+    {
+      "theme": "departamento-fiscal",
+      "kind": "multipla",
+      "prompt": "Sobre efd-contribuicoes, qual das alternativas a seguir esta correta?",
+      "options": [
+        "No ICMS, a empresa nunca pode se creditar do imposto pago nas aquisicoes, pagando sempre o valor total das saidas.",
+        "A EFD-Contribuicoes e usada exclusivamente para declarar o ICMS devido pela empresa.",
+        "O substituto tributario so tem responsabilidade pelo recolhimento do tributo, nunca por qualquer obrigacao acessoria relacionada.",
+        "A EFD-Contribuicoes e escrituracao digital que detalha a apuracao de PIS e COFINS (e, quando aplicavel, da Contribuicao Previdenciaria sobre a Receita Bruta)."
+      ],
+      "correctOption": 3,
+      "explanation": "A EFD-Contribuicoes e voltada a PIS/COFINS/CPRB, obrigacoes federais; a escrituracao de ICMS/IPI tem seu proprio bloco (EFD ICMS/IPI).",
+      "index": 37
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Um terreno retangular mede 29 metros de frente por 25 metros de fundo. Qual o perimetro, em metros?",
+      "options": [
+        "110",
+        "725",
+        "108",
+        "106"
+      ],
+      "correctOption": 2,
+      "explanation": "Perimetro do retangulo = 2 x (base + altura) = 2 x (29 + 25) = 108 m.",
+      "index": 38
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "multipla",
+      "prompt": "Sobre aviso previo, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A CLT fixa a jornada normal em dez horas diarias para todos os empregados, sem excecao.",
+        "O aviso previo, proporcional ao tempo de servico, e devido na rescisao sem justa causa por iniciativa do empregador ou do empregado, nos termos da lei.",
+        "A comunicacao de admissao de empregado e facultativa e pode ser feita em qualquer prazo, a criterio do empregador.",
+        "O aviso previo so e devido quando o empregado pede demissao, nunca quando o empregador dispensa sem justa causa."
+      ],
+      "correctOption": 1,
+      "explanation": "A Lei 12.506/2011 e a CLT preveem aviso previo tanto na dispensa sem justa causa pelo empregador quanto no pedido de demissao pelo empregado.",
+      "index": 39
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "multipla",
+      "prompt": "Sobre credito tributario - lancamento, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A taxa pode ser calculada com base exclusivamente no capital social da empresa contribuinte, como se fosse um imposto.",
+        "O lancamento e o procedimento administrativo que verifica a ocorrencia do fato gerador, determina a materia tributavel e calcula o montante do tributo devido.",
+        "O lancamento tributario e sempre feito pelo proprio contribuinte, sem qualquer participacao da autoridade administrativa.",
+        "A inscricao em divida ativa torna o credito tributario incontestavel, sem possibilidade de defesa do contribuinte."
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 142 do CTN atribui o lancamento, em regra, a autoridade administrativa (ainda que em modalidades como o lancamento por homologacao haja participacao relevante do contribuinte).",
+      "index": 40
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "certo_errado",
+      "prompt": "Lucro bruto e a diferenca entre a receita liquida e todas as despesas da entidade, inclusive as administrativas e financeiras.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Descontar todas as despesas (administrativas, financeiras etc.) da receita liquida resulta no lucro operacional ou liquido, nao no lucro bruto.",
+      "index": 41
+    },
+    {
+      "theme": "direito-tributario",
+      "kind": "certo_errado",
+      "prompt": "A taxa tem como fato gerador o exercicio regular do poder de policia ou a prestacao de servico publico especifico e divisivel.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 77 do CTN vincula a taxa ao poder de policia ou a servico publico especifico e divisivel, prestado ou posto a disposicao do contribuinte.",
+      "index": 42
+    },
+    {
+      "theme": "departamento-pessoal",
+      "kind": "multipla",
+      "prompt": "Sobre vale-transporte, qual das alternativas a seguir esta correta?",
+      "options": [
+        "O salario-familia e pago a todos os trabalhadores com filhos, independentemente da faixa de renda.",
+        "O empregador pode dispensar por justa causa sempre que considerar o desempenho do empregado insatisfatorio, sem necessidade de falta especifica.",
+        "O vale-transporte e sempre totalmente gratuito para o empregado, sem qualquer desconto permitido em lei.",
+        "O vale-transporte e beneficio destinado ao custeio dos deslocamentos do trabalhador entre residencia e local de trabalho, podendo haver desconto limitado a 6% do salario basico do empregado."
+      ],
+      "correctOption": 3,
+      "explanation": "A Lei 7.418/1985 permite o desconto de ate 6% do salario basico do empregado a titulo de participacao no custeio do vale-transporte.",
+      "index": 43
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "certo_errado",
+      "prompt": "Receita e qualquer entrada de dinheiro no caixa da entidade, inclusive emprestimos tomados.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "Emprestimo tomado nao e receita porque gera uma obrigacao (passivo) equivalente, nao altera o patrimonio liquido.",
+      "index": 44
+    },
+    {
+      "theme": "direito-constitucional",
+      "kind": "multipla",
+      "prompt": "Sobre administracao publica - principios, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A eficiencia nao e um principio constitucional expresso da administracao publica, apenas uma meta de gestao.",
+        "A administracao publica direta e indireta obedecera aos principios de legalidade, impessoalidade, moralidade, publicidade e eficiencia.",
+        "Compete exclusivamente aos Estados legislar sobre direito civil e comercial.",
+        "O mandado de injuncao serve para suprir a ausencia de qualquer lei, mesmo sem relacao com direitos constitucionais especificos."
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 37, caput, da CF/88 (apos a EC 19/1998) lista a eficiencia como principio expresso.",
+      "index": 45
+    },
+    {
+      "theme": "direito-empresarial",
+      "kind": "certo_errado",
+      "prompt": "A duplicata e titulo de credito tipicamente emitido em razao de uma compra e venda mercantil ou de uma prestacao de servicos, com base em fatura.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "A duplicata e emitida pelo proprio vendedor/prestador de servico (sacador) em razao da fatura correspondente a venda ou servico prestado.",
+      "index": 46
+    },
+    {
+      "theme": "tributacao",
+      "kind": "certo_errado",
+      "prompt": "A Certidao Negativa de Debitos, uma vez emitida, tem validade permanente e nunca precisa ser renovada.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 0,
+      "explanation": "A CND tem prazo de validade limitado; apos esse prazo, deve ser emitida uma nova certidao para comprovar a regularidade fiscal.",
+      "index": 47
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Uma empresa teve receita liquida de R$ 125.000,00 e lucro liquido de R$ 18.750,00 no periodo. Qual foi a margem liquida (lucro liquido / receita liquida), em percentual?",
+      "options": [
+        "15%",
+        "30%",
+        "13%",
+        "17%"
+      ],
+      "correctOption": 0,
+      "explanation": "Margem liquida = lucro liquido / receita liquida x 100 = 18750/125000 x 100 = 15%.",
+      "index": 48
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "certo_errado",
+      "prompt": "Passivo circulante compreende as obrigacoes que se espera liquidar no ciclo operacional normal ou em ate doze meses apos a data do balanco.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "O passivo circulante inclui fornecedores, salarios a pagar, tributos a pagar, entre outras obrigacoes de curto prazo, nao apenas emprestimos.",
+      "index": 49
+    },
+    {
+      "theme": "espanhol",
+      "kind": "multipla",
+      "prompt": "Sobre articulos contractos - 'al' y 'del', qual das alternativas a seguir esta correta?",
+      "options": [
+        "En espanol, la preposicion 'a' mas el articulo 'el' se contrae en 'al', y la preposicion 'de' mas el articulo 'el' se contrae en 'del'.",
+        "En espanol, nunca existen contracciones entre preposicion y articulo, a diferencia del portugues.",
+        "En el espanol estandar, el uso de 'le' como objeto directo masculino (leismo) es siempre la forma preferida y recomendada por la norma academica.",
+        "Los verbos 'ser' y 'estar' tienen exactamente el mismo significado en espanol y pueden sustituirse libremente en cualquier frase."
+      ],
+      "correctOption": 0,
+      "explanation": "Las contracciones 'al' (a + el) y 'del' (de + el) son obligatorias en espanol estandar siempre que se cumplan esas condiciones.",
+      "index": 50
+    },
+    {
+      "theme": "contabilidade",
+      "kind": "multipla",
+      "prompt": "Uma empresa teve receita liquida de R$ 354.000,00 e lucro liquido de R$ 28.320,00 no periodo. Qual foi a margem liquida (lucro liquido / receita liquida), em percentual?",
+      "options": [
+        "8%",
+        "10%",
+        "6%",
+        "16%"
+      ],
+      "correctOption": 0,
+      "explanation": "Margem liquida = lucro liquido / receita liquida x 100 = 28320/354000 x 100 = 8%.",
+      "index": 51
+    },
+    {
+      "theme": "espanhol",
+      "kind": "certo_errado",
+      "prompt": "La palabra 'embarazada' en espanol significa 'gravida' (esperando un bebe), siendo un falso amigo con la palabra portuguesa 'embaraçada' (que significa 'confusa' o 'enredada').",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Este es un falso amigo clasico entre espanol y portugues: 'embarazada' en espanol es 'gravida', no 'confusa'.",
+      "index": 52
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Um terreno retangular mede 25 metros de frente por 10 metros de fundo. Qual o perimetro, em metros?",
+      "options": [
+        "250",
+        "70",
+        "68",
+        "72"
+      ],
+      "correctOption": 1,
+      "explanation": "Perimetro do retangulo = 2 x (base + altura) = 2 x (25 + 10) = 70 m.",
+      "index": 53
+    },
+    {
+      "theme": "estatistica",
+      "kind": "multipla",
+      "prompt": "Considere o conjunto de valores (ja ordenados): 11, 23, 35, 40, 46. Qual e a mediana?",
+      "options": [
+        "31",
+        "23",
+        "40",
+        "35"
+      ],
+      "correctOption": 3,
+      "explanation": "Com 5 valores ordenados, a mediana e o valor central (3o elemento): 35.",
+      "index": 54
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "Uma DRE mostra receita liquida de R$ 356.000,00 e custo dos produtos vendidos (CPV) de R$ 213.600,00. Qual o lucro bruto?",
+      "options": [
+        "R$ 121.040,00",
+        "R$ 142.400,00",
+        "R$ 356.000,00",
+        "R$ 163.760,00"
+      ],
+      "correctOption": 1,
+      "explanation": "Lucro bruto = receita liquida - CPV = R$ 356.000,00 - R$ 213.600,00 = R$ 142.400,00.",
+      "index": 55
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre figuras de linguagem - metafora, qual das alternativas a seguir esta correta?",
+      "options": [
+        "A metafora exige obrigatoriamente o uso da palavra 'como' para estabelecer a comparacao entre dois elementos.",
+        "Nenhuma palavra paroxitona recebe acento grafico, segundo a norma ortografica vigente.",
+        "A metafora e figura de linguagem que estabelece uma comparacao implicita entre dois elementos, sem o uso de conectivo comparativo.",
+        "A palavra 'bastante' e sempre invariavel, mesmo quando funciona como adjetivo concordando com um substantivo."
+      ],
+      "correctOption": 2,
+      "explanation": "A comparacao com 'como' caracteriza o simile (comparacao explicita), nao a metafora, que e implicita (sem conectivo comparativo).",
+      "index": 56
+    },
+    {
+      "theme": "contabilidade-geral",
+      "kind": "multipla",
+      "prompt": "Uma DRE mostra receita liquida de R$ 266.000,00 e custo dos produtos vendidos (CPV) de R$ 133.000,00. Qual o lucro bruto?",
+      "options": [
+        "R$ 266.000,00",
+        "R$ 146.300,00",
+        "R$ 119.700,00",
+        "R$ 133.000,00"
+      ],
+      "correctOption": 3,
+      "explanation": "Lucro bruto = receita liquida - CPV = R$ 266.000,00 - R$ 133.000,00 = R$ 133.000,00.",
+      "index": 57
+    },
+    {
+      "theme": "direito-administrativo",
+      "kind": "certo_errado",
+      "prompt": "A desapropriacao exige, em regra, previa e justa indenizacao ao proprietario, salvo as hipoteses constitucionais especificas.",
+      "options": [
+        "Errado",
+        "Certo"
+      ],
+      "correctOption": 1,
+      "explanation": "Art. 5o, XXIV, da CF/88 exige justa e previa indenizacao em dinheiro, salvo casos especiais (como a desapropriacao-sancao para reforma agraria, paga em titulos).",
+      "index": 58
+    },
+    {
+      "theme": "portugues",
+      "kind": "multipla",
+      "prompt": "Sobre acentuacao grafica - paroxítonas terminadas em ditongo, qual das alternativas a seguir esta correta?",
+      "options": [
+        "Nenhuma palavra paroxitona recebe acento grafico, segundo a norma ortografica vigente.",
+        "Conjuncoes subordinativas ligam duas oracoes independentes entre si, sem relacao de subordinacao.",
+        "Com a expressao 'a maioria de', a concordancia verbal so pode ser feita no plural, sendo erro gramatical a concordancia no singular.",
+        "Palavras paroxitonas terminadas em ditongo crescente (como 'serie', 'area', 'magoa') recebem acento grafico, segundo a norma ortografica vigente."
+      ],
+      "correctOption": 3,
+      "explanation": "A regra de acentuacao das paroxitonas prevê acento para determinadas terminacoes, entre elas o ditongo crescente, como em 'serie' e 'area'.",
+      "index": 59
+    },
+    {
+      "theme": "matematica",
+      "kind": "multipla",
+      "prompt": "Se 12 maquinas identicas produzem 79 pecas por hora, quantas pecas 48 maquinas identicas produzem no mesmo intervalo de tempo (mantendo a mesma proporcao)?",
+      "options": [
+        "304",
+        "127",
+        "364",
+        "316"
+      ],
+      "correctOption": 3,
+      "explanation": "Regra de tres simples direta: 12 maquinas -> 79 pecas; 48 maquinas -> x. x = (79 x 48) / 12 = 316.",
+      "index": 60
+    }
+  ]
+}
