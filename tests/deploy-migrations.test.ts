@@ -75,6 +75,7 @@ void test('produção atual: 0004 e 0006 aplicadas à mão são só registradas,
     '0018_moldes_apo16.sql',
     '0019_niveis_apo18.sql',
     '0020_exames_apo18.sql',
+    '0021_temas_bagagem_apolo.sql',
   ]);
   assert.deepEqual(plan.partial, []);
 });
@@ -106,6 +107,7 @@ void test('migration nova ainda não aplicada vai para apply', () => {
       '0018_moldes_apo16.sql',
       '0019_niveis_apo18.sql',
       '0020_exames_apo18.sql',
+      '0021_temas_bagagem_apolo.sql',
     ],
     partial: [],
   });

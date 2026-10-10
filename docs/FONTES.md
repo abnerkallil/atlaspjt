@@ -85,6 +85,64 @@ a versão completa depois):
   é escolhido durante a própria curadoria, então a ordem é por ausência de
   conteúdo e data de criação.
 
+### Bagagem de temas
+
+Até 2026-10-10 `atlas_themes` estava vazia: os 1.800 rascunhos das 30 provas
+autorais (PR #67) já chegam com um tema em texto livre (ex.:
+`direito-tributario`), mas como nenhum tema estava cadastrado, o combo
+"Tema" não tinha nada para oferecer — o Abner tinha que digitar um tema
+novo a cada rascunho. A migração `drizzle/0021_temas_bagagem_apolo.sql`
+resolve isso cadastrando de uma vez os 18 temas que esse lote já usa (mesmo
+id/slug do texto livre, então o combo já aparece com o tema certo
+pré-selecionado nesses 1.800): contabilidade, contabilidade geral, direito
+tributário, tributação, direito empresarial, direito eleitoral, direito
+administrativo, direito constitucional, matemática, matemática financeira,
+estatística, raciocínio lógico, dados, português, inglês, espanhol,
+departamento pessoal e departamento fiscal. É só um ponto de partida —
+continua liberado cadastrar tema novo a qualquer momento pela tela
+(DEC-014: tema é etiqueta aberta, nunca uma lista fechada).
+
+### Sugestão de nível de Bloom
+
+**O que é Bloom, em uma frase:** uma escala de 6 níveis (lembrar, entender,
+aplicar, analisar, avaliar, criar) que classifica *o tipo de esforço mental*
+que a pergunta exige do aluno — não o assunto, nem a dificuldade. "Lembrar"
+é só reconhecer um fato; "aplicar" é usar uma fórmula/regra num caso
+concreto; "analisar"/"avaliar"/"criar" exigem decompor, julgar ou propor
+algo novo. É a taxonomia de Bloom revisada por Anderson & Krathwohl (2001),
+usada mundialmente em educação — o critério oficial é **o verbo de comando
+do enunciado** (o que a pergunta manda o aluno fazer), não o conteúdo.
+
+**O que a pesquisa mostrou sobre classificar isso automaticamente:** há
+estudos publicados tentando automatizar esse julgamento (ex.: Jayakodi et
+al. 2016; Omar et al. 2012). Todos usam a mesma ideia — casar o verbo do
+enunciado com o nível — mas também mostram o limite dela: só pelo verbo, a
+taxa de acerto fica em ~47-55%; levando em conta o tipo de questão e se ela
+apresenta um caso concreto (não só o verbo isolado), passa de 70%. Ou seja:
+dá para ter um palpite razoável sem IA, mas nunca 100% certo — por isso
+isto é só uma sugestão, nunca uma decisão automática.
+
+Por exigência do DEC-014 (nada de IA externa dentro do Apolo), a sugestão é
+regra fixa em código: `lib/apolo/bloom-classifier.ts` (com uma cópia para
+rodar fora do bundle da Worker, `scripts/lib/bloom-classifier.mjs`). Ela
+olha o tipo da questão e pistas no enunciado (há um verbo de cálculo? um
+cenário com números? um pedido de julgamento entre alternativas?) e devolve
+um palpite. Rodando contra os 1.800 rascunhos reais: 638 viraram "lembrar"
+(reconhecimento puro, tipo "sobre X, qual alternativa está correta?"), 921
+"entender" (afirmações certo/errado e múltipla escolha que exigem entender
+uma regra, sem cenário numérico) e 241 "aplicar" (problemas com números
+concretos, tipo "um terreno mede 28m por 19m, qual o perímetro?"). Nenhum
+"analisar"/"avaliar"/"criar" apareceu nesse lote — faz sentido, já que são
+todas questões objetivas (múltipla escolha ou certo/errado), e esses três
+níveis pedem tipicamente uma resposta aberta (dissertativa).
+
+`pnpm run apolo:sugestao-bloom -- --target production` preenche o campo
+Bloom só nos rascunhos ainda pendentes **sem** Bloom definido — nunca
+sobrescreve um rascunho que o Abner já revisou, e a aprovação continua
+exigindo ele confirmar (ou trocar) o Bloom, o conteúdo e a explicação antes
+de a questão virar ativa. `-- --check` só mostra a contagem por nível, sem
+gravar nada.
+
 ## Exclusão e backup
 
 Remover uma fonte (pela tela ou DELETE `/api/apolo/fontes/:id`) apaga o PDF

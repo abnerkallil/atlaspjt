@@ -148,6 +148,13 @@
       "when": 1791500100000,
       "tag": "0020_exames_apo18",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "6",
+      "when": 1791500200000,
+      "tag": "0021_temas_bagagem_apolo",
+      "breakpoints": true
     }
   ]
 }

@@ -17,17 +17,19 @@ function setup() {
 
 void test('APO-02: cadastrar tema novo não exige migração, com hierarquia e área de conhecimento', async () => {
   const { db } = setup();
-  await createTheme(db, { id: 'direito-tributario', title: 'Direito Tributário', knowledgeArea: 'juridico' }, now);
+  // Id fora da bagagem inicial de temas (drizzle/0021_temas_bagagem_apolo.sql)
+  // de propósito, para não colidir com um tema já semeado.
+  await createTheme(db, { id: 'direito-previdenciario', title: 'Direito Previdenciário', knowledgeArea: 'juridico' }, now);
   await createTheme(
     db,
-    { id: 'direito-tributario-icms', title: 'ICMS', parentId: 'direito-tributario', knowledgeArea: 'juridico' },
+    { id: 'direito-previdenciario-rgps', title: 'RGPS', parentId: 'direito-previdenciario', knowledgeArea: 'juridico' },
     now,
   );
 
-  const parent = await getTheme(db, 'direito-tributario');
-  const child = await getTheme(db, 'direito-tributario-icms');
+  const parent = await getTheme(db, 'direito-previdenciario');
+  const child = await getTheme(db, 'direito-previdenciario-rgps');
   assert.equal(parent?.parentId, null);
-  assert.equal(child?.parentId, 'direito-tributario');
+  assert.equal(child?.parentId, 'direito-previdenciario');
   assert.equal(child?.knowledgeArea, 'juridico');
 });
 

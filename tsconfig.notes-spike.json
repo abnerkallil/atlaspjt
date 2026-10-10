@@ -80,6 +80,7 @@
     "lib/apolo/question-bank.ts",
     "lib/apolo/sources.ts",
     "lib/apolo/drafts.ts",
+    "lib/apolo/bloom-classifier.ts",
     "lib/apolo/skill.ts",
     "lib/apolo/profile.ts",
     "lib/apolo/item-stats.ts",
@@ -113,7 +114,8 @@
     "tests/apolo-proficiency.test.ts",
     "tests/apolo-dashboard.test.ts",
     "tests/apolo-simulator.test.ts",
-    "tests/apolo-no-legacy-path.test.ts"
+    "tests/apolo-no-legacy-path.test.ts",
+    "tests/apolo-bloom-classifier.test.ts"
   ],
   "exclude": [
     "node_modules"
