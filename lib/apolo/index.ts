@@ -10,6 +10,7 @@ export * from './themes.js';
 export * from './question-bank.js';
 export * from './sources.js';
 export * from './drafts.js';
+export * from './bloom-classifier.js';
 export * from './skill.js';
 export * from './profile.js';
 export * from './item-stats.js';

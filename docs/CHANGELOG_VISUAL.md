@@ -642,3 +642,19 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 - Se algo der errado: reverter para `restore/pre-apolo-fontes-autorais`
   remove os dados e o script; nenhuma fonte ou rascunho já carregado em
   produção seria desfeito por isso (a reversão é só do repositório).
+
+## PR #68 — Bagagem de temas e sugestão de Bloom em /rascunhos
+
+- Ponto de restauração: branch `restore/pre-apolo-bagagem-temas-bloom`
+  (commit `18d72c4`, main antes do merge).
+- Migrations: `drizzle/0021_temas_bagagem_apolo.sql` (cadastra 18 temas em
+  `atlas_themes`, sem criar tabela nova).
+- O que muda no site: o combo "Tema" em `/rascunhos` passa a mostrar os 18
+  temas já usados pelos 1.800 rascunhos das provas autorais (PR #67), já
+  pré-selecionados nesses rascunhos (antes o combo estava vazio e aparecia
+  sempre como "Sem tema"). O campo "Nível de Bloom" continua manual na
+  tela — a sugestão (`pnpm run apolo:sugestao-bloom`) é um passo separado,
+  que só preenche rascunhos pendentes sem Bloom ainda definido.
+- Se algo der errado: reverter para `restore/pre-apolo-bagagem-temas-bloom`
+  remove os 18 temas cadastrados e o classificador; nenhum rascunho ou
+  questão aprovada é afetado (a aprovação em si nunca mudou).
