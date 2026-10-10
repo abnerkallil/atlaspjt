@@ -17,6 +17,7 @@
     "apolo:fonte": "node scripts/apolo-fonte.mjs",
     "apolo:extrair": "node scripts/apolo-extrair.mjs",
     "apolo:fontes-autorais": "node scripts/apolo-fontes-autorais.mjs",
+    "apolo:banco-novo": "node scripts/apolo-banco-novo.mjs",
     "apolo:sugestao-bloom": "node scripts/apolo-sugestao-bloom.mjs",
     "db:generate": "drizzle-kit generate",
     "db:catalog": "tsc -p tsconfig.notes-spike.json && node .notes-spike-dist/tools/write-catalog-seed.js",
