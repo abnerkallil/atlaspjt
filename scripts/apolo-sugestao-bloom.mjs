@@ -26,6 +26,8 @@ import { createRunner } from './lib/wrangler-cli.mjs';
 const LOCAL = { d1: 'site-creator-d1', config: 'wrangler.local.jsonc', where: '--local' };
 const LOCAL_CONFIG = 'deploy.local.json';
 const REMOTE_D1_CONFIG = '.wrangler/apolo-sugestao-bloom-d1.json';
+const SQL_FILE = '.wrangler/apolo-sugestao-bloom.sql';
+const UPDATE_CHUNK_SIZE = 300;
 
 function literal(value) {
   if (value === null || value === undefined) return 'NULL';
@@ -90,10 +92,28 @@ await runCli(async () => {
   // Um UPDATE por rascunho, sempre condicionado a bloom_level ainda ser NULL
   // — mesmo que o Abner tenha revisado um rascunho entre a leitura e a
   // escrita, a condição garante que nunca sobrescrevemos uma escolha dele.
-  const sql = updates
-    .map((u) => `UPDATE atlas_question_drafts SET bloom_level = ${literal(u.level)} WHERE id = ${literal(u.id)} AND bloom_level IS NULL;`)
-    .join('\n');
-  wrangler(['d1', 'execute', d1, where, '--config', config, '--command', sql, '--yes'], 'Falha ao gravar as sugestões de Bloom no D1.');
+  // Em lotes de UPDATE_CHUNK_SIZE via arquivo temporário (--file), como em
+  // apolo-banco-novo.mjs: um --command só com todos os UPDATEs de uma vez
+  // (1.800+ linhas) passa do limite de tamanho de linha de comando do
+  // Windows e falha.
+  const sql = updates.map(
+    (u) => `UPDATE atlas_question_drafts SET bloom_level = ${literal(u.level)} WHERE id = ${literal(u.id)} AND bloom_level IS NULL;`,
+  );
+  let written = 0;
+  for (let i = 0; i < sql.length; i += UPDATE_CHUNK_SIZE) {
+    const chunk = sql.slice(i, i + UPDATE_CHUNK_SIZE);
+    writeFileSync(SQL_FILE, `${chunk.join('\n')}\n`);
+    try {
+      wrangler(
+        ['d1', 'execute', d1, where, '--config', config, '--file', SQL_FILE, '--yes'],
+        `Falha ao gravar o lote de sugestões ${i + 1}-${i + chunk.length}.`,
+      );
+    } finally {
+      writeFileSync(SQL_FILE, '');
+    }
+    written += chunk.length;
+    console.log(`  ${written}/${sql.length} sugestões gravadas...`);
+  }
 
   console.log(`Pronto: ${updates.length} rascunho(s) com sugestão de Bloom pré-marcada em ${d1} (sem alterar os já revisados).`);
   console.log('Nada foi aprovado — cada um continua exigindo revisão humana em /rascunhos antes de virar questão ativa.');
