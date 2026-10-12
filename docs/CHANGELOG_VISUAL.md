@@ -677,3 +677,21 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 - Se algo der errado: reverter para `restore/pre-apolo-bagagem-temas-bloom`
   remove os 18 temas cadastrados e o classificador; nenhum rascunho ou
   questão aprovada é afetado (a aprovação em si nunca mudou).
+
+## PR #70 — Corrige `apolo:sugestao-bloom` para lotes grandes (>300 rascunhos)
+
+- Ponto de restauração: branch `restore/pre-apolo-sugestao-bloom-batching`
+  (commit `d3755d5`, main antes do merge).
+- O que muda no site: nada visível. Nenhuma tela, nota, anexo ou número muda.
+- O que muda fora do site: `scripts/apolo-sugestao-bloom.mjs`
+  (`pnpm run apolo:sugestao-bloom -- --target local|--target production`)
+  mandava todos os `UPDATE` de uma vez num único `wrangler d1 execute
+  --command`; com a carga de ~1.800 rascunhos (PR #67/#69) isso passa do
+  limite de tamanho de linha de comando do Windows e o script falha sem
+  gravar nada. Agora grava em lotes de 300 via arquivo temporário e
+  `--file`, igual ao padrão já usado em `apolo-banco-novo.mjs`. A lógica de
+  quais rascunhos recebem sugestão (só os pendentes sem Bloom ainda
+  definido, nunca sobrescrevendo um já revisado) não muda.
+- Se algo der errado: reverter para `restore/pre-apolo-sugestao-bloom-batching`
+  volta o script ao estado anterior; nenhum rascunho ou questão aprovada é
+  afetado.
