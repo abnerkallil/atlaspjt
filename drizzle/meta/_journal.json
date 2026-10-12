@@ -155,6 +155,13 @@
       "when": 1791500200000,
       "tag": "0021_temas_bagagem_apolo",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "6",
+      "when": 1791500300000,
+      "tag": "0022_taxonomia_conteudo_apolo",
+      "breakpoints": true
     }
   ]
 }

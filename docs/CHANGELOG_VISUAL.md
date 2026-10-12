@@ -695,3 +695,25 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 - Se algo der errado: reverter para `restore/pre-apolo-sugestao-bloom-batching`
   volta o script ao estado anterior; nenhum rascunho ou questão aprovada é
   afetado.
+
+## PR #71 — Taxonomia de conteúdo fora do roadmap + script de curadoria em lote
+
+- Ponto de restauração: branch `restore/pre-apolo-taxonomia-conteudo` (commit
+  `354d421`, main antes do merge).
+- O que muda no site: nada visível. Nenhuma tela, nota, anexo ou número muda
+  (a tela `/rascunhos` continua igual; a edição de `content_label_id` fica
+  para um passo futuro).
+- O que muda fora do site: migration `0022_taxonomia_conteudo_apolo.sql` cria
+  `atlas_content_taxonomy` (aberta, como `atlas_themes`) e a coluna
+  `content_label_id` em `atlas_question_drafts` — para rascunhos de temas que
+  ainda não têm nó no roadmap de 157 conteúdos (hoje só Contabilidade). Novo
+  script `scripts/apolo-aplicar-curadoria.mjs`
+  (`pnpm run apolo:aplicar-curadoria -- --file <classificação> --target
+  local|production`) grava, em lotes de 300 via `--file`, o `content_id` ou
+  `content_label_id` + `knowledge_type` decididos numa thread de curadoria,
+  identificando cada rascunho pelo `text_hash` — nunca sobrescreve um
+  rascunho já revisado. Nada é aprovado automaticamente.
+- Se algo der errado: reverter para `restore/pre-apolo-taxonomia-conteudo`
+  volta ao estado anterior; a coluna e a tabela novas ficam vazias até algum
+  script gravar nelas, então reverter sem ter rodado o script de aplicação
+  não perde nada.
