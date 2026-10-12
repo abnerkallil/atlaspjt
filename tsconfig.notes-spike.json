@@ -45,6 +45,8 @@
     "tools/write-catalog-seed.ts",
     "lib/roadmap-store.ts",
     "tests/catalog-roadmap.test.ts",
+    "lib/roadmap-prompt.ts",
+    "tests/roadmap-prompt.test.ts",
     "lib/pedagogy/prerequisites.ts",
     "tests/prerequisites.test.ts",
     "lib/attachments.ts",
