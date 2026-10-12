@@ -1,0 +1,2345 @@
+[
+  {
+    "textHash": "67e2cbf0",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-pessoal",
+      "title": "Salário-família"
+    }
+  },
+  {
+    "textHash": "d08af67a",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Mandado de injunção"
+    }
+  },
+  {
+    "textHash": "05502213",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Nome empresarial"
+    }
+  },
+  {
+    "textHash": "31abd7fa",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "ingles",
+      "title": "Passive voice"
+    }
+  },
+  {
+    "textHash": "9523338f",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Desconsideração da personalidade jurídica"
+    }
+  },
+  {
+    "textHash": "fa6ea687",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Conceito de empresário"
+    }
+  },
+  {
+    "textHash": "2a566b26",
+    "knowledgeType": "conceitual",
+    "contentId": "CG-037"
+  },
+  {
+    "textHash": "d23460f5",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "LGPD: conceito de dado pessoal"
+    }
+  },
+  {
+    "textHash": "e0f29f0a",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Porcentagem"
+    }
+  },
+  {
+    "textHash": "b4cb4132",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Organização político-administrativa da República"
+    }
+  },
+  {
+    "textHash": "6a7084a8",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Ambiguidade textual"
+    }
+  },
+  {
+    "textHash": "edff33ef",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-fiscal",
+      "title": "ICMS: regime de apuração (débito e crédito)"
+    }
+  },
+  {
+    "textHash": "7327042e",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Colocação pronominal: próclise"
+    }
+  },
+  {
+    "textHash": "0ea8b600",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Regra de três (proporção direta)"
+    }
+  },
+  {
+    "textHash": "5a016ea0",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Moda"
+    }
+  },
+  {
+    "textHash": "6ed76a2e",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "tributacao",
+      "title": "PIS e COFINS"
+    }
+  },
+  {
+    "textHash": "79124322",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Espécies tributárias (classificação do CTN)"
+    }
+  },
+  {
+    "textHash": "52a3c7d1",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Emprego do hífen"
+    }
+  },
+  {
+    "textHash": "ef52c47b",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Lei de Improbidade Administrativa"
+    }
+  },
+  {
+    "textHash": "d4d23b61",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-eleitoral",
+      "title": "Inelegibilidades (Lei da Ficha Limpa)"
+    }
+  },
+  {
+    "textHash": "378400ce",
+    "knowledgeType": "conceitual",
+    "contentId": "CG-003"
+  },
+  {
+    "textHash": "352abc8c",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Formação de preço de venda (markup)"
+    }
+  },
+  {
+    "textHash": "d7ad7e6a",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Perímetro de retângulo"
+    }
+  },
+  {
+    "textHash": "b52b1d8d",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-eleitoral",
+      "title": "Domicílio eleitoral"
+    }
+  },
+  {
+    "textHash": "15697b74",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "ingles",
+      "title": "Articles (a/an/the)"
+    }
+  },
+  {
+    "textHash": "8b98f713",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Princípio da legalidade tributária"
+    }
+  },
+  {
+    "textHash": "8cab9e5d",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Negação lógica de proposições (ou)"
+    }
+  },
+  {
+    "textHash": "b97ac6c5",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Juros simples"
+    }
+  },
+  {
+    "textHash": "d3f33acd",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Probabilidade simples"
+    }
+  },
+  {
+    "textHash": "6a756e6a",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Princípio da continuidade"
+    }
+  },
+  {
+    "textHash": "5bc87eee",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-pessoal",
+      "title": "Férias e terço constitucional"
+    }
+  },
+  {
+    "textHash": "92148e40",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Concordância verbal: 'a maioria de'"
+    }
+  },
+  {
+    "textHash": "dd6a4ff2",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "MMC (problemas de encontro periódico)"
+    }
+  },
+  {
+    "textHash": "50560b8e",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "ICMS: competência"
+    }
+  },
+  {
+    "textHash": "f3de76d3",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "departamento-fiscal",
+      "title": "ECF (Escrituração Contábil Fiscal)"
+    }
+  },
+  {
+    "textHash": "6933d87f",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Modalidades de licitação"
+    }
+  },
+  {
+    "textHash": "c9ed76d2",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "espanhol",
+      "title": "Acentuación: agudas, graves y esdrújulas"
+    }
+  },
+  {
+    "textHash": "1cedc84b",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "tributacao",
+      "title": "Substituição tributária 'para frente'"
+    }
+  },
+  {
+    "textHash": "b2594d82",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Valor presente (juros compostos)"
+    }
+  },
+  {
+    "textHash": "f1308811",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "ICMS: competência"
+    }
+  },
+  {
+    "textHash": "14e9d4a9",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Negação lógica de proposições (ou)"
+    }
+  },
+  {
+    "textHash": "7d717c73",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Processo administrativo disciplinar (PAD)"
+    }
+  },
+  {
+    "textHash": "2a839896",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Problemas de idade (equações do 1º grau)"
+    }
+  },
+  {
+    "textHash": "9898b6cb",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Direito de petição"
+    }
+  },
+  {
+    "textHash": "34bcacda",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Títulos de crédito: princípio da cartularidade"
+    }
+  },
+  {
+    "textHash": "729ef60a",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Paralelismo sintático"
+    }
+  },
+  {
+    "textHash": "9d6baa62",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Habeas corpus"
+    }
+  },
+  {
+    "textHash": "a0052420",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-pessoal",
+      "title": "Adicional noturno"
+    }
+  },
+  {
+    "textHash": "222ffbb6",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "LGPD: conceito de dado pessoal"
+    }
+  },
+  {
+    "textHash": "a650cd4a",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Modalidades de licitação"
+    }
+  },
+  {
+    "textHash": "47779ed2",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "departamento-fiscal",
+      "title": "EFD-Contribuições"
+    }
+  },
+  {
+    "textHash": "b233145a",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "LGPD: anonimização"
+    }
+  },
+  {
+    "textHash": "e65c00eb",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Contrapositiva de proposições condicionais"
+    }
+  },
+  {
+    "textHash": "4b50d1ae",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade-geral",
+      "title": "Índice de liquidez corrente"
+    }
+  },
+  {
+    "textHash": "2d26d8b2",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Contrapositiva de proposições condicionais"
+    }
+  },
+  {
+    "textHash": "2022ddd8",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade-geral",
+      "title": "Capital circulante líquido (CCL)"
+    }
+  },
+  {
+    "textHash": "8ed172dd",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "tributacao",
+      "title": "Certidão Negativa de Débitos (CND)"
+    }
+  },
+  {
+    "textHash": "576faba8",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "espanhol",
+      "title": "Pretérito perfecto simple vs imperfecto"
+    }
+  },
+  {
+    "textHash": "b806fecd",
+    "knowledgeType": "conceitual",
+    "contentId": "CG-027"
+  },
+  {
+    "textHash": "1edff98d",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "contabilidade-geral",
+      "title": "Índice de liquidez corrente"
+    }
+  },
+  {
+    "textHash": "b5de77cc",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Ambiguidade textual"
+    }
+  },
+  {
+    "textHash": "7405f36f",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "tributacao",
+      "title": "Retenção de tributos na fonte"
+    }
+  },
+  {
+    "textHash": "6e5f69b9",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área do círculo"
+    }
+  },
+  {
+    "textHash": "236501f3",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Contrapositiva de proposições condicionais"
+    }
+  },
+  {
+    "textHash": "db2e2d69",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "MMC (problemas de encontro periódico)"
+    }
+  },
+  {
+    "textHash": "f8b71404",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "LGPD: princípio da finalidade"
+    }
+  },
+  {
+    "textHash": "b0c9933b",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade-geral",
+      "title": "Capital circulante líquido (CCL)"
+    }
+  },
+  {
+    "textHash": "cf6bd582",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Conceito de empresário"
+    }
+  },
+  {
+    "textHash": "54501554",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Imunidade tributária"
+    }
+  },
+  {
+    "textHash": "90ac418d",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "ingles",
+      "title": "False friends: 'actually'"
+    }
+  },
+  {
+    "textHash": "fcbe0972",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Moda"
+    }
+  },
+  {
+    "textHash": "3e68bbd0",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Modalidades de licitação"
+    }
+  },
+  {
+    "textHash": "0c1292e7",
+    "knowledgeType": "conceitual",
+    "contentId": "CG-002"
+  },
+  {
+    "textHash": "bcbcf5de",
+    "knowledgeType": "conceitual",
+    "contentId": "CG-037"
+  },
+  {
+    "textHash": "8d45a76f",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Princípio da entidade"
+    }
+  },
+  {
+    "textHash": "3c438414",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "espanhol",
+      "title": "Futuro simple"
+    }
+  },
+  {
+    "textHash": "3640d83f",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Personalidade jurídica da sociedade empresária"
+    }
+  },
+  {
+    "textHash": "d1d7e79f",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Isenção tributária"
+    }
+  },
+  {
+    "textHash": "3659b6f6",
+    "knowledgeType": "conceitual",
+    "contentId": "CG-034"
+  },
+  {
+    "textHash": "b759aaf8",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Problemas de idade (equações do 1º grau)"
+    }
+  },
+  {
+    "textHash": "5ed0ff85",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "departamento-fiscal",
+      "title": "Domicílio Tributário Eletrônico (DTE)"
+    }
+  },
+  {
+    "textHash": "de4548fc",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Bens públicos: inalienabilidade"
+    }
+  },
+  {
+    "textHash": "dd428229",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Margem líquida"
+    }
+  },
+  {
+    "textHash": "e34cc055",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Probabilidade simples"
+    }
+  },
+  {
+    "textHash": "ce371ffd",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Presunção de inocência"
+    }
+  },
+  {
+    "textHash": "e9d8502e",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Equação do 1º grau"
+    }
+  },
+  {
+    "textHash": "d8b563a8",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "espanhol",
+      "title": "Falsos amigos: 'embarazada'"
+    }
+  },
+  {
+    "textHash": "044b2dcd",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Direito de propriedade e função social"
+    }
+  },
+  {
+    "textHash": "17169b2f",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Negação lógica de proposições (ou)"
+    }
+  },
+  {
+    "textHash": "a196c689",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Juros compostos"
+    }
+  },
+  {
+    "textHash": "58de6ce0",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Princípio da legalidade tributária"
+    }
+  },
+  {
+    "textHash": "5be894a4",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Colocação pronominal: próclise"
+    }
+  },
+  {
+    "textHash": "3b9b5145",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Desconsideração da personalidade jurídica"
+    }
+  },
+  {
+    "textHash": "8c34c66e",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Porcentagem"
+    }
+  },
+  {
+    "textHash": "89413257",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-fiscal",
+      "title": "Substituição tributária: obrigações do substituto"
+    }
+  },
+  {
+    "textHash": "9435811d",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Títulos de crédito: duplicata"
+    }
+  },
+  {
+    "textHash": "7ffb19a2",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Acentuação gráfica"
+    }
+  },
+  {
+    "textHash": "997f42d3",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "Big data: características (volume, velocidade, variedade)"
+    }
+  },
+  {
+    "textHash": "51ed09ff",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "ingles",
+      "title": "Simple present (third person -s)"
+    }
+  },
+  {
+    "textHash": "fd78693b",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Princípio da eficiência"
+    }
+  },
+  {
+    "textHash": "da358a02",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-eleitoral",
+      "title": "Inelegibilidades (Lei da Ficha Limpa)"
+    }
+  },
+  {
+    "textHash": "8726f9d3",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "tributacao",
+      "title": "IRPJ: Lucro Real"
+    }
+  },
+  {
+    "textHash": "579f66bc",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Hierarquia e delegação de competência"
+    }
+  },
+  {
+    "textHash": "18779cf3",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "tributacao",
+      "title": "Parcelamento tributário"
+    }
+  },
+  {
+    "textHash": "382b631a",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Ideia principal do texto"
+    }
+  },
+  {
+    "textHash": "637cd66c",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Problemas de idade (equações do 1º grau)"
+    }
+  },
+  {
+    "textHash": "b6578b28",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade-geral",
+      "title": "Giro de estoque"
+    }
+  },
+  {
+    "textHash": "f920f1fb",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Regência verbal: verbo 'assistir'"
+    }
+  },
+  {
+    "textHash": "f8ea5597",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Objetivos fundamentais da República"
+    }
+  },
+  {
+    "textHash": "d3ed873e",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-fiscal",
+      "title": "ICMS: regime de apuração (débito e crédito)"
+    }
+  },
+  {
+    "textHash": "01edab0a",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-pessoal",
+      "title": "Férias e terço constitucional"
+    }
+  },
+  {
+    "textHash": "40473d52",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Princípio da continuidade"
+    }
+  },
+  {
+    "textHash": "1e57dd6a",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Desconto simples de títulos"
+    }
+  },
+  {
+    "textHash": "aa0a49f8",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Direito de propriedade e função social"
+    }
+  },
+  {
+    "textHash": "10a5002f",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Espécies tributárias (classificação do CTN)"
+    }
+  },
+  {
+    "textHash": "a80832ae",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Negação lógica de proposições (e)"
+    }
+  },
+  {
+    "textHash": "38c253c4",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-eleitoral",
+      "title": "Condições de elegibilidade"
+    }
+  },
+  {
+    "textHash": "f8530826",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-pessoal",
+      "title": "Vale-transporte"
+    }
+  },
+  {
+    "textHash": "f5bafdf3",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Perímetro de retângulo"
+    }
+  },
+  {
+    "textHash": "0502e10e",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Desapropriação"
+    }
+  },
+  {
+    "textHash": "2db9f0f3",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "departamento-fiscal",
+      "title": "ECD (Escrituração Contábil Digital)"
+    }
+  },
+  {
+    "textHash": "9d65df32",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Problemas de idade (equações do 1º grau)"
+    }
+  },
+  {
+    "textHash": "3ba49853",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "espanhol",
+      "title": "Ser vs estar"
+    }
+  },
+  {
+    "textHash": "e5b660ec",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Dívida ativa tributária"
+    }
+  },
+  {
+    "textHash": "7bec16ea",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Margem líquida"
+    }
+  },
+  {
+    "textHash": "4133bef2",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-eleitoral",
+      "title": "Propaganda eleitoral"
+    }
+  },
+  {
+    "textHash": "046b5ea7",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Equação do 1º grau"
+    }
+  },
+  {
+    "textHash": "8e9d05c3",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "ingles",
+      "title": "Articles (a/an/the)"
+    }
+  },
+  {
+    "textHash": "99930bbe",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "tributacao",
+      "title": "Planejamento tributário lícito"
+    }
+  },
+  {
+    "textHash": "a3d687e9",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Emprego do hífen"
+    }
+  },
+  {
+    "textHash": "284e0413",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-pessoal",
+      "title": "Rescisão por justa causa"
+    }
+  },
+  {
+    "textHash": "1133afa2",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Mal vs mau"
+    }
+  },
+  {
+    "textHash": "e799e0ca",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Atos administrativos: vinculação e discricionariedade"
+    }
+  },
+  {
+    "textHash": "69bd2184",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "LGPD: princípio da finalidade"
+    }
+  },
+  {
+    "textHash": "ad7cc53c",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Princípio da anterioridade nonagesimal"
+    }
+  },
+  {
+    "textHash": "313c29dc",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Concordância verbal: verbo 'haver' (existir)"
+    }
+  },
+  {
+    "textHash": "5acdbc2f",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade-geral",
+      "title": "Giro de estoque"
+    }
+  },
+  {
+    "textHash": "c24bf7cf",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Conceito de tributo"
+    }
+  },
+  {
+    "textHash": "9b7d017b",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "Dados abertos governamentais"
+    }
+  },
+  {
+    "textHash": "ce4e9a89",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Contrapositiva de proposições condicionais"
+    }
+  },
+  {
+    "textHash": "40698cab",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Problemas de idade (equações do 1º grau)"
+    }
+  },
+  {
+    "textHash": "6a6ee643",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "departamento-fiscal",
+      "title": "Domicílio Tributário Eletrônico (DTE)"
+    }
+  },
+  {
+    "textHash": "2542871f",
+    "knowledgeType": "conceitual",
+    "contentId": "CG-037"
+  },
+  {
+    "textHash": "893a3dbc",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Desconto simples de títulos"
+    }
+  },
+  {
+    "textHash": "ba42d5e9",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área de retângulo"
+    }
+  },
+  {
+    "textHash": "2e5dfa5d",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Registro do empresário na Junta Comercial"
+    }
+  },
+  {
+    "textHash": "d4c07b65",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Remédios constitucionais (habeas data)"
+    }
+  },
+  {
+    "textHash": "e397f341",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Contrato de franquia"
+    }
+  },
+  {
+    "textHash": "a8b695ba",
+    "knowledgeType": "procedimental",
+    "contentId": "CG-037"
+  },
+  {
+    "textHash": "1c4793b3",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "MMC (problemas de encontro periódico)"
+    }
+  },
+  {
+    "textHash": "fa3456d7",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "ISS: competência"
+    }
+  },
+  {
+    "textHash": "fbfb6d7d",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Formação de preço de venda (markup)"
+    }
+  },
+  {
+    "textHash": "361e5bb4",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Negação lógica de proposições (ou)"
+    }
+  },
+  {
+    "textHash": "9b6dd169",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "LGPD: dado pessoal sensível"
+    }
+  },
+  {
+    "textHash": "11fc962a",
+    "knowledgeType": "conceitual",
+    "contentId": "CG-031"
+  },
+  {
+    "textHash": "5a9a7ce1",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Controle externo (Tribunal de Contas)"
+    }
+  },
+  {
+    "textHash": "4eb718c5",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Moda"
+    }
+  },
+  {
+    "textHash": "1b0cfce3",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "departamento-fiscal",
+      "title": "ECD (Escrituração Contábil Digital)"
+    }
+  },
+  {
+    "textHash": "49f566ce",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Contraditório e ampla defesa"
+    }
+  },
+  {
+    "textHash": "e97865c7",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "departamento-pessoal",
+      "title": "eSocial"
+    }
+  },
+  {
+    "textHash": "c1454c59",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Concordância verbal: sujeito composto"
+    }
+  },
+  {
+    "textHash": "887273b9",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Juros simples"
+    }
+  },
+  {
+    "textHash": "01e75041",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Princípio da legalidade"
+    }
+  },
+  {
+    "textHash": "14f3f7f4",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "ingles",
+      "title": "Modal verbs: must vs should"
+    }
+  },
+  {
+    "textHash": "60b58fc0",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-pessoal",
+      "title": "Aviso prévio"
+    }
+  },
+  {
+    "textHash": "35b7315c",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-eleitoral",
+      "title": "Filiação partidária e candidatura"
+    }
+  },
+  {
+    "textHash": "e8b22e03",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Mediana"
+    }
+  },
+  {
+    "textHash": "dc5f9d0b",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "espanhol",
+      "title": "Contracciones: al / del"
+    }
+  },
+  {
+    "textHash": "0d1b8581",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade-geral",
+      "title": "Giro de estoque"
+    }
+  },
+  {
+    "textHash": "a989fb21",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Contratos administrativos: cláusulas exorbitantes"
+    }
+  },
+  {
+    "textHash": "8e58f778",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Ambiguidade textual"
+    }
+  },
+  {
+    "textHash": "b32cc209",
+    "knowledgeType": "conceitual",
+    "contentId": "CG-034"
+  },
+  {
+    "textHash": "4ee9ee0d",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-eleitoral",
+      "title": "Captação ilícita de sufrágio"
+    }
+  },
+  {
+    "textHash": "2967ec8e",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Coesão textual: conectivos"
+    }
+  },
+  {
+    "textHash": "d6d29d22",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Controle externo (Tribunal de Contas)"
+    }
+  },
+  {
+    "textHash": "243795bc",
+    "knowledgeType": "conceitual",
+    "contentId": "CG-037"
+  },
+  {
+    "textHash": "be8d9c52",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Análise combinatória: combinação"
+    }
+  },
+  {
+    "textHash": "918497f5",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Crase"
+    }
+  },
+  {
+    "textHash": "fcfb4626",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Silêncio administrativo"
+    }
+  },
+  {
+    "textHash": "a00f83e0",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Sequências numéricas (PA/PG)"
+    }
+  },
+  {
+    "textHash": "2db2dc3d",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Sociedade limitada: responsabilidade dos sócios"
+    }
+  },
+  {
+    "textHash": "b1372854",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "ingles",
+      "title": "Simple present (third person -s)"
+    }
+  },
+  {
+    "textHash": "de523209",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-fiscal",
+      "title": "Substituição tributária: obrigações do substituto"
+    }
+  },
+  {
+    "textHash": "9ec4f726",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "tributacao",
+      "title": "Simples Nacional"
+    }
+  },
+  {
+    "textHash": "47fae03f",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Mediana"
+    }
+  },
+  {
+    "textHash": "07951368",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "tributacao",
+      "title": "Certidão Negativa de Débitos (CND)"
+    }
+  },
+  {
+    "textHash": "4240f511",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Contrato de franquia"
+    }
+  },
+  {
+    "textHash": "b96ff541",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Contrapositiva de proposições condicionais"
+    }
+  },
+  {
+    "textHash": "0863e8e6",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-eleitoral",
+      "title": "Capacidade eleitoral ativa"
+    }
+  },
+  {
+    "textHash": "5388293e",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Regra de três (proporção direta)"
+    }
+  },
+  {
+    "textHash": "c1afbaa1",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-fiscal",
+      "title": "Guarda de documentos fiscais"
+    }
+  },
+  {
+    "textHash": "e1eed355",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "espanhol",
+      "title": "Ser vs estar"
+    }
+  },
+  {
+    "textHash": "1df899bc",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "departamento-pessoal",
+      "title": "Jornada de trabalho"
+    }
+  },
+  {
+    "textHash": "62f71706",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "ingles",
+      "title": "Modal verbs: must vs should"
+    }
+  },
+  {
+    "textHash": "579963c7",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Margem líquida"
+    }
+  },
+  {
+    "textHash": "9291af12",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Princípio da legalidade tributária"
+    }
+  },
+  {
+    "textHash": "9fed7f21",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "SQL: comando SELECT"
+    }
+  },
+  {
+    "textHash": "43f93441",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Negação lógica de proposições (ou)"
+    }
+  },
+  {
+    "textHash": "1d1b6b37",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Valor presente (juros compostos)"
+    }
+  },
+  {
+    "textHash": "02a9629f",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Crase"
+    }
+  },
+  {
+    "textHash": "8284f88d",
+    "knowledgeType": "procedimental",
+    "contentId": "CG-037"
+  },
+  {
+    "textHash": "f5561103",
+    "knowledgeType": "procedimental",
+    "contentId": "CG-031"
+  },
+  {
+    "textHash": "4fe88685",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "departamento-fiscal",
+      "title": "ECF (Escrituração Contábil Fiscal)"
+    }
+  },
+  {
+    "textHash": "2fb779b9",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Princípio da legalidade"
+    }
+  },
+  {
+    "textHash": "e9c1168b",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "tributacao",
+      "title": "SPED (obrigações acessórias eletrônicas)"
+    }
+  },
+  {
+    "textHash": "de83f95e",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Análise combinatória: arranjo"
+    }
+  },
+  {
+    "textHash": "dd803ae6",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área de retângulo"
+    }
+  },
+  {
+    "textHash": "4f306ea9",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "Normalização de banco de dados"
+    }
+  },
+  {
+    "textHash": "4e954edd",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Orçamento público (PPA, LDO, LOA)"
+    }
+  },
+  {
+    "textHash": "4b16295b",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Atos administrativos: vinculação e discricionariedade"
+    }
+  },
+  {
+    "textHash": "a3135713",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Regra de três (proporção direta)"
+    }
+  },
+  {
+    "textHash": "89c8d6aa",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Crase"
+    }
+  },
+  {
+    "textHash": "e45fab5e",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "espanhol",
+      "title": "Pronombres de objeto directo (leísmo)"
+    }
+  },
+  {
+    "textHash": "05df3711",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Decadência tributária"
+    }
+  },
+  {
+    "textHash": "8a50e7ad",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Ponto de equilíbrio (custo-volume-lucro)"
+    }
+  },
+  {
+    "textHash": "448d8d09",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "departamento-pessoal",
+      "title": "Admissão e comunicação ao eSocial/CAGED"
+    }
+  },
+  {
+    "textHash": "414f417b",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Valor presente (juros compostos)"
+    }
+  },
+  {
+    "textHash": "f3a9db2f",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Perímetro de retângulo"
+    }
+  },
+  {
+    "textHash": "4091578a",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "departamento-pessoal",
+      "title": "13º salário"
+    }
+  },
+  {
+    "textHash": "d17e45dd",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Princípio da legalidade administrativa"
+    }
+  },
+  {
+    "textHash": "1170364f",
+    "knowledgeType": "procedimental",
+    "contentId": "CG-037"
+  },
+  {
+    "textHash": "b9515621",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Sociedade anônima: capital social"
+    }
+  },
+  {
+    "textHash": "7524a678",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Poder de polícia"
+    }
+  },
+  {
+    "textHash": "f6160bbd",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "tributacao",
+      "title": "Parcelamento tributário"
+    }
+  },
+  {
+    "textHash": "13a249f7",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Valor presente (juros compostos)"
+    }
+  },
+  {
+    "textHash": "4632b0e1",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Concordância verbal: sujeito composto"
+    }
+  },
+  {
+    "textHash": "7099b2ef",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Regra de três (proporção direta)"
+    }
+  },
+  {
+    "textHash": "ee624b1d",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Substituição tributária 'para frente'"
+    }
+  },
+  {
+    "textHash": "16e4bec1",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "tributacao",
+      "title": "IRPJ: Lucro Presumido"
+    }
+  },
+  {
+    "textHash": "c5f2f9fc",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-pessoal",
+      "title": "Jornada de trabalho"
+    }
+  },
+  {
+    "textHash": "73b6ab11",
+    "knowledgeType": "procedimental",
+    "contentId": "CG-031"
+  },
+  {
+    "textHash": "2100d0a3",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-eleitoral",
+      "title": "Condições de elegibilidade"
+    }
+  },
+  {
+    "textHash": "4d9a1667",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade-geral",
+      "title": "Giro de estoque"
+    }
+  },
+  {
+    "textHash": "5bc2d129",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Registro do empresário na Junta Comercial"
+    }
+  },
+  {
+    "textHash": "3332394f",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Problemas de idade (equações do 1º grau)"
+    }
+  },
+  {
+    "textHash": "473f4ad1",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Responsabilidade civil do Estado"
+    }
+  },
+  {
+    "textHash": "5536156a",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Porcentagem"
+    }
+  },
+  {
+    "textHash": "1b13875d",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Desconto simples de títulos"
+    }
+  },
+  {
+    "textHash": "5839a3af",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Sequências numéricas (PA/PG)"
+    }
+  },
+  {
+    "textHash": "9f28b78f",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Processo administrativo disciplinar (PAD)"
+    }
+  },
+  {
+    "textHash": "02152421",
+    "knowledgeType": "conceitual",
+    "contentId": "CG-037"
+  },
+  {
+    "textHash": "27fb5665",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade-geral",
+      "title": "Giro de estoque"
+    }
+  },
+  {
+    "textHash": "735d8ee2",
+    "knowledgeType": "conceitual",
+    "contentId": "CG-038"
+  },
+  {
+    "textHash": "707c1c19",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Remédios constitucionais (habeas corpus)"
+    }
+  },
+  {
+    "textHash": "67369a5f",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Média aritmética"
+    }
+  },
+  {
+    "textHash": "cd2c281d",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Negação lógica de proposições (e)"
+    }
+  },
+  {
+    "textHash": "540c965f",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Problemas de idade (equações do 1º grau)"
+    }
+  },
+  {
+    "textHash": "4eb6ee11",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Direitos sociais"
+    }
+  },
+  {
+    "textHash": "74d7fc2b",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "espanhol",
+      "title": "Idea principal del texto"
+    }
+  },
+  {
+    "textHash": "b65cfd63",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "ingles",
+      "title": "Present perfect"
+    }
+  },
+  {
+    "textHash": "61f2e914",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Devido processo legal"
+    }
+  },
+  {
+    "textHash": "80dea48e",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "departamento-pessoal",
+      "title": "FGTS"
+    }
+  },
+  {
+    "textHash": "fce0f810",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Isenção tributária"
+    }
+  },
+  {
+    "textHash": "d4b4ee95",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Irretroatividade tributária"
+    }
+  },
+  {
+    "textHash": "c03af444",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Regra de três (proporção direta)"
+    }
+  },
+  {
+    "textHash": "bd6952ce",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "Governança de dados"
+    }
+  },
+  {
+    "textHash": "b0c8e2e4",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Sociedade limitada: responsabilidade dos sócios"
+    }
+  },
+  {
+    "textHash": "04c3c2c1",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Moda"
+    }
+  },
+  {
+    "textHash": "18eb93a8",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Ideia principal do texto"
+    }
+  },
+  {
+    "textHash": "f5eb4901",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Figuras de linguagem: metáfora"
+    }
+  },
+  {
+    "textHash": "c2f05dcd",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "espanhol",
+      "title": "Acentuación: agudas, graves y esdrújulas"
+    }
+  },
+  {
+    "textHash": "59d8d74f",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Margem líquida"
+    }
+  },
+  {
+    "textHash": "96972681",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "Big data: características (volume, velocidade, variedade)"
+    }
+  },
+  {
+    "textHash": "b0492cb8",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "departamento-fiscal",
+      "title": "Malha fiscal"
+    }
+  },
+  {
+    "textHash": "92a9dd63",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Análise combinatória: combinação"
+    }
+  },
+  {
+    "textHash": "76c68d1a",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Equação do 1º grau"
+    }
+  },
+  {
+    "textHash": "8813d24f",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Pontuação: vírgula com oração explicativa"
+    }
+  },
+  {
+    "textHash": "a1166695",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Direitos sociais"
+    }
+  },
+  {
+    "textHash": "ec1768a6",
+    "knowledgeType": "procedimental",
+    "contentId": "CG-037"
+  },
+  {
+    "textHash": "edca7f72",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Análise combinatória: combinação"
+    }
+  },
+  {
+    "textHash": "11cf6f30",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Formação de preço de venda (markup)"
+    }
+  },
+  {
+    "textHash": "3edeb2bd",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Recuperação judicial e falência"
+    }
+  },
+  {
+    "textHash": "a1c87001",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-fiscal",
+      "title": "Guarda de documentos fiscais"
+    }
+  },
+  {
+    "textHash": "4e19862e",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "tributacao",
+      "title": "Retenção de tributos na fonte"
+    }
+  },
+  {
+    "textHash": "3679b44a",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-eleitoral",
+      "title": "Filiação partidária e candidatura"
+    }
+  },
+  {
+    "textHash": "8f08bae6",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Crase"
+    }
+  },
+  {
+    "textHash": "2d01b1bc",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Negação lógica de proposições (e)"
+    }
+  },
+  {
+    "textHash": "9c2ad857",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "Governança de dados"
+    }
+  },
+  {
+    "textHash": "23a0bf43",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Dívida ativa tributária"
+    }
+  },
+  {
+    "textHash": "5db34617",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Porcentagem"
+    }
+  },
+  {
+    "textHash": "f35da9ce",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-fiscal",
+      "title": "ICMS: regime de apuração (débito e crédito)"
+    }
+  },
+  {
+    "textHash": "2bd51d92",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Títulos de crédito: princípio da cartularidade"
+    }
+  },
+  {
+    "textHash": "7d7ef90e",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Sequências numéricas (PA/PG)"
+    }
+  },
+  {
+    "textHash": "19e66671",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Silêncio administrativo"
+    }
+  },
+  {
+    "textHash": "1a65b7f1",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Negação lógica de proposições (ou)"
+    }
+  },
+  {
+    "textHash": "67e539ea",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "espanhol",
+      "title": "Futuro simple"
+    }
+  },
+  {
+    "textHash": "378b57d6",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Formação de preço de venda (markup)"
+    }
+  },
+  {
+    "textHash": "fa68960c",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Juros compostos"
+    }
+  },
+  {
+    "textHash": "d83b5e13",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "departamento-pessoal",
+      "title": "Admissão e comunicação ao eSocial/CAGED"
+    }
+  },
+  {
+    "textHash": "796bba84",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Crase"
+    }
+  },
+  {
+    "textHash": "37ebcab8",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "ingles",
+      "title": "False friends: 'deadline'"
+    }
+  },
+  {
+    "textHash": "4f33d96d",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Sequências numéricas (PA/PG)"
+    }
+  },
+  {
+    "textHash": "22d37469",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "MDC (divisão em lotes iguais)"
+    }
+  },
+  {
+    "textHash": "fc182944",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-pessoal",
+      "title": "Salário-família"
+    }
+  },
+  {
+    "textHash": "d725adfa",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Responsabilidade civil do Estado"
+    }
+  },
+  {
+    "textHash": "2dcb0979",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Ponto de equilíbrio (custo-volume-lucro)"
+    }
+  },
+  {
+    "textHash": "fa35b234",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Regra de três (proporção direta)"
+    }
+  },
+  {
+    "textHash": "f90789fb",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Princípios da administração pública (art. 37, CF)"
+    }
+  },
+  {
+    "textHash": "65b5278b",
+    "knowledgeType": "conceitual",
+    "contentId": "CG-034"
+  },
+  {
+    "textHash": "73a0984d",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Mediana"
+    }
+  }
+]

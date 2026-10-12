@@ -1,0 +1,812 @@
+[
+  {
+    "textHash": "6cf96d47",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Medidas de tendência central: média"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "5f128acc",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Equações do 1º grau"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "84907a76",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Sequências numéricas"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "db6b96dd",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "contabilidade-geral",
+      "title": "Giro de estoque"
+    }
+  },
+  {
+    "textHash": "f298164a",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade-geral",
+      "title": "Capital circulante líquido (CCL)"
+    }
+  },
+  {
+    "textHash": "6152ed31",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Processo legislativo orçamentário (PPA, LDO, LOA)"
+    }
+  },
+  {
+    "textHash": "8dbcc37f",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Lançamento tributário (CTN, art. 142)"
+    }
+  },
+  {
+    "textHash": "581a3518",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Regra de três (proporcionalidade direta)"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "5bf5b120",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Problemas de idade (equações)"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "1c29a6f3",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Desconto simples"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "b411d78c",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Controle externo (Tribunal de Contas)"
+    }
+  },
+  {
+    "textHash": "844574b9",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Regência verbal"
+    }
+  },
+  {
+    "textHash": "c605cf57",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Juros simples"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "359bbf37",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Equações do 1º grau"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "8f0d5665",
+    "knowledgeType": "conceitual",
+    "contentId": "CG-027"
+  },
+  {
+    "textHash": "1895c542",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "MMC (mínimo múltiplo comum)"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "da49a6bf",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade-geral",
+      "title": "Índice de liquidez corrente"
+    }
+  },
+  {
+    "textHash": "584b47bd",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Margem líquida"
+    }
+  },
+  {
+    "textHash": "cce3ca71",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Juros compostos"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "e156ae9c",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade-geral",
+      "title": "Giro de estoque"
+    }
+  },
+  {
+    "textHash": "ae1051d4",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Análise combinatória"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "6ee9ea44",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Valor presente (juros compostos)"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "fc56ffec",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Concordância com expressões partitivas"
+    }
+  },
+  {
+    "textHash": "4797cfd5",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Medidas de tendência central: moda"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "af82ef24",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Ponto de equilíbrio (custo-volume-lucro)"
+    }
+  },
+  {
+    "textHash": "7139b67b",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Fundamentos da República Federativa do Brasil"
+    }
+  },
+  {
+    "textHash": "14d91aff",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Probabilidade"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "fb7043de",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Perímetro de figuras planas"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "0207afa7",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Negação de proposições lógicas"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "1954d2ae",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Direitos fundamentais (art. 5º, caput, CF/88)"
+    }
+  },
+  {
+    "textHash": "0550002a",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "MMC (mínimo múltiplo comum)"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "19194c92",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "Modelagem de dados: chave primária"
+    }
+  },
+  {
+    "textHash": "c5499746",
+    "knowledgeType": "procedimental",
+    "contentId": "CG-031"
+  },
+  {
+    "textHash": "5c882c83",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Juros simples"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "5b1484d7",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Regência verbal"
+    }
+  },
+  {
+    "textHash": "8484e358",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Sequências numéricas"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "84132a80",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade-geral",
+      "title": "Giro de estoque"
+    }
+  },
+  {
+    "textHash": "0c7d25f7",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Medidas de tendência central: moda"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "cd798cf7",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Atos administrativos: discricionariedade e vinculação"
+    }
+  },
+  {
+    "textHash": "511eb784",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Juros simples"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "32cd438f",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Sequências numéricas"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "2662784e",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Regra de três (proporcionalidade direta)"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "02068e22",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Porcentagem"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "05dc286d",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Margem líquida"
+    }
+  },
+  {
+    "textHash": "75f0f935",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Decadência do crédito tributário"
+    }
+  },
+  {
+    "textHash": "d2fbee74",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade-geral",
+      "title": "Índice de liquidez corrente"
+    }
+  },
+  {
+    "textHash": "0219eadc",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Regra de três (proporcionalidade direta)"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "8aa25785",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Valor presente (juros compostos)"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "ffaa58aa",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área de figuras planas"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "0bdd2413",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade-geral",
+      "title": "Índice de liquidez corrente"
+    }
+  },
+  {
+    "textHash": "0e5c7aff",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "tributacao",
+      "title": "SPED (Sistema Público de Escrituração Digital)"
+    }
+  },
+  {
+    "textHash": "ccaf3990",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Desconto simples"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "9f18a6ad",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Atributos do ato administrativo: autoexecutoriedade"
+    }
+  },
+  {
+    "textHash": "e2635950",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Ponto de equilíbrio (custo-volume-lucro)"
+    }
+  },
+  {
+    "textHash": "08366893",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Markup sobre o custo (formação de preço de venda)"
+    }
+  },
+  {
+    "textHash": "8e7b8243",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Ação popular"
+    }
+  },
+  {
+    "textHash": "6185b465",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade-geral",
+      "title": "Índice de liquidez corrente"
+    }
+  },
+  {
+    "textHash": "d2592eb2",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "direito-eleitoral",
+      "title": "Inelegibilidades (LC 64/1990 - Lei da Ficha Limpa)"
+    }
+  },
+  {
+    "textHash": "a59fd0a6",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Proposições condicionais e contrapositiva"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "60f46821",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Markup sobre o custo (formação de preço de venda)"
+    }
+  },
+  {
+    "textHash": "20762df4",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Licitações: dispensa e inexigibilidade"
+    }
+  },
+  {
+    "textHash": "2c80d04e",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "MDC (máximo divisor comum)"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "175ef1e3",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Remédios constitucionais (habeas data)"
+    }
+  },
+  {
+    "textHash": "f15d1bdd",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Medidas de tendência central: mediana"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "c9ee2099",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Regra de três (proporcionalidade direta)"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "382592c4",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade-geral",
+      "title": "Índice de liquidez corrente"
+    }
+  },
+  {
+    "textHash": "46f1b27e",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Regra de três (proporcionalidade direta)"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "822dcaf4",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade-geral",
+      "title": "Giro de estoque"
+    }
+  },
+  {
+    "textHash": "5e92fb31",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Desconto simples"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "8d52d802",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Sequências numéricas"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "cdb4c00a",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Ação popular"
+    }
+  },
+  {
+    "textHash": "f844ac11",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Problemas de idade (equações)"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "dbd456af",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Ponto de equilíbrio (custo-volume-lucro)"
+    }
+  },
+  {
+    "textHash": "1d12a06f",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Negação de proposições lógicas"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "80955604",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Equações do 1º grau"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "dfc7d5cf",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Medidas de tendência central: moda"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "288ef75c",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Juros compostos"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "3c43d59b",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Contratos administrativos: cláusulas exorbitantes"
+    }
+  },
+  {
+    "textHash": "1bfa4c58",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Análise combinatória"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "8619920c",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Margem líquida"
+    }
+  },
+  {
+    "textHash": "4b541bd0",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "departamento-pessoal",
+      "title": "Jornada de trabalho e horas extras (CLT)"
+    }
+  },
+  {
+    "textHash": "a45eff4f",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Markup sobre o custo (formação de preço de venda)"
+    }
+  },
+  {
+    "textHash": "4f14521b",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Porcentagem"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "49e27fb3",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Uso da vírgula em orações subordinadas"
+    }
+  },
+  {
+    "textHash": "d06f2edc",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "Dados abertos governamentais"
+    }
+  },
+  {
+    "textHash": "3a8fdc68",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Devido processo legal"
+    }
+  },
+  {
+    "textHash": "2ebbf209",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Margem líquida"
+    }
+  },
+  {
+    "textHash": "2a26114f",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade-geral",
+      "title": "Índice de liquidez corrente"
+    }
+  },
+  {
+    "textHash": "67221b55",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Markup sobre o custo (formação de preço de venda)"
+    }
+  },
+  {
+    "textHash": "72a4bc76",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Regra de três (proporcionalidade direta)"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "94ee5c11",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Estado de defesa e estado de sítio"
+    }
+  },
+  {
+    "textHash": "1f518165",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "contabilidade-geral",
+      "title": "Lucro bruto (DRE)"
+    }
+  },
+  {
+    "textHash": "9966d87f",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Medidas de tendência central: média"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "59ed28ec",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Princípio da legalidade administrativa"
+    }
+  },
+  {
+    "textHash": "e125236f",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Juros simples"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "a2e70f7d",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Juros compostos"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "d23156a5",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "LGPD: princípio da finalidade"
+    }
+  },
+  {
+    "textHash": "983f6b5f",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Problemas de idade (equações)"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "89045b38",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Medidas de tendência central: moda"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "c846b408",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área do círculo"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "b02be5fb",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Sequências numéricas"
+    },
+    "knowledgeType": "procedimental"
+  },
+  {
+    "textHash": "ea6ea870",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Regra de três (proporcionalidade direta)"
+    },
+    "knowledgeType": "procedimental"
+  }
+]

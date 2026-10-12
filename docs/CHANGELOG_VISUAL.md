@@ -14,6 +14,18 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #74 — Arquivos de classificação da curadoria (APO-07/APO-08)
+
+- Ponto de restauração: branch `restore/pre-curadoria-arquivos` (main antes do merge).
+- O que muda no site: nada visível ainda. Este PR só traz para o repositório
+  os 10 arquivos de classificação (conteúdo + tipo de conhecimento) das
+  3.600 questões pendentes em `/rascunhos`, para rodar
+  `pnpm apolo:aplicar-curadoria` com `git pull` em vez de copiar arquivo por
+  arquivo. A migração 0022 (`atlas_content_taxonomy`) já estava mesclada
+  (PR #72/#73) e ainda precisa ser publicada em produção; aplicar os
+  arquivos grava conteúdo/tipo de conhecimento nos rascunhos, nunca aprova
+  nenhum (DEC-014 continua exigindo revisão humana em `/rascunhos`).
+
 ## PR #30 — Backup do D1 e R2 com restauração de teste (DEC-011)
 
 - Ponto de restauração: branch `restore/pre-backup-dec011` (commit `d4d3145`, main antes do merge).

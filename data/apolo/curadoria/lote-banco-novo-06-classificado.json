@@ -1,0 +1,2375 @@
+[
+  {
+    "textHash": "078b5b3a",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Cálculo da mediana"
+    }
+  },
+  {
+    "textHash": "0ea44047",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Cálculo da mediana"
+    }
+  },
+  {
+    "textHash": "334d1a01",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Cálculo da mediana"
+    }
+  },
+  {
+    "textHash": "69a9db19",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Cálculo da mediana"
+    }
+  },
+  {
+    "textHash": "0451350a",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Cálculo da mediana"
+    }
+  },
+  {
+    "textHash": "746f051f",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Cálculo da mediana"
+    }
+  },
+  {
+    "textHash": "56c3b78d",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Cálculo da mediana"
+    }
+  },
+  {
+    "textHash": "37c3a8e4",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Cálculo da mediana"
+    }
+  },
+  {
+    "textHash": "36976544",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Compensação tributária (art. 170 CTN)"
+    }
+  },
+  {
+    "textHash": "66478c45",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "tributacao",
+      "title": "Não cumulatividade tributária (ICMS/IPI)"
+    }
+  },
+  {
+    "textHash": "ba13b54a",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Exclusão de sócio em sociedade limitada"
+    }
+  },
+  {
+    "textHash": "f7b9eedc",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-eleitoral",
+      "title": "Prestação de contas de campanha eleitoral"
+    }
+  },
+  {
+    "textHash": "e5cd2101",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Convalidação de atos administrativos"
+    }
+  },
+  {
+    "textHash": "0c4a4477",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Princípio da concordância prática (harmonização)"
+    }
+  },
+  {
+    "textHash": "a852c910",
+    "knowledgeType": "conceitual",
+    "contentId": "CG-031"
+  },
+  {
+    "textHash": "f5a78c0f",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "contabilidade-geral",
+      "title": "Equivalência patrimonial (MEP)"
+    }
+  },
+  {
+    "textHash": "2d7c55b9",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Orações subordinadas adverbiais (relação de sentido)"
+    }
+  },
+  {
+    "textHash": "4ca5147c",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "ingles",
+      "title": "Modal verbs (obrigação)"
+    }
+  },
+  {
+    "textHash": "37aedebc",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "espanhol",
+      "title": "Pronombres personales (función de 'lo')"
+    }
+  },
+  {
+    "textHash": "faf9d42d",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "Replicação de dados em sistemas distribuídos"
+    }
+  },
+  {
+    "textHash": "2f0f3a9c",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-pessoal",
+      "title": "Programa de Alimentação do Trabalhador (PAT)"
+    }
+  },
+  {
+    "textHash": "0833a64a",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-fiscal",
+      "title": "Retenção de ISS na fonte"
+    }
+  },
+  {
+    "textHash": "f0bc0a94",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Intervalo de confiança"
+    }
+  },
+  {
+    "textHash": "91be187f",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Tabela-verdade: número de linhas (2^n)"
+    }
+  },
+  {
+    "textHash": "fe3ebb34",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Transação tributária (Lei 13.988/2020)"
+    }
+  },
+  {
+    "textHash": "2bdb132f",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Controle preventivo de constitucionalidade"
+    }
+  },
+  {
+    "textHash": "79096f45",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Consolidação de demonstrações financeiras (CPC 36)"
+    }
+  },
+  {
+    "textHash": "cfb7bfec",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Função sintática: complemento nominal"
+    }
+  },
+  {
+    "textHash": "88f185d7",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "espanhol",
+      "title": "Conjugación: pretérito imperfecto de subjuntivo"
+    }
+  },
+  {
+    "textHash": "925446f1",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "Trigger em banco de dados relacional"
+    }
+  },
+  {
+    "textHash": "85a71900",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-pessoal",
+      "title": "Jornada de trabalho em regime parcial (CLT)"
+    }
+  },
+  {
+    "textHash": "d704dee4",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-fiscal",
+      "title": "Nota Fiscal de Serviços Eletrônica (NFS-e)"
+    }
+  },
+  {
+    "textHash": "00d3788e",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Holding (função típica)"
+    }
+  },
+  {
+    "textHash": "aac63bae",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Arranjos simples (análise combinatória)"
+    }
+  },
+  {
+    "textHash": "50985a40",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Arranjos simples (análise combinatória)"
+    }
+  },
+  {
+    "textHash": "12d441c8",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Arranjos simples (análise combinatória)"
+    }
+  },
+  {
+    "textHash": "8aabff6a",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Arranjos simples (análise combinatória)"
+    }
+  },
+  {
+    "textHash": "87c2a875",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Arranjos simples (análise combinatória)"
+    }
+  },
+  {
+    "textHash": "bd02ab42",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Arranjos simples (análise combinatória)"
+    }
+  },
+  {
+    "textHash": "1647dad3",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Arranjos simples (análise combinatória)"
+    }
+  },
+  {
+    "textHash": "9b3655af",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Arranjos simples (análise combinatória)"
+    }
+  },
+  {
+    "textHash": "3b5862c7",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Arranjos simples (análise combinatória)"
+    }
+  },
+  {
+    "textHash": "ed6f364d",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Arranjos simples (análise combinatória)"
+    }
+  },
+  {
+    "textHash": "b82f9d9e",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Margem de contribuição percentual"
+    }
+  },
+  {
+    "textHash": "5811448a",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Margem de contribuição percentual"
+    }
+  },
+  {
+    "textHash": "2fab9a5e",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Margem de contribuição percentual"
+    }
+  },
+  {
+    "textHash": "8c2f1d56",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Margem de contribuição percentual"
+    }
+  },
+  {
+    "textHash": "0207485c",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Margem de contribuição percentual"
+    }
+  },
+  {
+    "textHash": "7e538821",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Margem de contribuição percentual"
+    }
+  },
+  {
+    "textHash": "963774b6",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Margem de contribuição percentual"
+    }
+  },
+  {
+    "textHash": "a18233aa",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Margem de contribuição percentual"
+    }
+  },
+  {
+    "textHash": "a071f785",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Margem de contribuição percentual"
+    }
+  },
+  {
+    "textHash": "c69080b1",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Margem de contribuição percentual"
+    }
+  },
+  {
+    "textHash": "ccb1c013",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Amplitude interquartil (IQR)"
+    }
+  },
+  {
+    "textHash": "6dbd7944",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Amplitude interquartil (IQR)"
+    }
+  },
+  {
+    "textHash": "f0e9c982",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Amplitude interquartil (IQR)"
+    }
+  },
+  {
+    "textHash": "516531bf",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Amplitude interquartil (IQR)"
+    }
+  },
+  {
+    "textHash": "62c4ab49",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Amplitude interquartil (IQR)"
+    }
+  },
+  {
+    "textHash": "3599c3bf",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Amplitude interquartil (IQR)"
+    }
+  },
+  {
+    "textHash": "1a87fee5",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Amplitude interquartil (IQR)"
+    }
+  },
+  {
+    "textHash": "bff2b8fa",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Amplitude interquartil (IQR)"
+    }
+  },
+  {
+    "textHash": "5ac1e032",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Amplitude interquartil (IQR)"
+    }
+  },
+  {
+    "textHash": "841d5592",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Amplitude interquartil (IQR)"
+    }
+  },
+  {
+    "textHash": "8fd61252",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Imunidade tributária recíproca"
+    }
+  },
+  {
+    "textHash": "7cc23b93",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "tributacao",
+      "title": "Base de cálculo por dentro do ICMS"
+    }
+  },
+  {
+    "textHash": "ddb43d65",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Cláusula de não concorrência (trespasse)"
+    }
+  },
+  {
+    "textHash": "dbacd165",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-eleitoral",
+      "title": "Captação ilícita de sufrágio (art. 41-A)"
+    }
+  },
+  {
+    "textHash": "bddba6bc",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Desapropriação por utilidade pública"
+    }
+  },
+  {
+    "textHash": "a9dc2bb6",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Teoria da transcendência dos motivos determinantes"
+    }
+  },
+  {
+    "textHash": "9aa17346",
+    "knowledgeType": "conceitual",
+    "contentId": "CG-031"
+  },
+  {
+    "textHash": "a6868d1d",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "contabilidade-geral",
+      "title": "Princípios contábeis (prudência/conservadorismo)"
+    }
+  },
+  {
+    "textHash": "adc3816e",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Orações subordinadas adverbiais (relação de sentido)"
+    }
+  },
+  {
+    "textHash": "0099b67d",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "ingles",
+      "title": "Relative clauses (whose)"
+    }
+  },
+  {
+    "textHash": "b41b8c86",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "espanhol",
+      "title": "Conjugación: futuro simple (verbos irregulares)"
+    }
+  },
+  {
+    "textHash": "efe59c1b",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "ETL (Extract, Transform, Load)"
+    }
+  },
+  {
+    "textHash": "b301ce41",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-pessoal",
+      "title": "Auxílio-acidente (benefício previdenciário)"
+    }
+  },
+  {
+    "textHash": "42299660",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-fiscal",
+      "title": "GFIP (pré-eSocial)"
+    }
+  },
+  {
+    "textHash": "e9843793",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Distribuição binomial"
+    }
+  },
+  {
+    "textHash": "57917c61",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Tabela-verdade: disjunção exclusiva (XOR)"
+    }
+  },
+  {
+    "textHash": "5805618d",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Anterioridade nonagesimal (mitigada)"
+    }
+  },
+  {
+    "textHash": "2404ddb0",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Devido processo legal substantivo"
+    }
+  },
+  {
+    "textHash": "4a5fb2b8",
+    "knowledgeType": "conceitual",
+    "contentId": "CG-034"
+  },
+  {
+    "textHash": "faada257",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Classes gramaticais: advérbio"
+    }
+  },
+  {
+    "textHash": "0ebbcaea",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "espanhol",
+      "title": "Pronombres relativos (donde)"
+    }
+  },
+  {
+    "textHash": "4bf6596a",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "View (visão) em banco de dados relacional"
+    }
+  },
+  {
+    "textHash": "6e4ff813",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-pessoal",
+      "title": "Adicional de periculosidade (CLT art. 193)"
+    }
+  },
+  {
+    "textHash": "a31fccc7",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-fiscal",
+      "title": "Documento de Arrecadação do Simples Nacional (DAS)"
+    }
+  },
+  {
+    "textHash": "8dfe45a3",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Prescrição intercorrente (execução fiscal)"
+    }
+  },
+  {
+    "textHash": "c69252c1",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Diagonal do retângulo (Teorema de Pitágoras)"
+    }
+  },
+  {
+    "textHash": "e91a9dda",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Diagonal do retângulo (Teorema de Pitágoras)"
+    }
+  },
+  {
+    "textHash": "50fa3f3c",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Diagonal do retângulo (Teorema de Pitágoras)"
+    }
+  },
+  {
+    "textHash": "a453aef0",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Diagonal do retângulo (Teorema de Pitágoras)"
+    }
+  },
+  {
+    "textHash": "71f4e2f8",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Diagonal do retângulo (Teorema de Pitágoras)"
+    }
+  },
+  {
+    "textHash": "faf2b88f",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Diagonal do retângulo (Teorema de Pitágoras)"
+    }
+  },
+  {
+    "textHash": "80aa38bf",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Diagonal do retângulo (Teorema de Pitágoras)"
+    }
+  },
+  {
+    "textHash": "9a7cd77a",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Diagonal do retângulo (Teorema de Pitágoras)"
+    }
+  },
+  {
+    "textHash": "70d69727",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Diagonal do retângulo (Teorema de Pitágoras)"
+    }
+  },
+  {
+    "textHash": "1ddbddfd",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Diagonal do retângulo (Teorema de Pitágoras)"
+    }
+  },
+  {
+    "textHash": "becc7dbb",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Juros compostos: taxa para dobrar capital"
+    }
+  },
+  {
+    "textHash": "ff90b6c0",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Juros compostos: taxa para dobrar capital"
+    }
+  },
+  {
+    "textHash": "497862a1",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Juros compostos: taxa para dobrar capital"
+    }
+  },
+  {
+    "textHash": "14220906",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Juros compostos: taxa para dobrar capital"
+    }
+  },
+  {
+    "textHash": "11cb9417",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Juros compostos: taxa para dobrar capital"
+    }
+  },
+  {
+    "textHash": "b8359c7c",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Juros compostos: taxa para dobrar capital"
+    }
+  },
+  {
+    "textHash": "bd748c9d",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Juros compostos: taxa para dobrar capital"
+    }
+  },
+  {
+    "textHash": "b58524c2",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Juros compostos: taxa para dobrar capital"
+    }
+  },
+  {
+    "textHash": "c992dfc6",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Juros compostos: taxa para dobrar capital"
+    }
+  },
+  {
+    "textHash": "c329833c",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Juros compostos: taxa para dobrar capital"
+    }
+  },
+  {
+    "textHash": "03ef06ac",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Custo total de produção (custo fixo + variável)"
+    }
+  },
+  {
+    "textHash": "f96bd6b9",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Custo total de produção (custo fixo + variável)"
+    }
+  },
+  {
+    "textHash": "5701cb73",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Custo total de produção (custo fixo + variável)"
+    }
+  },
+  {
+    "textHash": "9ec653db",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Custo total de produção (custo fixo + variável)"
+    }
+  },
+  {
+    "textHash": "ba90c8d6",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Custo total de produção (custo fixo + variável)"
+    }
+  },
+  {
+    "textHash": "bd8c4a24",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Custo total de produção (custo fixo + variável)"
+    }
+  },
+  {
+    "textHash": "40e2f042",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Custo total de produção (custo fixo + variável)"
+    }
+  },
+  {
+    "textHash": "694e6880",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Custo total de produção (custo fixo + variável)"
+    }
+  },
+  {
+    "textHash": "2160467c",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Custo total de produção (custo fixo + variável)"
+    }
+  },
+  {
+    "textHash": "c8e63997",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Custo total de produção (custo fixo + variável)"
+    }
+  },
+  {
+    "textHash": "f19b43d5",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Imunidade tributária subjetiva (pessoal)"
+    }
+  },
+  {
+    "textHash": "1fba6b6b",
+    "knowledgeType": "procedimental",
+    "contentId": "CG-028"
+  },
+  {
+    "textHash": "3ea4ed08",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Ações preferenciais vs. ordinárias (S.A.)"
+    }
+  },
+  {
+    "textHash": "de77b20f",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-eleitoral",
+      "title": "Coligação partidária (eleições proporcionais)"
+    }
+  },
+  {
+    "textHash": "1eefd001",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Pregão: fase de lances"
+    }
+  },
+  {
+    "textHash": "08746c50",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Mandado de injunção"
+    }
+  },
+  {
+    "textHash": "5e662817",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Desvio médio absoluto (fórmula)"
+    }
+  },
+  {
+    "textHash": "c43319f2",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Negação de proposições com quantificadores"
+    }
+  },
+  {
+    "textHash": "314e0511",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Função sintática: predicativo do sujeito"
+    }
+  },
+  {
+    "textHash": "2058a262",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "ingles",
+      "title": "Modal verbs (should - conselho)"
+    }
+  },
+  {
+    "textHash": "107cca4b",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "espanhol",
+      "title": "Perífrasis verbal: ir a + infinitivo"
+    }
+  },
+  {
+    "textHash": "c97ccc5a",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "Chave primária composta"
+    }
+  },
+  {
+    "textHash": "8eedb7d8",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-pessoal",
+      "title": "Aviso prévio indenizado"
+    }
+  },
+  {
+    "textHash": "4aeb7cee",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-fiscal",
+      "title": "EFD-Contribuições"
+    }
+  },
+  {
+    "textHash": "d6863641",
+    "knowledgeType": "conceitual",
+    "contentId": "CG-036"
+  },
+  {
+    "textHash": "e9f3c565",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "tributacao",
+      "title": "Substituição tributária regressiva (para trás)"
+    }
+  },
+  {
+    "textHash": "168edd2d",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Lançamento tributário de ofício"
+    }
+  },
+  {
+    "textHash": "9decd296",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Princípio da novidade (nome empresarial)"
+    }
+  },
+  {
+    "textHash": "908ac993",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-eleitoral",
+      "title": "Horário eleitoral gratuito (distribuição)"
+    }
+  },
+  {
+    "textHash": "0682cd9f",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Poder disciplinar da Administração"
+    }
+  },
+  {
+    "textHash": "c13ec535",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Princípio da reserva legal"
+    }
+  },
+  {
+    "textHash": "76187e62",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Função sintática: complemento nominal"
+    }
+  },
+  {
+    "textHash": "69356989",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "ingles",
+      "title": "Present continuous (planned future)"
+    }
+  },
+  {
+    "textHash": "90d869da",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "espanhol",
+      "title": "Preposiciones: uso de 'por'"
+    }
+  },
+  {
+    "textHash": "d0cc8dee",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "Restrição UNIQUE"
+    }
+  },
+  {
+    "textHash": "2d2daacc",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Perímetro do triângulo equilátero"
+    }
+  },
+  {
+    "textHash": "1163191b",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Perímetro do triângulo equilátero"
+    }
+  },
+  {
+    "textHash": "2549e96e",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Perímetro do triângulo equilátero"
+    }
+  },
+  {
+    "textHash": "06e6eda5",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Perímetro do triângulo equilátero"
+    }
+  },
+  {
+    "textHash": "4dc29d78",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Perímetro do triângulo equilátero"
+    }
+  },
+  {
+    "textHash": "6b064447",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Perímetro do triângulo equilátero"
+    }
+  },
+  {
+    "textHash": "33e7e06b",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Perímetro do triângulo equilátero"
+    }
+  },
+  {
+    "textHash": "b89bb71c",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Perímetro do triângulo equilátero"
+    }
+  },
+  {
+    "textHash": "64af1df5",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Perímetro do triângulo equilátero"
+    }
+  },
+  {
+    "textHash": "f8e3db30",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Perímetro do triângulo equilátero"
+    }
+  },
+  {
+    "textHash": "8883f3ce",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Número de diagonais de um polígono convexo"
+    }
+  },
+  {
+    "textHash": "d4106d4d",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Número de diagonais de um polígono convexo"
+    }
+  },
+  {
+    "textHash": "96af6498",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Número de diagonais de um polígono convexo"
+    }
+  },
+  {
+    "textHash": "feb85577",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Número de diagonais de um polígono convexo"
+    }
+  },
+  {
+    "textHash": "9095a0e2",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Número de diagonais de um polígono convexo"
+    }
+  },
+  {
+    "textHash": "174f2e8e",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Número de diagonais de um polígono convexo"
+    }
+  },
+  {
+    "textHash": "26554f33",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Número de diagonais de um polígono convexo"
+    }
+  },
+  {
+    "textHash": "a08f1158",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Número de diagonais de um polígono convexo"
+    }
+  },
+  {
+    "textHash": "ff03c6fa",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Número de diagonais de um polígono convexo"
+    }
+  },
+  {
+    "textHash": "b14c5754",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Número de diagonais de um polígono convexo"
+    }
+  },
+  {
+    "textHash": "02d14ed2",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Quarta proporcional (regra de três)"
+    }
+  },
+  {
+    "textHash": "c3ee93ee",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Quarta proporcional (regra de três)"
+    }
+  },
+  {
+    "textHash": "6037e646",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Quarta proporcional (regra de três)"
+    }
+  },
+  {
+    "textHash": "796cd1cc",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Quarta proporcional (regra de três)"
+    }
+  },
+  {
+    "textHash": "a9449442",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Quarta proporcional (regra de três)"
+    }
+  },
+  {
+    "textHash": "a4ee85da",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Quarta proporcional (regra de três)"
+    }
+  },
+  {
+    "textHash": "ac7a61c8",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Quarta proporcional (regra de três)"
+    }
+  },
+  {
+    "textHash": "fa240fd4",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Quarta proporcional (regra de três)"
+    }
+  },
+  {
+    "textHash": "5d550af2",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Quarta proporcional (regra de três)"
+    }
+  },
+  {
+    "textHash": "10e7366a",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Quarta proporcional (regra de três)"
+    }
+  },
+  {
+    "textHash": "9533b18b",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Taxa (espécie tributária) vs. imposto"
+    }
+  },
+  {
+    "textHash": "ce63e2a1",
+    "knowledgeType": "conceitual",
+    "contentId": "CG-031"
+  },
+  {
+    "textHash": "28654cbf",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Contrato de franquia (franchising)"
+    }
+  },
+  {
+    "textHash": "8f5f4f2c",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-eleitoral",
+      "title": "Condutas vedadas a agentes públicos (art. 73, Lei 9.504/97)"
+    }
+  },
+  {
+    "textHash": "bed74f04",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Cláusulas exorbitantes (contrato administrativo)"
+    }
+  },
+  {
+    "textHash": "ac238121",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Princípio da inafastabilidade da jurisdição"
+    }
+  },
+  {
+    "textHash": "37bc40ec",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Curtose"
+    }
+  },
+  {
+    "textHash": "619ecdf9",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Tautologia (proposição sempre verdadeira)"
+    }
+  },
+  {
+    "textHash": "8aa51218",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Pontuação: oração subordinada adjetiva explicativa"
+    }
+  },
+  {
+    "textHash": "7904c77d",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "ingles",
+      "title": "Comparative forms (adjectives)"
+    }
+  },
+  {
+    "textHash": "a0c0514c",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "espanhol",
+      "title": "Pretérito imperfecto (uso)"
+    }
+  },
+  {
+    "textHash": "91ede069",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "Replicação master-slave (operações de escrita)"
+    }
+  },
+  {
+    "textHash": "b9cdb1dc",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-pessoal",
+      "title": "Adicional de insalubridade"
+    }
+  },
+  {
+    "textHash": "171bfcc9",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "departamento-fiscal",
+      "title": "Cancelamento de NF-e (prazo)"
+    }
+  },
+  {
+    "textHash": "106d8547",
+    "knowledgeType": "conceitual",
+    "contentId": "CG-038"
+  },
+  {
+    "textHash": "de448cfd",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "tributacao",
+      "title": "Bitributação"
+    }
+  },
+  {
+    "textHash": "ffba10e1",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Prazo de prescrição do crédito tributário"
+    }
+  },
+  {
+    "textHash": "64926e13",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Registro de marca (INPI)"
+    }
+  },
+  {
+    "textHash": "fdcefa8e",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-eleitoral",
+      "title": "Domicílio eleitoral"
+    }
+  },
+  {
+    "textHash": "8b483d37",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Responsabilidade civil do Estado (objetiva)"
+    }
+  },
+  {
+    "textHash": "2b391aae",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Ação Declaratória de Constitucionalidade (ADC)"
+    }
+  },
+  {
+    "textHash": "f8e70dec",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Uso do hífen (Acordo Ortográfico)"
+    }
+  },
+  {
+    "textHash": "375a6afe",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "ingles",
+      "title": "Past simple (verbos irregulares)"
+    }
+  },
+  {
+    "textHash": "f9f667ee",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "espanhol",
+      "title": "Acentuación: palabras esdrújulas"
+    }
+  },
+  {
+    "textHash": "635bcfa8",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "Backup diferencial vs. completo"
+    }
+  },
+  {
+    "textHash": "c3fe3980",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área do losango"
+    }
+  },
+  {
+    "textHash": "ec54d256",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área do losango"
+    }
+  },
+  {
+    "textHash": "debc85e2",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área do losango"
+    }
+  },
+  {
+    "textHash": "44e0de9c",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área do losango"
+    }
+  },
+  {
+    "textHash": "dd1de62b",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área do losango"
+    }
+  },
+  {
+    "textHash": "b1a50375",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área do losango"
+    }
+  },
+  {
+    "textHash": "48f963b5",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área do losango"
+    }
+  },
+  {
+    "textHash": "64911dfe",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área do losango"
+    }
+  },
+  {
+    "textHash": "8405d5b7",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área do losango"
+    }
+  },
+  {
+    "textHash": "d4f32436",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área do losango"
+    }
+  },
+  {
+    "textHash": "c5c78dbe",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Conversão de unidades: m/s para km/h"
+    }
+  },
+  {
+    "textHash": "7567757b",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Conversão de unidades: m/s para km/h"
+    }
+  },
+  {
+    "textHash": "292d7db0",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Conversão de unidades: m/s para km/h"
+    }
+  },
+  {
+    "textHash": "a36d0b1a",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Conversão de unidades: m/s para km/h"
+    }
+  },
+  {
+    "textHash": "ddbff315",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Conversão de unidades: m/s para km/h"
+    }
+  },
+  {
+    "textHash": "7c1d2938",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Conversão de unidades: m/s para km/h"
+    }
+  },
+  {
+    "textHash": "f27df84d",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Conversão de unidades: m/s para km/h"
+    }
+  },
+  {
+    "textHash": "2e37b21f",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Conversão de unidades: m/s para km/h"
+    }
+  },
+  {
+    "textHash": "11cb1148",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Conversão de unidades: m/s para km/h"
+    }
+  },
+  {
+    "textHash": "07676c82",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Conversão de unidades: m/s para km/h"
+    }
+  },
+  {
+    "textHash": "faa559de",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Divisão de lucros proporcional ao investimento"
+    }
+  },
+  {
+    "textHash": "8eb464c3",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Divisão de lucros proporcional ao investimento"
+    }
+  },
+  {
+    "textHash": "24e9bf34",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Divisão de lucros proporcional ao investimento"
+    }
+  },
+  {
+    "textHash": "480e34c1",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Divisão de lucros proporcional ao investimento"
+    }
+  },
+  {
+    "textHash": "190d23d3",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Divisão de lucros proporcional ao investimento"
+    }
+  },
+  {
+    "textHash": "c70a0f5a",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Divisão de lucros proporcional ao investimento"
+    }
+  },
+  {
+    "textHash": "1abf02eb",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Divisão de lucros proporcional ao investimento"
+    }
+  },
+  {
+    "textHash": "45ed5f69",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Divisão de lucros proporcional ao investimento"
+    }
+  },
+  {
+    "textHash": "8dd06da9",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Divisão de lucros proporcional ao investimento"
+    }
+  },
+  {
+    "textHash": "c56bd5f4",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Divisão de lucros proporcional ao investimento"
+    }
+  },
+  {
+    "textHash": "664fccd9",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Responsável tributário (distinção de contribuinte)"
+    }
+  },
+  {
+    "textHash": "1631462b",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "contabilidade",
+      "title": "Princípio do custo histórico"
+    }
+  },
+  {
+    "textHash": "307ee83c",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Empresário individual (responsabilidade)"
+    }
+  },
+  {
+    "textHash": "e7de8cc7",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-eleitoral",
+      "title": "Propaganda eleitoral extemporânea"
+    }
+  },
+  {
+    "textHash": "112f4d09",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Ato administrativo vinculado vs. discricionário"
+    }
+  },
+  {
+    "textHash": "e3de36a2",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Princípio da anterioridade eleitoral (art. 16, CF)"
+    }
+  },
+  {
+    "textHash": "bf51d816",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Amostragem por conglomerados"
+    }
+  },
+  {
+    "textHash": "b8013ae4",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Modus ponens (silogismo hipotético)"
+    }
+  },
+  {
+    "textHash": "75602f69",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Concordância nominal (adjetivo predicativo)"
+    }
+  },
+  {
+    "textHash": "d2bb32d3",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "ingles",
+      "title": "Zero conditional"
+    }
+  },
+  {
+    "textHash": "cffffdae",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "espanhol",
+      "title": "Verbos de cambio: ponerse + adjetivo"
+    }
+  },
+  {
+    "textHash": "14d626f8",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "Integridade referencial"
+    }
+  },
+  {
+    "textHash": "6030386b",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-pessoal",
+      "title": "Jornada 12x36 (DSR e feriados)"
+    }
+  },
+  {
+    "textHash": "6a966510",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-fiscal",
+      "title": "Bloco K do SPED Fiscal (EFD ICMS/IPI)"
+    }
+  },
+  {
+    "textHash": "0489e885",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "contabilidade-geral",
+      "title": "Ajuste de exercícios anteriores"
+    }
+  },
+  {
+    "textHash": "bf02f03d",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "tributacao",
+      "title": "Não incidência vs. isenção tributária"
+    }
+  },
+  {
+    "textHash": "ec67e3d4",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Suspensão da exigibilidade do crédito tributário (art. 151 CTN)"
+    }
+  },
+  {
+    "textHash": "3557f1c8",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Sociedade em comandita simples (tipos de sócios)"
+    }
+  },
+  {
+    "textHash": "bf0695f2",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "direito-eleitoral",
+      "title": "Idade mínima para candidatura a vereador"
+    }
+  },
+  {
+    "textHash": "3c022e9e",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Dispensa vs. inexigibilidade de licitação"
+    }
+  },
+  {
+    "textHash": "09b45b0e",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Cláusulas pétreas (limites materiais ao poder de emenda)"
+    }
+  },
+  {
+    "textHash": "f1ea5125",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Pronome 'se' (reflexivo/recíproco)"
+    }
+  },
+  {
+    "textHash": "34f672cf",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "ingles",
+      "title": "Passive voice (modal 'must')"
+    }
+  },
+  {
+    "textHash": "bf6315d4",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "espanhol",
+      "title": "Artículo neutro 'lo' + adjetivo"
+    }
+  },
+  {
+    "textHash": "e0faecdc",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "SQL Injection (vulnerabilidade)"
+    }
+  },
+  {
+    "textHash": "e02e8083",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área do quadrado a partir do perímetro"
+    }
+  },
+  {
+    "textHash": "ea14c482",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área do quadrado a partir do perímetro"
+    }
+  },
+  {
+    "textHash": "8b1edf6e",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área do quadrado a partir do perímetro"
+    }
+  },
+  {
+    "textHash": "be6cadba",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área do quadrado a partir do perímetro"
+    }
+  },
+  {
+    "textHash": "b2c5ac99",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área do quadrado a partir do perímetro"
+    }
+  },
+  {
+    "textHash": "fa8bbee5",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área do quadrado a partir do perímetro"
+    }
+  },
+  {
+    "textHash": "4ce4a6a0",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área do quadrado a partir do perímetro"
+    }
+  },
+  {
+    "textHash": "7c79735c",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área do quadrado a partir do perímetro"
+    }
+  },
+  {
+    "textHash": "7b20ac28",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área do quadrado a partir do perímetro"
+    }
+  },
+  {
+    "textHash": "7f96a42b",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Área do quadrado a partir do perímetro"
+    }
+  },
+  {
+    "textHash": "ed978e0a",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Conversão de temperatura: Fahrenheit para Celsius"
+    }
+  },
+  {
+    "textHash": "8d2192cd",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Conversão de temperatura: Fahrenheit para Celsius"
+    }
+  },
+  {
+    "textHash": "58e8db95",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Conversão de temperatura: Fahrenheit para Celsius"
+    }
+  },
+  {
+    "textHash": "02341c9d",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Conversão de temperatura: Fahrenheit para Celsius"
+    }
+  },
+  {
+    "textHash": "d13ccfb5",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Conversão de temperatura: Fahrenheit para Celsius"
+    }
+  },
+  {
+    "textHash": "bd1cbc45",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Conversão de temperatura: Fahrenheit para Celsius"
+    }
+  },
+  {
+    "textHash": "c07c43d2",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Conversão de temperatura: Fahrenheit para Celsius"
+    }
+  },
+  {
+    "textHash": "f52081be",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Conversão de temperatura: Fahrenheit para Celsius"
+    }
+  },
+  {
+    "textHash": "97e38cf2",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Conversão de temperatura: Fahrenheit para Celsius"
+    }
+  },
+  {
+    "textHash": "cf76a366",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica",
+      "title": "Conversão de temperatura: Fahrenheit para Celsius"
+    }
+  },
+  {
+    "textHash": "057a8fc9",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Percentual de aumento para recompor preço (após redução)"
+    }
+  },
+  {
+    "textHash": "895fcaf0",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Percentual de aumento para recompor preço (após redução)"
+    }
+  },
+  {
+    "textHash": "ca79cca8",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Percentual de aumento para recompor preço (após redução)"
+    }
+  },
+  {
+    "textHash": "effea021",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Percentual de aumento para recompor preço (após redução)"
+    }
+  },
+  {
+    "textHash": "5d30184b",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Percentual de aumento para recompor preço (após redução)"
+    }
+  },
+  {
+    "textHash": "8d46eec2",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Percentual de aumento para recompor preço (após redução)"
+    }
+  },
+  {
+    "textHash": "37a62692",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Percentual de aumento para recompor preço (após redução)"
+    }
+  },
+  {
+    "textHash": "faacc1db",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Percentual de aumento para recompor preço (após redução)"
+    }
+  },
+  {
+    "textHash": "62a3b40f",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Percentual de aumento para recompor preço (após redução)"
+    }
+  },
+  {
+    "textHash": "c941b0c1",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "matematica-financeira",
+      "title": "Percentual de aumento para recompor preço (após redução)"
+    }
+  },
+  {
+    "textHash": "89601b6a",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-tributario",
+      "title": "Capacidade tributária ativa vs. competência tributária"
+    }
+  },
+  {
+    "textHash": "80429339",
+    "knowledgeType": "conceitual",
+    "contentId": "CG-034"
+  },
+  {
+    "textHash": "2131f429",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-empresarial",
+      "title": "Princípio da preservação da empresa"
+    }
+  },
+  {
+    "textHash": "11e4430f",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-eleitoral",
+      "title": "Prestação de contas de campanha eleitoral"
+    }
+  },
+  {
+    "textHash": "31e55bfa",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-administrativo",
+      "title": "Princípio da eficiência (EC 19/1998)"
+    }
+  },
+  {
+    "textHash": "d7e8e6d5",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "direito-constitucional",
+      "title": "Controle de constitucionalidade difuso (efeitos)"
+    }
+  },
+  {
+    "textHash": "854242b8",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Coeficiente de variação"
+    }
+  },
+  {
+    "textHash": "229ab4a1",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "raciocinio-logico",
+      "title": "Contrapositiva (equivalência lógica)"
+    }
+  },
+  {
+    "textHash": "8daa75e3",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "portugues",
+      "title": "Identificação do sujeito (ordem inversa)"
+    }
+  },
+  {
+    "textHash": "9baadb74",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "ingles",
+      "title": "Third conditional"
+    }
+  },
+  {
+    "textHash": "60f261ba",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "espanhol",
+      "title": "Subjuntivo (verbo volitivo)"
+    }
+  },
+  {
+    "textHash": "8195d0b1",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "dados",
+      "title": "INNER JOIN (SQL)"
+    }
+  },
+  {
+    "textHash": "1c2eae3a",
+    "knowledgeType": "factual",
+    "contentLabel": {
+      "theme": "departamento-pessoal",
+      "title": "FGTS (percentual de depósito mensal)"
+    }
+  },
+  {
+    "textHash": "19a4f65d",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "departamento-fiscal",
+      "title": "Nota Fiscal de Serviços Eletrônica (NFS-e)"
+    }
+  },
+  {
+    "textHash": "fe483078",
+    "knowledgeType": "conceitual",
+    "contentId": "CG-021"
+  },
+  {
+    "textHash": "38248666",
+    "knowledgeType": "conceitual",
+    "contentLabel": {
+      "theme": "tributacao",
+      "title": "Princípio da capacidade contributiva"
+    }
+  },
+  {
+    "textHash": "6414b587",
+    "knowledgeType": "procedimental",
+    "contentLabel": {
+      "theme": "estatistica",
+      "title": "Cálculo da mediana"
+    }
+  }
+]
