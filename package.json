@@ -19,6 +19,7 @@
     "apolo:fontes-autorais": "node scripts/apolo-fontes-autorais.mjs",
     "apolo:banco-novo": "node scripts/apolo-banco-novo.mjs",
     "apolo:sugestao-bloom": "node scripts/apolo-sugestao-bloom.mjs",
+    "apolo:aplicar-curadoria": "node scripts/apolo-aplicar-curadoria.mjs",
     "db:generate": "drizzle-kit generate",
     "db:catalog": "tsc -p tsconfig.notes-spike.json && node .notes-spike-dist/tools/write-catalog-seed.js",
     "db:migrate:local": "wrangler d1 migrations apply site-creator-d1 --local --config wrangler.local.jsonc",

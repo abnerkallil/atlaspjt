@@ -507,6 +507,27 @@ export const atlasQuestionSources = sqliteTable(
   ],
 );
 
+// Taxonomia "matéria › conteúdo" fora do roadmap atual (APO-02/DEC-014, Eixo
+// 2): o roadmap curado (atlas_contents) só cobre Contabilidade Geral e
+// Tributária hoje, mas os rascunhos cobrem 18 temas. Enquanto não existe um
+// roadmap real para esses outros temas, a curadoria rotula o rascunho aqui —
+// aberta, sem enum, mesmo princípio de atlas_themes — em vez de forçar um
+// content_id que não existe. Serve de matéria-prima para o gerador de roadmap
+// personalizado (pedido do Abner em 2026-10-12): cada linha já é um par
+// tema+conteúdo extraído de currículo/edital real.
+export const atlasContentTaxonomy = sqliteTable(
+  'atlas_content_taxonomy',
+  {
+    id: text('id').primaryKey(),
+    themeId: text('theme_id')
+      .notNull()
+      .references(() => atlasThemes.id, { onDelete: 'cascade' }),
+    title: text('title').notNull(),
+    createdAt: text('created_at').notNull(),
+  },
+  (table) => [index('idx_atlas_content_taxonomy_theme').on(table.themeId)],
+);
+
 // Curadoria de rascunhos (APO-07): questão extraída (APO-06) ou proposta à
 // mão, pendente até um humano aprovar — nunca entra sozinha no banco
 // ("precisamos de curadoria se quisermos um desenvolvimento sério" — Abner,
@@ -518,6 +539,9 @@ export const atlasQuestionDrafts = sqliteTable(
     sourceId: text('source_id').references(() => atlasQuestionSources.id, { onDelete: 'set null' }),
     // Preenchidos na curadoria, não na extração — por isso nulos até revisão.
     contentId: text('content_id').references(() => atlasContents.id, { onDelete: 'set null' }),
+    // Alternativa a contentId quando o tema não tem roadmap ainda (ver
+    // atlas_content_taxonomy acima). Um rascunho usa um ou outro, nunca os dois.
+    contentLabelId: text('content_label_id').references(() => atlasContentTaxonomy.id, { onDelete: 'set null' }),
     subtopicId: text('subtopic_id').references(() => atlasSubtopics.id, { onDelete: 'set null' }),
     theme: text('theme'),
     kind: text('kind').notNull(),
@@ -550,6 +574,7 @@ export const atlasQuestionDrafts = sqliteTable(
   (table) => [
     index('idx_atlas_question_drafts_status').on(table.status),
     index('idx_atlas_question_drafts_content').on(table.contentId),
+    index('idx_atlas_question_drafts_content_label').on(table.contentLabelId),
   ],
 );
 
