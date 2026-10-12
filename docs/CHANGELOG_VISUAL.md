@@ -696,7 +696,7 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
   volta o script ao estado anterior; nenhum rascunho ou questão aprovada é
   afetado.
 
-## PR #71 — Taxonomia de conteúdo fora do roadmap + script de curadoria em lote
+## PR #72 — Taxonomia de conteúdo fora do roadmap + script de curadoria em lote
 
 - Ponto de restauração: branch `restore/pre-apolo-taxonomia-conteudo` (commit
   `354d421`, main antes do merge).
