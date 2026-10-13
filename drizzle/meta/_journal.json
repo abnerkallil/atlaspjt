@@ -162,6 +162,13 @@
       "when": 1791500300000,
       "tag": "0022_taxonomia_conteudo_apolo",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "6",
+      "when": 1791500400000,
+      "tag": "0023_idx_drafts_text_hash",
+      "breakpoints": true
     }
   ]
 }

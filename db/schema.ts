@@ -575,6 +575,7 @@ export const atlasQuestionDrafts = sqliteTable(
     index('idx_atlas_question_drafts_status').on(table.status),
     index('idx_atlas_question_drafts_content').on(table.contentId),
     index('idx_atlas_question_drafts_content_label').on(table.contentLabelId),
+    index('idx_atlas_question_drafts_text_hash').on(table.textHash),
   ],
 );
 
