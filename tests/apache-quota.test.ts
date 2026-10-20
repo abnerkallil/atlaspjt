@@ -1,11 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {
-  APACHE_DAILY_PAGE_LIMIT,
-  ApacheQuotaError,
-  assertQuota,
-  refundQuota,
-} from '../lib/apache/quota.js';
+import { ApacheError } from '../lib/apache/errors.js';
+import { APACHE_DAILY_PAGE_LIMIT, assertQuota, refundQuota } from '../lib/apache/quota.js';
 import { d1 } from './support/d1-sqlite.js';
 import { migratedDatabase } from './support/migrated-db.js';
 
@@ -28,7 +24,7 @@ void test('APA-13: rejeita ao passar do limite na mesma janela', async () => {
   await assertQuota(db, 'u1', 90, new Date('2026-10-20T10:00:00.000Z'));
   await assert.rejects(
     () => assertQuota(db, 'u1', 1, new Date('2026-10-20T10:30:00.000Z')),
-    ApacheQuotaError,
+    ApacheError,
   );
   const row = await db.prepare('SELECT pages_used FROM atlas_apache_quota WHERE user_id = ?1').bind('u1').first<{
     pages_used: number;
@@ -40,14 +36,14 @@ void test('APA-13: rejeita de cara um envio maior que o limite diário inteiro, 
   const db = seeded();
   await assert.rejects(
     () => assertQuota(db, 'novo-usuario', APACHE_DAILY_PAGE_LIMIT + 1, new Date('2026-10-20T10:00:00.000Z')),
-    ApacheQuotaError,
+    ApacheError,
   );
 });
 
 void test('APA-13: janela rolante de 24h libera cota de novo', async () => {
   const db = seeded();
   await assertQuota(db, 'u1', 90, new Date('2026-10-20T10:00:00.000Z'));
-  await assert.rejects(() => assertQuota(db, 'u1', 1, new Date('2026-10-21T09:59:00.000Z')), ApacheQuotaError);
+  await assert.rejects(() => assertQuota(db, 'u1', 1, new Date('2026-10-21T09:59:00.000Z')), ApacheError);
   // passou de 24h desde a primeira página da janela
   await assertQuota(db, 'u1', 90, new Date('2026-10-21T10:00:01.000Z'));
   const row = await db.prepare('SELECT pages_used FROM atlas_apache_quota WHERE user_id = ?1').bind('u1').first<{
@@ -115,7 +111,7 @@ void test('APA-13: mensagem de limite batido informa quantas horas faltam para a
   await assert.rejects(
     () => assertQuota(db, 'u1', 1, new Date('2026-10-20T15:00:00.000Z')),
     (error: unknown) => {
-      assert.ok(error instanceof ApacheQuotaError);
+      assert.ok(error instanceof ApacheError);
       // Janela reabre em 2026-10-21T10:00:00Z; faltam 19h a partir de 15:00.
       assert.match(error.message, /em 19 horas/);
       return true;

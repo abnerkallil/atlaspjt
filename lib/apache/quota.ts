@@ -5,19 +5,10 @@
 // concorrentes: cada uma só conta como aceita se o próprio UPDATE afetar uma
 // linha, e o SQLite serializa os writes de uma mesma linha.
 import type { D1Like } from '../pedagogy/transitions.js';
+import { ApacheError } from './errors.js';
 
 export const APACHE_DAILY_PAGE_LIMIT = 90;
 const WINDOW_SECONDS = 24 * 60 * 60;
-
-export class ApacheQuotaError extends Error {
-  constructor(
-    message: string,
-    readonly status: number,
-  ) {
-    super(message);
-    this.name = 'ApacheQuotaError';
-  }
-}
 
 async function windowStartOf(db: D1Like, userId: string): Promise<string | null> {
   const row = await db
@@ -43,7 +34,7 @@ export async function assertQuota(
 ): Promise<string | null> {
   if (pagesRequested <= 0) return windowStartOf(db, userId);
   if (pagesRequested > APACHE_DAILY_PAGE_LIMIT) {
-    throw new ApacheQuotaError(
+    throw new ApacheError(
       `Este envio tem ${pagesRequested} páginas, mais que o limite diário de ${APACHE_DAILY_PAGE_LIMIT}.`,
       413,
     );
@@ -74,7 +65,7 @@ export async function assertQuota(
   if (!result || result.meta.changes === 0) {
     const windowStart = await windowStartOf(db, userId);
     const hours = windowStart ? hoursUntilReset(windowStart, now) : 24;
-    throw new ApacheQuotaError(
+    throw new ApacheError(
       `Limite de ${APACHE_DAILY_PAGE_LIMIT} páginas por dia atingido. Tenta de novo em ${hours} hora${hours === 1 ? '' : 's'}.`,
       429,
     );
