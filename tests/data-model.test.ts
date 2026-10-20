@@ -52,6 +52,11 @@ void test('TEC-02: a espinha do DEC-05 existe no banco migrado, com estado e aud
     atlas_question_sources: 'APO-05',
     atlas_question_drafts: 'APO-07',
     atlas_exam_attempts: 'APO-18',
+    atlas_apache_lessons: 'APA-02',
+    atlas_apache_enrichments: 'APA-02',
+    atlas_apache_quota: 'APA-02',
+    atlas_apache_queue: 'APA-02',
+    atlas_apache_neuron_meter: 'APA-02',
   };
   for (const name of tables) {
     if (byCard[name]) continue;
