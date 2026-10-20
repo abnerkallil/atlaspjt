@@ -100,7 +100,7 @@ async function answerKey(raw: Raw, db: Db, attemptId: string, correctCount = Inf
 // inteira coberta com todas as atividades aprovadas.
 async function reachFinal(raw: Raw, db: Db, midtermCorrect = 45) {
   const total = contentIds(raw).length;
-  coverFirst(raw, total / 2);
+  coverFirst(raw, Math.ceil(total / 2));
   await startExameMeio(db, DISCIPLINE, { confirmed: true, now: T0, id: 'ex1' });
   await submitExam(db, 'ex1', { answers: await answerKey(raw, db, 'ex1', midtermCorrect) }, { now: T1 });
   coverFirst(raw, total);
@@ -264,7 +264,7 @@ void test('conteudo-100: só com o exame de meio entregue, 100% de cobertura e t
 void test('conteudo-100 não dispara com cobertura incompleta', async () => {
   const { raw, db } = setup();
   const total = contentIds(raw).length;
-  coverFirst(raw, total / 2);
+  coverFirst(raw, Math.ceil(total / 2));
   await startExameMeio(db, DISCIPLINE, { confirmed: true, now: T0, id: 'ex1' });
   await submitExam(db, 'ex1', { answers: await answerKey(raw, db, 'ex1', 45) }, { now: T1 });
   coverFirst(raw, total - 1);

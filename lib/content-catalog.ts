@@ -1,6 +1,11 @@
 export type ContentReference = {
   id: string;
-  subject: 'Contabilidade Geral' | 'Contabilidade Tributária';
+  subject:
+    | 'Contabilidade Geral'
+    | 'Contabilidade Tributária'
+    | 'Contabilidade de Custos'
+    | 'Análise das Demonstrações Financeiras'
+    | 'Contabilidade Avançada';
   unit: string;
   title: string;
   keywords: string;
@@ -57,6 +62,14 @@ export const contentCatalog: ContentReference[] = [
     unit: 'Fundamentos',
     title: 'Variações patrimoniais',
     keywords: 'Variações qualitativas e quantitativas; resultado e patrimônio',
+  },
+  {
+    id: 'CG-041',
+    subject: 'Contabilidade Geral',
+    unit: 'Fundamentos',
+    title: 'Princípios contábeis fundamentais',
+    keywords:
+      'Prudência, continuidade, entidade, oportunidade, custo histórico e demais princípios de contabilidade',
   },
   {
     id: 'CG-007',
@@ -1271,6 +1284,137 @@ export const contentCatalog: ContentReference[] = [
     title: 'Avaliação de domínio em Contabilidade Tributária',
     keywords:
       'Prova teórica, casos, escrituração, apurações, SPED, reforma, defesa oral e auditoria de consistência',
+  },
+  {
+    id: 'CC-001',
+    subject: 'Contabilidade de Custos',
+    unit: 'Fundamentos de custos',
+    title: 'Classificação de custos e CPV industrial',
+    keywords:
+      'Custos fixos e variáveis, diretos e indiretos, custo dos produtos vendidos em empresa industrial',
+  },
+  {
+    id: 'CC-002',
+    subject: 'Contabilidade de Custos',
+    unit: 'Fundamentos de custos',
+    title: 'Métodos de avaliação de estoque',
+    keywords: 'PEPS, UEPS e custo médio ponderado na avaliação de estoques',
+  },
+  {
+    id: 'CC-003',
+    subject: 'Contabilidade de Custos',
+    unit: 'Formação de preço e decisão',
+    title: 'Markup e formação de preço de venda',
+    keywords:
+      'Cálculo de markup, margem de lucro desejada e composição do preço de venda',
+  },
+  {
+    id: 'CC-004',
+    subject: 'Contabilidade de Custos',
+    unit: 'Formação de preço e decisão',
+    title: 'Ponto de equilíbrio e margem de contribuição',
+    keywords:
+      'Margem de contribuição, custos fixos e ponto de equilíbrio contábil, econômico e financeiro',
+  },
+  {
+    id: 'AD-001',
+    subject: 'Análise das Demonstrações Financeiras',
+    unit: 'Liquidez e capital de giro',
+    title: 'Índices de liquidez e Capital Circulante Líquido',
+    keywords:
+      'Liquidez corrente, seca, geral e imediata; CCL (Capital Circulante Líquido)',
+  },
+  {
+    id: 'AD-002',
+    subject: 'Análise das Demonstrações Financeiras',
+    unit: 'Liquidez e capital de giro',
+    title: 'Giro de estoque e indicadores de giro',
+    keywords:
+      'Giro de estoque, prazo médio de estocagem e indicadores de rotatividade',
+  },
+  {
+    id: 'AD-003',
+    subject: 'Análise das Demonstrações Financeiras',
+    unit: 'Rentabilidade e indicadores combinados',
+    title: 'Margem de lucro bruto e lucro bruto',
+    keywords: 'Lucro bruto, margem bruta e sua leitura na análise de balanços',
+  },
+  {
+    id: 'AD-004',
+    subject: 'Análise das Demonstrações Financeiras',
+    unit: 'Rentabilidade e indicadores combinados',
+    title: 'Margem líquida e indicadores de rentabilidade',
+    keywords: 'Margem líquida, ROE e ROA na análise de rentabilidade',
+  },
+  {
+    id: 'AD-005',
+    subject: 'Análise das Demonstrações Financeiras',
+    unit: 'Rentabilidade e indicadores combinados',
+    title: 'EBITDA e indicadores combinados de análise',
+    keywords:
+      'EBITDA, margem EBITDA e leitura combinada de liquidez, rentabilidade e giro',
+  },
+  {
+    id: 'AD-006',
+    subject: 'Análise das Demonstrações Financeiras',
+    unit: 'Rentabilidade e indicadores combinados',
+    title: 'TIR, VPL e análise de investimentos',
+    keywords:
+      'Taxa interna de retorno, valor presente líquido e viabilidade de investimentos',
+  },
+  {
+    id: 'CA-001',
+    subject: 'Contabilidade Avançada',
+    unit: 'Ativos intangíveis e investimentos',
+    title: 'Ativos intangíveis, goodwill e equivalência patrimonial',
+    keywords:
+      'Intangíveis, ágio/goodwill e método de equivalência patrimonial (MEP)',
+  },
+  {
+    id: 'CA-002',
+    subject: 'Contabilidade Avançada',
+    unit: 'Ativos intangíveis e investimentos',
+    title: 'Consolidação de demonstrações financeiras',
+    keywords: 'Consolidação de balanços entre controladora e controladas (CPC 36)',
+  },
+  {
+    id: 'CA-003',
+    subject: 'Contabilidade Avançada',
+    unit: 'Reconhecimento e mensuração avançada',
+    title: 'Provisões, contingências e impairment',
+    keywords:
+      'Provisões e passivos contingentes (CPC 25) e teste de redução ao valor recuperável (CPC 01)',
+  },
+  {
+    id: 'CA-004',
+    subject: 'Contabilidade Avançada',
+    unit: 'Reconhecimento e mensuração avançada',
+    title: 'Mensuração a valor justo e ajuste a valor presente',
+    keywords: 'Valor justo, ajuste a valor presente (AVP) e seus efeitos nas demonstrações',
+  },
+  {
+    id: 'CA-005',
+    subject: 'Contabilidade Avançada',
+    unit: 'Reconhecimento e mensuração avançada',
+    title: 'Receita diferida, subvenções e duplicatas descontadas',
+    keywords:
+      'Receita diferida, subvenções governamentais e desconto de duplicatas',
+  },
+  {
+    id: 'CA-006',
+    subject: 'Contabilidade Avançada',
+    unit: 'Reconhecimento e mensuração avançada',
+    title: 'Ajustes de exercícios anteriores e reserva legal',
+    keywords:
+      'Ajustes patrimoniais, correção de exercícios anteriores e constituição de reserva legal',
+  },
+  {
+    id: 'CA-007',
+    subject: 'Contabilidade Avançada',
+    unit: 'Demonstrações complementares',
+    title: 'Demonstrações complementares: DOAR e DVA',
+    keywords:
+      'Demonstração das Origens e Aplicações de Recursos (DOAR) e Demonstração do Valor Adicionado (DVA)',
   },
 ];
 

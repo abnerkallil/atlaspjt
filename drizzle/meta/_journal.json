@@ -183,6 +183,13 @@
       "when": 1791500600000,
       "tag": "0025_materiais_documentos_fiscais_reforma",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "6",
+      "when": 1791500700000,
+      "tag": "0026_contabilidade_custos_analise_avancada",
+      "breakpoints": true
     }
   ]
 }

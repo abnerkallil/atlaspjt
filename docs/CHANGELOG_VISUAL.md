@@ -14,6 +14,33 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #79 — 3 disciplinas novas no roadmap (Custos, Análise das Demonstrações, Avançada) + CG-041
+
+- Ponto de restauração: branch `restore/pre-contabilidade-custos-analise-avancada` (main antes do merge).
+- O que muda no site: o roadmap de Contabilidade ganha 18 nós novos — 1 em
+  Contabilidade Geral (CG-041, "Princípios contábeis fundamentais", inserido
+  dentro da unidade "Fundamentos") e 3 disciplinas novas depois de
+  Contabilidade Tributária: **Contabilidade de Custos** (4 nós: classificação
+  de custos/CPV, avaliação de estoque, markup, ponto de equilíbrio),
+  **Análise das Demonstrações Financeiras** (6 nós: liquidez/CCL, giro,
+  margem de lucro bruto, margem líquida/rentabilidade, EBITDA, TIR/VPL) e
+  **Contabilidade Avançada** (7 nós: intangíveis/goodwill/MEP, consolidação,
+  provisões/impairment, valor justo/AVP, receita diferida/subvenção/
+  duplicatas, ajustes de exercícios anteriores/reserva legal, DOAR/DVA).
+  Quem já estuda Contabilidade Geral/Tributária vê esses nós aparecerem no
+  roadmap; não muda nada do que já estava lá (CG-007 a CG-040 só reordenam
+  posição interna pra abrir espaço pro CG-041).
+  Depois que Abner rodar `data/apolo/curadoria/remap-contabilidade-novos-nos.sql`
+  em produção, 194 rascunhos que a curadoria de 2026-10-12 tinha deixado
+  "fora do roadmap" passam a aparecer em `/rascunhos` com o conteúdo certo
+  já selecionado (mais 1, "Depreciação pelo método das unidades produzidas",
+  remapeado pro nó já existente CG-031, mesmo padrão dos PRs #76/#77). Não
+  aprova nenhum rascunho.
+  Estrutura aprovada pelo Abner em 2026-10-20 (opção B da proposta em
+  `/mnt/project-files/apolo/curadoria/proposta-estrutura-contabilidade-2026-10-20.md`),
+  coordenado com o PR #78 (que adiciona nós de Contabilidade Tributária sobre
+  documentos fiscais) — disciplinas e faixas de ID diferentes, sem overlap.
+
 ## PR #78 — Apostila Documentos Fiscais na Reforma: novos nós + materiais no roadmap de Contabilidade Tributária
 
 - Ponto de restauração: branch `restore/pre-apostila-documentos-fiscais` (main antes do merge).

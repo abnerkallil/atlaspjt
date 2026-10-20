@@ -19,8 +19,20 @@ void test('TEC-04: a migration de carga é exatamente o que o gerador produz (ro
 
 void test('TEC-04: uma fase por matéria, todos os conteúdos da planilha, pré-requisito em sequência na unidade', () => {
   const roadmap = buildCatalogRoadmap();
-  assert.deepEqual(roadmap.phases.map((phase) => phase.title), ['Contabilidade Geral', 'Contabilidade Tributária']);
-  assert.deepEqual(roadmap.disciplines.map((item) => item.title), ['Contabilidade Geral', 'Contabilidade Tributária']);
+  assert.deepEqual(roadmap.phases.map((phase) => phase.title), [
+    'Contabilidade Geral',
+    'Contabilidade Tributária',
+    'Contabilidade de Custos',
+    'Análise das Demonstrações Financeiras',
+    'Contabilidade Avançada',
+  ]);
+  assert.deepEqual(roadmap.disciplines.map((item) => item.title), [
+    'Contabilidade Geral',
+    'Contabilidade Tributária',
+    'Contabilidade de Custos',
+    'Análise das Demonstrações Financeiras',
+    'Contabilidade Avançada',
+  ]);
   assert.deepEqual(roadmap.contents.map((item) => item.id).sort(), contentCatalog.map((item) => item.id).sort());
 
   const byId = new Map(roadmap.contents.map((item) => [item.id, item]));

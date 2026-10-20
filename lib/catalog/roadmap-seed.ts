@@ -20,6 +20,24 @@ const SUBJECTS: { subject: ContentReference['subject']; phaseId: string; discipl
     disciplineId: 'contabilidade-tributaria',
     summary: 'Regimes de tributação, tributos, obrigações e reforma tributária.',
   },
+  {
+    subject: 'Contabilidade de Custos',
+    phaseId: 'fase-contabilidade-custos',
+    disciplineId: 'contabilidade-custos',
+    summary: 'Classificação de custos, avaliação de estoque, markup e ponto de equilíbrio.',
+  },
+  {
+    subject: 'Análise das Demonstrações Financeiras',
+    phaseId: 'fase-analise-demonstracoes',
+    disciplineId: 'analise-demonstracoes',
+    summary: 'Liquidez, capital de giro, rentabilidade e indicadores combinados de análise.',
+  },
+  {
+    subject: 'Contabilidade Avançada',
+    phaseId: 'fase-contabilidade-avancada',
+    disciplineId: 'contabilidade-avancada',
+    summary: 'Intangíveis, consolidação, provisões, mensuração avançada e demonstrações complementares.',
+  },
 ];
 
 export type CatalogRoadmap = {
