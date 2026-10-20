@@ -738,3 +738,103 @@ export const atlasContentMaterials = sqliteTable(
   },
   (table) => [index('idx_atlas_content_materials_content').on(table.contentId, table.position)],
 );
+
+// Apache (DEC-019, DEC-020): aula base por conteúdo, em R2 (gzip) + status/
+// versão aqui. Aula regerada sobrescreve o objeto R2, sem histórico de versão.
+export const atlasApacheLessons = sqliteTable(
+  'atlas_apache_lessons',
+  {
+    id: text('id').primaryKey(),
+    contentId: text('content_id')
+      .notNull()
+      .references(() => atlasContents.id, { onDelete: 'cascade' }),
+    // pendente | gerando | gerada | reportada | erro
+    status: text('status').notNull().default('pendente'),
+    version: integer('version').notNull().default(1),
+    model: text('model'),
+    objectKey: text('object_key'),
+    generatedAt: text('generated_at'),
+    reportedCount: integer('reported_count').notNull().default(0),
+    errorMessage: text('error_message'),
+    updatedAt: text('updated_at').notNull(),
+  },
+  (table) => [uniqueIndex('idx_atlas_apache_lessons_content').on(table.contentId)],
+);
+
+// Ficha extraída do material do aluno (ApacheEnrichment: conceitos +
+// irrelevante), NÃO o resultado comparado com a aula — a comparação é
+// sempre calculada na leitura (lib/apache/schema.ts), nunca aqui.
+export const atlasApacheEnrichments = sqliteTable(
+  'atlas_apache_enrichments',
+  {
+    id: text('id').primaryKey(),
+    contentId: text('content_id')
+      .notNull()
+      .references(() => atlasContents.id, { onDelete: 'cascade' }),
+    // vem de getApacheUserId() (lib/auth.ts), hoje sempre a mesma constante.
+    userId: text('user_id').notNull(),
+    // processando | concluido | descartado | erro
+    status: text('status').notNull().default('processando'),
+    objectKey: text('object_key'),
+    sourceFileHash: text('source_file_hash'),
+    pagesUsed: integer('pages_used').notNull().default(0),
+    // JSON de conceitos acumulado por chunk (validado por validateEnrichment),
+    // limpo quando status chega a concluido/descartado.
+    partialResult: text('partial_result'),
+    errorMessage: text('error_message'),
+    createdAt: text('created_at').notNull(),
+    updatedAt: text('updated_at').notNull(),
+  },
+  (table) => [
+    uniqueIndex('idx_atlas_apache_enrichments_content_user').on(table.contentId, table.userId),
+    index('idx_atlas_apache_enrichments_hash').on(table.sourceFileHash),
+  ],
+);
+
+// Cota de 90 páginas/24h por titular (getApacheUserId()); janela rolante.
+export const atlasApacheQuota = sqliteTable('atlas_apache_quota', {
+  userId: text('user_id').primaryKey(),
+  windowStart: text('window_start').notNull(),
+  pagesUsed: integer('pages_used').notNull().default(0),
+  updatedAt: text('updated_at').notNull(),
+});
+
+// Fila processada via waitUntil (sem Cron Trigger, DEC-019); dedupe de
+// aula por content_id+kind+status (índice abaixo), consultado no APA-07
+// antes do insert. startedAt destrava itens presos em 'processando' quando
+// o waitUntil é interrompido antes da geração terminar (ver APA-02/APA-07
+// em docs/APACHE.md: mais velho que 5 minutos volta para 'pendente').
+export const atlasApacheQueue = sqliteTable(
+  'atlas_apache_queue',
+  {
+    id: text('id').primaryKey(),
+    contentId: text('content_id')
+      .notNull()
+      .references(() => atlasContents.id, { onDelete: 'cascade' }),
+    // aula | aula_manual | enriquecimento
+    kind: text('kind').notNull().default('aula'),
+    // só preenchido para kind='enriquecimento'; aula é compartilhada, sem titular.
+    userId: text('user_id'),
+    // pendente | processando | concluido | erro
+    status: text('status').notNull().default('pendente'),
+    attempts: integer('attempts').notNull().default(0),
+    lastError: text('last_error'),
+    // texto extraído do upload, em apache/tmp/, até o job terminar.
+    tempObjectKey: text('temp_object_key'),
+    // marcado quando status vira 'processando'.
+    startedAt: text('started_at'),
+    createdAt: text('created_at').notNull(),
+    processedAt: text('processed_at'),
+  },
+  (table) => [
+    index('idx_atlas_apache_queue_status').on(table.status, table.createdAt),
+    index('idx_atlas_apache_queue_content_kind_status').on(table.contentId, table.kind, table.status),
+  ],
+);
+
+// Medidor diário de neurons do Workers AI (plano Free, 10.000/dia, reset 00:00 UTC).
+export const atlasApacheNeuronMeter = sqliteTable('atlas_apache_neuron_meter', {
+  day: text('day').primaryKey(),
+  neuronsUsed: integer('neurons_used').notNull().default(0),
+  updatedAt: text('updated_at').notNull(),
+});
