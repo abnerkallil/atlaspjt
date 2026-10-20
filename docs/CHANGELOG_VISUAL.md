@@ -14,6 +14,29 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #84 — UI da aula base na sessão de estudo (APA-04)
+
+- Ponto de restauração: branch `restore/pre-apa-04` (main antes do merge).
+- O que muda no site: na tela de estudo de qualquer conteúdo, antes do
+  bloco "Material do conteúdo", aparece um novo card de "aula gerada por
+  IA" (objetivo, conceitos, fórmulas, exemplos, pegadinhas de prova e
+  resumo) assim que ela estiver pronta — enquanto a aula está sendo
+  escrita mostra um spinner avisando que leva poucos minutos, e se for
+  reportado algum erro nela (card futuro) ela continua visível com um
+  aviso acima. **Hoje esse card não aparece de fato**: a rota que ele
+  consulta (`GET /api/apache/aulas/:contentId`, card APA-07) ainda não
+  existe, então ele recebe 404 e se esconde sozinho — nada muda na tela
+  até o APA-07 ser mesclado.
+- O componente (`components/pages/content-lesson.tsx`) consulta essa rota
+  de novo a cada 5s enquanto a aula não estiver pronta, parando depois de
+  ~10 minutos de tentativas ou quando a aba fica em segundo plano (volta a
+  consultar assim que a aba fica visível de novo), para não gastar
+  requisições à toa.
+- Sem migration nova.
+- Se algo der errado: reverter para `restore/pre-apa-04` remove o
+  componente e as classes `.al-*`; como a rota que ele chama não existe
+  ainda, nada no site muda hoje de qualquer forma.
+
 ## PR #85 — Ingestão de arquivo digital, PDF/DOCX/XLSX (APA-09)
 
 - Ponto de restauração: branch `restore/pre-apa-09` (main antes do merge).
