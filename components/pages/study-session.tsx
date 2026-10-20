@@ -9,6 +9,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useAtlasShell } from '@/components/atlas/atlas-shell';
 import { updateStudySession } from '@/components/pages/use-study-overview';
+import { ContentLesson } from '@/components/pages/content-lesson';
 import { ContentMaterials } from '@/components/pages/content-materials';
 import { DirectedStudy } from '@/components/pages/directed-study';
 import {
@@ -673,6 +674,7 @@ export function StudySession({
               <p className="ss-key">
                 Pause quando precisar parar: o tempo para de contar e o ponto atual fica salvo. Ao concluir, o quiz do conteúdo é liberado.
               </p>
+              <ContentLesson contentId={session.contentId} />
               <ContentMaterials contentId={session.contentId} />
             </div>
           )}
