@@ -1031,3 +1031,89 @@ Quest: Card APO-17 — Atividades como pré-requisito da Avaliação Final (ATLA
 Supersedes: NONE
 
 Superseded by: NONE
+
+---
+
+## DEC-019 — Modelo de dados, storage, identidade e execução periódica do Apache
+
+Status: ACCEPTED
+
+Date: 2026-10-20
+
+### Context
+
+Card APA-01 exige decidir, antes de qualquer código do Apache (aula base + enriquecimento), onde a aula e a ficha de enriquecimento ficam armazenadas, como a comparação entre o material do aluno e a aula se mantém correta quando a aula muda de versão (o arquivo original do aluno é sempre apagado após o processamento, então "recalcular pedindo o arquivo de novo" não é viável), como a identidade do titular é chaveada antes de existir multiusuário de verdade, e como a fila de geração roda sem depender de um mecanismo de `scheduled` não documentado no vinext. Requisito original (Abner, 2026-10-20): Apache como segunda IA do Atlas, excepcionando DEC-014 só para si. Abner respondeu as 4 perguntas diretamente na thread "Cards do Apache" em 2026-10-20 17:55–17:57, sem sessão formal de Raf.
+
+### Decision
+
+(1) Storage: aula base em R2 (gzip) com status/versão/modelo em D1 (`atlas_apache_lessons`); ficha do enriquecimento também em R2 (gzip) com metadados em D1 (`atlas_apache_enrichments`); mesmo bucket `ATTACHMENTS`, prefixos `apache/aulas/<contentId>/v<versao>.json.gz` e `apache/enriquecimento/<contentId>/<userId>.json.gz`; aula regerada sobrescreve, sem histórico de versão. (2) A ficha extraída do material (conceitos, sem comparação com a aula) é guardada por `content_id`+`userId`, independente da versão da aula; a comparação (`novos`/`reforcos`) é sempre recalculada na leitura, função pura, sem IA, nunca persistida. (3) Quota e enriquecimento chaveados por `userId` desde o primeiro código, via `getApacheUserId()` novo em `lib/auth.ts` (hoje retorna constante fixa do dono) — único ponto de mudança no dia do multiusuário. (4) Execução periódica via opção (b): sem Cron Trigger nem `scheduled` customizado nesta v1; fila processada por `ctx.waitUntil(...)` na requisição que originou o item, mais checagem de itens pendentes no primeiro request HTTP recebido após o reset diário de cota (00:00 UTC).
+
+### Rationale
+
+1. Reaproveitar o par R2 (bytes, gzip) + D1 (status/metadados) já validado por `atlas_content_materials`/`atlas_question_sources` evita um mecanismo de storage novo.
+2. Ficha separada da comparação resolve a contradição entre "arquivo original sempre apagado" e "recalcular exige o arquivo", sem reter dados do aluno além do necessário.
+3. `waitUntil` + checagem pós-reset evita depender de um mecanismo de `scheduled` não documentado no vinext.
+
+### Constraints for Claude Code
+
+- Nenhuma tabela de usuário nova; toda identidade do Apache passa por `getApacheUserId()` (`lib/auth.ts`), nunca lida sessão direto em `lib/apache/*`.
+- `atlas_apache_enrichments` nunca grava `lesson_version` nem o resultado comparado — só a ficha; o diff é função pura calculada na leitura (ver DEC-020 para as blindagens de tamanho).
+- Aula regerada sobrescreve o objeto R2 e incrementa `version` em D1; sem histórico de versões anteriores.
+- Fila (`atlas_apache_queue`) processada só via `waitUntil` e checagem pós-00:00 UTC; nenhum Cron Trigger nem `scheduled` customizado nesta v1.
+- Mesmo bucket `ATTACHMENTS`; nenhum bucket R2 novo.
+
+### Consequences
+
+Desbloqueia o card APA-02 (migration) e toda a cadeia de cards do Apache. Fixa que o multiusuário futuro só exige mudar `getApacheUserId()`, sem migration nova em nenhuma tabela do Apache.
+
+### Related
+
+Quest: Card APA-01 — Gate de arquitetura do Apache (ATLAS-RAF-GATE-20261020-001)
+
+Supersedes: NONE
+
+Superseded by: NONE
+
+---
+
+## DEC-020 — Segurança do Apache (prompt-injection, limites e blindagem geral)
+
+Status: ACCEPTED
+
+Date: 2026-10-20
+
+### Context
+
+Card APA-14 exige blindar as rotas do Apache (primeira peça do Atlas a enviar texto de origem externa — material do aluno, materiais do conteúdo — para um modelo de IA generativa) contra prompt-injection, upload disfarçado por extensão, saída de IA sem limite de tamanho e rajadas de requisição, sem reabrir a autenticação já coberta por `proxy.ts` (DEC-007). Abner confirmou os itens (1)-(2) como estavam e pediu auditoria ampliada ("o programa precisa ser blindado"), respondida com 6 itens novos, todos confirmados por ele em 2026-10-20 17:55–17:57.
+
+### Decision
+
+(1) Delimitador explícito de prompt-injection em volta de todo texto não escrito pelo Abner na hora; saída da IA sempre como texto React puro, nunca HTML. (2) Upload até 10MB; síncrono só até ~6.000 caracteres (1 página, 1 chamada de IA); 2+ chunks vão para a fila; validação server-side de `text.length` contra páginas declaradas. (3) Autenticação já coberta por `proxy.ts`, falha fechada, sem ação de código. (4) `validateApacheUpload` checa magic bytes (`%PDF`, `PK\x03\x04`) contra o tipo declarado. (5) Teto duro de 540.000 caracteres no texto extraído, independente da página declarada. (6) Teto de caracteres por campo na saída da IA (`def`/`texto`/`resumo` ≤ 2.000, listas ≤ 20 itens) em `validateLesson`/`validateEnrichment`. (7) Novo binding `APACHE_RATE_LIMITER` (mesmo mecanismo do `LOGIN_RATE_LIMITER`), 20 req/min, em `POST /api/apache/enriquecimento` (+ `/texto`), antes de `assertQuota`. (8) Erros do Apache sempre genéricos (`ApacheError`), nunca stack trace ou detalhe interno.
+
+### Rationale
+
+1. Delimitador + saída sempre como texto React puro é a defesa mínima contra prompt-injection e XSS simultaneamente.
+2. Teto de 540k chars pós-extração fecha a lacuna que a validação de páginas declaradas, por si só, não fecha.
+3. Reaproveitar o mecanismo do `LOGIN_RATE_LIMITER` para `APACHE_RATE_LIMITER` evita inventar um binding novo de rate limit.
+
+### Constraints for Claude Code
+
+- Todo texto de origem externa passa por delimitador explícito antes de ir para o prompt da IA.
+- Saída da IA renderizada só como texto React puro; nunca `dangerouslySetInnerHTML` nem HTML bruto.
+- `validateApacheUpload` (APA-12) valida magic bytes, não só extensão/MIME declarado.
+- Teto de 540.000 caracteres no texto extraído, checado depois da extração (APA-09/APA-12).
+- `validateLesson`/`validateEnrichment` (APA-03) impõem teto de caracteres por campo e por lista.
+- `APACHE_RATE_LIMITER` novo (20 req/min) nas rotas que chamam IA, antes de `assertQuota`; nenhuma rota `/api/apache/*` entra em `PUBLIC_PATHS`.
+- Toda resposta de erro do Apache usa `ApacheError` com mensagem curta e genérica.
+
+### Consequences
+
+Desbloqueia o código do Apache sob as mesmas regras de segurança já formalizadas; qualquer card que gere ou processe texto externo (APA-06, APA-09, APA-12) deve citar estes itens literalmente.
+
+### Related
+
+Quest: Card APA-14 — Gate de segurança do Apache (ATLAS-RAF-GATE-20261020-002)
+
+Supersedes: NONE
+
+Superseded by: NONE

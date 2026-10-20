@@ -928,6 +928,131 @@ YES — registrado como DEC-018, Related: card APO-17.
 
 ---
 
+# GATE APA-01 — MODELO DE DADOS, STORAGE, IDENTIDADE E EXECUÇÃO PERIÓDICA DO APACHE
+
+Status: RESOLVED — DEC-019 (ACCEPTED); storage em R2+D1, ficha separada do diff, identidade por `getApacheUserId()`, fila via `waitUntil`
+
+Correlation: ATLAS-RAF-GATE-20261020-001
+
+## Quest
+
+Card APA-01 — Gate de arquitetura do Apache (aula base + enriquecimento), `docs/APACHE.md` revisão 4.
+
+## Architectural question
+
+Onde a aula base e a ficha de enriquecimento são armazenadas, como a comparação entre o material do aluno e a aula se mantém correta quando a aula muda de versão, como a identidade do titular é chaveada antes de existir multiusuário, e como a fila de geração roda sem Cron Trigger.
+
+## Gate trigger
+
+Primeira peça do Atlas com IA generativa externa (excepciona DEC-014 só para o Apache); introduz 5 tabelas novas e dois prefixos novos no bucket `ATTACHMENTS`.
+
+## Original requirement
+
+Abner, 2026-10-20: pediu o Apache como segunda IA do Atlas (aula base por conteúdo + enriquecimento por upload do aluno), respondeu as 4 perguntas do Gate diretamente na thread "Cards do Apache" (17:55–17:57), sem sessão formal de Raf.
+
+## Relevant repository facts
+
+1. Lido: `docs/APACHE.md` (revisão 4), `db/schema.ts`, `lib/auth.ts`, `proxy.ts` (DEC-007), `vite.config.ts` (`localBindingConfig`), `scripts/prepare-own-deploy.mjs` (binding `ATTACHMENTS`).
+2. Atlas é de usuário único hoje (DEC-007); não existe tabela de usuário nem mecanismo de cron customizado documentado no vinext.
+3. O arquivo original enviado pelo aluno é sempre apagado após o processamento — qualquer esquema que dependa de reenviá-lo para recalcular está descartado.
+
+## Options and trade-offs
+
+Decidido sem opções formais em Raf — respondido diretamente pelo Abner após levantamento do Claude Code. Ver "Decision" abaixo para as 4 respostas.
+
+## Decision required
+
+As 4 perguntas do card APA-01 (storage, ficha×versão, identidade, execução periódica).
+
+## Raf decision
+
+### Decision
+
+(1) Storage: aula base em R2 (gzip) com status/versão/modelo em D1 (`atlas_apache_lessons`); ficha do enriquecimento também em R2 (gzip) com metadados em D1 (`atlas_apache_enrichments`); mesmo bucket `ATTACHMENTS`, prefixos `apache/aulas/<contentId>/v<versao>.json.gz` e `apache/enriquecimento/<contentId>/<userId>.json.gz`; aula regerada sobrescreve, sem histórico de versão. (2) Ficha×versão: a ficha extraída (conceitos, sem comparação) é guardada por `content_id`+`userId`, independente da versão da aula; a comparação (`novos`/`reforcos`) é recalculada na leitura, pura, sem IA, nunca persistida — nunca fica desatualizada e nunca precisa do arquivo de novo. (3) Identidade: quota e enriquecimento chaveados por `userId` desde o primeiro código, via `getApacheUserId()` novo em `lib/auth.ts` (hoje retorna constante fixa do dono); é o único ponto de mudança no dia do multiusuário. (4) Execução periódica: opção (b) — sem Cron Trigger nem `scheduled` customizado nesta v1; fila processada via `ctx.waitUntil(...)` na requisição que originou o item, mais checagem de pendentes no primeiro request HTTP após o reset diário de cota (00:00 UTC).
+
+### Rationale
+
+1. Reaproveitar o par R2 (bytes, gzip) + D1 (status/metadados) já validado por `atlas_content_materials`/`atlas_question_sources` evita um mecanismo de storage novo.
+2. Ficha separada da comparação resolve a contradição "arquivo original sempre apagado" vs. "recalcular exige o arquivo" sem reter dados do aluno além do necessário.
+3. `waitUntil` + checagem pós-reset evita depender de um mecanismo de `scheduled` não documentado no vinext, ao custo aceito pelo Abner de itens só processarem no próximo acesso HTTP.
+
+### Constraints for Claude Code
+
+- Nenhuma tabela de usuário nova; toda identidade do Apache passa por `getApacheUserId()` (`lib/auth.ts`), nunca lida sessão direto em `lib/apache/*`.
+- `atlas_apache_enrichments` nunca grava `lesson_version` nem o resultado comparado — só a ficha; o diff é função pura calculada na leitura.
+- Aula regerada sobrescreve o objeto R2 e incrementa `version` em D1; sem histórico de versões anteriores.
+- Fila (`atlas_apache_queue`) processada só via `waitUntil` e checagem pós-00:00 UTC; nenhum Cron Trigger nem `scheduled` customizado nesta v1.
+- Mesmo bucket `ATTACHMENTS`; nenhum bucket R2 novo.
+
+### DEC Required
+
+YES — registrado como DEC-019, Related: card APA-01.
+
+---
+
+# GATE APA-14 — SEGURANÇA DO APACHE (PROMPT-INJECTION, LIMITES E BLINDAGEM GERAL)
+
+Status: RESOLVED — DEC-020 (ACCEPTED); 8 itens de blindagem confirmados, incluindo rate limit novo e validação de conteúdo real do upload
+
+Correlation: ATLAS-RAF-GATE-20261020-002
+
+## Quest
+
+Card APA-14 — Gate de segurança do Apache, `docs/APACHE.md` revisão 4.
+
+## Architectural question
+
+Como blindar as rotas do Apache contra prompt-injection via material do aluno/conteúdo, uploads maliciosos disfarçados por extensão, saída de IA sem limite de tamanho, e rajadas de requisição, sem reabrir a autenticação já coberta por `proxy.ts`.
+
+## Gate trigger
+
+Primeira peça do Atlas que envia texto de origem externa (upload do aluno, materiais do conteúdo) para um modelo de IA generativa; pediu auditoria ampliada do Abner ("o programa precisa ser blindado").
+
+## Original requirement
+
+Abner, 2026-10-20: confirmou os itens (1) e (2) como estavam e pediu blindagem geral ampliada, respondida com 6 itens novos concretos, todos confirmados por ele na thread "Cards do Apache" (17:55–17:57).
+
+## Relevant repository facts
+
+1. Lido: `proxy.ts` (DEC-007, `PUBLIC_PATHS`), `vite.config.ts` (`LOGIN_RATE_LIMITER`, único rate limit existente hoje), runtime `workerd` (`CompressionStream` só gzip/deflate, sem Brotli).
+2. Nenhuma rota do Atlas hoje valida conteúdo real de arquivo (magic bytes) nem tem teto de caracteres por campo em saída de IA, porque nenhuma rota hoje chama IA generativa externa.
+
+## Options and trade-offs
+
+Decidido sem opções formais em Raf — respondido diretamente pelo Abner. Ver "Decision" abaixo para os 8 itens.
+
+## Decision required
+
+Confirmação dos itens (1)-(2) e definição dos itens de blindagem ampliada pedidos pelo Abner.
+
+## Raf decision
+
+### Decision
+
+(1) Delimitador explícito de prompt-injection em volta de todo texto não escrito pelo Abner na hora (materiais do conteúdo, texto extraído de upload); saída da IA sempre como texto React puro, nunca HTML. (2) Upload até 10MB; síncrono só até ~6.000 caracteres (1 página, 1 chamada de IA); 2+ chunks vão para a fila; validação server-side de `text.length` contra páginas declaradas. (3) Autenticação já coberta por `proxy.ts` (DEC-007), falha fechada, sem ação de código — só não entrar em `PUBLIC_PATHS`. (4) `validateApacheUpload` checa os primeiros bytes do arquivo (`%PDF`, `PK\x03\x04`) contra o tipo declarado. (5) Teto duro de 540.000 caracteres (90 páginas × 6.000) no texto extraído, independente da página declarada, para impedir contornar cota/fila mentindo sobre o tamanho do arquivo. (6) Teto de caracteres por campo na saída da IA (`def`/`texto`/`resumo` ≤ 2.000, listas ≤ 20 itens) em `validateLesson`/`validateEnrichment`. (7) Novo binding `APACHE_RATE_LIMITER` (mesmo mecanismo do `LOGIN_RATE_LIMITER`), 20 req/min, em `POST /api/apache/enriquecimento` (+ `/texto`), antes de `assertQuota`. (8) Mensagens de erro do Apache sempre genéricas (`ApacheError`), nunca stack trace, caminho de arquivo ou detalhe interno.
+
+### Rationale
+
+1. Delimitador + saída sempre como texto React puro é a defesa mínima contra prompt-injection e XSS ao mesmo tempo, sem exigir sanitização de HTML.
+2. Teto de 540k chars pós-extração fecha a lacuna que a validação de páginas declaradas, por si só, não fecha (arquivo que mente sobre o próprio tamanho).
+3. Reaproveitar o mecanismo do `LOGIN_RATE_LIMITER` para `APACHE_RATE_LIMITER` evita inventar um binding novo de rate limit.
+
+### Constraints for Claude Code
+
+- Todo texto de origem externa (material do conteúdo, upload do aluno) passa por delimitador explícito antes de ir para o prompt da IA.
+- Saída da IA renderizada só como texto React puro (`{texto}`); nunca `dangerouslySetInnerHTML` nem HTML bruto.
+- `validateApacheUpload` (APA-12) valida magic bytes, não só extensão/MIME declarado.
+- Teto de 540.000 caracteres no texto extraído é checado depois da extração (APA-09/APA-12), antes de decidir síncrono vs. fila.
+- `validateLesson`/`validateEnrichment` (APA-03) impõem teto de caracteres por campo e por lista, além de presença/tipo.
+- `APACHE_RATE_LIMITER` novo (20 req/min) nas rotas que chamam IA, aplicado antes de `assertQuota`; nenhuma rota `/api/apache/*` entra em `PUBLIC_PATHS`.
+- Toda resposta de erro do Apache usa `ApacheError` com mensagem curta e genérica.
+
+### DEC Required
+
+YES — registrado como DEC-020, Related: card APA-14.
+
+---
+
 # CORE PRINCIPLE
 
 Atlas supplies product requirement. Claude Code supplies evidence. Raf supplies architectural judgment. These responsibilities must remain separate.

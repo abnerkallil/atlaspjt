@@ -118,7 +118,7 @@ documentado para cron.
 
 ```
 APA-01 (Gate: schema/storage/identidade/cron) — RESPONDIDO pelo Abner
-APA-14 (Gate: segurança/prompt-injection) — RESPONDIDO, auditoria ampliada em andamento
+APA-14 (Gate: segurança/prompt-injection) — RESOLVIDO, DEC-020, auditoria ampliada concluída
   └─ APA-02 (migration D1, já incorpora as decisões dos 2 Gates)
        ├─ APA-03 (schema JSON: ficha + diff) ── APA-04 (UI)
        ├─ APA-05 (storage R2, gzip)
@@ -195,9 +195,9 @@ formalmente em `docs/quests/ARCHITECTURE_GATE.md` / `docs/ATLAS_DECISIONS.md`.
 código do Apache.
 
 **Checklist**
-- [ ] Gate formalizado em ARCHITECTURE_GATE.md com as 4 respostas
+- [x] Gate formalizado em ARCHITECTURE_GATE.md com as 4 respostas (GATE APA-01, DEC-019)
 - [x] Confirmação do Abner sobre o item (2) corrigido (2026-10-20)
-- [ ] DEC registrado em ATLAS_DECISIONS.md, se aplicável
+- [x] DEC registrado em ATLAS_DECISIONS.md, se aplicável (DEC-019)
 
 ---
 
@@ -271,7 +271,7 @@ considerado pronto.
 - [ ] Item (6) teto de tamanho por campo em `validateLesson`/`validateEnrichment` (APA-03)
 - [ ] Item (7) `APACHE_RATE_LIMITER` novo, 20 req/min, nas rotas de enriquecimento (APA-12)
 - [ ] Item (8) mensagens de erro genéricas confirmadas em todas as rotas do Apache
-- [ ] Gate formalizado em ARCHITECTURE_GATE.md
+- [x] Gate formalizado em ARCHITECTURE_GATE.md (GATE APA-14, DEC-020)
 
 ---
 
