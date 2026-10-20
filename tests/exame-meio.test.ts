@@ -152,16 +152,16 @@ void test('tempo: 90 s por questão somados, sem rolagem; cálculo/lacuna numér
 void test('conteudo-50 dispara sozinho (sistema) ao chegar em 50% de cobertura, uma vez só, com auditoria', async () => {
   const { raw, db } = setup();
   const total = contentIds(raw).length;
-  coverFirst(raw, total / 2 - 1);
+  coverFirst(raw, Math.ceil(total / 2) - 1);
   const below = await syncDisciplineState(db, DISCIPLINE, { now });
   assert.equal(below.released, false);
   assert.equal(below.state, 'em-andamento');
 
-  coverFirst(raw, total / 2);
+  coverFirst(raw, Math.ceil(total / 2));
   const released = await syncDisciplineState(db, DISCIPLINE, { now });
   assert.deepEqual(
     { released: released.released, state: released.state, covered: released.covered, total: released.total },
-    { released: true, state: 'exame-meio-liberado', covered: total / 2, total },
+    { released: true, state: 'exame-meio-liberado', covered: Math.ceil(total / 2), total },
   );
   const audit = await listAudit(db, { entityType: 'disciplina', entityId: DISCIPLINE });
   assert.equal(audit.length, 1);
@@ -190,7 +190,7 @@ void test('antes de 50% o exame não começa', async () => {
 
 void test('sem confirmação explícita: 409 code=confirmation, nada é gravado e o estado não muda', async () => {
   const { raw, db } = setup();
-  coverFirst(raw, contentIds(raw).length / 2);
+  coverFirst(raw, Math.ceil(contentIds(raw).length / 2));
   await syncDisciplineState(db, DISCIPLINE, { now });
   let caught: unknown;
   try {
@@ -208,7 +208,7 @@ void test('sem confirmação explícita: 409 code=confirmation, nada é gravado 
 
 void test('com confirmação: exame em curso (auditado), 60 questões espalhadas pelo escopo, 90 s cada; tentativa única', async () => {
   const { raw, db } = setup();
-  coverFirst(raw, contentIds(raw).length / 2);
+  coverFirst(raw, Math.ceil(contentIds(raw).length / 2));
   const attempt = await startExameMeio(db, DISCIPLINE, { confirmed: true, now, id: 'ex1' });
   assert.equal(attempt.status, 'em-andamento');
   assert.equal(attempt.instrument, EXAM_INSTRUMENT);
@@ -254,7 +254,7 @@ void test('com confirmação: exame em curso (auditado), 60 questões espalhadas
 
 void test('envio: nota própria, boletim versionado com KR-20, exame-meio-entregue (sistema) → exame-meio-concluido', async () => {
   const { raw, db } = setup();
-  coverFirst(raw, contentIds(raw).length / 2);
+  coverFirst(raw, Math.ceil(contentIds(raw).length / 2));
   await startExameMeio(db, DISCIPLINE, { confirmed: true, now, id: 'ex1' });
   const answers = await correctAnswers(raw, db, 'ex1', 45);
   const done = await submitExam(db, 'ex1', { answers }, { now: later });
@@ -292,7 +292,7 @@ void test('envio: nota própria, boletim versionado com KR-20, exame-meio-entreg
 
 void test('abaixo de 70% reprova o exame, mas ele é entregue do mesmo jeito', async () => {
   const { raw, db } = setup();
-  coverFirst(raw, contentIds(raw).length / 2);
+  coverFirst(raw, Math.ceil(contentIds(raw).length / 2));
   await startExameMeio(db, DISCIPLINE, { confirmed: true, now, id: 'ex1' });
   const answers = await correctAnswers(raw, db, 'ex1', 30);
   const done = await submitExam(db, 'ex1', { answers }, { now: later });
@@ -303,7 +303,7 @@ void test('abaixo de 70% reprova o exame, mas ele é entregue do mesmo jeito', a
 
 void test('travar libera o gabarito das dissertativas; o envio usa as respostas travadas', async () => {
   const { raw, db } = setup();
-  coverFirst(raw, contentIds(raw).length / 2);
+  coverFirst(raw, Math.ceil(contentIds(raw).length / 2));
   await startExameMeio(db, DISCIPLINE, { confirmed: true, now, id: 'ex1' });
   const answers = await correctAnswers(raw, db, 'ex1');
   const locked = await lockExam(db, 'ex1', answers, { now });
@@ -320,7 +320,7 @@ void test('banco curto no escopo: o exame sai com menos de 60 questões, sem que
   await setContentLevel(db, 'CG-001', 'iniciante');
   await setContentLevel(db, 'CG-002', 'intermediario');
   await setContentLevel(db, 'CG-040', 'avancado');
-  coverFirst(raw, contentIds(raw).length / 2);
+  coverFirst(raw, Math.ceil(contentIds(raw).length / 2));
   const attempt = await startExameMeio(db, DISCIPLINE, { confirmed: true, now, id: 'ex1' });
   assert.equal(attempt.scope.rule, 'nivel');
   assert.deepEqual(attempt.scope.contentIds, ['CG-001', 'CG-002']);
@@ -337,7 +337,7 @@ void test('banco curto no escopo: o exame sai com menos de 60 questões, sem que
 void test('escopo nivelado sem questões cadastradas: 409, sem tentativa e sem iniciar o exame', async () => {
   const { raw, db } = setup();
   await setContentLevel(db, 'CG-030', 'iniciante');
-  coverFirst(raw, contentIds(raw).length / 2);
+  coverFirst(raw, Math.ceil(contentIds(raw).length / 2));
   await assert.rejects(
     startExameMeio(db, DISCIPLINE, { confirmed: true, now }),
     (error: unknown) => error instanceof QuizError && error.status === 409,
@@ -385,7 +385,7 @@ void test('kr20() extraído dá o mesmo número que computeInstrumentStats', () 
 
 void test('progresso: Avaliações passa a valer a nota do exame entregue', async () => {
   const { raw, db } = setup();
-  coverFirst(raw, contentIds(raw).length / 2);
+  coverFirst(raw, Math.ceil(contentIds(raw).length / 2));
   await startExameMeio(db, DISCIPLINE, { confirmed: true, now, id: 'ex1' });
   await submitExam(db, 'ex1', { answers: await correctAnswers(raw, db, 'ex1', 45) }, { now: later });
   const input = await loadProgressInput(db);
