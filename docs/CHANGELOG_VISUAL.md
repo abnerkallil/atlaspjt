@@ -14,6 +14,21 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #86 — Storage R2 das aulas do Apache, gzip (APA-05)
+
+- Ponto de restauração: branch `restore/pre-apa-05` (main antes do merge).
+- O que muda no site: nada visível ainda. Este PR só adiciona
+  `lib/apache/lesson-store.ts` (`saveLesson`/`readLesson`/`markReported`/
+  `markFailed`): grava a aula gerada no bucket R2 comprimida em gzip e
+  guarda status/versão/modelo em D1 (`atlas_apache_lessons`); aula
+  regerada sobrescreve a anterior sem histórico de versão. `markReported`
+  (botão "reportar erro", ainda sem UI — é o APA-08) marca a aula como
+  reportada e enfileira uma nova geração em `atlas_apache_queue`.
+  Nenhuma rota ou tela chama essas funções ainda — isso é o APA-06/07.
+- Sem migration nova.
+- Se algo der errado: reverter para `restore/pre-apa-05` remove o módulo
+  de storage; como nenhuma rota o usa ainda, nada no site muda.
+
 ## PR #84 — UI da aula base na sessão de estudo (APA-04)
 
 - Ponto de restauração: branch `restore/pre-apa-04` (main antes do merge).
