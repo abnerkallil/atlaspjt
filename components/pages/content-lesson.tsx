@@ -2,55 +2,87 @@
 
 import { useEffect, useState } from 'react';
 import { Spinner } from '@/components/ui/spinner';
-import type { RenderedLesson } from '@/lib/apache/schema';
+import { resolvePollOutcome, type LessonResponse } from '@/lib/apache/lesson-poll';
 
-type LessonStatus = 'pendente' | 'gerando' | 'gerada' | 'reportada' | 'erro';
+const POLL_INTERVAL_MS = 5000;
 
-type LessonResponse = {
-  status: LessonStatus;
-  lesson?: RenderedLesson;
-  errorMessage?: string;
-};
-
-async function errorOf(response: Response) {
-  const body = (await response.json().catch(() => null)) as { error?: string } | null;
-  return body?.error ?? 'Não foi possível carregar a aula.';
+async function parseBody(response: Response): Promise<LessonResponse | null> {
+  return (await response.json().catch(() => null)) as LessonResponse | null;
 }
 
 export function ContentLesson({ contentId }: { contentId: string }) {
   const [data, setData] = useState<LessonResponse | null>(null);
   const [loadError, setLoadError] = useState('');
+  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
     let active = true;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    let attempts = 0;
 
-    function load() {
+    function scheduleNext() {
+      if (!active) return;
+      timeoutId = setTimeout(poll, POLL_INTERVAL_MS);
+    }
+
+    function poll() {
+      if (!active) return;
+      // Aba em segundo plano: não gasta requisição, só reagenda a checagem.
+      // Volta a pedir de verdade assim que a aba fica visível de novo
+      // (listener abaixo chama poll() direto).
+      if (document.visibilityState === 'hidden') {
+        scheduleNext();
+        return;
+      }
+      attempts += 1;
       fetch(`/api/apache/aulas/${encodeURIComponent(contentId)}`)
         .then(async (response) => {
-          if (!response.ok) throw new Error(await errorOf(response));
-          return (await response.json()) as LessonResponse;
+          if (response.status === 404) return resolvePollOutcome(true, null, attempts);
+          return resolvePollOutcome(false, await parseBody(response), attempts);
         })
-        .then((result) => {
+        .then((outcome) => {
           if (!active) return;
-          setData(result);
-          setLoadError('');
-          if (result.status === 'gerada' || result.status === 'reportada' || result.status === 'erro') {
-            clearInterval(timer);
+          if (outcome.kind === 'hidden') {
+            setHidden(true);
+            setData(null);
+            setLoadError('');
+            return; // endpoint ainda não existe (APA-07) — não é erro, não repete
           }
+          if (outcome.kind === 'error') {
+            setHidden(false);
+            setLoadError(outcome.message);
+            return; // erro real — não repete sozinho, evita loop infinito
+          }
+          setHidden(false);
+          setLoadError('');
+          setData(outcome.data);
+          if (outcome.continuePolling) scheduleNext();
         })
         .catch((error: unknown) => {
-          if (active) setLoadError(error instanceof Error ? error.message : 'Não foi possível carregar a aula.');
+          if (!active) return;
+          setHidden(false);
+          setLoadError(error instanceof Error ? error.message : 'Não foi possível carregar a aula.');
         });
     }
 
-    load();
-    const timer = setInterval(load, 5000);
+    function onVisibilityChange() {
+      if (document.visibilityState === 'visible' && active) {
+        if (timeoutId) clearTimeout(timeoutId);
+        poll();
+      }
+    }
+
+    poll();
+    document.addEventListener('visibilitychange', onVisibilityChange);
 
     return () => {
       active = false;
-      clearInterval(timer);
+      if (timeoutId) clearTimeout(timeoutId);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
     };
   }, [contentId]);
+
+  if (hidden) return null;
 
   return (
     <section className="al-card">
