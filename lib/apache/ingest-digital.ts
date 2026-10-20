@@ -29,6 +29,14 @@ const SCANNED_LIKELY_MAX_CHARS = 200;
 // no fallback por tamanho de texto acima.
 const PAGE_MARKER_PATTERN = /^#+\s*Page\s+\d+\s*$/gim;
 
+// Qualquer linha de cabeçalho markdown (título do arquivo, "## Contents",
+// os marcadores de página acima). Removida antes de medir
+// `provavelmenteEscaneado`: um PDF escaneado de muitas páginas acumula
+// centenas de caracteres só em cabeçalhos e marcadores, sem ter uma letra
+// de texto real — contar isso como "conteúdo" faria um escaneado de 20+
+// páginas nunca ser sinalizado para o fluxo de OCR (APA-10).
+const HEADING_LINE_PATTERN = /^#+\s.*$/gm;
+
 const SUPPORTED_MIME_TYPES = new Set([
   'application/pdf',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
@@ -45,7 +53,10 @@ export type DigitalExtraction = {
 // pacote `@cloudflare/workers-types` inteiro só por esse tipo e facilita
 // o mock nos testes.
 export type MarkdownConversionAi = {
-  toMarkdown(file: { name: string; blob: Blob }): Promise<{
+  toMarkdown(
+    file: { name: string; blob: Blob },
+    options?: { conversionOptions?: { pdf?: { metadata?: boolean } } },
+  ): Promise<{
     format: 'markdown' | 'text' | 'error';
     data?: string;
     error?: string;
@@ -60,10 +71,13 @@ export async function extractDigital(
     throw new ApacheError('tipo de arquivo não suportado para ingestão digital', 415);
   }
 
-  const result = await ai.toMarkdown({
-    name: file.name ?? 'documento',
-    blob: new Blob([file.bytes], { type: file.mimeType }),
-  });
+  const result = await ai.toMarkdown(
+    {
+      name: file.name ?? 'documento',
+      blob: new Blob([file.bytes], { type: file.mimeType }),
+    },
+    { conversionOptions: { pdf: { metadata: false } } },
+  );
 
   if (result.format === 'error' || result.data === undefined) {
     throw new ApacheError('não foi possível extrair o conteúdo do arquivo', 422);
@@ -83,7 +97,8 @@ export async function extractDigital(
       ? pageMarkers.length
       : Math.max(1, Math.ceil(markdown.length / CHARS_PER_PAGE_ESTIMATE));
 
-  const provavelmenteEscaneado = markdown.trim().length < SCANNED_LIKELY_MAX_CHARS;
+  const contentWithoutHeadings = markdown.replace(HEADING_LINE_PATTERN, '').trim();
+  const provavelmenteEscaneado = contentWithoutHeadings.length < SCANNED_LIKELY_MAX_CHARS;
 
   return { markdown, pages, provavelmenteEscaneado };
 }

@@ -43,6 +43,15 @@ void test('fixture escaneada: markdown vazio sinaliza provavelmente escaneado', 
   assert.equal(result.pages, 1);
 });
 
+void test('fixture escaneada de várias páginas: cabeçalhos "### Page N" vazios não escondem o escaneamento', async () => {
+  const pageHeaders = Array.from({ length: 30 }, (_, i) => `### Page ${i + 1}`).join('\n\n');
+  const result = await extractDigital(fakeAi(pageHeaders), {
+    bytes: new ArrayBuffer(0),
+    mimeType: 'application/pdf',
+  });
+  assert.equal(result.provavelmenteEscaneado, true);
+});
+
 void test('DOCX/XLSX sem marcador de página usa a heurística por tamanho (6.000 chars/página)', async () => {
   const markdown = 'x'.repeat(12_000);
   const result = await extractDigital(fakeAi(markdown), {
