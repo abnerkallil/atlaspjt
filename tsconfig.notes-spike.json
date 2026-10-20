@@ -117,7 +117,10 @@
     "tests/apolo-dashboard.test.ts",
     "tests/apolo-simulator.test.ts",
     "tests/apolo-no-legacy-path.test.ts",
-    "tests/apolo-bloom-classifier.test.ts"
+    "tests/apolo-bloom-classifier.test.ts",
+    "lib/apache/errors.ts",
+    "lib/apache/schema.ts",
+    "tests/apache-schema.test.ts"
   ],
   "exclude": [
     "node_modules"
