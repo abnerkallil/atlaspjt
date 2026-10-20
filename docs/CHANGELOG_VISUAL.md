@@ -27,6 +27,21 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 - Se algo der errado: reverter para `restore/pre-apa-03` remove esses dois
   arquivos e os testes; nenhuma tabela ou tela existente é afetada.
 
+## PR #82 — Medidor diário de neurons do Workers AI (APA-15)
+
+- Ponto de restauração: branch `restore/pre-apa-15` (main antes do merge).
+- O que muda no site: nada visível ainda. Este PR só adiciona
+  `lib/apache/neuron-meter.ts` (`recordNeuronUsage`, `neuronBudgetRemaining`,
+  `estimateNeurons`), que vai ser usado pelas próximas peças do Apache
+  (gerador de aula, fila/cron, upload de enriquecimento) para nunca deixar
+  o Workers AI passar de 90% do orçamento grátis de 10.000 neurons/dia.
+  Nenhuma tela ou rota chama essas funções ainda; nenhum dado de nota, quiz,
+  sessão ou progresso existente é afetado.
+- Sem migration nova (usa a tabela `atlas_apache_neuron_meter` já criada
+  pelo PR #80).
+- Se algo der errado: reverter para `restore/pre-apa-15` remove o medidor;
+  como nenhuma rota o usa ainda, nada no site muda.
+
 ## PR #80 — Migration D1 base do Apache (APA-02)
 
 - Ponto de restauração: branch `restore/pre-apa-02` (main antes do merge).
