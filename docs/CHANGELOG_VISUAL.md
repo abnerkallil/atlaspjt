@@ -14,6 +14,19 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #83 — Esquema JSON da aula do Apache + testes (APA-03)
+
+- Ponto de restauração: branch `restore/pre-apa-03` (main antes do merge).
+- O que muda no site: nada visível ainda. Este PR só adiciona
+  `lib/apache/schema.ts` (tipos da aula/ficha do Apache e as funções puras
+  `validateLesson`, `validateEnrichment`, `renderLesson`,
+  `diffEnrichmentAgainstLesson`) e `lib/apache/errors.ts` (`ApacheError`
+  com mensagem curta + status HTTP, Gate APA-14 item 8), sem nenhuma rota,
+  tela ou migration. Cria também o primeiro runner de teste do Apache,
+  estendendo `pnpm run test:notes` para cobrir `tests/apache-schema.test.ts`.
+- Se algo der errado: reverter para `restore/pre-apa-03` remove esses dois
+  arquivos e os testes; nenhuma tabela ou tela existente é afetada.
+
 ## PR #80 — Migration D1 base do Apache (APA-02)
 
 - Ponto de restauração: branch `restore/pre-apa-02` (main antes do merge).
