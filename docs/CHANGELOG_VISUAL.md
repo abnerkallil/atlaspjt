@@ -14,6 +14,20 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #85 — Ingestão de arquivo digital, PDF/DOCX/XLSX (APA-09)
+
+- Ponto de restauração: branch `restore/pre-apa-09` (main antes do merge).
+- O que muda no site: nada visível ainda. Este PR só adiciona
+  `lib/apache/ingest-digital.ts` (`extractDigital`): extrai o texto de um
+  PDF/DOCX/XLSX digital via `env.AI.toMarkdown` (gratuito para documento,
+  sem OCR), rejeita acima de 540.000 caracteres extraídos (Gate APA-14
+  item 5) e sinaliza quando o arquivo parece ser um PDF escaneado (sem
+  texto real), para o próximo card (APA-10) tentar OCR. Nenhuma rota ou
+  tela chama essa função ainda.
+- Sem migration nova.
+- Se algo der errado: reverter para `restore/pre-apa-09` remove a função
+  de extração; como nenhuma rota a usa ainda, nada no site muda.
+
 ## PR #81 — Limite de 90 páginas/24h por usuário (APA-13)
 
 - Ponto de restauração: branch `restore/pre-apa-13` (main antes do merge).

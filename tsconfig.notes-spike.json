@@ -124,7 +124,9 @@
     "lib/apache/neuron-meter.ts",
     "tests/apache-neuron-meter.test.ts",
     "lib/apache/quota.ts",
-    "tests/apache-quota.test.ts"
+    "tests/apache-quota.test.ts",
+    "lib/apache/ingest-digital.ts",
+    "tests/apache-ingest-digital.test.ts"
   ],
   "exclude": [
     "node_modules"

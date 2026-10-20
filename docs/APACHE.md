@@ -126,7 +126,7 @@ APA-14 (Gate: segurança/prompt-injection) — RESOLVIDO, DEC-020, auditoria amp
        │         └─ APA-06 (gerador Llama 70B, já usa o medidor e a guarda de prompt do APA-14)
        │              └─ APA-07 (fila via waitUntil + diff calculado na leitura)
        │                   └─ APA-08 (reportar erro)
-       ├─ APA-09 (ingestão digital, unpdf)
+       ├─ APA-09 (ingestão digital, env.AI.toMarkdown)
        ├─ APA-10 (ingestão imagem, Tesseract.js + unpdf)
        └─ APA-11 (fallback letra de mão)
             └─ APA-13 (limite de páginas, por userId) ── usa getApacheUserId()
