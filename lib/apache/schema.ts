@@ -1,3 +1,5 @@
+import { ApacheError } from "./errors.js";
+
 export type ApacheLesson = {
   v: 1;
   obj: string; // objetivo da aula, 1 frase
@@ -28,8 +30,6 @@ export type ApacheEnrichmentDiff = {
   reforcos: { conceitoId: string; texto: string }[];
 };
 
-export class ApacheError extends Error {}
-
 // Gate APA-14 item 6: teto de tamanho por campo, para uma resposta de IA
 // maliciosa ou malformada não gravar strings sem limite no R2/D1 para sempre.
 const MAX_FIELD_CHARS = 2000;
@@ -39,29 +39,35 @@ function isString(value: unknown): value is string {
   return typeof value === "string";
 }
 
-function checkField(value: unknown, field: string): string {
+function checkField(value: unknown, field: string, allowEmpty = true): string {
   if (!isString(value)) {
-    throw new ApacheError(`campo "${field}" ausente ou não é string`);
+    throw new ApacheError(`campo "${field}" ausente ou não é string`, 400);
+  }
+  if (!allowEmpty && value.trim().length === 0) {
+    throw new ApacheError(`campo "${field}" não pode ser vazio`, 400);
   }
   if (value.length > MAX_FIELD_CHARS) {
-    throw new ApacheError(`campo "${field}" excede ${MAX_FIELD_CHARS} caracteres`);
+    throw new ApacheError(`campo "${field}" excede ${MAX_FIELD_CHARS} caracteres`, 400);
   }
   return value;
 }
 
-function checkList(value: unknown, field: string): unknown[] {
+function checkList(value: unknown, field: string, allowEmpty = true): unknown[] {
   if (!Array.isArray(value)) {
-    throw new ApacheError(`campo "${field}" ausente ou não é lista`);
+    throw new ApacheError(`campo "${field}" ausente ou não é lista`, 400);
+  }
+  if (!allowEmpty && value.length === 0) {
+    throw new ApacheError(`campo "${field}" não pode ser vazio`, 400);
   }
   if (value.length > MAX_LIST_ITEMS) {
-    throw new ApacheError(`campo "${field}" excede ${MAX_LIST_ITEMS} itens`);
+    throw new ApacheError(`campo "${field}" excede ${MAX_LIST_ITEMS} itens`, 400);
   }
   return value;
 }
 
 function checkConcept(value: unknown, field: string): ApacheConcept {
   if (typeof value !== "object" || value === null) {
-    throw new ApacheError(`item de "${field}" inválido`);
+    throw new ApacheError(`item de "${field}" inválido`, 400);
   }
   const v = value as Record<string, unknown>;
   return {
@@ -73,7 +79,7 @@ function checkConcept(value: unknown, field: string): ApacheConcept {
 
 function checkRelation(value: unknown, field: string): ApacheRelation {
   if (typeof value !== "object" || value === null) {
-    throw new ApacheError(`item de "${field}" inválido`);
+    throw new ApacheError(`item de "${field}" inválido`, 400);
   }
   const v = value as Record<string, unknown>;
   return {
@@ -85,7 +91,7 @@ function checkRelation(value: unknown, field: string): ApacheRelation {
 
 function checkFormula(value: unknown, field: string): ApacheFormula {
   if (typeof value !== "object" || value === null) {
-    throw new ApacheError(`item de "${field}" inválido`);
+    throw new ApacheError(`item de "${field}" inválido`, 400);
   }
   const v = value as Record<string, unknown>;
   return {
@@ -97,7 +103,7 @@ function checkFormula(value: unknown, field: string): ApacheFormula {
 
 function checkExample(value: unknown, field: string): ApacheExample {
   if (typeof value !== "object" || value === null) {
-    throw new ApacheError(`item de "${field}" inválido`);
+    throw new ApacheError(`item de "${field}" inválido`, 400);
   }
   const v = value as Record<string, unknown>;
   return {
@@ -108,38 +114,38 @@ function checkExample(value: unknown, field: string): ApacheExample {
 
 export function validateLesson(data: unknown): ApacheLesson {
   if (typeof data !== "object" || data === null) {
-    throw new ApacheError("aula inválida: não é um objeto");
+    throw new ApacheError("aula inválida: não é um objeto", 400);
   }
   const d = data as Record<string, unknown>;
   if (d.v !== 1) {
-    throw new ApacheError('campo "v" ausente ou diferente de 1');
+    throw new ApacheError('campo "v" ausente ou diferente de 1', 400);
   }
   return {
     v: 1,
-    obj: checkField(d.obj, "obj"),
-    cc: checkList(d.cc, "cc").map((c) => checkConcept(c, "cc")),
-    rl: checkList(d.rl, "rl").map((r) => checkRelation(r, "rl")),
-    fm: checkList(d.fm, "fm").map((f) => checkFormula(f, "fm")),
-    ex: checkList(d.ex, "ex").map((e) => checkExample(e, "ex")),
+    obj: checkField(d.obj, "obj", false),
+    cc: checkList(d.cc, "cc", false).map((c, i) => checkConcept(c, `cc[${i}]`)),
+    rl: checkList(d.rl, "rl").map((r, i) => checkRelation(r, `rl[${i}]`)),
+    fm: checkList(d.fm, "fm").map((f, i) => checkFormula(f, `fm[${i}]`)),
+    ex: checkList(d.ex, "ex").map((e, i) => checkExample(e, `ex[${i}]`)),
     pg: checkList(d.pg, "pg").map((p, i) => checkField(p, `pg[${i}]`)),
-    rs: checkField(d.rs, "rs"),
+    rs: checkField(d.rs, "rs", false),
   };
 }
 
 export function validateEnrichment(data: unknown): ApacheEnrichment {
   if (typeof data !== "object" || data === null) {
-    throw new ApacheError("ficha inválida: não é um objeto");
+    throw new ApacheError("ficha inválida: não é um objeto", 400);
   }
   const d = data as Record<string, unknown>;
   if (d.v !== 1) {
-    throw new ApacheError('campo "v" ausente ou diferente de 1');
+    throw new ApacheError('campo "v" ausente ou diferente de 1', 400);
   }
   if (typeof d.irrelevante !== "boolean") {
-    throw new ApacheError('campo "irrelevante" ausente ou não é booleano');
+    throw new ApacheError('campo "irrelevante" ausente ou não é booleano', 400);
   }
   return {
     v: 1,
-    conceitos: checkList(d.conceitos, "conceitos").map((c) => checkConcept(c, "conceitos")),
+    conceitos: checkList(d.conceitos, "conceitos").map((c, i) => checkConcept(c, `conceitos[${i}]`)),
     irrelevante: d.irrelevante,
   };
 }

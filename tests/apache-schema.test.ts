@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { ApacheError } from "../lib/apache/errors.js";
 import {
-  ApacheError,
   diffEnrichmentAgainstLesson,
   renderLesson,
   validateEnrichment,
@@ -56,6 +56,30 @@ void test("APA-03: aula válida é aceita e renderLesson mapeia direto", () => {
 void test("APA-03: campo acima do teto de tamanho é rejeitado", () => {
   const data = baseLesson({ obj: "x".repeat(2001) });
   assert.throws(() => validateLesson(data), ApacheError);
+});
+
+void test("APA-03: obj/rs/cc vazios são rejeitados, com status 400 e índice no caminho do erro", () => {
+  assert.throws(
+    () => validateLesson(baseLesson({ obj: "" })),
+    (error: unknown) => error instanceof ApacheError && error.status === 400,
+  );
+  assert.throws(
+    () => validateLesson(baseLesson({ rs: "   " })),
+    (error: unknown) => error instanceof ApacheError && error.status === 400,
+  );
+  assert.throws(() => validateLesson(baseLesson({ cc: [] })), ApacheError);
+  assert.throws(
+    () =>
+      validateLesson(
+        baseLesson({
+          cc: [
+            { id: "c1", nome: "Conceito X", def: "Definição de X" },
+            { id: "c2", nome: "Conceito Y", def: 123 as unknown as string },
+          ],
+        }),
+      ),
+    (error: unknown) => error instanceof ApacheError && error.message.includes("cc[1].def"),
+  );
 });
 
 void test("APA-03: lista acima do teto de itens é rejeitada", () => {
