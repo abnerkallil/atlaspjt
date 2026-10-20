@@ -4,7 +4,7 @@
 // enriquecimento (APA-12) usar quando o arquivo enviado é imagem/print ou
 // PDF sinalizado como escaneado. Não é o formulário em si — só o pedaço de
 // UI que roda `ocrFile` e mostra o progresso por página enquanto ele roda.
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Progress, ProgressLabel, ProgressValue } from '@/components/ui/progress';
 import { ocrFile, type ApacheOcrInput, type ApacheOcrPageResult, type ApacheOcrProgress } from '@/lib/apache/ocr';
 
@@ -14,25 +14,38 @@ type ApacheOcrRunnerProps = {
   onError: (message: string) => void;
 };
 
+const GENERIC_ERROR = 'Não foi possível ler o arquivo. Tente novamente ou envie outra foto/PDF.';
+
 function statusLabel(progress: ApacheOcrProgress | null): string {
   if (!progress) return 'Preparando OCR…';
   const pagina = progress.totalPages > 1 ? `página ${progress.page}/${progress.totalPages} — ` : '';
   return `${pagina}reconhecendo texto…`;
 }
 
-// Componente controlado: dispara o OCR ao montar e expõe o resultado via
-// onDone/onError — quem o usa (APA-12) decide o que fazer com o resultado
-// (inclusive o fallback de letra de mão do APA-11, por confidence < 70).
+// Componente controlado: dispara o OCR no efeito (nunca no corpo do render)
+// e expõe o resultado via onDone/onError — quem o usa (APA-12) decide o
+// que fazer com o resultado (inclusive o fallback de letra de mão do
+// APA-11, por confidence < 70). Desmontar cancela o OCR em andamento via
+// AbortSignal, que encerra o worker do Tesseract (ver lib/apache/ocr.ts).
 export function ApacheOcrRunner({ file, onDone, onError }: ApacheOcrRunnerProps) {
   const [progress, setProgress] = useState<ApacheOcrProgress | null>(null);
-  const [started, setStarted] = useState(false);
 
-  if (!started) {
-    setStarted(true);
-    ocrFile(file, setProgress)
-      .then(onDone)
-      .catch((error: unknown) => onError(error instanceof Error ? error.message : 'Não foi possível ler o arquivo.'));
-  }
+  useEffect(() => {
+    const controller = new AbortController();
+    setProgress(null);
+    ocrFile(file, setProgress, controller.signal)
+      .then((pages) => {
+        if (!controller.signal.aborted) onDone(pages);
+      })
+      .catch((error: unknown) => {
+        if (controller.signal.aborted) return;
+        // lib/apache/ocr.ts só rejeita com ApacheError (mensagem já segura
+        // para a tela); qualquer outro caso cai no genérico por garantia.
+        onError(error instanceof Error ? error.message : GENERIC_ERROR);
+      });
+    return () => controller.abort();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [file]);
 
   const value = progress ? Math.round(progress.progress * 100) : 0;
 
