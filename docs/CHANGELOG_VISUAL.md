@@ -41,6 +41,26 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
   coordenado com o PR #78 (que adiciona nós de Contabilidade Tributária sobre
   documentos fiscais) — disciplinas e faixas de ID diferentes, sem overlap.
 
+## PR #78 — Apostila Documentos Fiscais na Reforma: novos nós + materiais no roadmap de Contabilidade Tributária
+
+- Ponto de restauração: branch `restore/pre-apostila-documentos-fiscais` (main antes do merge).
+- O que muda no site: no **Roadmap**, a disciplina Contabilidade Tributária ganha
+  7 nós novos na unidade "Reforma tributária — Documentos fiscais" (CT-118 a
+  CT-124: CST/cClassTrib, NF-e/NFC-e, NFS-e/DPS, correções e ajustes, créditos
+  e apuração assistida, cadastros/ERP/EFD, caso integrado), posicionados entre
+  CT-107 e a Governança. O nó já existente CT-106 (Documentos, split payment e
+  cashback) e os 7 nós novos ganham **Material do conteúdo** (texto) extraído
+  da apostila "Documentos Fiscais na Reforma Tributária" (Débora Maiara
+  Rediess, Nota Fácil Assessoria).
+- Migrations novas: `0024_contabilidade_tributaria_reforma_documentos_fiscais.sql`
+  (os 7 nós + pré-requisitos + reposicionamento de CT-108 a CT-117, que
+  entraram 7 posições depois na mesma disciplina) e
+  `0025_materiais_documentos_fiscais_reforma.sql` (20 materiais de texto).
+  `Publicar Atlas.cmd` aplica sozinho.
+- Se algo der errado: reverter para `restore/pre-apostila-documentos-fiscais`
+  remove os 7 nós novos e os materiais; nenhuma nota, quiz ou progresso de
+  aluno existente é afetado (nenhuma tabela de estado é tocada).
+
 ## PR #77 — Remapeia 2 rascunhos de regime tributário pro nó certo do roadmap
 
 - Ponto de restauração: branch `restore/pre-remap-tributario` (main antes do merge).
