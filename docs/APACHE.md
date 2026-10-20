@@ -580,8 +580,8 @@ D1/R2 local via `wrangler dev`/Miniflare do próprio `@cloudflare/vite-plugin`
 antes de prometer "integração").
 
 **Checklist**
-- [ ] `lib/apache/lesson-store.ts` com as 4 funções (gzip, não brotli)
-- [ ] Teste de round-trip + versionamento sem histórico
+- [x] `lib/apache/lesson-store.ts` com as 4 funções (gzip, não brotli)
+- [x] Teste de round-trip + versionamento sem histórico
 - [ ] Restore `restore/pre-apa-05` + `CHANGELOG_VISUAL.md`
 
 ---
