@@ -19,14 +19,29 @@ export class ApacheQuotaError extends Error {
   }
 }
 
-// `now` é injetável para teste; em produção é sempre `new Date()`.
+async function windowStartOf(db: D1Like, userId: string): Promise<string | null> {
+  const row = await db
+    .prepare('SELECT window_start FROM atlas_apache_quota WHERE user_id = ?1')
+    .bind(userId)
+    .first<{ window_start: string }>();
+  return row?.window_start ?? null;
+}
+
+function hoursUntilReset(windowStart: string, now: Date): number {
+  const resetAt = new Date(windowStart).getTime() + WINDOW_SECONDS * 1000;
+  return Math.max(1, Math.ceil((resetAt - now.getTime()) / (60 * 60 * 1000)));
+}
+
+// Retorna o window_start da janela em que as páginas foram debitadas — o
+// chamador deve guardar e passar para refundQuota, para o refund nunca
+// acertar numa janela diferente da que gerou o débito (ver refundQuota).
 export async function assertQuota(
   db: D1Like,
   userId: string,
   pagesRequested: number,
   now: Date = new Date(),
-): Promise<void> {
-  if (pagesRequested <= 0) return;
+): Promise<string | null> {
+  if (pagesRequested <= 0) return windowStartOf(db, userId);
   if (pagesRequested > APACHE_DAILY_PAGE_LIMIT) {
     throw new ApacheQuotaError(
       `Este envio tem ${pagesRequested} páginas, mais que o limite diário de ${APACHE_DAILY_PAGE_LIMIT}.`,
@@ -57,23 +72,37 @@ export async function assertQuota(
   ]);
 
   if (!result || result.meta.changes === 0) {
+    const windowStart = await windowStartOf(db, userId);
+    const hours = windowStart ? hoursUntilReset(windowStart, now) : 24;
     throw new ApacheQuotaError(
-      `Limite de ${APACHE_DAILY_PAGE_LIMIT} páginas por dia atingido. Tenta de novo mais tarde.`,
+      `Limite de ${APACHE_DAILY_PAGE_LIMIT} páginas por dia atingido. Tenta de novo em ${hours} hora${hours === 1 ? '' : 's'}.`,
       429,
     );
   }
+
+  return windowStartOf(db, userId);
 }
 
 // Chamado quando o processamento falha por erro do sistema (não quando o
 // arquivo é descartado por ser irrelevante — aí as páginas ficam debitadas,
-// porque o processamento rodou normalmente).
-export async function refundQuota(db: D1Like, userId: string, pages: number): Promise<void> {
-  if (pages <= 0) return;
+// porque o processamento rodou normalmente). `windowStart` é o valor que
+// assertQuota retornou quando debitou essas páginas: o refund só acerta
+// enquanto a janela não mudou, senão devolveria páginas para a janela nova
+// (reaberta depois do reset) em vez da que gerou o débito.
+export async function refundQuota(
+  db: D1Like,
+  userId: string,
+  pages: number,
+  windowStart: string | null,
+  now: Date = new Date(),
+): Promise<void> {
+  if (pages <= 0 || !windowStart) return;
   await db.batch([
     db
       .prepare(
-        `UPDATE atlas_apache_quota SET pages_used = MAX(0, pages_used - ?2), updated_at = ?3 WHERE user_id = ?1`,
+        `UPDATE atlas_apache_quota SET pages_used = MAX(0, pages_used - ?2), updated_at = ?3
+         WHERE user_id = ?1 AND window_start = ?4`,
       )
-      .bind(userId, pages, new Date().toISOString()),
+      .bind(userId, pages, now.toISOString(), windowStart),
   ]);
 }

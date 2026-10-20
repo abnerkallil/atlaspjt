@@ -81,16 +81,44 @@ void test('APA-13: duas chamadas concorrentes não passam de 90 no total', async
 
 void test('APA-13: refundQuota devolve páginas em erro de sistema, sem passar de zero', async () => {
   const db = seeded();
-  await assertQuota(db, 'u1', 30, new Date('2026-10-20T10:00:00.000Z'));
-  await refundQuota(db, 'u1', 10);
+  const windowStart = await assertQuota(db, 'u1', 30, new Date('2026-10-20T10:00:00.000Z'));
+  await refundQuota(db, 'u1', 10, windowStart);
   let row = await db.prepare('SELECT pages_used FROM atlas_apache_quota WHERE user_id = ?1').bind('u1').first<{
     pages_used: number;
   }>();
   assert.equal(row?.pages_used, 20);
 
-  await refundQuota(db, 'u1', 999);
+  await refundQuota(db, 'u1', 999, windowStart);
   row = await db.prepare('SELECT pages_used FROM atlas_apache_quota WHERE user_id = ?1').bind('u1').first<{
     pages_used: number;
   }>();
   assert.equal(row?.pages_used, 0);
+});
+
+void test('APA-13: refundQuota não acerta a janela nova se o débito era da janela anterior', async () => {
+  const db = seeded();
+  // u1 debita 60 páginas na janela 1.
+  const windowStart1 = await assertQuota(db, 'u1', 60, new Date('2026-10-20T10:00:00.000Z'));
+  // Mais de 24h depois, a janela já reabriu: u1 debita 1 página na janela 2.
+  await assertQuota(db, 'u1', 1, new Date('2026-10-21T10:00:01.000Z'));
+  // O refund do job da janela 1 chega atrasado — não pode afetar a janela 2.
+  await refundQuota(db, 'u1', 60, windowStart1, new Date('2026-10-21T10:05:00.000Z'));
+  const row = await db.prepare('SELECT pages_used FROM atlas_apache_quota WHERE user_id = ?1').bind('u1').first<{
+    pages_used: number;
+  }>();
+  assert.equal(row?.pages_used, 1, 'refund atrasado da janela antiga não deve zerar o uso da janela nova');
+});
+
+void test('APA-13: mensagem de limite batido informa quantas horas faltam para a janela reabrir', async () => {
+  const db = seeded();
+  await assertQuota(db, 'u1', 90, new Date('2026-10-20T10:00:00.000Z'));
+  await assert.rejects(
+    () => assertQuota(db, 'u1', 1, new Date('2026-10-20T15:00:00.000Z')),
+    (error: unknown) => {
+      assert.ok(error instanceof ApacheQuotaError);
+      // Janela reabre em 2026-10-21T10:00:00Z; faltam 19h a partir de 15:00.
+      assert.match(error.message, /em 19 horas/);
+      return true;
+    },
+  );
 });
