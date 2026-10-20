@@ -14,6 +14,38 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #77 — Remapeia 2 rascunhos de regime tributário pro nó certo do roadmap
+
+- Ponto de restauração: branch `restore/pre-remap-tributario` (main antes do merge).
+- O que muda no site: nada visível ainda. Mesma correção do PR #76, mas para
+  "Regimes tributários: lucro presumido/Lucro Real" → CT-040/CT-046
+  (Contabilidade Tributária já tem esses nós).
+
+## PR #76 — Remapeia 36 rascunhos de Contabilidade pro nó certo do roadmap
+
+- Ponto de restauração: branch `restore/pre-remap-contabilidade` (main antes do merge).
+- O que muda no site: nada visível ainda — é um dado, não publica sozinho.
+  Depois que Abner rodar `data/apolo/curadoria/remap-contabilidade-existente.sql`
+  em produção, 36 rascunhos que a curadoria de 2026-10-12 tinha deixado "fora
+  do roadmap" (por não baterem o título exato de um nó) passam a aparecer em
+  `/rascunhos` com o conteúdo certo já selecionado (ex.: "Ativo (conceito)" →
+  CG-008). Não cria nó novo, não aprova nada.
+
+## PR #75 — Índice em atlas_question_drafts.text_hash (corrige queda do Hoje)
+
+- Ponto de restauração: branch `restore/pre-idx-drafts-text-hash` (main antes do merge).
+- O que muda no site: nada de novo visualmente. Corrige a queda de hoje à
+  noite: Hoje/Agenda, "Continue de onde parou" e "O Atlas observou" ficaram
+  indisponíveis porque o D1 de produção bateu o limite gratuito de leituras
+  (5M linhas/dia). Causa: `atlas_question_drafts` não tinha índice em
+  `text_hash` (diferente de `atlas_questions`, que já tinha); os 2.802
+  UPDATEs de `pnpm apolo:aplicar-curadoria` desta noite, cada um filtrando
+  por `text_hash`, varreram a tabela inteira (~3.600 linhas) a cada um —
+  cerca de 10,1M linhas lidas, bem acima do limite. Migration 0023 adiciona
+  o índice que faltava. O site some sozinho a indisponibilidade quando o
+  limite reseta (00:00 UTC / 21h em Brasília); este PR evita que aconteça de
+  novo na próxima carga.
+
 ## PR #74 — Arquivos de classificação da curadoria (APO-07/APO-08)
 
 - Ponto de restauração: branch `restore/pre-curadoria-arquivos` (main antes do merge).

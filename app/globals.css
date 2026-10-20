@@ -599,6 +599,24 @@ a.rm-start { display: inline-flex; align-items: center; gap: 6px; text-decoratio
   .rm-changes { padding: 18px; }
   .rm-changes li { grid-template-columns: 1fr; gap: 4px; }
 }
+.rm-heading-aside { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+
+/* Gerador de prompt de roadmap (CG-gerador-roadmap) */
+.rg-workspace { display: grid; grid-template-columns: minmax(0,1fr) minmax(320px,1fr); gap: 16px; align-items: start; }
+.rg-form { margin-top: 0; }
+.rg-preview { position: sticky; top: 24px; padding: 22px; border: 1px solid var(--line); border-radius: 16px; background: #fff; box-shadow: 0 10px 32px rgba(31,23,54,.05); }
+.rg-preview-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.rg-preview-head .eyebrow { margin: 0; }
+.rg-copy { white-space: nowrap; }
+.rg-copy.copied { color: #0d6b4e; border-color: #9fe0c4; }
+.rg-prompt-text { width: 100%; padding: 14px; border: 1px solid #c9c5d3; border-radius: 10px; color: var(--ink); background: #faf9fc; font: inherit; font-size: 13px; line-height: 1.6; white-space: pre-wrap; resize: vertical; }
+.rg-hint { display: flex; align-items: flex-start; gap: 7px; margin: 14px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.rg-hint svg { flex: none; margin-top: 2px; color: #2463eb; }
+@media (max-width: 900px) {
+  .rg-workspace { grid-template-columns: 1fr; }
+  .rg-preview { position: static; }
+  .rm-heading-aside { align-items: flex-start; }
+}
 
 /* Quizzes (UX-04) */
 .qz-card { border: 1px solid var(--line); border-radius: 16px; background: #fff; box-shadow: 0 10px 32px rgba(31,23,54,.05); padding: 22px 24px; }

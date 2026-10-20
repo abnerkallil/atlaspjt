@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { AlertTriangle, Check, LockKeyhole, Map as MapIcon, Play, RotateCcw, Route } from 'lucide-react';
+import { AlertTriangle, Check, LockKeyhole, Map as MapIcon, Play, RotateCcw, Route, Sparkles } from 'lucide-react';
 import { PageHeading } from '@/components/atlas/page-heading';
 import { ProgressBar } from '@/components/atlas/progress-bar';
 import { CONTENT_STATE_META, LOCKED_META } from '@/lib/pedagogy/state-labels';
@@ -149,7 +149,14 @@ export function RoadmapPage() {
         eyebrow="ROADMAP"
         title="Seu caminho até o domínio."
         titleId="rm-title"
-        aside={<div className="streak-pill"><Route size={17} /> {roadmap.title}</div>}
+        aside={
+          <div className="rm-heading-aside">
+            <div className="streak-pill"><Route size={17} /> {roadmap.title}</div>
+            <Link className="quiet-button" href="/roadmap/gerador">
+              <Sparkles size={15} /> Criar roadmap de outro assunto
+            </Link>
+          </div>
+        }
       >
         Fases, pré-requisitos e o registro de cada mudança — tudo vem do seu progresso real.
       </PageHeading>
