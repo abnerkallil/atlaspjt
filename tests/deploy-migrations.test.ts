@@ -78,6 +78,8 @@ void test('produção atual: 0004 e 0006 aplicadas à mão são só registradas,
     '0021_temas_bagagem_apolo.sql',
     '0022_taxonomia_conteudo_apolo.sql',
     '0023_idx_drafts_text_hash.sql',
+    '0024_contabilidade_tributaria_reforma_documentos_fiscais.sql',
+    '0025_materiais_documentos_fiscais_reforma.sql',
   ]);
   assert.deepEqual(plan.partial, []);
 });
@@ -112,6 +114,8 @@ void test('migration nova ainda não aplicada vai para apply', () => {
       '0021_temas_bagagem_apolo.sql',
       '0022_taxonomia_conteudo_apolo.sql',
       '0023_idx_drafts_text_hash.sql',
+      '0024_contabilidade_tributaria_reforma_documentos_fiscais.sql',
+      '0025_materiais_documentos_fiscais_reforma.sql',
     ],
     partial: [],
   });
