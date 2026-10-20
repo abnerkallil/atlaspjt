@@ -120,7 +120,9 @@
     "tests/apolo-bloom-classifier.test.ts",
     "lib/apache/errors.ts",
     "lib/apache/schema.ts",
-    "tests/apache-schema.test.ts"
+    "tests/apache-schema.test.ts",
+    "lib/apache/neuron-meter.ts",
+    "tests/apache-neuron-meter.test.ts"
   ],
   "exclude": [
     "node_modules"

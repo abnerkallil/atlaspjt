@@ -600,11 +600,14 @@ export async function neuronBudgetRemaining(): Promise<{ used: number; remaining
   // used = linha do dia (0 se não existe); remaining = 10000 - used; overLimit = used >= 9000 (90%, sempre — sem "se fizer sentido")
 }
 ```
-Estimativas de neurons por geração (já levantadas e verificadas no chat do
-projeto em 2026-10-20, ~3k tokens de entrada + ~2k de saída por aula/chunk):
-Llama 3.3 70B ≈ 20 neurons, Gemma 4 26B ≈ 120, Qwen3 30B ≈ 130 — use
-`response.usage` da chamada real quando disponível; caia nesses valores só
-como estimativa de fallback.
+Estimativas de neurons por geração (~3k tokens de entrada + ~2k de saída
+por aula/chunk, taxas verificadas em developers.cloudflare.com/workers-ai/
+platform/pricing/ em 2026-10-20): Llama 3.3 70B ≈ 490 neurons, Gemma 4 26B
+≈ 82, Qwen3 30B ≈ 75, Llama 3.2 11B vision ≈ 136 — use `response.usage` da
+chamada real quando disponível; caia nesses valores só como estimativa de
+fallback. (Os números antigos desta seção — 20/120/130 — eram na verdade
+aulas por dia dentro do orçamento de 10.000 neurons, não neurons por
+geração; corrigido 2026-10-20 na revisão do PR do APA-15.)
 
 `neuronBudgetRemaining().overLimit` é checado **em todo lugar que chama
 IA no Apache**: antes do cron processar um item (APA-07), antes de aceitar
