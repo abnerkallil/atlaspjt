@@ -61,7 +61,9 @@ export async function saveLesson(
 ): Promise<{ version: number; objectKey: string }> {
   validateLesson(lesson);
   const current = await getLessonRow(db, contentId);
-  const version = (current?.version ?? 0) + 1;
+  // Uma linha 'pendente' sem object_key (criada pelo APA-07 antes de gerar)
+  // não conta como versão anterior: a primeira aula nasce v1, não v2.
+  const version = current?.object_key ? current.version + 1 : 1;
   const objectKey = lessonObjectKey(contentId, version);
   const bytes = await gzip(new TextEncoder().encode(JSON.stringify(lesson)));
   await bucket.put(objectKey, bytes, {
@@ -110,8 +112,15 @@ export async function readLesson(
     throw new ApacheError(`Aula do conteúdo "${contentId}" não encontrada no armazenamento.`, 500);
   }
   const bytes = new Uint8Array(await new Response(object.body).arrayBuffer());
-  const json = new TextDecoder().decode(await gunzip(bytes));
-  return { lesson: validateLesson(JSON.parse(json)), version: row.version };
+  try {
+    const json = new TextDecoder().decode(await gunzip(bytes));
+    return { lesson: validateLesson(JSON.parse(json)), version: row.version };
+  } catch {
+    // gzip corrompido, JSON inválido ou aula fora do schema: é corrupção do
+    // que foi gravado no bucket, não um erro do cliente — nunca vaza o
+    // TypeError/SyntaxError/ApacheError(400) original.
+    throw new ApacheError('Aula armazenada corrompida.', 500);
+  }
 }
 
 // "Reportar erro": marca a aula ativa como reportada e enfileira uma nova
@@ -119,18 +128,34 @@ export async function readLesson(
 // Claude (model === 'claude-manual'), senão 'aula' (regenerada pela IA).
 // Idempotente: não duplica a fila se já existe um pedido pendente/em
 // andamento do mesmo kind para este conteúdo.
+const STALE_PROCESSING_MS = 5 * 60 * 1000;
+
 export async function markReported(db: D1Like, contentId: string, now: string): Promise<void> {
   const row = await getLessonRow(db, contentId);
   if (!row) throw new ApacheError(`Aula do conteúdo "${contentId}" não existe.`, 404);
+  // Só uma aula exibível (gerada ou já reportada antes) pode ser reportada de
+  // novo; pendente/gerando/erro ainda não tem nada pronto para o usuário ver.
+  if (row.status !== 'gerada' && row.status !== 'reportada') {
+    throw new ApacheError(`Aula do conteúdo "${contentId}" não está disponível para reportar.`, 409);
+  }
   const kind = row.model === 'claude-manual' ? 'aula_manual' : 'aula';
 
-  const pending = await db
+  const candidates = await db
     .prepare(
-      `SELECT 1 FROM atlas_apache_queue
+      `SELECT status, started_at FROM atlas_apache_queue
        WHERE content_id = ?1 AND kind = ?2 AND status IN ('pendente', 'processando')`,
     )
     .bind(contentId, kind)
-    .first();
+    .all<{ status: string; started_at: string | null }>();
+  // Um item 'processando' preso (waitUntil interrompido, started_at há mais
+  // de 5 min — regra do APA-02/07) não bloqueia um novo pedido.
+  const pending = candidates.results.some(
+    (item) =>
+      item.status === 'pendente' ||
+      (item.status === 'processando' &&
+        item.started_at !== null &&
+        new Date(now).getTime() - new Date(item.started_at).getTime() < STALE_PROCESSING_MS),
+  );
 
   const statements = [
     db
@@ -154,6 +179,12 @@ export async function markReported(db: D1Like, contentId: string, now: string): 
   await db.batch(statements);
 }
 
+const MAX_ERROR_MESSAGE_CHARS = 200;
+
+// error_message é só para o painel interno/log — NUNCA repassado ao cliente
+// como está (Gate APA-14/DEC-020 item 8: a API responde uma mensagem
+// genérica, nunca este campo). Truncado aqui mesmo assim, para uma causa de
+// erro longa (ex.: stack de uma lib externa) nunca inflar a linha sem limite.
 export async function markFailed(db: D1Like, contentId: string, message: string, now: string): Promise<void> {
   const row = await getLessonRow(db, contentId);
   if (!row) throw new ApacheError(`Aula do conteúdo "${contentId}" não existe.`, 404);
@@ -164,6 +195,6 @@ export async function markFailed(db: D1Like, contentId: string, message: string,
          SET status = 'erro', error_message = ?2, updated_at = ?3
          WHERE content_id = ?1`,
       )
-      .bind(contentId, message, now),
+      .bind(contentId, message.slice(0, MAX_ERROR_MESSAGE_CHARS), now),
   ]);
 }

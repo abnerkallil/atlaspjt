@@ -553,11 +553,12 @@ export function lessonObjectKey(contentId: string, version: number) {
 }
 
 export async function saveLesson(contentId: string, lesson: ApacheLesson, model: string): Promise<void> {
-  // 1. lê a linha atual (se existir, version += 1, senão version = 1)
+  // 1. lê a linha atual (se já tinha object_key, version += 1, senão version = 1)
   // 2. comprime com new CompressionStream('gzip') — NÃO 'br' (sem suporte no workerd)
   // 3. bucket.put(novo objectKey, bytes, { httpMetadata: { contentType: 'application/json', contentEncoding: 'gzip' } })
-  // 4. bucket.delete(objectKey antigo) se havia versão anterior (sem histórico)
-  // 5. UPSERT atlas_apache_lessons (status='gerada', version, model, object_key, generated_at=now, error_message=null, updated_at=now)
+  // 4. UPSERT atlas_apache_lessons (status='gerada', version, model, object_key, generated_at=now, error_message=null, updated_at=now)
+  // 5. bucket.delete(objectKey antigo) se havia versão anterior — só depois do novo já gravado em D1 e R2,
+  //    para nunca ficar sem nenhuma versão válida se o put ou o UPSERT falharem (sem histórico)
 }
 
 export async function readLesson(contentId: string): Promise<{ lesson: ApacheLesson; version: number } | null> {

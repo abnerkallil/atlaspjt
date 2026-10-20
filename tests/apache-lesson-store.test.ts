@@ -210,3 +210,99 @@ void test('markReported em conteúdo sem aula lança ApacheError 404', async () 
     return true;
   });
 });
+
+void test('markReported recusa aula pendente/erro (409): nada pronto para reportar', async () => {
+  const sqlite = migratedDatabase();
+  seedContent(sqlite, 'X-001');
+  sqlite.exec(
+    `INSERT INTO atlas_apache_lessons (id, content_id, status, version, updated_at) VALUES ('l1', 'X-001', 'pendente', 1, '${now}')`,
+  );
+  const db = d1(sqlite);
+  await assert.rejects(markReported(db, 'X-001', now), (error) => {
+    assert.ok(error instanceof ApacheError);
+    assert.equal(error.status, 409);
+    return true;
+  });
+});
+
+void test('markReported ignora item processando preso há mais de 5 min: não bloqueia novo pedido', async () => {
+  const sqlite = migratedDatabase();
+  seedContent(sqlite, 'X-001');
+  const db = d1(sqlite);
+  const bucket = fakeBucket();
+  await saveLesson(db, bucket, 'X-001', sampleLesson(), 'claude-manual', now);
+  const staleStart = '2026-10-20T12:00:00.000Z';
+  sqlite.exec(
+    `INSERT INTO atlas_apache_queue (id, content_id, kind, status, attempts, started_at, created_at)
+     VALUES ('q1', 'X-001', 'aula_manual', 'processando', 1, '${staleStart}', '${staleStart}')`,
+  );
+  const tenMinutesLater = '2026-10-20T12:10:00.000Z';
+  await markReported(db, 'X-001', tenMinutesLater);
+  const count = sqlite
+    .prepare('SELECT COUNT(*) AS n FROM atlas_apache_queue WHERE content_id = ?')
+    .get('X-001') as { n: number };
+  assert.equal(count.n, 2, 'processando preso (>5min) não bloqueia; um novo item é enfileirado');
+});
+
+void test('markReported não duplica quando o processando ainda está fresco (<5min)', async () => {
+  const sqlite = migratedDatabase();
+  seedContent(sqlite, 'X-001');
+  const db = d1(sqlite);
+  const bucket = fakeBucket();
+  await saveLesson(db, bucket, 'X-001', sampleLesson(), 'claude-manual', now);
+  sqlite.exec(
+    `INSERT INTO atlas_apache_queue (id, content_id, kind, status, attempts, started_at, created_at)
+     VALUES ('q1', 'X-001', 'aula_manual', 'processando', 1, '${now}', '${now}')`,
+  );
+  const twoMinutesLater = '2026-10-20T12:02:00.000Z';
+  await markReported(db, 'X-001', twoMinutesLater);
+  const count = sqlite
+    .prepare('SELECT COUNT(*) AS n FROM atlas_apache_queue WHERE content_id = ?')
+    .get('X-001') as { n: number };
+  assert.equal(count.n, 1, 'processando fresco ainda bloqueia um novo pedido');
+});
+
+void test('saveLesson não salta para v2 quando a linha já existia pendente, sem object_key', async () => {
+  const sqlite = migratedDatabase();
+  seedContent(sqlite, 'X-001');
+  sqlite.exec(
+    `INSERT INTO atlas_apache_lessons (id, content_id, status, version, updated_at) VALUES ('l1', 'X-001', 'pendente', 1, '${now}')`,
+  );
+  const db = d1(sqlite);
+  const bucket = fakeBucket();
+
+  const result = await saveLesson(db, bucket, 'X-001', sampleLesson(), 'modelo-a', now);
+  assert.equal(result.version, 1, 'linha pendente sem object_key ainda não teve nenhuma versão gravada');
+});
+
+void test('readLesson com bytes corrompidos no bucket lança ApacheError 500 genérico', async () => {
+  const sqlite = migratedDatabase();
+  seedContent(sqlite, 'X-001');
+  const db = d1(sqlite);
+  const bucket = fakeBucket();
+  await saveLesson(db, bucket, 'X-001', sampleLesson(), 'modelo-a', now);
+  const key = objectKeyFor(sqlite, 'X-001');
+  bucket.store.set(key, new Uint8Array([1, 2, 3, 4])); // não é gzip válido
+
+  await assert.rejects(readLesson(db, bucket, 'X-001'), (error) => {
+    assert.ok(error instanceof ApacheError);
+    assert.equal(error.status, 500);
+    assert.equal((error as ApacheError).message, 'Aula armazenada corrompida.');
+    return true;
+  });
+});
+
+void test('markFailed trunca a mensagem em 200 caracteres', async () => {
+  const sqlite = migratedDatabase();
+  seedContent(sqlite, 'X-001');
+  const db = d1(sqlite);
+  const bucket = fakeBucket();
+  await saveLesson(db, bucket, 'X-001', sampleLesson(), 'modelo-a', now);
+
+  await markFailed(db, 'X-001', 'x'.repeat(500), now);
+
+  const row = sqlite
+    .prepare('SELECT error_message FROM atlas_apache_lessons WHERE content_id = ?')
+    .get('X-001') as { error_message: string };
+  assert.equal(row.error_message.length, 200);
+});
