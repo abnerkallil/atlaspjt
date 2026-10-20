@@ -1137,6 +1137,62 @@ export const contentCatalog: ContentReference[] = [
       'Testes, fases, redução/extinção de tributos, alíquotas de referência e impactos nos contratos',
   },
   {
+    id: 'CT-118',
+    subject: 'Contabilidade Tributária',
+    unit: 'Reforma tributária — Documentos fiscais',
+    title: 'CST, cClassTrib e tributação no documento fiscal',
+    keywords:
+      'Os 18 CST de IBS/CBS, oito indicadores, tabela cClassTrib, alíquotas, base de cálculo, reduções, regimes recorrentes, ZFM, cCredPres e o Imposto Seletivo no documento',
+  },
+  {
+    id: 'CT-119',
+    subject: 'Contabilidade Tributária',
+    unit: 'Reforma tributária — Documentos fiscais',
+    title: 'NF-e e NFC-e na Reforma Tributária',
+    keywords:
+      'Estrutura do XML, gIBSCBS, totais do IBS/CBS/IS, vedações da NFC-e, referenciamento e rejeições por classificação ou cálculo',
+  },
+  {
+    id: 'CT-120',
+    subject: 'Contabilidade Tributária',
+    unit: 'Reforma tributária — Documentos fiscais',
+    title: 'NFS-e e DPS na Reforma Tributária',
+    keywords:
+      'DPS, Emissor Nacional, ADN, cIndOp, Simples Nacional na NFS-e, operações com imóveis, vAjusteBC e DANFSe',
+  },
+  {
+    id: 'CT-121',
+    subject: 'Contabilidade Tributária',
+    unit: 'Reforma tributária — Documentos fiscais',
+    title: 'Correções, ajustes e eventos fiscais na Reforma',
+    keywords:
+      'Nota de Débito e Crédito, Carta de Correção, Ajustes SINIEF, gAjusteCompet, CST 811, cClassTrib de ajuste e eventos fiscais',
+  },
+  {
+    id: 'CT-122',
+    subject: 'Contabilidade Tributária',
+    unit: 'Reforma tributária — Documentos fiscais',
+    title: 'Créditos e apuração assistida',
+    keywords:
+      'Débito, extinção e crédito, conta-corrente por operação, demonstrativo, crédito presumido e eventos de crédito',
+  },
+  {
+    id: 'CT-123',
+    subject: 'Contabilidade Tributária',
+    unit: 'Reforma tributária — Documentos fiscais',
+    title: 'Cadastros, ERP, EFD e controles na Reforma Tributária',
+    keywords:
+      'Parametrização do ERP, homologação x produção, EFD ICMS/IPI, cruzamentos eletrônicos, riscos e checklist de implantação',
+  },
+  {
+    id: 'CT-124',
+    subject: 'Contabilidade Tributária',
+    unit: 'Reforma tributária — Documentos fiscais',
+    title: 'Caso integrado: implantação da Reforma nos documentos fiscais',
+    keywords:
+      'Estudo de caso ponta a ponta, calendário de adequação por perfil de cliente e síntese de controle',
+  },
+  {
     id: 'CT-108',
     subject: 'Contabilidade Tributária',
     unit: 'Governança e domínio',
