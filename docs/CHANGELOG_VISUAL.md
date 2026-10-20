@@ -14,6 +14,22 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #81 — Limite de 90 páginas/24h por usuário (APA-13)
+
+- Ponto de restauração: branch `restore/pre-apa-13` (main antes do merge).
+- O que muda no site: nada visível ainda. Este PR só adiciona
+  `lib/apache/quota.ts` (`assertQuota`/`refundQuota`): checagem e débito de
+  páginas numa janela rolante de 24h por usuário, num único `UPDATE`
+  condicional (sem leitura separada antes), para duas chamadas concorrentes
+  nunca somarem mais que 90 páginas no dia. Também adiciona
+  `getApacheUserId()` em `lib/auth.ts` (hoje retorna a constante fixa do
+  dono), usado pelas próximas peças do Apache. Nenhuma rota ou tela chama
+  essas funções ainda.
+- Sem migration nova (usa a tabela `atlas_apache_quota` já criada pelo
+  PR #80).
+- Se algo der errado: reverter para `restore/pre-apa-13` remove a checagem
+  de cota; como nenhuma rota a usa ainda, nada no site muda.
+
 ## PR #83 — Esquema JSON da aula do Apache + testes (APA-03)
 
 - Ponto de restauração: branch `restore/pre-apa-03` (main antes do merge).

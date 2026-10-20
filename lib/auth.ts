@@ -128,3 +128,11 @@ export function safeNextPath(value: string | null | undefined): string {
   }
   return value;
 }
+
+// DEC-019: identidade do Apache, chaveada por userId desde o primeiro código.
+// Hoje o Atlas é single-user (DEC-007), então sempre retorna esta constante;
+// o dia do multiusuário muda só esta função, sem migration nova nas tabelas
+// do Apache.
+export function getApacheUserId(): string {
+  return 'atlas-owner';
+}
