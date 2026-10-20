@@ -126,7 +126,9 @@
     "lib/apache/quota.ts",
     "tests/apache-quota.test.ts",
     "lib/apache/ingest-digital.ts",
-    "tests/apache-ingest-digital.test.ts"
+    "tests/apache-ingest-digital.test.ts",
+    "lib/apache/lesson-poll.ts",
+    "tests/apache-lesson-poll.test.ts"
   ],
   "exclude": [
     "node_modules"

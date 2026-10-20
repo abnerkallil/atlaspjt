@@ -864,6 +864,11 @@ a.rm-start { display: inline-flex; align-items: center; gap: 6px; text-decoratio
 .ss-step h2 svg { flex: none; color: var(--blue); }
 .ss-step > p { max-width: 68ch; margin: 0 0 14px; color: #3f3c49; font-size: 15px; line-height: 1.75; }
 .ss-key { padding: 13px 15px; border-left: 4px solid #d3b76b; border-radius: 4px 12px 12px 4px; color: #4f4214 !important; background: #fffbec; font-weight: 600; }
+.al-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
+.al-empty { color: var(--muted); font-size: 13px; }
+.al-body { font-size: 14px; line-height: 1.6; color: var(--ink); }
+.al-body h3 { font-size: 16px; margin: 14px 0 6px; }
+.al-flag { background: #fff1df; color: var(--amber); border-radius: 8px; padding: 8px 12px; font-size: 12px; margin-bottom: 10px; }
 .cm { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line); }
 .cm-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
 .cm-head .eyebrow { margin: 0; }
