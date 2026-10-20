@@ -130,7 +130,9 @@
     "lib/apache/lesson-poll.ts",
     "tests/apache-lesson-poll.test.ts",
     "lib/apache/lesson-store.ts",
-    "tests/apache-lesson-store.test.ts"
+    "tests/apache-lesson-store.test.ts",
+    "lib/apache/ocr.ts",
+    "tests/apache-ocr.test.ts"
   ],
   "exclude": [
     "node_modules"
