@@ -336,6 +336,7 @@ CREATE TABLE `atlas_apache_queue` (
   `attempts` integer NOT NULL DEFAULT 0,
   `last_error` text,
   `temp_object_key` text, -- texto extraído do upload, em apache/tmp/, até o job terminar
+  `started_at` text, -- marcado quando status vira 'processando'; destrava item preso se o waitUntil for interrompido antes da geração terminar (ver regra abaixo)
   `created_at` text NOT NULL,
   `processed_at` text,
   FOREIGN KEY (`content_id`) REFERENCES `atlas_contents`(`id`) ON UPDATE no action ON DELETE cascade
@@ -355,14 +356,27 @@ reportada, entra na fila com esse `kind` em vez de `'aula'`, e o processador
 do APA-07 **nunca** chama o gerador automático para esse `kind` — só sinaliza
 para revisão humana (ver regra no APA-18).
 
+**Item preso em `'processando'`** (decidido pelo coordenador em 2026-10-20,
+detalhe técnico dentro do Gate já aprovado, sem precisar de nova decisão do
+Abner): o `waitUntil` que processa a fila pode ser interrompido antes da
+geração no Llama 70B terminar (janela de execução curta), deixando o item
+em `'processando'` para sempre — o dedupe do APA-07 bloquearia reenfileirar
+esse `content_id`+`kind`, e a varredura pós-meia-noite só olha itens
+`'pendente'`. Por isso `atlas_apache_queue.started_at` é marcado quando o
+status vira `'processando'`; tanto a varredura pós-reset quanto o próprio
+`enqueue` do APA-07 tratam um item `'processando'` com `started_at` mais
+velho que **5 minutos** como preso: voltam para `'pendente'` e incrementam
+`attempts`; depois de **3 tentativas**, o item vira `'erro'` em vez de
+voltar para `'pendente'` de novo (implementação no APA-07, schema aqui).
+
 **Aceite:** `pnpm run test:notes` (ou o equivalente criado no APA-03) verde
 com as novas tabelas no allowlist de `tests/data-model.test.ts` e nos arrays
 de `tests/deploy-migrations.test.ts`; `drizzle/meta/_journal.json` atualizado.
 
 **Checklist**
-- [ ] Migration `0027_apache_base` com as 5 tabelas (sem `lesson_version` em enrichments)
-- [ ] `tests/data-model.test.ts` e `tests/deploy-migrations.test.ts` atualizados
-- [ ] `drizzle/meta/_journal.json` com a nova entrada
+- [x] Migration `0027_apache_base` com as 5 tabelas (sem `lesson_version` em enrichments)
+- [x] `tests/data-model.test.ts` e `tests/deploy-migrations.test.ts` atualizados
+- [x] `drizzle/meta/_journal.json` com a nova entrada
 - [ ] Restore `restore/pre-apa-02` + `CHANGELOG_VISUAL.md`
 
 ---
@@ -670,15 +684,24 @@ foi chamado.
 - `GET /api/apache/aulas/[contentId]/route.ts`:
   - Sem linha em `atlas_apache_lessons`: cria `status='pendente'`, insere em
     `atlas_apache_queue` **só se não existir já uma linha `pendente`/
-    `processando` para esse `content_id`+`kind='aula'`** (dedupe de fila —
-    consulta antes do insert, usa o índice `idx_atlas_apache_queue_content_kind_status`
-    do APA-02), responde `{ status: 'pendente' }`, e chama
-    `ctx.waitUntil(processQueueItem(...))` para processar depois de responder.
+    `processando` não presa para esse `content_id`+`kind='aula'`** (dedupe de
+    fila — consulta antes do insert, usa o índice
+    `idx_atlas_apache_queue_content_kind_status` do APA-02; uma linha
+    `processando` com `started_at` mais velho que 5 minutos é tratada como
+    presa, não bloqueia o dedupe — ver regra abaixo), responde `{ status:
+    'pendente' }`, e chama `ctx.waitUntil(processQueueItem(...))` para
+    processar depois de responder.
   - **Em toda chamada** (independente do status da aula): também checa se há
     itens pendentes na fila com `created_at` anterior ao reset diário mais
     recente (meia-noite UTC) — se houver, dispara o processamento deles via
     `waitUntil` também, para destravar itens que ficaram parados da meia-noite
     até agora (opção (b) do Gate APA-01).
+  - **Item preso em `'processando'`**: o `waitUntil` pode ser interrompido
+    antes da geração terminar. Tanto a varredura pós-reset quanto o `enqueue`
+    acima tratam um item `'processando'` com `started_at` mais velho que 5
+    minutos como preso — voltam para `'pendente'` e incrementam `attempts`;
+    depois de 3 tentativas, o item vira `'erro'` em vez de voltar para
+    `'pendente'` de novo (schema: `atlas_apache_queue.started_at`, APA-02).
   - `status` existente (`'gerada'`/`'reportada'`): carrega a aula
     (`readLesson`, APA-05) e, se existir uma ficha de enriquecimento
     `concluido` para esse `content_id`+`userId` (`getApacheUserId()`), carrega
@@ -687,14 +710,15 @@ foi chamado.
     novos, reforcos }` na resposta. Responde
     `{ status, lesson: renderLesson(lesson), enrichment, errorMessage: undefined }`.
   - `status: 'erro'`: responde `{ status, errorMessage: row.error_message }`.
-- `processQueueItem`: marca `processando`, checa `neuronBudgetRemaining`
-  (APA-15) — se `overLimit`, deixa `pendente` e sai sem tentar; senão chama
-  `writeLesson` (APA-06) e marca `concluido`/`erro`.
+- `processQueueItem`: marca `processando` e grava `started_at=now`, checa
+  `neuronBudgetRemaining` (APA-15) — se `overLimit`, deixa `pendente` e sai
+  sem tentar; senão chama `writeLesson` (APA-06) e marca `concluido`/`erro`.
 
 **Checklist**
 - [ ] `GET /api/apache/aulas/[contentId]/route.ts`
-- [ ] Dedupe de fila por `content_id`+`kind`+status antes do insert
+- [ ] Dedupe de fila por `content_id`+`kind`+status antes do insert, ignorando `processando` preso (`started_at` > 5min)
 - [ ] Processamento via `waitUntil` na requisição + checagem de itens pendentes pós-reset em toda chamada
+- [ ] Item `processando` preso (`started_at` > 5min) volta para `pendente` (attempts+1) na varredura e no enqueue; 3 tentativas → `erro`
 - [ ] Diff enriquecimento×aula calculado na leitura (`diffEnrichmentAgainstLesson`), nunca gravado
 - [ ] Corte por `neuronBudgetRemaining` antes de cada item
 - [ ] Restore `restore/pre-apa-07` + `CHANGELOG_VISUAL.md`

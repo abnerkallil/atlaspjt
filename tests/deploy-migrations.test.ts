@@ -81,6 +81,7 @@ void test('produção atual: 0004 e 0006 aplicadas à mão são só registradas,
     '0024_contabilidade_tributaria_reforma_documentos_fiscais.sql',
     '0025_materiais_documentos_fiscais_reforma.sql',
     '0026_contabilidade_custos_analise_avancada.sql',
+    '0027_apache_base.sql',
   ]);
   assert.deepEqual(plan.partial, []);
 });
@@ -118,6 +119,7 @@ void test('migration nova ainda não aplicada vai para apply', () => {
       '0024_contabilidade_tributaria_reforma_documentos_fiscais.sql',
       '0025_materiais_documentos_fiscais_reforma.sql',
       '0026_contabilidade_custos_analise_avancada.sql',
+      '0027_apache_base.sql',
     ],
     partial: [],
   });
