@@ -4,6 +4,7 @@ import test from 'node:test';
 import {
   DAILY_NEURON_BUDGET,
   NEURON_OVERLIMIT_THRESHOLD,
+  estimateNeurons,
   neuronBudgetRemaining,
   recordNeuronUsage,
 } from '../lib/apache/neuron-meter.js';
@@ -58,4 +59,39 @@ void test('amount zero ou inválido não grava', async () => {
   await recordNeuronUsage(db, -5, '2026-10-20T08:00:00.000Z');
   await recordNeuronUsage(db, Number.NaN, '2026-10-20T08:00:00.000Z');
   assert.equal((await neuronBudgetRemaining(db, '2026-10-20T08:00:00.000Z')).used, 0);
+});
+
+void test('data inválida rejeitada em recordNeuronUsage e neuronBudgetRemaining', async () => {
+  const db = d1(migratedDatabase());
+  await assert.rejects(recordNeuronUsage(db, 20, 'não-é-data'), /Data inválida/);
+  await assert.rejects(neuronBudgetRemaining(db, 'não-é-data'), /Data inválida/);
+});
+
+void test('Math.ceil: uso fracionário nunca vira 0', async () => {
+  const db = d1(migratedDatabase());
+  await recordNeuronUsage(db, 0.3, '2026-10-20T08:00:00.000Z');
+  assert.equal((await neuronBudgetRemaining(db, '2026-10-20T08:00:00.000Z')).used, 1);
+});
+
+void test('estimateNeurons: tokens × taxa do modelo, com fallback de 3k/2k tokens', () => {
+  const llama = estimateNeurons('@cf/meta/llama-3.3-70b-instruct-fp8-fast');
+  assert.ok(Math.abs(llama - 489.6) < 1, `esperava ~490, veio ${llama}`);
+
+  const gemma = estimateNeurons('@cf/google/gemma-4-26b-a4b-it');
+  assert.ok(Math.abs(gemma - 81.8) < 1, `esperava ~82, veio ${gemma}`);
+
+  const qwen = estimateNeurons('@cf/qwen/qwen3-30b-a3b-fp8');
+  assert.ok(Math.abs(qwen - 74.8) < 1, `esperava ~75, veio ${qwen}`);
+
+  const vision = estimateNeurons('@cf/meta/llama-3.2-11b-vision-instruct');
+  assert.ok(Math.abs(vision - 136.2) < 1, `esperava ~136, veio ${vision}`);
+
+  // usage real da chamada tem prioridade sobre o fallback de 3k/2k.
+  const usoReal = estimateNeurons('@cf/meta/llama-3.3-70b-instruct-fp8-fast', {
+    promptTokens: 1_000_000,
+    completionTokens: 0,
+  });
+  assert.equal(usoReal, 26_668);
+
+  assert.throws(() => estimateNeurons('@cf/desconhecido/modelo-x'), /sem taxa de neurons/);
 });
