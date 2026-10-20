@@ -122,7 +122,9 @@
     "lib/apache/schema.ts",
     "tests/apache-schema.test.ts",
     "lib/apache/neuron-meter.ts",
-    "tests/apache-neuron-meter.test.ts"
+    "tests/apache-neuron-meter.test.ts",
+    "lib/apache/ingest-digital.ts",
+    "tests/apache-ingest-digital.test.ts"
   ],
   "exclude": [
     "node_modules"
