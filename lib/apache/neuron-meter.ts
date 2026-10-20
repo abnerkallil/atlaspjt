@@ -2,6 +2,7 @@
 // reset 00:00 UTC). Checado em todo lugar que chama IA no Apache (APA-06,
 // APA-07, APA-12) antes de gastar neurons — ver docs/APACHE.md.
 import type { D1Like } from '../pedagogy/transitions.js';
+import { ApacheError } from './errors.js';
 
 export const DAILY_NEURON_BUDGET = 10_000;
 // Corte em 90%, sempre — sem exceção por "fizer sentido" (docs/APACHE.md).
@@ -31,7 +32,7 @@ export function estimateNeurons(
   usage?: { promptTokens: number; completionTokens: number },
 ): number {
   const rate = NEURON_RATE_PER_MILLION_TOKENS[model];
-  if (!rate) throw new Error(`Modelo sem taxa de neurons cadastrada: "${model}"`);
+  if (!rate) throw new ApacheError(`Modelo sem taxa de neurons cadastrada: "${model}"`, 500);
   const promptTokens = usage?.promptTokens ?? FALLBACK_PROMPT_TOKENS;
   const completionTokens = usage?.completionTokens ?? FALLBACK_COMPLETION_TOKENS;
   return (promptTokens * rate.input) / 1_000_000 + (completionTokens * rate.output) / 1_000_000;
@@ -39,7 +40,7 @@ export function estimateNeurons(
 
 function utcDay(now: string): string {
   const date = new Date(now);
-  if (Number.isNaN(date.getTime())) throw new Error(`Data inválida: "${now}"`);
+  if (Number.isNaN(date.getTime())) throw new ApacheError(`Data inválida: "${now}"`, 500);
   return date.toISOString().slice(0, 10);
 }
 

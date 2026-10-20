@@ -1,6 +1,7 @@
 // APA-15: medidor diário de neurons do Workers AI.
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { ApacheError } from '../lib/apache/errors.js';
 import {
   DAILY_NEURON_BUDGET,
   NEURON_OVERLIMIT_THRESHOLD,
@@ -63,8 +64,14 @@ void test('amount zero ou inválido não grava', async () => {
 
 void test('data inválida rejeitada em recordNeuronUsage e neuronBudgetRemaining', async () => {
   const db = d1(migratedDatabase());
-  await assert.rejects(recordNeuronUsage(db, 20, 'não-é-data'), /Data inválida/);
-  await assert.rejects(neuronBudgetRemaining(db, 'não-é-data'), /Data inválida/);
+  await assert.rejects(
+    recordNeuronUsage(db, 20, 'não-é-data'),
+    (error: ApacheError) => error instanceof ApacheError && error.status === 500 && /Data inválida/.test(error.message),
+  );
+  await assert.rejects(
+    neuronBudgetRemaining(db, 'não-é-data'),
+    (error: ApacheError) => error instanceof ApacheError && error.status === 500 && /Data inválida/.test(error.message),
+  );
 });
 
 void test('Math.ceil: uso fracionário nunca vira 0', async () => {
@@ -93,5 +100,8 @@ void test('estimateNeurons: tokens × taxa do modelo, com fallback de 3k/2k toke
   });
   assert.equal(usoReal, 26_668);
 
-  assert.throws(() => estimateNeurons('@cf/desconhecido/modelo-x'), /sem taxa de neurons/);
+  assert.throws(
+    () => estimateNeurons('@cf/desconhecido/modelo-x'),
+    (error: ApacheError) => error instanceof ApacheError && error.status === 500 && /sem taxa de neurons/.test(error.message),
+  );
 });
