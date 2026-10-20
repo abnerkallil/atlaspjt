@@ -1,9 +1,12 @@
 # Apache — IA criadora de conteúdo pedagógico (aula base + enriquecimento)
 
-**Revisão 2** (2026-10-20, depois de checar main de verdade): corrige citações
-erradas, fecha a questão de usuário único, resolve a ordem de dependências e
-fecha os buracos de segurança apontados na revisão. Nada foi implementado — é
-só planejamento, pronto para distribuir em threads.
+**Revisão 3** (2026-10-20, depois de uma segunda rodada de revisão): corrige a
+identidade (o Atlas vai ficar público, então quota/enriquecimento já nascem
+chaveados por usuário, não como estado global) e a justificativa do corte
+síncrono-vs-fila do Gate de segurança (CPU não é o gargalo real — é número de
+chamadas de IA/latência). Também confirma, com evidência, que dá para
+registrar um `scheduled` customizado no `vinext`. Nada foi implementado — é só
+planejamento.
 
 Apache escreve, uma vez por conteúdo, uma **aula base** que aparece automaticamente
 na sessão de estudo (onde hoje aparece "Nenhum material anexado ainda"), e quando
@@ -12,14 +15,17 @@ conceitos do seu material" — sem gravar texto solto no banco e sem assinatura 
 (Cloudflare Workers AI, plano Free). É a primeira peça do Atlas com IA generativa —
 excepciona o DEC-014 (Apolo sem IA externa), que continua valendo só para o Apolo.
 
-**Fato que muda o desenho (não estava claro na v1):** o Atlas é de **usuário
-único** (DEC-007, `docs/auth.md`) — não existe tabela de usuário, `lib/auth.ts`
-não tem id de aluno, só um cookie de sessão assinado. Não há "privacidade entre
-alunos" para proteger porque só existe uma pessoa. Daqui em diante este
-documento trata quota e enriquecimento como **estado global do Atlas**, não por
-usuário. Se um dia o Atlas abrir para mais gente, isso é um Gate novo, não deste
-card. Essa mudança está na pergunta 3 do Gate do APA-01 — confirme com Abner/Raf
-antes do APA-02.
+**Identidade (corrigido na revisão 3):** o Atlas é de usuário único hoje
+(DEC-007, `docs/auth.md`, sem tabela de usuário), mas o Abner já disse que a
+plataforma vai ficar pública — tratar quota/enriquecimento como estado
+"global" geraria retrabalho garantido quando isso acontecer. Em vez disso,
+**todo dado de quota e de enriquecimento já nasce chaveado por `userId`**,
+vindo de um helper único: `getApacheUserId()` em `lib/auth.ts`, que hoje
+retorna uma constante fixa (o dono — ex.: `'owner'`, ou o valor que `lib/auth.ts`
+já usa internamente para a sessão única, confirme ao implementar). Quando
+houver multiusuário de verdade, só esse helper muda (passa a ler o id da
+sessão) — nenhuma tabela do Apache precisa de migration nova. Custo extra
+agora é praticamente zero: só a coluna `user_id` a mais em duas tabelas.
 
 ## Convenções que todo card abaixo segue
 
@@ -27,6 +33,10 @@ antes do APA-02.
   outro card mexer em schema antes, pegue o próximo número livre e combine
   entre as threads. Atualize `drizzle/meta/_journal.json`, `tests/data-model.test.ts`
   e `tests/deploy-migrations.test.ts`.
+- **Identidade**: `getApacheUserId()` (novo, `lib/auth.ts`) é a única função
+  que qualquer card chama para obter o "titular" — nunca leia sessão
+  diretamente dentro de `lib/apache/*`. Hoje retorna uma constante; é o ponto
+  único de mudança no dia do multiusuário.
 - **Testes**: este repo não tem `pnpm test` nem um runner genérico. O único
   padrão existente é `pnpm run test:notes` (`tsc -p tsconfig.notes-spike.json`
   + `node --test` sobre os `.js` compilados) e cobre só o código de notas. Para
@@ -101,9 +111,9 @@ APA-14 (Gate: segurança/prompt-injection) ── roda em paralelo ao APA-01, se
        ├─ APA-09 (ingestão digital, unpdf)
        ├─ APA-10 (ingestão imagem, Tesseract.js + unpdf)
        └─ APA-11 (fallback letra de mão)
-            └─ APA-13 (limite de páginas) ── estado global, não por aluno
+            └─ APA-13 (limite de páginas, por userId) ── usa getApacheUserId()
                  └─ APA-12 (enriquecimento: junta 09+10+11+13, usa a guarda do APA-14,
-                            e o dedupe de hash do APA-16 já embutido)
+                            por userId, e o dedupe de hash do APA-16 já embutido)
 APA-17 (bake-off) precisa de APA-06 (para comparar) e termina ANTES do APA-12
   fechar, porque o APA-12 precisa do modelo escolhido como config.
 APA-16 deixa de ser card isolado: o dedupe de fila entra no APA-07, o dedupe de
@@ -135,40 +145,44 @@ nenhum card. **Gate:** **SIM — obrigatório antes de qualquer código.**
 > (`atlas_apache_lessons`); enriquecimento também em R2 (gzip) com metadados em
 > D1 (`atlas_apache_enrichments`); mesmo bucket `ATTACHMENTS`, prefixos
 > `apache/aulas/<contentId>/v<versao>.json.gz` e
-> `apache/enriquecimento/<contentId>.json.gz`. Aula regerada sobrescreve, sem
-> histórico de versão (diferente das notas, DEC-012, porque não há edição
-> humana a preservar). Confirma?
+> `apache/enriquecimento/<contentId>/<userId>.json.gz`. Aula regerada
+> sobrescreve, sem histórico de versão (diferente das notas, DEC-012, porque
+> não há edição humana a preservar). Confirma?
 >
 > **(2) Enriquecimento × versão da aula.** Se a aula for regerada, o
 > enriquecimento salvo vira órfão e é recalculado sob demanda na próxima vez
 > que o conteúdo é aberto (não fica escondido, nem precisa ser mantido
 > artificialmente igual). Confirma, ou prefere outra relação?
 >
-> **(3) Identidade.** O Atlas é de usuário único (DEC-007): não existe tabela
-> de usuário nem de sessão com id. O "limite de 90 páginas por aluno" e a
-> "privacidade do enriquecimento por aluno" (pedidos pelo Abner em
-> 2026-10-20) ficam sendo, na prática, **estado global do Atlas** — não há
-> outro aluno para proteger contra. Proposta: tratar como global agora (sem
-> coluna de usuário em nenhuma tabela do Apache) e reabrir isso como Gate
-> novo no dia em que o Atlas aceitar mais de uma pessoa. Confirma essa leitura
-> ou prefere já modelar uma coluna de "titular" (mesmo com valor fixo hoje)
-> para não migrar depois?
+> **(3) Identidade.** O Atlas é de usuário único hoje (DEC-007), mas vai ficar
+> público — tratar quota/enriquecimento como estado "global" geraria
+> retrabalho garantido quando isso acontecer. Proposta corrigida: **quota e
+> enriquecimento já nascem chaveados por `userId`** desde o primeiro código,
+> via um helper único `getApacheUserId()` em `lib/auth.ts` (hoje retorna uma
+> constante fixa do dono; no dia do multiusuário, só esse helper muda, nenhuma
+> tabela precisa de migration nova). Confirma essa leitura?
 >
 > **(4) Execução periódica.** O entry de produção é `vinext/server/fetch-handler`
-> (`vite.config.ts`), que só expõe `fetch` — não há `scheduled` hoje em lugar
-> nenhum do projeto, e nenhum Cron Trigger está configurado. A geração lazy
-> (APA-07) precisa de alguma forma de rodar fora de uma requisição HTTP (para
-> não travar a tela do usuário nem furar o limite de CPU por requisição).
-> Opções a escolher: **(a)** descobrir se o `vinext`/`@cloudflare/vite-plugin`
-> permite exportar um `scheduled` adicional junto do `fetch` gerado (mais
-> simples, mas depende do que o framework permite) **(b)** processar a fila
-> dentro da própria requisição HTTP que a disparou, via
-> `ctx.waitUntil(...)` (sem Cron Trigger nenhum, roda só quando alguém
-> acessa o Atlas — pode deixar aulas pendentes por mais tempo se o uso for
-> esporádico, mas não exige infra nova) **(c)** um segundo Worker separado,
-> só para o cron, com seu próprio `wrangler.jsonc` e acesso aos mesmos
-> bindings D1/R2 (mais isolado, mais peça de infra). Pede-se decisão de qual
-> caminho seguir — isso define o escopo real do APA-07.
+> (`vite.config.ts`), que hoje só expõe `fetch` — não há `scheduled` configurado
+> no projeto. Verificado no repo oficial do `vinext` (`github.com/cloudflare/vinext`):
+> existe um mecanismo documentado, `cloudflare.config.ts` com
+> `defineWorker({ exports: {...} })`, que mescla chaves extras no objeto de
+> exports do Worker gerado — hoje usado só pelo adaptador de cache do próprio
+> vinext, mas estruturalmente serve para acrescentar um `scheduled` junto do
+> `fetch`. Isso NÃO é um caso de uso de cron documentado oficialmente pelo
+> vinext — é possível pela mecânica do merge de exports, mas precisa ser
+> confirmado na prática (build, inspecionar `dist/server/wrangler.json`,
+> confirmar que o Cron Trigger de fato dispara) antes de confiar nisso em
+> produção. Proposta: **opção (a)** — registrar `scheduled` via
+> `cloudflare.config.ts`/`defineWorker({ exports: { scheduled: meuHandler } })`,
+> com o APA-07 fazendo essa verificação empírica como primeiro passo do card
+> (se falhar na prática, cai para processar a fila também no primeiro request
+> HTTP recebido depois do reset diário de cota, além do `waitUntil` da
+> requisição que originou o item — para não deixar a fila travada da meia-noite
+> UTC até alguém acessar o Atlas). Confirma essa ordem de tentativa, ou prefere
+> já ir direto para `waitUntil`-apenas (opção b, mais simples mas pode atrasar
+> itens pendentes até a próxima visita) ou um Worker separado (opção c, mais
+> infra)?
 
 **Aceite:** `docs/quests/ARCHITECTURE_GATE.md` com `Status: RESOLVED` e as 4
 respostas; se `DEC Required: YES`, decisão em `docs/ATLAS_DECISIONS.md` antes
@@ -202,10 +216,17 @@ apenas — roda em paralelo ao APA-01, sem esperar código de ninguém). **Gate:
 > Limites concretos a travar aqui, não deixar para "bom senso" na
 > implementação: **tamanho máximo de upload do enriquecimento** (proposta:
 > mesmo teto de 10MB do DEC-07/anexos, por arquivo); **quando o processamento
-> roda síncrono vs. vai para a fila** (proposta: síncrono só até 1 chunk, ~2.000
-> caracteres de texto já extraído — qualquer coisa maior sempre vai para a
-> fila, nunca processa dentro da requisição HTTP, dado o limite de 10ms de CPU
-> do Workers Free); **contagem de páginas do upload via `/texto`** (o
+> roda síncrono vs. vai para a fila** — **corrigido**: o gargalo real NÃO é CPU
+> (chamada de IA é I/O, não consome os 10ms de CPU do Workers Free enquanto
+> espera; hash SHA-256 via WebCrypto e parse de JSON são baratos mesmo para um
+> arquivo de 10MB). O gargalo real é **número de chamadas sequenciais de IA
+> dentro de uma única requisição HTTP** (cada chamada leva segundos; várias em
+> sequência estouram o tempo de resposta e o limite de sub-requisições do
+> Workers Free). Proposta corrigida: síncrono só até **1 chunk, ~6.000
+> caracteres** (o mesmo tamanho de "1 página" já usado como teto abaixo — um
+> upload de 1 página real faz só 1 chamada de IA e fica síncrono); 2+ chunks
+> (2+ chamadas de IA) sempre vão para a fila, por latência/contagem de
+> chamadas, não por CPU; **contagem de páginas do upload via `/texto`** (o
 > navegador manda quantas páginas processou via Tesseract — isso não pode ser
 > confiado como está: o servidor precisa limitar `text.length` a um teto
 > plausível por página declarada, ex. 6.000 caracteres/página, e rejeitar se
@@ -218,7 +239,7 @@ APA-12 antes de qualquer um deles ser considerado pronto.
 
 **Checklist**
 - [ ] Gate resolvido e DEC registrado, se aplicável
-- [ ] Guarda de prompt-injection, teto de upload e regra de síncrono-vs-fila com valores travados
+- [ ] Guarda de prompt-injection, teto de upload e regra de síncrono-vs-fila com valores travados (justificada por latência/nº de chamadas, não CPU)
 
 ---
 
@@ -226,11 +247,12 @@ APA-12 antes de qualquer um deles ser considerado pronto.
 
 **Prioridade:** P0. **Áreas:** Backend, Dados. **Depende de:** APA-01, APA-14
 (Gates resolvidos — a migration já reflete as respostas, principalmente a (3)
-identidade global e a (4) execução periódica escolhida). **Gate:** não.
+identidade por `userId` e a (4) execução periódica escolhida). **Gate:** não.
 
 **Escopo — `drizzle/0027_apache_base.sql`** (ajuste o número se necessário;
-sem coluna de usuário, por ser estado global — ver Gate APA-01 pergunta 3; se
-o Gate decidir diferente, ajuste antes de criar a migration):
+com `user_id` em `atlas_apache_enrichments` e `atlas_apache_quota`, conforme
+Gate APA-01 pergunta 3 — `atlas_apache_lessons` continua sem `user_id`,
+porque a aula é compartilhada):
 
 ```sql
 CREATE TABLE `atlas_apache_lessons` (
@@ -251,6 +273,7 @@ CREATE UNIQUE INDEX `idx_atlas_apache_lessons_content` ON `atlas_apache_lessons`
 CREATE TABLE `atlas_apache_enrichments` (
   `id` text PRIMARY KEY NOT NULL,
   `content_id` text NOT NULL,
+  `user_id` text NOT NULL, -- vem de getApacheUserId() (lib/auth.ts), hoje sempre a mesma constante
   `lesson_version` integer NOT NULL,
   `status` text NOT NULL DEFAULT 'processando', -- processando | concluido | descartado | erro
   `object_key` text,
@@ -261,12 +284,11 @@ CREATE TABLE `atlas_apache_enrichments` (
   `updated_at` text NOT NULL,
   FOREIGN KEY (`content_id`) REFERENCES `atlas_contents`(`id`) ON UPDATE no action ON DELETE cascade
 );
-CREATE UNIQUE INDEX `idx_atlas_apache_enrichments_content` ON `atlas_apache_enrichments` (`content_id`);
+CREATE UNIQUE INDEX `idx_atlas_apache_enrichments_content_user` ON `atlas_apache_enrichments` (`content_id`, `user_id`);
 CREATE INDEX `idx_atlas_apache_enrichments_hash` ON `atlas_apache_enrichments` (`source_file_hash`);
 
--- Estado global (não por usuário — ver Gate APA-01 pergunta 3). Uma linha fixa.
 CREATE TABLE `atlas_apache_quota` (
-  `id` text PRIMARY KEY NOT NULL DEFAULT 'global',
+  `user_id` text PRIMARY KEY NOT NULL, -- vem de getApacheUserId()
   `window_start` text NOT NULL,
   `pages_used` integer NOT NULL DEFAULT 0,
   `updated_at` text NOT NULL
@@ -276,6 +298,7 @@ CREATE TABLE `atlas_apache_queue` (
   `id` text PRIMARY KEY NOT NULL,
   `content_id` text NOT NULL,
   `kind` text NOT NULL DEFAULT 'aula', -- aula | aula_manual | enriquecimento
+  `user_id` text, -- só preenchido para kind='enriquecimento'; aula é compartilhada, sem titular
   `status` text NOT NULL DEFAULT 'pendente', -- pendente | processando | concluido | erro
   `attempts` integer NOT NULL DEFAULT 0,
   `last_error` text,
@@ -304,7 +327,7 @@ com as novas tabelas no allowlist de `tests/data-model.test.ts` e nos arrays
 de `tests/deploy-migrations.test.ts`; `drizzle/meta/_journal.json` atualizado.
 
 **Checklist**
-- [ ] Migration `0027_apache_base` com as 5 tabelas (sem coluna de usuário)
+- [ ] Migration `0027_apache_base` com as 5 tabelas (`user_id` em enrichments e quota)
 - [ ] `tests/data-model.test.ts` e `tests/deploy-migrations.test.ts` atualizados
 - [ ] `drizzle/meta/_journal.json` com a nova entrada
 - [ ] Restore `restore/pre-apa-02` + `CHANGELOG_VISUAL.md`
@@ -455,7 +478,8 @@ APA-07.
 **Prioridade:** P0. **Áreas:** Backend. **Depende de:** APA-02, APA-03.
 **Gate:** não.
 
-**Escopo — `lib/apache/lesson-store.ts`** (padrão de `lib/attachments-store.ts`):
+**Escopo — `lib/apache/lesson-store.ts`** (padrão de `lib/attachments-store.ts`;
+aula é compartilhada, sem `userId` nesta parte):
 
 ```ts
 import { env } from 'cloudflare:workers';
@@ -589,21 +613,31 @@ foi chamado.
 ## APA-07 — Fila, geração lazy e execução periódica
 
 **Prioridade:** P0. **Áreas:** Backend, Infra. **Depende de:** APA-06, APA-01
-(Gate — a opção (a)/(b)/(c) escolhida na pergunta 4 define o "Escopo" real
-deste card; o texto abaixo descreve a opção (b), a mais simples; ajuste para
-(a) ou (c) se o Gate escolher outra). **Gate:** não.
+(Gate — a opção escolhida na pergunta 4 define o "Escopo" real deste card; o
+texto abaixo descreve a opção (a) recomendada, com fallback). **Gate:** não.
 
-**Escopo (assumindo a opção (b) do Gate — processar dentro da própria
-requisição via `waitUntil`; troque esta seção se o Gate escolher diferente):**
+**Escopo:**
 
+- **Passo 0 (primeiro passo deste card, antes de qualquer outra coisa):**
+  verificar empiricamente se o `vinext` aceita um `scheduled` customizado via
+  `cloudflare.config.ts` + `defineWorker({ exports: { scheduled: ... } })`
+  (mecanismo encontrado no repo oficial do vinext, não documentado como caso
+  de cron) — fazer um build, inspecionar `dist/server/wrangler.json` e
+  confirmar que o Cron Trigger de fato dispara em produção. Documentar o
+  resultado no PR deste card.
+- **Se funcionar:** `scheduled` processa a fila (`atlas_apache_queue`) a cada
+  N minutos (confirmar quantos Cron Triggers o plano Free permite antes de
+  escolher a frequência).
+- **Se não funcionar:** usar `ctx.waitUntil(...)` na própria requisição que
+  originou o item **mais** uma checagem de fila pendente no primeiro request
+  HTTP recebido depois do reset diário de cota (meia-noite UTC) — para não
+  deixar itens pendentes travados até alguém acessar o Atlas por acaso.
 - `GET /api/apache/aulas/[contentId]/route.ts`:
   - Sem linha em `atlas_apache_lessons`: cria `status='pendente'`, insere em
     `atlas_apache_queue` **só se não existir já uma linha `pendente`/
     `processando` para esse `content_id`+`kind='aula'`** (dedupe de fila —
     consulta antes do insert, usa o índice `idx_atlas_apache_queue_content_kind_status`
-    do APA-02), responde `{ status: 'pendente' }`, e chama
-    `ctx.waitUntil(processQueueItem(...))` para processar depois de responder,
-    sem travar a requisição.
+    do APA-02), responde `{ status: 'pendente' }`.
   - `status` existente: responde `{ status, lesson: status === 'gerada' ||
     status === 'reportada' ? renderLesson(await readLesson(contentId)) :
     undefined, errorMessage: status === 'erro' ? row.error_message : undefined }`.
@@ -612,9 +646,10 @@ requisição via `waitUntil`; troque esta seção se o Gate escolher diferente):
   `writeLesson` (APA-06) e marca `concluido`/`erro`.
 
 **Checklist**
+- [ ] Verificação empírica do `scheduled` customizado do vinext, documentada no PR
 - [ ] `GET /api/apache/aulas/[contentId]/route.ts`
 - [ ] Dedupe de fila por `content_id`+`kind`+status antes do insert
-- [ ] Processamento via a opção escolhida no Gate APA-01 (4)
+- [ ] Processamento via `scheduled` (se funcionar) ou `waitUntil` + checagem no primeiro request pós-reset (fallback)
 - [ ] Corte por `neuronBudgetRemaining` antes de cada item
 - [ ] Restore `restore/pre-apa-07` + `CHANGELOG_VISUAL.md`
 
@@ -727,20 +762,25 @@ escolhido antes de fechar este card). **Gate:** não.
   /api/apache/enriquecimento/texto` (`{ contentId, text, pages }`, para o
   texto já extraído no navegador por Tesseract.js/APA-10 ou Llama
   vision/APA-11) — valida `text.length <= pages * 6000` (teto do Gate APA-14,
-  rejeita 413 se passar), checa `assertQuota` (APA-13) **antes** de qualquer
+  rejeita 413 se passar). `userId` vem de `getApacheUserId()` (convenções) —
+  checa `assertQuota(userId, pagesRequested)` (APA-13) **antes** de qualquer
   outra coisa.
 - Calcula `source_file_hash` (SHA-256) **antes de descartar qualquer byte**;
   se já existe `atlas_apache_enrichments` `concluido` com o mesmo hash para
-  o mesmo conteúdo, devolve o resultado salvo direto (0 neurons, 0 páginas
-  novas debitadas).
-- Cria/atualiza a linha única de `atlas_apache_enrichments` daquele
-  `content_id` (um enriquecimento por conteúdo, estado global — ver Gate
-  APA-01 pergunta 3), `status='processando'`.
+  o mesmo conteúdo e o mesmo `userId`, devolve o resultado salvo direto (0
+  neurons, 0 páginas novas debitadas).
+- Cria/atualiza a linha de `atlas_apache_enrichments` daquele
+  `content_id` + `userId` (um enriquecimento por conteúdo×usuário — índice
+  único `idx_atlas_apache_enrichments_content_user` do APA-02),
+  `status='processando'`.
 - Chunking (~2.000 caracteres, quebra em parágrafo). **Só processa síncrono
-  (dentro da própria requisição) se houver exatamente 1 chunk** — teto do
-  Gate APA-14; 2+ chunks sempre vão para `atlas_apache_queue`
-  (`kind='enriquecimento'`, `temp_object_key` apontando para o texto gravado
-  em `apache/tmp/<queueId>.txt` em R2) e o mesmo processador do APA-07 os
+  (dentro da própria requisição) se houver exatamente 1 chunk de até ~6.000
+  caracteres** (teto do Gate APA-14, corrigido: justificado por número de
+  chamadas de IA/latência, não por CPU — a chamada de IA é I/O e não consome
+  os 10ms de CPU do Workers Free); 2+ chunks sempre vão para
+  `atlas_apache_queue` (`kind='enriquecimento'`, `user_id` preenchido,
+  `temp_object_key` apontando para o texto gravado em
+  `apache/tmp/<queueId>.txt` em R2) e o mesmo processador do APA-07 os
   consome.
 - Por chunk: chama Workers AI (modo JSON de `ApacheEnrichment`, modelo
   definido pelo APA-17) com o delimitador do Gate APA-14 em volta do texto do
@@ -752,15 +792,15 @@ escolhido antes de fechar este card). **Gate:** não.
 - Fim: todo chunk `irrelevante=true` → `status='descartado'`, aviso "Esse
   arquivo não parece ter relação com este conteúdo — não foi somado à
   aula."; senão grava o resultado final (gzip) em
-  `apache/enriquecimento/<contentId>.json.gz`, `status='concluido'`.
+  `apache/enriquecimento/<contentId>/<userId>.json.gz`, `status='concluido'`.
 - **Sempre apaga**: os bytes do upload original (nunca vão para R2 — só o
   texto extraído passa, e esse texto temporário em `apache/tmp/` também é
   apagado quando o item da fila termina, sucesso ou erro).
 - Frontend: `ContentLesson` (APA-04) faz polling do mesmo
   `GET /api/apache/aulas/:contentId` estendido para incluir
-  `enrichment: { status, novos, reforcos }`; renderiza
-  `<section className="al-enrich"><p className="eyebrow">NOVOS CONCEITOS DO
-  SEU MATERIAL</p>` com a lista, fundo `#f2ecff`, borda `--violet`.
+  `enrichment: { status, novos, reforcos }` (do `userId` da sessão atual);
+  renderiza `<section className="al-enrich"><p className="eyebrow">NOVOS
+  CONCEITOS DO SEU MATERIAL</p>` com a lista, fundo `#f2ecff`, borda `--violet`.
 
 **Aceite:** PDF de 3 páginas com 1 conceito novo e 2 repetidos resulta em 1
 item em `novos`; progresso aparece por chunk; arquivo sem relação é
@@ -768,47 +808,48 @@ descartado com aviso; reenvio do mesmo arquivo não gasta neurons de novo.
 
 **Checklist**
 - [ ] `POST /api/apache/enriquecimento` (+ `/texto`), validação de tamanho e páginas
-- [ ] Hash antes de descartar bytes; dedupe por hash
-- [ ] Síncrono só com 1 chunk; 2+ sempre via fila com texto temporário em R2
+- [ ] Hash antes de descartar bytes; dedupe por hash + userId
+- [ ] Síncrono só com 1 chunk de até ~6.000 caracteres; 2+ sempre via fila com texto temporário em R2
 - [ ] Bytes originais e texto temporário sempre apagados ao final
 - [ ] UI incremental `.al-enrich`
 - [ ] Restore `restore/pre-apa-12` + `CHANGELOG_VISUAL.md`
 
 ---
 
-## APA-13 — Limite de 90 páginas / 24h (estado global)
+## APA-13 — Limite de 90 páginas / 24h (por usuário)
 
 **Prioridade:** P0. **Áreas:** Backend. **Depende de:** APA-02, APA-01 (Gate,
-pergunta 3 — confirma que é estado global, não por aluno). **Gate:** não.
+pergunta 3). **Gate:** não.
 
 **Escopo — `lib/apache/quota.ts`**, atômico (evita corrida entre leitura e
 gravação com uma única instrução SQL condicional, não leitura+escrita
 separadas):
 ```ts
-export async function assertQuota(pagesRequested: number): Promise<void> {
-  // 1. SELECT window_start, pages_used FROM atlas_apache_quota WHERE id = 'global'
+export async function assertQuota(userId: string, pagesRequested: number): Promise<void> {
+  // userId vem de getApacheUserId() (lib/auth.ts) — hoje sempre a mesma constante
+  // 1. SELECT window_start, pages_used FROM atlas_apache_quota WHERE user_id = ?userId
   // 2. se não existe linha, ou agora - window_start > 24h: trate como janela nova (window_start = agora, pages_used = 0) só no passo 3
-  // 3. UPDATE atlas_apache_quota
+  // 3. UPDATE/INSERT ... ON CONFLICT (user_id) DO UPDATE
   //      SET pages_used = CASE WHEN (unixepoch() - unixepoch(window_start)) > 86400
   //                             THEN ?pagesRequested
   //                             ELSE pages_used + ?pagesRequested END,
   //          window_start = CASE WHEN (unixepoch() - unixepoch(window_start)) > 86400 THEN ?agora ELSE window_start END,
   //          updated_at = ?agora
-  //      WHERE id = 'global'
+  //      WHERE user_id = ?userId
   //        AND ( (unixepoch() - unixepoch(window_start)) > 86400
   //              OR pages_used + ?pagesRequested <= 90 )
   //    -- o UPDATE condicional faz a checagem e a escrita no mesmo statement: 0 linhas afetadas = limite batido
   // 4. se afetou 0 linhas, lança ApacheError('Limite de 90 páginas por dia atingido. Tenta de novo em X horas.', 429)
 }
 
-export async function refundQuota(pages: number): Promise<void> {
-  // UPDATE atlas_apache_quota SET pages_used = MAX(0, pages_used - pages) WHERE id = 'global'
+export async function refundQuota(userId: string, pages: number): Promise<void> {
+  // UPDATE atlas_apache_quota SET pages_used = MAX(0, pages_used - pages) WHERE user_id = ?userId
   // chamado quando o processamento falha por erro do sistema (não quando o arquivo é descartado por ser irrelevante — aí as páginas ficam debitadas, porque o processamento rodou normalmente)
 }
 ```
 
 **Checklist**
-- [ ] `lib/apache/quota.ts` com `UPDATE` condicional atômico (sem race de leitura+escrita)
+- [ ] `lib/apache/quota.ts` com `UPDATE` condicional atômico por `userId` (sem race de leitura+escrita)
 - [ ] `refundQuota` chamado em erro de sistema, não em descarte por irrelevância
 - [ ] Teste de janela rolante + teste de concorrência (duas chamadas simultâneas não passam de 90)
 - [ ] Restore `restore/pre-apa-13` + `CHANGELOG_VISUAL.md`
@@ -823,9 +864,9 @@ não.
 
 Este card não cria biblioteca nova: o dedupe de fila já está no APA-07
 (índice `idx_atlas_apache_queue_content_kind_status` + checagem antes do
-insert) e o dedupe de arquivo já está no APA-12 (`source_file_hash`). Este
-card existe para **testar os dois juntos** depois que ambos estiverem prontos
-e documentar o comportamento em `docs/APACHE.md`.
+insert) e o dedupe de arquivo já está no APA-12 (`source_file_hash` +
+`userId`). Este card existe para **testar os dois juntos** depois que ambos
+estiverem prontos e documentar o comportamento em `docs/APACHE.md`.
 
 **Aceite:** dois acessos simultâneos a um conteúdo sem aula geram uma linha
 só na fila; enviar o mesmo arquivo duas vezes ao mesmo conteúdo não gasta
