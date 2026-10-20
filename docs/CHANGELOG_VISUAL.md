@@ -14,6 +14,13 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #77 — Remapeia 2 rascunhos de regime tributário pro nó certo do roadmap
+
+- Ponto de restauração: branch `restore/pre-remap-tributario` (main antes do merge).
+- O que muda no site: nada visível ainda. Mesma correção do PR #76, mas para
+  "Regimes tributários: lucro presumido/Lucro Real" → CT-040/CT-046
+  (Contabilidade Tributária já tem esses nós).
+
 ## PR #76 — Remapeia 36 rascunhos de Contabilidade pro nó certo do roadmap
 
 - Ponto de restauração: branch `restore/pre-remap-contabilidade` (main antes do merge).
