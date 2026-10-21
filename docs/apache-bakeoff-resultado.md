@@ -83,6 +83,8 @@ Compara 3 modelos do catálogo Workers AI na tarefa de EXTRAÇÃO de ficha de en
 
 ## Recomendação
 
+_Esta seção é escrita à mão (análise humana/Claude sobre os resultados acima) — uma próxima execução do script SOBRESCREVE este arquivo inteiro, inclusive esta seção. Se o bake-off rodar de novo, reaplicar esta análise depois._
+
 **Modelo escolhido para `APACHE_ENRICHMENT_MODEL`: `@cf/google/gemma-4-26b-a4b-it` (Gemma 4 26B).**
 
 ### Gemma 4 26B × Llama 3.3 70B (baseline da aula)
@@ -103,11 +105,14 @@ Llama continua sendo a escolha certa, APA-06).
 
 ### Qwen3 30B — não escolhido
 
-Causa raiz confirmada na saída bruta desta rodada (ver acima): mesmo com
-`enable_thinking: false`, o endpoint do Qwen3 no Workers AI sempre devolve
-`message.content: null` e põe a resposta inteira em `message.reasoning`/
-`message.reasoning_content` — um comportamento do parser de raciocínio do
-modelo que o parâmetro não desliga por completo nesta versão hospedada.
+Causa raiz confirmada na saída bruta desta rodada (ver acima): mesmo
+enviando `chat_template_kwargs.enable_thinking: false` (parâmetro
+confirmado só por teste direto, NÃO documentado oficialmente pela Cloudflare
+para este modelo — ver nota abaixo), o endpoint do Qwen3 no Workers AI
+sempre devolve `message.content: null` e põe a resposta inteira em
+`message.reasoning`/`message.reasoning_content` — um comportamento do
+parser de raciocínio do modelo que o parâmetro não desliga por completo
+nesta versão hospedada.
 Isso por si só é contornável (bastaria ler `reasoning_content` como
 fallback), mas a ficha extraída nesse fallback (visível na saída bruta
 acima) tem um problema de qualidade: o Qwen3 separou "Via de Defesa" e "Via
@@ -123,9 +128,28 @@ nesta tarefa e sem indício de que valha o esforço extra de parsing.
 ### Decisão para o APA-12
 
 `APACHE_ENRICHMENT_MODEL=@cf/google/gemma-4-26b-a4b-it` deve ser lido como
-variável de ambiente (nunca hardcoded) no código que o APA-12 escrever para
-a chamada de enriquecimento — mesmo padrão de binding condicional que
-`lib/apache/lesson-writer.ts` usa para `LESSON_MODEL`. O APA-12 deve tratar
-a resposta no formato nativo `{ response, usage }` (confirmado para Gemma
-nesta rodada) — não precisa do fallback `choices`/`reasoning_content` que
-este script criou para também comparar o Qwen3.
+`env.APACHE_ENRICHMENT_MODEL` (variável de ambiente, nunca hardcoded — NÃO
+é o mesmo padrão de `LESSON_MODEL` em `lib/apache/lesson-writer.ts:13`, que
+é uma constante fixa no código), com Gemma como valor padrão. A chamada em
+si segue o mesmo formato (`response_format: json_schema`, `max_tokens`
+explícito) de `lesson-writer.ts`, mas a RESPOSTA do Gemma vem no formato
+OpenAI-compatible (`choices[0].message.content`/`.parsed`), confirmado
+pela própria falha da 1ª rodada deste bake-off (o Gemma não tem campo
+`response`) e pela documentação atual da Cloudflare — não no formato
+nativo `{ response, usage }` que só o Llama usa. O APA-12 deve ler a
+resposta do jeito que `resolveModelOutput()` (`scripts/apache-bakeoff.ts`)
+faz: tentar `choices[0].message.content`/`.parsed` primeiro, com `response`
+como fallback só por segurança caso o catálogo mude de novo — não precisa
+do fallback de `reasoning_content` que este script criou só para também
+tentar comparar o Qwen3 (modelo não escolhido).
+
+### Nota sobre `enable_thinking`
+
+O parâmetro `chat_template_kwargs: { enable_thinking: false }` foi usado
+neste bake-off com base só em teste direto (rodando contra a conta real),
+não em documentação oficial da Cloudflare confirmando esse nome de campo
+para Gemma 4 26B ou Qwen3 30B — funcionou razoavelmente para o Gemma
+(permitiu respostas válidas nas 2 rodadas finais) mas não resolveu o
+problema do Qwen3 (ver acima). Se o APA-12 reaproveitar esse parâmetro,
+vale reconfirmar na documentação do modelo antes, porque pode mudar sem
+aviso.
