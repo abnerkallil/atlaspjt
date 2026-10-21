@@ -134,7 +134,9 @@
     "lib/apache/ocr.ts",
     "tests/apache-ocr.test.ts",
     "lib/apache/lesson-writer.ts",
-    "tests/apache-lesson-writer.test.ts"
+    "tests/apache-lesson-writer.test.ts",
+    "lib/apache/ingest-handwriting.ts",
+    "tests/apache-ingest-handwriting.test.ts"
   ],
   "exclude": [
     "node_modules"
