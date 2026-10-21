@@ -132,7 +132,9 @@
     "lib/apache/lesson-store.ts",
     "tests/apache-lesson-store.test.ts",
     "lib/apache/ocr.ts",
-    "tests/apache-ocr.test.ts"
+    "tests/apache-ocr.test.ts",
+    "lib/apache/lesson-writer.ts",
+    "tests/apache-lesson-writer.test.ts"
   ],
   "exclude": [
     "node_modules"

@@ -32,8 +32,8 @@ export type ApacheEnrichmentDiff = {
 
 // Gate APA-14 item 6: teto de tamanho por campo, para uma resposta de IA
 // maliciosa ou malformada não gravar strings sem limite no R2/D1 para sempre.
-const MAX_FIELD_CHARS = 2000;
-const MAX_LIST_ITEMS = 20;
+export const MAX_FIELD_CHARS = 2000;
+export const MAX_LIST_ITEMS = 20;
 
 function isString(value: unknown): value is string {
   return typeof value === "string";
