@@ -14,6 +14,24 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #88 — Gerador da aula base do Apache, Workers AI (APA-06)
+
+- Ponto de restauração: branch `restore/pre-apa-06` (main antes do merge).
+- O que muda no site: nada visível ainda. Este PR só adiciona
+  `lib/apache/lesson-writer.ts` (`writeLesson`): gera a aula de um conteúdo
+  chamando o Workers AI (Llama 3.3 70B), usando os materiais já cadastrados
+  do conteúdo como contexto (com o delimitador de prompt-injection do Gate
+  APA-14 em volta deles, neutralizado se um material tentar fechar o
+  delimitador sozinho), checa o orçamento diário de neurons antes de cada
+  chamada, tenta de novo uma vez se a resposta vier fora do formato, e
+  grava a aula pronta (APA-05) quando dá certo. Nenhuma tela ou rota ainda
+  chama isso — é o APA-07 (fila) que vai acionar. Binding novo `AI` no
+  Worker, ligado só no build/deploy (não em `pnpm dev`, pra não exigir
+  login no Wrangler nem gastar neurons reais testando local).
+- Sem migration nova.
+- Se algo der errado: reverter para `restore/pre-apa-06` remove o gerador;
+  como nenhuma rota ainda chama `writeLesson`, nada no site muda.
+
 ## PR #87 — OCR de foto/print/PDF escaneado, no navegador (APA-10)
 
 - Ponto de restauração: branch `restore/pre-apa-10` (main antes do merge).
