@@ -1,9 +1,11 @@
 # Apache — IA criadora de conteúdo pedagógico (aula base + enriquecimento)
 
 **Revisão 4** (2026-10-20, depois do Abner responder os 6 itens dos Gates):
-registra a decisão da execução periódica — **opção (b)**, `waitUntil` + checagem
-no primeiro acesso do dia, sem depender de um `scheduled` customizado do
-vinext — e corrige a relação enriquecimento×versão da aula: como o arquivo
+registra a decisão da execução periódica — **opção (b)**, fila processada em
+segundo plano + checagem no primeiro acesso do dia, sem depender de um
+`scheduled` customizado do vinext (mecanismo revisado em 2026-10-21 para
+Cloudflare Queues, ver abaixo e DEC-019) — e corrige a relação
+enriquecimento×versão da aula: como o arquivo
 original do aluno é sempre apagado, a **ficha extraída** (os conceitos que a
 IA tirou do material) agora é guardada **separada** do resultado comparado com
 a aula; quando a aula muda de versão, só a comparação é refeita —
@@ -27,13 +29,22 @@ tabela de usuário), mas o Abner já disse que a plataforma vai ficar pública �
 multiusuário de verdade, só esse helper muda — nenhuma tabela do Apache
 precisa de migration nova.
 
-**Execução periódica (decidido pelo Abner — opção b):** sem Cron Trigger nem
-`scheduled` customizado nesta v1. A fila é processada via `ctx.waitUntil(...)`
-na própria requisição que originou o item, **mais** uma checagem de itens
-pendentes no primeiro request HTTP recebido depois do reset diário de cota
-(meia-noite UTC) — para não deixar itens travados até alguém acessar o Atlas
-por acaso. Mais simples, sem depender de um mecanismo do vinext não
-documentado para cron.
+**Execução periódica (decidido pelo Abner — opção b; mecanismo revisado em
+2026-10-21, DEC-019):** sem Cron Trigger nem `scheduled` customizado nesta v1.
+A geração roda num **consumer de Cloudflare Queues** (fila
+`atlas-apache-aulas`, binding `APACHE_LESSON_QUEUE`), não mais via
+`ctx.waitUntil` — o `waitUntil` só garante ~30s depois da resposta, e o
+Llama 3.3 70B com retry passa disso com frequência (isolate cortado no meio
+gastaria neurons sem terminar a aula). A rota GET só manda uma mensagem leve
+`{queueId, contentId}` pra fila; quem chama a IA é sempre o consumer
+(`worker-entry.ts`). **Mais** uma checagem de itens pendentes no primeiro
+request HTTP recebido depois do reset diário de cota (meia-noite UTC) — ela
+só manda mensagens pra fila (nunca chama a IA direto), para não deixar itens
+travados até alguém acessar o Atlas por acaso. Cloudflare Queues está no
+plano Free: 10.000 operações/dia (leitura+escrita+exclusão somadas), ~6-12
+operações por aula (a varredura pode reenviar um item adiado por cota ou
+recuperado de um travamento) — sem depender de um mecanismo do vinext não
+documentado para cron nem de `scheduled`.
 
 ## Convenções que todo card abaixo segue
 
@@ -124,7 +135,7 @@ APA-14 (Gate: segurança/prompt-injection) — RESOLVIDO, DEC-020, auditoria amp
        ├─ APA-05 (storage R2, gzip)
        │    └─ APA-15 (medidor de neurons) ── chamado por APA-06 desde o início
        │         └─ APA-06 (gerador Llama 70B, já usa o medidor e a guarda de prompt do APA-14)
-       │              └─ APA-07 (fila via waitUntil + diff calculado na leitura)
+       │              └─ APA-07 (fila via Cloudflare Queues, DEC-019 revisado + diff calculado na leitura)
        │                   └─ APA-08 (reportar erro)
        ├─ APA-09 (ingestão digital, env.AI.toMarkdown)
        ├─ APA-10 (ingestão imagem, Tesseract.js + unpdf)
@@ -181,13 +192,18 @@ formalmente em `docs/quests/ARCHITECTURE_GATE.md` / `docs/ATLAS_DECISIONS.md`.
 > `userId` desde o primeiro código, via `getApacheUserId()` em `lib/auth.ts`
 > (hoje retorna uma constante fixa do dono).
 >
-> **(4) Execução periódica — DECIDIDO: opção (b).** Sem Cron Trigger nem
-> `scheduled` customizado do vinext nesta v1 (mesmo existindo um jeito
-> estruturalmente possível de registrar `scheduled`, não vale a pena depender
-> de um mecanismo não documentado como caso de cron). A fila roda via
-> `ctx.waitUntil(...)` na requisição que originou o item, mais uma checagem de
-> itens pendentes no primeiro request HTTP recebido depois do reset diário de
-> cota (meia-noite UTC).
+> **(4) Execução periódica — DECIDIDO: opção (b); mecanismo revisado em
+> 2026-10-21 (ver DEC-019).** Sem Cron Trigger nem `scheduled` customizado do
+> vinext nesta v1 (mesmo existindo um jeito estruturalmente possível de
+> registrar `scheduled`, não vale a pena depender de um mecanismo não
+> documentado como caso de cron). A geração roda num **consumer de Cloudflare
+> Queues** (fila `atlas-apache-aulas`) — não mais via `ctx.waitUntil`, que só
+> garante ~30s depois da resposta e o Llama 3.3 70B com retry passa disso com
+> frequência. A rota GET só manda a mensagem `{queueId, contentId}` pra fila;
+> quem chama a IA é o consumer. Plano Free: 10.000 operações/dia, ~6-12 por
+> aula (a varredura pode reenviar). Mantém a checagem de itens pendentes no primeiro request HTTP
+> recebido depois do reset diário de cota (meia-noite UTC) — ela só manda
+> mensagens pra fila.
 
 **Aceite:** todas as 4 decisões confirmadas pelo Abner; falta só registrar
 `docs/quests/ARCHITECTURE_GATE.md` com `Status: RESOLVED` e as 4 respostas; se
@@ -336,7 +352,7 @@ CREATE TABLE `atlas_apache_queue` (
   `attempts` integer NOT NULL DEFAULT 0,
   `last_error` text,
   `temp_object_key` text, -- texto extraído do upload, em apache/tmp/, até o job terminar
-  `started_at` text, -- marcado quando status vira 'processando'; destrava item preso se o waitUntil for interrompido antes da geração terminar (ver regra abaixo)
+  `started_at` text, -- marcado quando status vira 'processando'; destrava item preso se o consumer for interrompido antes da geração terminar (ver regra abaixo)
   `created_at` text NOT NULL,
   `processed_at` text,
   FOREIGN KEY (`content_id`) REFERENCES `atlas_contents`(`id`) ON UPDATE no action ON DELETE cascade
@@ -358,9 +374,10 @@ para revisão humana (ver regra no APA-18).
 
 **Item preso em `'processando'`** (decidido pelo coordenador em 2026-10-20,
 detalhe técnico dentro do Gate já aprovado, sem precisar de nova decisão do
-Abner): o `waitUntil` que processa a fila pode ser interrompido antes da
-geração no Llama 70B terminar (janela de execução curta), deixando o item
-em `'processando'` para sempre — o dedupe do APA-07 bloquearia reenfileirar
+Abner): o consumer que processa a fila (Cloudflare Queues desde 2026-10-21,
+ver DEC-019) pode ser interrompido antes da geração no Llama 70B terminar
+sem nunca chamar `ack()`/`retry()`, deixando o item em `'processando'` para
+sempre — o dedupe do APA-07 bloquearia reenfileirar
 esse `content_id`+`kind`, e a varredura pós-meia-noite só olha itens
 `'pendente'`. Por isso `atlas_apache_queue.started_at` é marcado quando o
 status vira `'processando'`; tanto a varredura pós-reset quanto o próprio
@@ -683,9 +700,11 @@ foi chamado.
 **Prioridade:** P0. **Áreas:** Backend, Infra. **Depende de:** APA-06, APA-03
 (para o `diffEnrichmentAgainstLesson`). **Gate:** não.
 
-**Escopo (opção (b) decidida pelo Abner — `waitUntil`, sem Cron Trigger):**
+**Escopo (opção (b) decidida pelo Abner; mecanismo revisado em 2026-10-21 —
+Cloudflare Queues em vez de `waitUntil`, ver DEC-019):**
 
-- `GET /api/apache/aulas/[contentId]/route.ts`:
+- `GET /api/apache/aulas/[contentId]/route.ts` (produtor — nunca chama a IA,
+  nunca precisa do binding `AI`):
   - Sem linha em `atlas_apache_lessons`: cria `status='pendente'`, insere em
     `atlas_apache_queue` **só se não existir já uma linha `pendente`/
     `processando` não presa para esse `content_id`+`kind='aula'`** (dedupe de
@@ -693,19 +712,36 @@ foi chamado.
     `idx_atlas_apache_queue_content_kind_status` do APA-02; uma linha
     `processando` com `started_at` mais velho que 5 minutos é tratada como
     presa, não bloqueia o dedupe — ver regra abaixo), responde `{ status:
-    'pendente' }`, e chama `ctx.waitUntil(processQueueItem(...))` para
-    processar depois de responder.
-  - **Em toda chamada** (independente do status da aula): também checa se há
-    itens pendentes na fila com `created_at` anterior ao reset diário mais
-    recente (meia-noite UTC) — se houver, dispara o processamento deles via
-    `waitUntil` também, para destravar itens que ficaram parados da meia-noite
-    até agora (opção (b) do Gate APA-01).
-  - **Item preso em `'processando'`**: o `waitUntil` pode ser interrompido
-    antes da geração terminar. Tanto a varredura pós-reset quanto o `enqueue`
-    acima tratam um item `'processando'` com `started_at` mais velho que 5
-    minutos como preso — voltam para `'pendente'` e incrementam `attempts`;
-    depois de 3 tentativas, o item vira `'erro'` em vez de voltar para
-    `'pendente'` de novo (schema: `atlas_apache_queue.started_at`, APA-02).
+    'pendente' }`, e manda a mensagem `{queueId, contentId}` pro binding
+    `Queue` (`APACHE_LESSON_QUEUE`, fila `atlas-apache-aulas`) — quem
+    processa é sempre o consumer (`worker-entry.ts`), nunca esta rota.
+  - **Em toda chamada** (independente do status da aula, e para `kind='aula'`
+    apenas — nunca `aula_manual`/`enriquecimento`, fora do escopo deste
+    card): também checa se há itens `pendente` na fila com `created_at`
+    anterior ao reset diário mais recente (meia-noite UTC) — se houver,
+    manda a mensagem deles pra fila também, para destravar itens que
+    ficaram parados da meia-noite até agora (opção (b) do Gate APA-01) —
+    inclui tanto um item parado por travamento de infraestrutura quanto um
+    adiado por falta de cota (a cota de ontem não importa mais depois do
+    reset). Um item `pendente` adiado por falta de cota **não** pode ser
+    reprocessado a cada poll de 5s do cliente — só esta varredura pós-reset
+    o retoma, senão cada poll mandaria outra mensagem pra fila (e o
+    consumer chamaria a IA de novo) enquanto a cota não reseta.
+  - **Item preso em `'processando'`**: o consumer pode ser interrompido
+    antes da geração terminar (Cloudflare Queues já reentrega uma mensagem
+    que falhar — isto é só a salvaguarda de último nível, para quando o
+    isolate é reciclado no meio sem nunca chamar `ack()`/`retry()`). Tanto a
+    varredura pós-reset quanto o `enqueue` acima tratam um item
+    `'processando'` com `started_at` mais velho que 5 minutos como preso —
+    voltam para `'pendente'` e incrementam `attempts`; depois de 3
+    tentativas, o item vira `'erro'` em vez de voltar para `'pendente'` de
+    novo (schema: `atlas_apache_queue.started_at`, APA-02) — e, nesse caso, a
+    aula em si também é marcada como `'erro'` (`markFailed`, APA-05): sem
+    isso ela ficava `'pendente'` para sempre e o cliente nunca veria um
+    erro, só o spinner indefinidamente. Pelo mesmo motivo, qualquer outra
+    falha de `processQueueItem` que não seja um 429 (ex.: uma falha de
+    R2/D1 fora do controle do `writeLesson`) também marca a aula como
+    `'erro'`.
   - `status` existente (`'gerada'`/`'reportada'`): carrega a aula
     (`readLesson`, APA-05) e, se existir uma ficha de enriquecimento
     `concluido` para esse `content_id`+`userId` (`getApacheUserId()`), carrega
@@ -713,15 +749,27 @@ foi chamado.
     **na leitura, não gravado** — para montar `enrichment: { status: 'concluido',
     novos, reforcos }` na resposta. Responde
     `{ status, lesson: renderLesson(lesson), enrichment, errorMessage: undefined }`.
-  - `status: 'erro'`: responde `{ status, errorMessage: row.error_message }`.
-- `processQueueItem`: marca `processando` e grava `started_at=now`, checa
+  - `status: 'erro'`: responde `{ status, errorMessage }` com uma mensagem
+    **genérica** fixa, nunca `row.error_message` — esse campo é só para
+    log/painel interno; repassá-lo ao cliente quebraria o Gate
+    APA-14/DEC-020 item 8 (nunca vazar detalhe interno na resposta).
+- `processQueueItem` (chamado pelo consumer — `queue()` em
+  `worker-entry.ts`, único lugar com o binding `AI`): marca `processando` e
+  grava `started_at=now` com um claim atômico (`UPDATE ... WHERE
+  status='pendente'`, nunca processa 2x a mesma mensagem reentregue), checa
   `neuronBudgetRemaining` (APA-15) — se `overLimit`, deixa `pendente` e sai
   sem tentar; senão chama `writeLesson` (APA-06) e marca `concluido`/`erro`.
+  Nunca lança por uma falha de geração (vira estado no banco); o consumer só
+  dá `retry()` numa exceção genuína de infraestrutura.
 
 **Checklist**
+- [ ] Binding `Queue` em `vite.config.ts` (`queues.producers`/`consumers`,
+  fila `atlas-apache-aulas`), confirmado em `dist/server/wrangler.json`
+- [ ] `worker-entry.ts` (fetch do vinext + `queue()`), `main` do
+  `vite.config.ts` apontando pra ele
 - [ ] `GET /api/apache/aulas/[contentId]/route.ts`
 - [ ] Dedupe de fila por `content_id`+`kind`+status antes do insert, ignorando `processando` preso (`started_at` > 5min)
-- [ ] Processamento via `waitUntil` na requisição + checagem de itens pendentes pós-reset em toda chamada
+- [ ] Mensagem mandada pro binding `Queue` na requisição + checagem de itens pendentes pós-reset em toda chamada
 - [ ] Item `processando` preso (`started_at` > 5min) volta para `pendente` (attempts+1) na varredura e no enqueue; 3 tentativas → `erro`
 - [ ] Diff enriquecimento×aula calculado na leitura (`diffEnrichmentAgainstLesson`), nunca gravado
 - [ ] Corte por `neuronBudgetRemaining` antes de cada item

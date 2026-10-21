@@ -137,7 +137,9 @@
     "tests/apache-lesson-writer.test.ts",
     "lib/apache/ingest-handwriting.ts",
     "tests/apache-ingest-handwriting.test.ts",
-    "scripts/apache-bakeoff.ts"
+    "scripts/apache-bakeoff.ts",
+    "lib/apache/queue.ts",
+    "tests/apache-queue.test.ts"
   ],
   "exclude": [
     "node_modules"

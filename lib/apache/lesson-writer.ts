@@ -6,7 +6,7 @@ import type { D1Like } from '../pedagogy/transitions.js';
 import { listMaterials, type Material } from '../materials.js';
 import { ApacheError } from './errors.js';
 import { markFailed, saveLesson, type R2Like } from './lesson-store.js';
-import { NEURON_OVERLIMIT_THRESHOLD, estimateNeurons, neuronBudgetRemaining, recordNeuronUsage } from './neuron-meter.js';
+import { NEURON_OVERLIMIT_THRESHOLD, adjustNeuronUsage, estimateNeurons, neuronBudgetRemaining, recordNeuronUsage } from './neuron-meter.js';
 import { MAX_FIELD_CHARS, MAX_LIST_ITEMS, validateLesson, type ApacheLesson } from './schema.js';
 
 // Config do modelo — nunca hardcode a string no chamador (card APA-06).
@@ -180,17 +180,20 @@ function estimatePromptTokens(prompt: string): number {
   return Math.ceil(prompt.length / 4);
 }
 
+function worstCaseNeurons(prompt: string): number {
+  return estimateNeurons(LESSON_MODEL, {
+    promptTokens: estimatePromptTokens(prompt),
+    completionTokens: MAX_COMPLETION_TOKENS,
+  });
+}
+
 // Checa, pelo pior caso (saída usando os MAX_COMPLETION_TOKENS inteiros), se
 // esta chamada ainda cabe no corte de 90% do orçamento diário (APA-15) —
 // chamado antes de CADA tentativa, não só da primeira, porque o prompt do
 // retry é um pouco maior e o orçamento pode ter sido gasto por outra
 // geração entre uma tentativa e outra.
-async function assertBudgetForAttempt(db: D1Like, now: string, prompt: string): Promise<void> {
+async function assertBudgetForAttempt(db: D1Like, now: string, worstCase: number): Promise<void> {
   const budget = await neuronBudgetRemaining(db, now);
-  const worstCase = estimateNeurons(LESSON_MODEL, {
-    promptTokens: estimatePromptTokens(prompt),
-    completionTokens: MAX_COMPLETION_TOKENS,
-  });
   if (budget.used + worstCase > NEURON_OVERLIMIT_THRESHOLD) {
     throw new ApacheError('Cota diária de neurons do Apache esgotada; a aula fica pendente para o próximo dia.', 429);
   }
@@ -223,7 +226,14 @@ export async function writeLesson(
         ? basePrompt
         : `${basePrompt}\n\nSua resposta anterior não seguiu o formato pedido: ${lastErrorMessage}\nResponda de novo, só o JSON, corrigindo esse problema.`;
 
-    await assertBudgetForAttempt(db, now, prompt);
+    const worstCase = worstCaseNeurons(prompt);
+    await assertBudgetForAttempt(db, now, worstCase);
+
+    // Reserva pelo pior caso ANTES da chamada: se o isolate for cortado no
+    // meio do ai.run (ex.: o consumer da fila sendo reciclado), o gasto real
+    // que a Cloudflare já cobrou não fica de fora do medidor local — ajusta
+    // pro valor real abaixo quando (e se) a chamada responder.
+    await recordNeuronUsage(db, worstCase, now);
 
     let output: AiLessonOutput;
     try {
@@ -240,21 +250,19 @@ export async function writeLesson(
       continue;
     }
 
-    // Neurons já foram gastos pela chamada acima mesmo que a resposta seja
-    // inválida — contabiliza antes de validar, nunca só em caso de sucesso.
-    await recordNeuronUsage(
-      db,
-      estimateNeurons(
-        LESSON_MODEL,
-        output.usage
-          ? {
-              promptTokens: output.usage.prompt_tokens ?? 0,
-              completionTokens: output.usage.completion_tokens ?? 0,
-            }
-          : undefined,
-      ),
-      now,
+    // Ajusta a reserva pro uso real (nunca fica com o pior caso sobrando
+    // contado quando a resposta usou menos) — nunca só em caso de sucesso,
+    // mesmo com a resposta inválida os neurons já foram gastos pela chamada.
+    const actual = estimateNeurons(
+      LESSON_MODEL,
+      output.usage
+        ? {
+            promptTokens: output.usage.prompt_tokens ?? 0,
+            completionTokens: output.usage.completion_tokens ?? 0,
+          }
+        : undefined,
     );
+    await adjustNeuronUsage(db, actual - worstCase, now);
 
     let lesson: ApacheLesson;
     try {

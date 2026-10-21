@@ -32,7 +32,7 @@ async function gzip(bytes: Uint8Array): Promise<Uint8Array> {
   return new Uint8Array(await new Response(stream).arrayBuffer());
 }
 
-async function gunzip(bytes: Uint8Array): Promise<Uint8Array> {
+export async function gunzip(bytes: Uint8Array): Promise<Uint8Array> {
   const stream = new Blob([bytes.slice().buffer]).stream().pipeThrough(new DecompressionStream('gzip'));
   return new Uint8Array(await new Response(stream).arrayBuffer());
 }
@@ -45,6 +45,33 @@ async function getLessonRow(db: D1Like, contentId: string): Promise<LessonRow | 
     )
     .bind(contentId)
     .first<LessonRow>();
+}
+
+export type LessonStatusRow = { status: string; error_message: string | null };
+
+// Leitura mínima de status (PK, sem tocar R2) — usada pelo polling de
+// GET /api/apache/aulas/:contentId (APA-07) para decidir o que responder
+// sem gastar uma leitura do R2 enquanto a aula não está pronta (gerada/reportada).
+export async function getLessonStatus(db: D1Like, contentId: string): Promise<LessonStatusRow | null> {
+  return db
+    .prepare(`SELECT status, error_message FROM atlas_apache_lessons WHERE content_id = ?1`)
+    .bind(contentId)
+    .first<LessonStatusRow>();
+}
+
+// Cria a linha 'pendente' na primeira vez que alguém abre a sessão de estudo
+// deste conteúdo (APA-07). ON CONFLICT DO NOTHING: idempotente para duas
+// requisições concorrentes (poll de duas abas) criando a linha ao mesmo tempo.
+export async function ensurePendingLesson(db: D1Like, contentId: string, now: string): Promise<void> {
+  await db.batch([
+    db
+      .prepare(
+        `INSERT INTO atlas_apache_lessons (id, content_id, status, version, reported_count, updated_at)
+         VALUES (?1, ?2, 'pendente', 1, 0, ?3)
+         ON CONFLICT(content_id) DO NOTHING`,
+      )
+      .bind(crypto.randomUUID(), contentId, now),
+  ]);
 }
 
 // Grava a aula nova no R2 e faz o UPSERT em atlas_apache_lessons. Sobrescreve
@@ -147,8 +174,8 @@ export async function markReported(db: D1Like, contentId: string, now: string): 
     )
     .bind(contentId, kind)
     .all<{ status: string; started_at: string | null }>();
-  // Um item 'processando' preso (waitUntil interrompido, started_at há mais
-  // de 5 min — regra do APA-02/07) não bloqueia um novo pedido.
+  // Um item 'processando' preso (consumer da fila interrompido, started_at
+  // há mais de 5 min — regra do APA-02/07) não bloqueia um novo pedido.
   const pending = candidates.results.some(
     (item) =>
       item.status === 'pendente' ||
