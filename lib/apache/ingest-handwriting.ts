@@ -22,13 +22,14 @@ import {
 
 // Verificado em developers.cloudflare.com/workers-ai/models/llama-3.2-11b-vision-instruct/
 // e no `Ai_Cf_Meta_Llama_3_2_11B_Vision_Instruct_Messages` de
-// `@cloudflare/workers-types` em 2026-10-21: a variante `messages` aceita
-// tanto `image` (base64/data URI) no nível raiz do input -- é o que o
-// tutorial oficial da Cloudflare usa -- quanto `content[].image_url.url`
-// por mensagem. Usamos a primeira forma (mais simples, uma imagem por
-// chamada, sem motivo pra lista de `content`). Taxa de neurons deste
-// modelo já está cadastrada em NEURON_RATE_PER_MILLION_TOKENS
-// (lib/apache/neuron-meter.ts).
+// `@cloudflare/workers-types` em 2026-10-21: usamos `content[].image_url.url`
+// por mensagem, não o campo `image` solto no nível raiz -- é a única forma
+// cujo comentário no tipo confirma explicitamente data URI base64 ("image
+// uri with data (e.g. data:image/jpeg;base64,/9j/...)"); o `image` de topo
+// tipa como `number[] | string` sem especificar o formato da string, e
+// ninguém aqui consegue fazer um smoke test real contra a conta do Abner
+// pra desambiguar. Taxa de neurons deste modelo já está cadastrada em
+// NEURON_RATE_PER_MILLION_TOKENS (lib/apache/neuron-meter.ts).
 export const HANDWRITING_MODEL = '@cf/meta/llama-3.2-11b-vision-instruct';
 
 // Corte de confiança do OCR (APA-10) abaixo do qual o chamador deve
@@ -101,8 +102,12 @@ export type VisionAi = {
   run(
     model: string,
     inputs: {
-      messages: { role: 'system' | 'user'; content: string }[];
-      image: string;
+      messages: {
+        role: 'system' | 'user';
+        content:
+          | string
+          | ({ type: 'text'; text: string } | { type: 'image_url'; image_url: { url: string } })[];
+      }[];
       max_tokens: number;
     },
   ): Promise<{
@@ -190,15 +195,20 @@ export async function extractHandwriting(
       throw new NeuronBudgetExhaustedError();
     }
 
-    const image = `data:${mimeType};base64,${toBase64(imageBytes)}`;
+    const imageDataUri = `data:${mimeType};base64,${toBase64(imageBytes)}`;
     let result: Awaited<ReturnType<VisionAi['run']>>;
     try {
       result = await ai.run(HANDWRITING_MODEL, {
         messages: [
           { role: 'system', content: 'Você transcreve texto manuscrito de imagens, sem adicionar comentários.' },
-          { role: 'user', content: HANDWRITING_PROMPT },
+          {
+            role: 'user',
+            content: [
+              { type: 'text', text: HANDWRITING_PROMPT },
+              { type: 'image_url', image_url: { url: imageDataUri } },
+            ],
+          },
         ],
-        image,
         max_tokens: MAX_OUTPUT_TOKENS,
       });
     } catch (error) {

@@ -46,7 +46,7 @@ void test('transcreve a imagem, soma neurons reais no medidor e devolve o texto'
   assert.equal(budget.used, Math.ceil(result.neuronsUsed));
 });
 
-void test('manda max_tokens explícito e a imagem como data URI com o mimeType certo', async () => {
+void test('manda max_tokens explícito e a imagem como data URI em content[].image_url.url', async () => {
   const db = d1(migratedDatabase());
   let seenInputs: Parameters<VisionAi['run']>[1] | undefined;
   const ai = fakeAi(async (_model, inputs) => {
@@ -55,7 +55,12 @@ void test('manda max_tokens explícito e a imagem como data URI com o mimeType c
   });
   await extractHandwriting(ai, db, new Uint8Array([9, 9]).buffer, 'image/jpeg', NOW);
   assert.equal(seenInputs?.max_tokens, MAX_OUTPUT_TOKENS);
-  assert.ok(seenInputs?.image.startsWith('data:image/jpeg;base64,'));
+  const userContent = seenInputs?.messages[1]?.content;
+  assert.ok(Array.isArray(userContent), 'content da mensagem do usuário é a lista [text, image_url]');
+  const imagePart = (userContent as { type: string; image_url?: { url: string } }[]).find(
+    (part) => part.type === 'image_url',
+  );
+  assert.ok(imagePart?.image_url?.url.startsWith('data:image/jpeg;base64,'));
 });
 
 void test('sem usage na resposta, cai no fallback do estimateNeurons (não fica sem registrar nada)', async () => {
