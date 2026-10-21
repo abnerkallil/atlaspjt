@@ -139,7 +139,11 @@
     "tests/apache-ingest-handwriting.test.ts",
     "scripts/apache-bakeoff.ts",
     "lib/apache/queue.ts",
-    "tests/apache-queue.test.ts"
+    "tests/apache-queue.test.ts",
+    "lib/apache/upload-validation.ts",
+    "tests/apache-upload-validation.test.ts",
+    "lib/apache/enrichment.ts",
+    "tests/apache-enrichment.test.ts"
   ],
   "exclude": [
     "node_modules"

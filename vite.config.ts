@@ -36,13 +36,28 @@ const localBindingConfig = {
       ]
     : [],
   // Limite de tentativas de login: 10 por minuto por IP (lib/auth-env.ts).
+  // APACHE_RATE_LIMITER (Gate APA-14 item 7): 20/min por usuário nas rotas
+  // de enriquecimento (app/api/apache/enriquecimento/*) -- namespace_id
+  // diferente do login, cada ratelimit binding precisa do seu próprio.
   ratelimits: [
     {
       name: 'LOGIN_RATE_LIMITER',
       namespace_id: '1001',
       simple: { limit: 10, period: 60 as const },
     },
+    {
+      name: 'APACHE_RATE_LIMITER',
+      namespace_id: '1002',
+      simple: { limit: 20, period: 60 as const },
+    },
   ],
+  // APA-17: modelo escolhido para o enriquecimento (bake-off, ver
+  // docs/apache-bakeoff-resultado.md) -- lido como variável de ambiente
+  // (lib/apache/enrichment.ts lê `env.APACHE_ENRICHMENT_MODEL`, nunca
+  // hardcoded), para trocar de modelo sem precisar de deploy de código.
+  vars: {
+    APACHE_ENRICHMENT_MODEL: '@cf/google/gemma-4-26b-a4b-it',
+  },
   // APA-07 (DEC-019): geração da aula roda no consumer desta fila
   // (worker-entry.ts), nunca na rota GET — o produtor só manda uma
   // mensagem leve {queueId, contentId}. Plano Free: 10.000 operações/dia

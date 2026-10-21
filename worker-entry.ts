@@ -14,6 +14,10 @@ type ApacheEnv = {
   DB?: D1Like;
   ATTACHMENTS?: R2Like;
   AI?: AiLike;
+  // APA-12/APA-17: modelo de enriquecimento, lido do binding de variável de
+  // ambiente -- nunca hardcoded aqui (lib/apache/enrichment.ts só cai no
+  // default se a env var não estiver configurada).
+  APACHE_ENRICHMENT_MODEL?: string;
 };
 
 export default {
@@ -23,13 +27,13 @@ export default {
   // processada; processQueueItem já é idempotente (claim atômico por
   // status='pendente'), então reentrega nunca gera uma 2ª chamada de IA.
   async queue(batch: QueueBatchLike, env: ApacheEnv): Promise<void> {
-    const { DB, ATTACHMENTS, AI } = env;
+    const { DB, ATTACHMENTS, AI, APACHE_ENRICHMENT_MODEL } = env;
     if (!DB || !ATTACHMENTS || !AI) {
       console.error('Apache: fila de aulas recebeu um lote sem DB/ATTACHMENTS/AI configurados.');
       for (const message of batch.messages) message.retry();
       return;
     }
-    await handleLessonQueueBatch(batch, DB, ATTACHMENTS, AI);
+    await handleLessonQueueBatch(batch, DB, ATTACHMENTS, AI, APACHE_ENRICHMENT_MODEL);
   },
 } satisfies {
   fetch: typeof vinextHandler.fetch;

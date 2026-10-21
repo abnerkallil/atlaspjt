@@ -8,6 +8,7 @@
 import { getApacheUserId } from '../auth.js';
 import type { D1Like } from '../pedagogy/transitions.js';
 import { ApacheError } from './errors.js';
+import { APACHE_DEFAULT_ENRICHMENT_MODEL, processEnrichmentQueueItem } from './enrichment.js';
 import type { AiLike } from './lesson-writer.js';
 import { writeLesson } from './lesson-writer.js';
 import {
@@ -248,6 +249,15 @@ async function deferForQuota(db: D1Like, queueId: string, contentId: string, now
 // erro. Nunca lança: a chamadora (handleLessonQueueBatch) só precisa decidir
 // ack()/retry() a partir de uma exceção genuína de infraestrutura (ex.: D1
 // fora do ar), não de uma falha de geração (já virou estado no banco).
+type QueueItemKindInfo = { kind: string; user_id: string | null; temp_object_key: string | null };
+
+async function loadQueueItemKindInfo(db: D1Like, queueId: string): Promise<QueueItemKindInfo | null> {
+  return db
+    .prepare(`SELECT kind, user_id, temp_object_key FROM atlas_apache_queue WHERE id = ?1`)
+    .bind(queueId)
+    .first<QueueItemKindInfo>();
+}
+
 export async function processQueueItem(
   db: D1Like,
   bucket: R2Like,
@@ -255,7 +265,30 @@ export async function processQueueItem(
   queueId: string,
   contentId: string,
   now: string,
+  enrichmentModel: string = APACHE_DEFAULT_ENRICHMENT_MODEL,
 ): Promise<void> {
+  // APA-12: itens `kind='enriquecimento'` usam o mesmo claim/consumer desta
+  // fila (`atlas-apache-aulas`), mas um fluxo próprio (texto temporário em
+  // R2, chunk a chunk, sem `atlas_apache_lessons`) -- despachado aqui pelo
+  // `kind` da própria linha, antes de qualquer lógica específica de aula.
+  const kindInfo = await loadQueueItemKindInfo(db, queueId);
+  if (!kindInfo) return; // item não existe mais (não deveria acontecer; sem o quê reivindicar)
+  if (kindInfo.kind === 'enriquecimento') {
+    if (!kindInfo.user_id || !kindInfo.temp_object_key) {
+      // Linha de enriquecimento sem user_id/temp_object_key é inconsistente
+      // (sempre preenchidos por enqueueEnrichment) -- marca erro em vez de
+      // reivindicar e travar tentando ler um texto que não existe.
+      await db.batch([
+        db
+          .prepare(`UPDATE atlas_apache_queue SET status = 'erro', last_error = ?2, processed_at = ?3 WHERE id = ?1 AND status = 'pendente'`)
+          .bind(queueId, 'item de enriquecimento sem user_id/temp_object_key', now),
+      ]);
+      return;
+    }
+    await processEnrichmentQueueItem(db, bucket, ai, enrichmentModel, queueId, contentId, kindInfo.user_id, kindInfo.temp_object_key, now);
+    return;
+  }
+
   const [claim] = await db.batch([
     db
       .prepare(`UPDATE atlas_apache_queue SET status = 'processando', started_at = ?2, last_error = NULL WHERE id = ?1 AND status = 'pendente'`)
@@ -314,6 +347,7 @@ export async function handleLessonQueueBatch(
   db: D1Like,
   bucket: R2Like,
   ai: AiLike,
+  enrichmentModel: string = APACHE_DEFAULT_ENRICHMENT_MODEL,
 ): Promise<void> {
   // `now` por mensagem, nunca uma vez só pro lote: com max_batch_size > 1,
   // a hora do início do lote ficaria velha nas últimas mensagens — se as
@@ -324,7 +358,7 @@ export async function handleLessonQueueBatch(
   for (const message of batch.messages) {
     const now = new Date().toISOString();
     try {
-      await processQueueItem(db, bucket, ai, message.body.queueId, message.body.contentId, now);
+      await processQueueItem(db, bucket, ai, message.body.queueId, message.body.contentId, now, enrichmentModel);
       message.ack();
     } catch (error) {
       console.error('Apache: falha ao processar item da fila de aulas', error);

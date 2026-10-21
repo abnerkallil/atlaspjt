@@ -869,6 +869,10 @@ a.rm-start { display: inline-flex; align-items: center; gap: 6px; text-decoratio
 .al-body { font-size: 14px; line-height: 1.6; color: var(--ink); }
 .al-body h3 { font-size: 16px; margin: 14px 0 6px; }
 .al-flag { background: #fff1df; color: var(--amber); border-radius: 8px; padding: 8px 12px; font-size: 12px; margin-bottom: 10px; }
+.al-enrich { background: #f2ecff; border: 1px solid var(--violet); border-radius: var(--radius); padding: 16px 20px; margin-top: 16px; font-size: 14px; line-height: 1.6; color: var(--ink); }
+.al-enrich h3 { font-size: 15px; margin: 10px 0 4px; }
+.apache-enrich-form { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 10px; }
+.apache-enrich-checkbox { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #3f3c49; }
 .cm { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line); }
 .cm-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
 .cm-head .eyebrow { margin: 0; }
