@@ -6,7 +6,16 @@ import type { AiLike } from '../lib/apache/lesson-writer.js';
 import { LESSON_MODEL } from '../lib/apache/lesson-writer.js';
 import { readLesson, type R2Like } from '../lib/apache/lesson-store.js';
 import { recordNeuronUsage } from '../lib/apache/neuron-meter.js';
-import { enqueueLessonIfNeeded, handleGetAula, processQueueItem, sweepQueue } from '../lib/apache/queue.js';
+import {
+  enqueueLessonIfNeeded,
+  handleGetAula,
+  handleLessonQueueBatch,
+  processQueueItem,
+  sweepQueue,
+  type LessonQueueMessage,
+  type QueueLike,
+  type QueueMessageLike,
+} from '../lib/apache/queue.js';
 import type { ApacheLesson } from '../lib/apache/schema.js';
 import { d1 } from './support/d1-sqlite.js';
 import { migratedDatabase } from './support/migrated-db.js';
@@ -80,9 +89,34 @@ function fakeAi(run: AiLike['run']): AiLike {
   return { run };
 }
 
-function recordingScheduler() {
-  const scheduled: Promise<void>[] = [];
-  return { scheduled, schedule: (p: Promise<void>) => scheduled.push(p) };
+// Fake do binding `Queue` (produtor) — só registra as mensagens enviadas,
+// sem processar nada (quem processa de verdade é o consumer, testado
+// separadamente com handleLessonQueueBatch abaixo).
+function fakeQueue(): QueueLike & { sent: LessonQueueMessage[] } {
+  const sent: LessonQueueMessage[] = [];
+  return {
+    sent,
+    async send(message) {
+      sent.push(message);
+    },
+  };
+}
+
+type FakeMessage = QueueMessageLike & { acked: boolean; retried: boolean };
+
+function fakeMessage(body: LessonQueueMessage): FakeMessage {
+  const message: FakeMessage = {
+    body,
+    acked: false,
+    retried: false,
+    ack() {
+      message.acked = true;
+    },
+    retry() {
+      message.retried = true;
+    },
+  };
+  return message;
 }
 
 void test('enqueueLessonIfNeeded cria 1 item pendente quando a fila está vazia', async () => {
@@ -194,13 +228,10 @@ void test('sweepQueue só agenda itens pendentes criados antes da meia-noite UTC
       VALUES ('other-kind', 'X-003', 'enriquecimento', 'pendente', 0, '2026-10-20T20:00:00.000Z');
   `);
   const db = d1(sqlite);
-  const ai = fakeAi(async () => ({ response: JSON.stringify(sampleLesson()) }));
-  const { scheduled, schedule } = recordingScheduler();
+  const queue = fakeQueue();
 
-  await sweepQueue(db, fakeBucket(), ai, now, schedule);
-  assert.equal(scheduled.length, 1);
-  await Promise.all(scheduled);
-  assert.equal(queueRow(sqlite, 'old')?.status, 'concluido');
+  await sweepQueue(db, queue, now);
+  assert.deepEqual(queue.sent, [{ queueId: 'old', contentId: 'X-001' }]);
   assert.equal(queueRow(sqlite, 'today')?.status, 'pendente', 'ainda não passou da meia-noite seguinte');
   assert.equal(queueRow(sqlite, 'other-kind')?.status, 'pendente', 'kind != aula nunca é tocado por esta varredura');
 });
@@ -214,13 +245,12 @@ void test('sweepQueue recupera processando preso há mais de 5 min (independente
     `INSERT INTO atlas_apache_queue (id, content_id, kind, status, attempts, started_at, created_at)
      VALUES ('q1', 'X-001', 'aula', 'processando', 0, '${staleStart}', '${now}')`,
   );
-  const ai = fakeAi(async () => ({ response: JSON.stringify(sampleLesson()) }));
-  const { scheduled, schedule } = recordingScheduler();
+  const queue = fakeQueue();
 
-  await sweepQueue(db, fakeBucket(), ai, now, schedule);
-  assert.equal(scheduled.length, 1);
-  await scheduled[0];
-  assert.equal(queueRow(sqlite, 'q1')?.status, 'concluido');
+  await sweepQueue(db, queue, now);
+  assert.deepEqual(queue.sent, [{ queueId: 'q1', contentId: 'X-001' }]);
+  assert.equal(queueRow(sqlite, 'q1')?.status, 'pendente', 'recuperado para pendente — quem reivindica de novo é o consumer');
+  assert.equal(queueRow(sqlite, 'q1')?.attempts, 1);
 });
 
 void test('processQueueItem deixa pendente sem chamar a IA quando o orçamento de neurons já passou de 90%', async () => {
@@ -321,24 +351,30 @@ void test('processQueueItem marca erro (item e aula) quando o writer desiste de 
   assert.equal(lessonStatus(sqlite, 'X-001'), 'erro');
 });
 
-void test('handleGetAula na primeira chamada cria a linha pendente, enfileira e agenda o processamento', async () => {
+void test('handleGetAula na primeira chamada cria a linha pendente e manda 1 mensagem pra fila', async () => {
   const sqlite = migratedDatabase();
   seedContent(sqlite, 'X-001');
   const db = d1(sqlite);
   const bucket = fakeBucket();
-  const ai = fakeAi(async () => ({ response: JSON.stringify(sampleLesson()) }));
-  const { scheduled, schedule } = recordingScheduler();
+  const queue = fakeQueue();
 
-  const response = await handleGetAula(db, bucket, ai, 'X-001', now, schedule);
+  const response = await handleGetAula(db, bucket, queue, 'X-001', now);
   assert.deepEqual(response, { status: 'pendente' });
-  assert.equal(scheduled.length, 1);
-  await scheduled[0];
+  assert.equal(queue.sent.length, 1);
+  assert.equal(queue.sent[0].contentId, 'X-001');
+
+  // Simula o consumer (worker-entry.ts) recebendo a mensagem que o produtor
+  // acima mandou — é ele que de fato chama a IA e gera a aula.
+  const ai = fakeAi(async () => ({ response: JSON.stringify(sampleLesson()) }));
+  const message = fakeMessage(queue.sent[0]);
+  await handleLessonQueueBatch({ messages: [message] }, db, bucket, ai, now);
+  assert.equal(message.acked, true);
 
   const stored = await readLesson(db, bucket, 'X-001');
-  assert.ok(stored, 'o processamento agendado deveria ter gerado a aula');
+  assert.ok(stored, 'o consumer deveria ter gerado a aula');
 });
 
-void test('handleGetAula não agenda nada novo quando já existe um processando saudável para o conteúdo', async () => {
+void test('handleGetAula não manda nada pra fila quando já existe um processando saudável para o conteúdo', async () => {
   const sqlite = migratedDatabase();
   seedContent(sqlite, 'X-001');
   const db = d1(sqlite);
@@ -348,41 +384,37 @@ void test('handleGetAula não agenda nada novo quando já existe um processando 
      INSERT INTO atlas_apache_queue (id, content_id, kind, status, attempts, started_at, created_at)
        VALUES ('q1', 'X-001', 'aula', 'processando', 0, '${now}', '${now}')`,
   );
-  let calls = 0;
-  const ai = fakeAi(async () => {
-    calls += 1;
-    return { response: JSON.stringify(sampleLesson()) };
-  });
-  const { scheduled, schedule } = recordingScheduler();
+  const queue = fakeQueue();
 
-  const response = await handleGetAula(db, bucket, ai, 'X-001', now, schedule);
+  const response = await handleGetAula(db, bucket, queue, 'X-001', now);
   assert.deepEqual(response, { status: 'pendente' });
-  assert.equal(scheduled.length, 0, 'já existe um processando saudável — não deve agendar nada novo');
-  assert.equal(calls, 0);
+  assert.equal(queue.sent.length, 0, 'já existe um processando saudável — não deve mandar nada novo pra fila');
 });
 
-void test('handleGetAula responde a aula já gerada, sem chamar a IA', async () => {
+void test('handleGetAula responde a aula já gerada, sem tocar a fila', async () => {
   const sqlite = migratedDatabase();
   seedContent(sqlite, 'X-001');
   const db = d1(sqlite);
   const bucket = fakeBucket();
   const lesson = sampleLesson();
-  const ai = fakeAi(async () => ({ response: JSON.stringify(lesson) }));
-  const { scheduled, schedule } = recordingScheduler();
+  sqlite.exec(
+    `INSERT INTO atlas_apache_lessons (id, content_id, status, version, model, object_key, generated_at, reported_count, updated_at)
+     VALUES ('l1', 'X-001', 'gerada', 1, '${LESSON_MODEL}', 'apache/aulas/X-001/v1.json.gz', '${now}', 0, '${now}')`,
+  );
+  await bucket.put(
+    'apache/aulas/X-001/v1.json.gz',
+    await (async () => {
+      const stream = new Blob([new TextEncoder().encode(JSON.stringify(lesson))])
+        .stream()
+        .pipeThrough(new CompressionStream('gzip'));
+      return new Uint8Array(await new Response(stream).arrayBuffer());
+    })(),
+  );
+  const queue = fakeQueue();
 
-  await handleGetAula(db, bucket, ai, 'X-001', now, schedule);
-  assert.equal(scheduled.length, 1);
-  await scheduled[0]; // processa de verdade o único item agendado
+  const response = await handleGetAula(db, bucket, queue, 'X-001', now);
 
-  let aiCalledAgain = false;
-  const readAi = fakeAi(async () => {
-    aiCalledAgain = true;
-    return { response: JSON.stringify(lesson) };
-  });
-  const { schedule: readSchedule } = recordingScheduler();
-  const response = await handleGetAula(db, bucket, readAi, 'X-001', now, readSchedule);
-
-  assert.equal(aiCalledAgain, false);
+  assert.equal(queue.sent.length, 0);
   assert.equal(response.status, 'gerada');
   assert.deepEqual(response.lesson?.objetivo, lesson.obj);
 });
@@ -395,9 +427,8 @@ void test('handleGetAula responde erro com uma mensagem genérica, nunca o error
      VALUES ('l1', 'X-001', 'erro', 1, 'stack trace interno sensível', '${now}')`,
   );
   const db = d1(sqlite);
-  const { schedule } = recordingScheduler();
 
-  const response = await handleGetAula(db, fakeBucket(), fakeAi(async () => ({})), 'X-001', now, schedule);
+  const response = await handleGetAula(db, fakeBucket(), fakeQueue(), 'X-001', now);
   assert.equal(response.status, 'erro');
   assert.ok(response.errorMessage && !response.errorMessage.includes('stack trace'));
 });
@@ -405,10 +436,9 @@ void test('handleGetAula responde erro com uma mensagem genérica, nunca o error
 void test('handleGetAula lança 404 para conteúdo inexistente', async () => {
   const sqlite = migratedDatabase();
   const db = d1(sqlite);
-  const { schedule } = recordingScheduler();
 
   await assert.rejects(
-    handleGetAula(db, fakeBucket(), fakeAi(async () => ({})), 'X-999', now, schedule),
+    handleGetAula(db, fakeBucket(), fakeQueue(), 'X-999', now),
     (error) => {
       assert.ok(error instanceof ApacheError);
       assert.equal(error.status, 404);
@@ -420,10 +450,9 @@ void test('handleGetAula lança 404 para conteúdo inexistente', async () => {
 void test('handleGetAula lança 404 para um contentId em formato inválido, sem tocar o D1', async () => {
   const sqlite = migratedDatabase();
   const db = d1(sqlite);
-  const { schedule } = recordingScheduler();
 
   await assert.rejects(
-    handleGetAula(db, fakeBucket(), fakeAi(async () => ({})), '../etc/passwd', now, schedule),
+    handleGetAula(db, fakeBucket(), fakeQueue(), '../etc/passwd', now),
     (error) => {
       assert.ok(error instanceof ApacheError);
       assert.equal(error.status, 404);
@@ -432,15 +461,62 @@ void test('handleGetAula lança 404 para um contentId em formato inválido, sem 
   );
 });
 
-void test('handleGetAula sem bindings de AI/R2 (dev sem APACHE_AI_DEV=1) só lê status, sem agendar nada', async () => {
+void test('handleGetAula sem bindings de fila/R2 (dev sem a fila configurada) só lê status, sem tentar enfileirar', async () => {
   const sqlite = migratedDatabase();
   seedContent(sqlite, 'X-001');
   const db = d1(sqlite);
-  const { scheduled, schedule } = recordingScheduler();
 
-  const response = await handleGetAula(db, null, null, 'X-001', now, schedule);
+  const response = await handleGetAula(db, null, null, 'X-001', now);
   assert.deepEqual(response, { status: 'pendente' });
-  assert.equal(scheduled.length, 0);
   const count = sqlite.prepare('SELECT COUNT(*) AS n FROM atlas_apache_queue').get() as { n: number };
-  assert.equal(count.n, 0, 'sem ai/bucket não deve nem criar o item na fila');
+  assert.equal(count.n, 0, 'sem fila/bucket não deve nem criar o item na fila');
+});
+
+void test('handleLessonQueueBatch processa cada mensagem do lote e dá ack em cada uma no sucesso', async () => {
+  const sqlite = migratedDatabase();
+  seedContent(sqlite, 'X-001');
+  seedContent(sqlite, 'X-002');
+  const db = d1(sqlite);
+  sqlite.exec(
+    `INSERT INTO atlas_apache_lessons (id, content_id, status, version, updated_at) VALUES ('l1', 'X-001', 'pendente', 1, '${now}');
+     INSERT INTO atlas_apache_lessons (id, content_id, status, version, updated_at) VALUES ('l2', 'X-002', 'pendente', 1, '${now}');
+     INSERT INTO atlas_apache_queue (id, content_id, kind, status, attempts, created_at) VALUES ('q1', 'X-001', 'aula', 'pendente', 0, '${now}');
+     INSERT INTO atlas_apache_queue (id, content_id, kind, status, attempts, created_at) VALUES ('q2', 'X-002', 'aula', 'pendente', 0, '${now}')`,
+  );
+  const ai = fakeAi(async () => ({ response: JSON.stringify(sampleLesson()) }));
+  const bucket = fakeBucket();
+  const m1 = fakeMessage({ queueId: 'q1', contentId: 'X-001' });
+  const m2 = fakeMessage({ queueId: 'q2', contentId: 'X-002' });
+
+  await handleLessonQueueBatch({ messages: [m1, m2] }, db, bucket, ai, now);
+
+  assert.equal(m1.acked, true);
+  assert.equal(m2.acked, true);
+  assert.equal(queueRow(sqlite, 'q1')?.status, 'concluido');
+  assert.equal(queueRow(sqlite, 'q2')?.status, 'concluido');
+});
+
+void test('handleLessonQueueBatch dá retry (não ack) quando processQueueItem lança (falha de infraestrutura real, ex.: D1 fora do ar)', async () => {
+  const sqlite = migratedDatabase();
+  seedContent(sqlite, 'X-001');
+  const realDb = d1(sqlite);
+  sqlite.exec(
+    `INSERT INTO atlas_apache_lessons (id, content_id, status, version, updated_at) VALUES ('l1', 'X-001', 'pendente', 1, '${now}');
+     INSERT INTO atlas_apache_queue (id, content_id, kind, status, attempts, created_at) VALUES ('q1', 'X-001', 'aula', 'pendente', 0, '${now}')`,
+  );
+  // db.batch lançando simula uma falha real de infraestrutura (D1 fora do
+  // ar) — bem diferente de uma falha de geração (que processQueueItem
+  // sempre converte em estado no banco, nunca propaga).
+  const brokenDb = {
+    prepare: realDb.prepare.bind(realDb),
+    async batch(): Promise<{ meta: { changes: number } }[]> {
+      throw new Error('D1 indisponível');
+    },
+  };
+  const ai = fakeAi(async () => ({ response: JSON.stringify(sampleLesson()) }));
+  const message = fakeMessage({ queueId: 'q1', contentId: 'X-001' });
+
+  await handleLessonQueueBatch({ messages: [message] }, brokenDb, fakeBucket(), ai, now);
+  assert.equal(message.retried, true);
+  assert.equal(message.acked, false);
 });

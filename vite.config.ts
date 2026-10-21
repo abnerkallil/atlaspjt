@@ -13,7 +13,10 @@ const { d1, r2 } = hostingConfig;
 const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === 'seatbelt';
 
 const localBindingConfig = {
-  main: 'vinext/server/fetch-handler',
+  // Entry próprio (worker-entry.ts) em vez do handler padrão do vinext:
+  // vinext não exporta um handler `queue`, então este arquivo embrulha o
+  // fetch do vinext e acrescenta o consumer da fila do Apache (acima).
+  main: './worker-entry.ts',
   compatibility_flags: ['nodejs_compat'],
   d1_databases: d1
     ? [
@@ -40,6 +43,25 @@ const localBindingConfig = {
       simple: { limit: 10, period: 60 as const },
     },
   ],
+  // APA-07 (DEC-019): geração da aula roda no consumer desta fila
+  // (worker-entry.ts), nunca na rota GET — o produtor só manda uma
+  // mensagem leve {queueId, contentId}. Plano Free: 10.000 operações/dia
+  // (leitura+escrita+exclusão somadas), ~3-4 operações por aula (send +
+  // leitura do lote + ack/retry). max_retries: 3, coerente com o limite de
+  // tentativas já aplicado em lib/apache/queue.ts; sem dead_letter_queue —
+  // um item que esgota os retries da própria Cloudflare ainda é recuperado
+  // pela varredura (sweepQueue) depois da meia-noite UTC.
+  queues: {
+    producers: [{ queue: 'atlas-apache-aulas', binding: 'APACHE_LESSON_QUEUE' }],
+    consumers: [
+      {
+        queue: 'atlas-apache-aulas',
+        max_batch_size: 5,
+        max_batch_timeout: 10,
+        max_retries: 3,
+      },
+    ],
+  },
 };
 
 export default defineConfig(async ({ command }) => {

@@ -1,6 +1,10 @@
-// APA-07: fila, geração lazy e diff na leitura (Gate APA-01, opção (b):
-// sem Cron Trigger, roda via ctx.waitUntil na própria requisição + checagem
-// de pendências no primeiro acesso depois do reset diário de neurons).
+// APA-07: fila, geração lazy e diff na leitura. DEC-019 (revisado): a
+// geração roda num consumer de Cloudflare Queues (fila `atlas-apache-aulas`),
+// não mais via `ctx.waitUntil` — o `waitUntil` só garante ~30s depois da
+// resposta, e o Llama 3.3 70B com retry passa disso com frequência. O
+// produtor (GET /api/apache/aulas/:contentId) só manda uma mensagem leve
+// `{ queueId, contentId }` pra fila; quem chama a IA é o consumer
+// (`queue()` em worker-entry.ts, via handleLessonQueueBatch abaixo).
 import { getApacheUserId } from '../auth.js';
 import type { D1Like } from '../pedagogy/transitions.js';
 import { ApacheError } from './errors.js';
@@ -23,29 +27,50 @@ import {
 } from './schema.js';
 import type { LessonResponse } from './lesson-poll.js';
 
-// waitUntil pode ser interrompido pelo runtime antes da geração terminar —
-// um item 'processando' com started_at mais velho que isso é tratado como
-// preso (card APA-07).
+// Cloudflare Queues já reentrega uma mensagem que falhar (retry nativo,
+// configurado em vite.config.ts) — mas um consumer que trava sem nunca
+// chamar ack()/retry() (ex.: o isolate é reciclado no meio) ainda pode
+// deixar um item preso em 'processando' sem a fila saber. Esta constante
+// é só a salvaguarda de último nível (sweepQueue), não o mecanismo
+// principal de retry (que agora é da própria fila).
 const STALE_PROCESSING_MS = 5 * 60 * 1000;
 // Depois de 3 recuperações de item preso, desiste de verdade (vira 'erro' e
 // marca a aula como erro) em vez de tentar pendente->processando->preso para
 // sempre.
 const MAX_QUEUE_ATTEMPTS = 3;
 const MAX_LAST_ERROR_CHARS = 200;
-// Teto por requisição de quantos itens a varredura processa de uma vez via
-// waitUntil — evita uma única requisição acordar centenas de gerações de
-// uma vez (não especificado pelo card, só uma salvaguarda de custo).
+// Teto por requisição de quantos itens a varredura reenvia pra fila de uma
+// vez — evita uma única requisição mandar centenas de mensagens de uma vez
+// (não especificado pelo card, só uma salvaguarda de custo: Queues Free dá
+// 10.000 operações/dia).
 const SWEEP_LIMIT = 5;
 
 // Sentinela em `last_error` (não é uma mensagem de erro real) pra marcar um
 // item que foi adiado por falta de cota de neurons — precisa ficar
 // distinguível de um item "pendente normal" (recém-criado ou recuperado de
-// um travamento), senão cada poll de 5s do cliente chamaria a IA de novo
-// enquanto a cota não reseta (o 3036 da Cloudflare é uma chamada real).
+// um travamento), senão cada poll de 5s do cliente mandaria outra mensagem
+// pra fila (e o consumer chamaria a IA de novo — o 3036 é uma chamada real).
 const QUOTA_DEFERRED_MARKER = 'cota_diaria_esgotada';
 
 const STUCK_ERROR_MESSAGE =
   'Não foi possível gerar a aula depois de várias tentativas (o processamento foi interrompido repetidamente).';
+
+export type LessonQueueMessage = { queueId: string; contentId: string };
+
+// Interface mínima do binding `Queue` (produtor) — só o que este módulo usa,
+// no mesmo padrão de D1Like/R2Like/AiLike, pra ser testável com um fake.
+export type QueueLike = {
+  send(message: LessonQueueMessage): Promise<unknown>;
+};
+
+// Interface mínima de uma mensagem/lote recebidos pelo consumer (`queue()`
+// em worker-entry.ts) — mesmo padrão.
+export type QueueMessageLike = {
+  body: LessonQueueMessage;
+  ack(): void;
+  retry(options?: { delaySeconds?: number }): void;
+};
+export type QueueBatchLike = { messages: readonly QueueMessageLike[] };
 
 type QueueRow = {
   id: string;
@@ -100,9 +125,9 @@ async function recoverStaleItem(db: D1Like, row: QueueRow, now: string): Promise
 // existente foi adiado por cota (QUOTA_DEFERRED_MARKER), NENHUM item novo é
 // criado nem devolvido: um item 'erro' é terminal (a aula já virou erro) e
 // um item adiado por cota só pode ser retomado pela varredura pós-reset —
-// nunca a cada poll de 5s do cliente, senão isso chamaria a IA de novo a
-// cada poll enquanto a cota não reseta. Retorna o id do item pendente para
-// processar agora, ou null se não há nada saudável para processar.
+// nunca a cada poll de 5s do cliente, senão isso mandaria mensagem pra fila
+// de novo enquanto a cota não reseta. Retorna o id do item pendente para
+// mandar pra fila agora, ou null se não há nada saudável para mandar.
 export async function enqueueLessonIfNeeded(
   db: D1Like,
   contentId: string,
@@ -153,24 +178,18 @@ function mostRecentUtcMidnight(now: string): string {
   return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())).toISOString();
 }
 
-export type Scheduler = (promise: Promise<void>) => void;
-
-// Varredura (Gate APA-01, opção (b)): roda em toda chamada da rota, pra
-// qualquer conteúdo — nunca kind='aula_manual'/'enriquecimento' (fora do
-// escopo deste card). Dois papéis: (1) destrava 'processando' preso há mais
-// de 5 min (mesma regra do dedupe acima); (2) retoma 'pendente' criado antes
-// da meia-noite UTC mais recente — cobre tanto um item parado por um
-// travamento de infraestrutura quanto um adiado por cota (QUOTA_DEFERRED_MARKER),
-// já que depois do reset a cota de ontem não importa mais. Usa só os
-// índices idx_atlas_apache_queue_status/idx_atlas_apache_queue_content_kind_status.
-export async function sweepQueue(
-  db: D1Like,
-  bucket: R2Like,
-  ai: AiLike,
-  now: string,
-  schedule: Scheduler,
-  limit = SWEEP_LIMIT,
-): Promise<void> {
+// Varredura (Gate APA-01, opção (b) revisada: Cloudflare Queues em vez de
+// waitUntil, mas o mesmo princípio de "sem Cron Trigger" — roda em toda
+// chamada da rota, pra qualquer conteúdo, nunca kind='aula_manual'/
+// 'enriquecimento' (fora do escopo deste card). Dois papéis: (1) destrava
+// 'processando' preso há mais de 5 min — salvaguarda de último nível pra
+// quando o consumer trava sem chamar ack()/retry() (a fila já reentrega
+// sozinha em qualquer outro caso de falha); (2) retoma 'pendente' criado
+// antes da meia-noite UTC mais recente — cobre tanto um item recém-recuperado
+// de um travamento quanto um adiado por cota (QUOTA_DEFERRED_MARKER), já
+// que depois do reset a cota de ontem não importa mais. Usa só os índices
+// idx_atlas_apache_queue_status/idx_atlas_apache_queue_content_kind_status.
+export async function sweepQueue(db: D1Like, queue: QueueLike, now: string, limit = SWEEP_LIMIT): Promise<void> {
   const midnight = mostRecentUtcMidnight(now);
   const staleBefore = new Date(new Date(now).getTime() - STALE_PROCESSING_MS).toISOString();
   const { results } = await db
@@ -188,10 +207,10 @@ export async function sweepQueue(
   for (const row of results) {
     if (row.status === 'processando') {
       const nextStatus = await recoverStaleItem(db, row, now);
-      if (nextStatus === 'pendente') schedule(processQueueItem(db, bucket, ai, row.id, row.content_id, now));
+      if (nextStatus === 'pendente') await queue.send({ queueId: row.id, contentId: row.content_id });
       continue;
     }
-    schedule(processQueueItem(db, bucket, ai, row.id, row.content_id, now));
+    await queue.send({ queueId: row.id, contentId: row.content_id });
   }
 }
 
@@ -206,17 +225,20 @@ async function deferForQuota(db: D1Like, queueId: string, contentId: string, now
   ]);
 }
 
-// Processa 1 item da fila: reivindica o item com um UPDATE condicional
-// (WHERE status='pendente') pra nunca processar o mesmo item 2x em
-// paralelo (2 abas pollando ao mesmo tempo, por exemplo — o dedupe acima
-// reduz a chance, mas não cobre a corrida entre a leitura e esta escrita).
-// Depois checa o orçamento de neurons (adia sem chamar a IA se já passou de
-// 90%), chama writeLesson (APA-06) e marca 'concluido'/'erro'. Um 429 do
-// writer (cota local ou erro 3036 da Cloudflare) adia pra depois do reset —
-// nunca marca erro por falta de cota. Qualquer outra falha (ex.: writeLesson
-// esgotou os retries dele, ou uma falha de R2/D1 fora do controle dele)
-// marca a aula como erro também — sem isso ela ficava 'pendente' para
-// sempre, sem o cliente nunca ver um erro.
+// Processa 1 item da fila (chamado pelo consumer, handleLessonQueueBatch
+// abaixo): reivindica o item com um UPDATE condicional (WHERE
+// status='pendente') pra nunca processar o mesmo item 2x em paralelo — a
+// entrega da Cloudflare Queues é "pelo menos uma vez", então a mesma
+// mensagem pode chegar mais de uma vez. Depois checa o orçamento de neurons
+// (adia sem chamar a IA se já passou de 90%), chama writeLesson (APA-06) e
+// marca 'concluido'/'erro'. Um 429 do writer (cota local ou erro 3036 da
+// Cloudflare) adia pra depois do reset — nunca marca erro por falta de
+// cota. Qualquer outra falha (ex.: writeLesson esgotou os retries dele, ou
+// uma falha de R2/D1 fora do controle dele) marca a aula como erro também —
+// sem isso ela ficava 'pendente' para sempre, sem o cliente nunca ver um
+// erro. Nunca lança: a chamadora (handleLessonQueueBatch) só precisa decidir
+// ack()/retry() a partir de uma exceção genuína de infraestrutura (ex.: D1
+// fora do ar), não de uma falha de geração (já virou estado no banco).
 export async function processQueueItem(
   db: D1Like,
   bucket: R2Like,
@@ -230,7 +252,7 @@ export async function processQueueItem(
       .prepare(`UPDATE atlas_apache_queue SET status = 'processando', started_at = ?2, last_error = NULL WHERE id = ?1 AND status = 'pendente'`)
       .bind(queueId, now),
   ]);
-  if (claim.meta.changes === 0) return; // outra chamada já reivindicou este item
+  if (claim.meta.changes === 0) return; // outra entrega já reivindicou este item
 
   const budget = await neuronBudgetRemaining(db, now);
   if (budget.overLimit) {
@@ -271,6 +293,31 @@ export async function processQueueItem(
   }
 }
 
+// Consumer da fila (card APA-07, DEC-019 revisado): chamado por `queue()`
+// em worker-entry.ts, único lugar que de fato tem os bindings AI/ATTACHMENTS
+// disponíveis (o produtor, GET /api/apache/aulas/:contentId, nunca precisa
+// deles). ack() depois de processQueueItem sempre — ele mesmo nunca lança
+// pra uma falha de geração, só vira estado no banco; retry() só numa
+// exceção genuína de infraestrutura (D1/R2 fora do ar), que Cloudflare
+// Queues reentrega sozinha (max_retries em vite.config.ts).
+export async function handleLessonQueueBatch(
+  batch: QueueBatchLike,
+  db: D1Like,
+  bucket: R2Like,
+  ai: AiLike,
+  now: string,
+): Promise<void> {
+  for (const message of batch.messages) {
+    try {
+      await processQueueItem(db, bucket, ai, message.body.queueId, message.body.contentId, now);
+      message.ack();
+    } catch (error) {
+      console.error('Apache: falha ao processar item da fila de aulas', error);
+      message.retry();
+    }
+  }
+}
+
 const CONTENT_ID_PATTERN = /^[A-Za-z0-9_-]{1,64}$/;
 
 async function assertContentExists(db: D1Like, contentId: string): Promise<void> {
@@ -303,22 +350,23 @@ async function readEnrichmentFicha(bucket: R2Like, objectKey: string): Promise<A
 // error_message (interno, de log) ao cliente.
 const GENERIC_LESSON_ERROR_MESSAGE = 'Não foi possível gerar esta aula agora. Tente de novo mais tarde.';
 
-// Orquestra o GET /api/apache/aulas/:contentId inteiro (card APA-07): a rota
-// em app/api/apache/aulas/[contentId]/route.ts só injeta os bindings
-// (D1/R2/AI) e o `schedule` (ctx.waitUntil real ou um fallback de dev). Sem
-// `ai`/`bucket` (binding ausente em dev sem APACHE_AI_DEV=1), a leitura de
-// status ainda funciona, só não dispara processamento nem lê aula já gerada
-// sem R2.
+// Orquestra o GET /api/apache/aulas/:contentId inteiro (card APA-07): a
+// rota em app/api/apache/aulas/[contentId]/route.ts só injeta os bindings
+// D1/R2 e o `queue` (binding Cloudflare Queues real, ou null se ausente —
+// ex.: dev sem a fila configurada localmente). Nunca precisa do binding
+// `AI` — quem chama a IA é sempre o consumer, nunca o produtor. Sem
+// `queue`, a leitura de status ainda funciona, só não manda nada pra fila;
+// sem `bucket`, a leitura de uma aula já pronta falha (mas pendente/erro
+// seguem funcionando, já que não tocam R2).
 export async function handleGetAula(
   db: D1Like,
   bucket: R2Like | null,
-  ai: AiLike | null,
+  queue: QueueLike | null,
   contentId: string,
   now: string,
-  schedule: Scheduler,
 ): Promise<LessonResponse> {
-  if (ai && bucket) {
-    await sweepQueue(db, bucket, ai, now, schedule);
+  if (queue) {
+    await sweepQueue(db, queue, now);
   }
 
   await assertContentExists(db, contentId);
@@ -330,9 +378,9 @@ export async function handleGetAula(
   }
 
   if (statusRow.status === 'pendente' || statusRow.status === 'gerando') {
-    if (ai && bucket) {
+    if (queue) {
       const queueId = await enqueueLessonIfNeeded(db, contentId, 'aula', now);
-      if (queueId) schedule(processQueueItem(db, bucket, ai, queueId, contentId, now));
+      if (queueId) await queue.send({ queueId, contentId });
     }
     return { status: 'pendente' };
   }
