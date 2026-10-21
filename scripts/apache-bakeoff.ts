@@ -16,22 +16,33 @@
 // (APA-15, verificado 2026-10-20) — reaproveitados daqui, nunca redigitados.
 //
 // Custo deste bake-off (3 modelos × 2 casos de teste, MAX_COMPLETION_TOKENS
-// = 500): no PIOR CASO (toda chamada usando os 500 tokens de saída inteiros)
-// ≈ 300 neurons no total — a maior parte disso é só o Llama, que é ~6x mais
-// caro em neurons que os outros dois; na prática a ficha de enriquecimento é
-// curta e o gasto real fica bem menor. Orçamento diário é 10.000 (ver
-// DAILY_NEURON_BUDGET em lib/apache/neuron-meter.ts) — este bake-off usa no
-// máximo ~3% dele, mesmo no pior caso.
+// = 900): no PIOR CASO (toda chamada usando os 900 tokens de saída inteiros)
+// ≈ 530 neurons no total — a maior parte disso é só o Llama, que é ~6-7x
+// mais caro em neurons que os outros dois; na prática o gasto real fica bem
+// menor (ver coluna "Neurons" em docs/apache-bakeoff-resultado.md depois de
+// rodar). Orçamento diário é 10.000 (ver DAILY_NEURON_BUDGET em
+// lib/apache/neuron-meter.ts) — este bake-off usa no máximo ~5,3% dele,
+// mesmo no pior caso.
 //
 // Uso (só precisa estar logado no wrangler — `npx wrangler login`, o mesmo
 // login já usado para `wrangler d1 execute --remote`):
 //   pnpm run apache:bakeoff
 //
-// Rodado contra a conta real em 2026-10-21: Llama devolveu `{ response, usage
-// }` (formato nativo), mas Gemma 4 e Qwen3 devolveram `{ choices: [{ message
-// }], usage }` (formato OpenAI-compatible) — ver resolveModelOutput() mais
-// abaixo, que trata os dois formatos (1ª versão só tratava o primeiro, e
-// toda resposta de Gemma/Qwen3 virava "ficha inválida: não é um objeto").
+// Rodado contra a conta real em 2026-10-21, 2 rodadas:
+// 1ª rodada: Llama devolveu `{ response, usage }` (formato nativo), Gemma 4
+//   e Qwen3 devolveram `{ choices: [{ message }], usage }` (formato
+//   OpenAI-compatible) — a 1ª versão só tratava o formato do Llama, e toda
+//   resposta de Gemma/Qwen3 virava "ficha inválida: não é um objeto".
+//   Corrigido com resolveModelOutput() (trata os dois formatos).
+// 2ª rodada: Qwen3 devolve `response: null` JUNTO com `choices` (não só um
+//   ou outro) — `!== undefined` deixava o `null` passar como se fosse
+//   resposta de verdade, escondendo o `choices` certo. Corrigido pra
+//   `!= null` (cobre os dois). Além disso Gemma e Qwen3 são modelos
+//   "thinking": com max_tokens=500, gastavam boa parte (às vezes tudo) do
+//   teto com raciocínio interno antes do JSON, truncando a resposta.
+//   Corrigido com `enable_thinking: false` nos dois + teto subido pra 900
+//   (ver THINKING_DISABLED/MAX_COMPLETION_TOKENS) + um campo "truncated" no
+//   relatório pra não precisar reler a saída bruta na mão numa próxima vez.
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { getPlatformProxy } from 'wrangler';
 import type { AiLike } from '../lib/apache/lesson-writer.js';
@@ -63,20 +74,25 @@ function ensureBakeoffWranglerConfig(): void {
 // dois primeiros. IDs confirmados no catálogo do Workers AI (ver histórico
 // do APA-15): não redigitar sem reconfirmar no painel Cloudflare > Workers AI
 // > Models, porque o catálogo muda.
+// Gemma 4 26B e Qwen3 30B são os dois modelos "thinking" do catálogo (MoE
+// com raciocínio embutido) — rodando de verdade (2026-10-21), os dois
+// gastaram uma fração grande (às vezes TODO) do max_tokens com raciocínio
+// interno antes do JSON, truncando a resposta real. `enable_thinking: false`
+// desliga esse passo pros dois (Llama 3.3 70B não tem esse parâmetro, nem
+// precisa).
+const THINKING_DISABLED = { chat_template_kwargs: { enable_thinking: false } };
+
 const MODELS = [
   { label: 'Llama 3.3 70B (baseline da aula, APA-06)', id: '@cf/meta/llama-3.3-70b-instruct-fp8-fast', extraInputs: {} },
-  { label: 'Gemma 4 26B', id: '@cf/google/gemma-4-26b-a4b-it', extraInputs: {} },
-  // Qwen3 é um modelo de raciocínio ("thinking"): sem desligar, a resposta
-  // vem com um bloco <think>...</think> antes do JSON, consumindo tokens de
-  // saída à toa e exigindo limpeza extra do texto (ver stripThinkBlocks).
-  {
-    label: 'Qwen3 30B',
-    id: '@cf/qwen/qwen3-30b-a3b-fp8',
-    extraInputs: { chat_template_kwargs: { enable_thinking: false } },
-  },
+  { label: 'Gemma 4 26B', id: '@cf/google/gemma-4-26b-a4b-it', extraInputs: THINKING_DISABLED },
+  { label: 'Qwen3 30B', id: '@cf/qwen/qwen3-30b-a3b-fp8', extraInputs: THINKING_DISABLED },
 ] as const;
 
-const MAX_COMPLETION_TOKENS = 500; // ficha de enriquecimento é curta (poucos conceitos), não precisa do teto de uma aula inteira
+// 500 não foi suficiente: mesmo com thinking desligado, a ficha de 3
+// conceitos (caso "relevante") ficou perto do teto em mais de um modelo na
+// 2ª rodada real — 900 dá folga sem chegar perto do teto de uma aula
+// inteira (lesson-writer.ts usa 4000).
+const MAX_COMPLETION_TOKENS = 900;
 
 // Mesmo delimitador de prompt-injection do Gate APA-14 (DEC-020 item 1),
 // usado em lesson-writer.ts — o material do aluno nunca é instrução.
@@ -191,11 +207,16 @@ type AiRunOutput = {
 };
 
 function resolveModelOutput(output: AiRunOutput): unknown {
-  if (output.response !== undefined) return output.response;
+  // Bug da 2ª rodada real: Qwen3 devolve `response: null` JUNTO com
+  // `choices`, não só um ou outro — `!== undefined` deixava `null` passar
+  // batido como se fosse a resposta de verdade, antes de olhar `choices`.
+  // `!= null` cobre undefined E null, caindo pro formato OpenAI-compatible
+  // nos dois casos.
+  if (output.response != null) return output.response;
   const message = output.choices?.[0]?.message;
-  if (message?.parsed !== undefined) return message.parsed;
-  if (message?.content !== undefined) return message.content;
-  throw new Error('formato de resposta desconhecido: nem "response" nem "choices[0].message" presentes');
+  if (message?.parsed != null) return message.parsed;
+  if (message?.content != null) return message.content;
+  throw new Error('formato de resposta desconhecido: nem "response" nem "choices[0].message" presentes (ou ambos nulos/vazios)');
 }
 
 // Qwen3 (modelo de raciocínio) pode devolver um bloco <think>...</think>
@@ -234,6 +255,7 @@ type RunResult = {
   erro?: string;
   irrelevante?: boolean;
   numConceitos?: number;
+  truncated: boolean;
   raw: string;
 };
 
@@ -278,6 +300,7 @@ async function runOne(ai: AiLike, model: (typeof MODELS)[number], testCase: Test
         usedJsonSchema,
         valid: false,
         erro: `chamada falhou (com e sem json_schema): ${fallbackError instanceof Error ? fallbackError.message : String(fallbackError)}`,
+        truncated: false,
         raw: '',
       };
     }
@@ -288,6 +311,10 @@ async function runOne(ai: AiLike, model: (typeof MODELS)[number], testCase: Test
     model.id,
     output.usage ? { promptTokens: output.usage.prompt_tokens ?? 0, completionTokens: output.usage.completion_tokens ?? 0 } : undefined,
   );
+  // Diagnóstico pra não precisar reler a saída bruta na mão de novo (como
+  // na 1ª e 2ª rodadas reais): se a chamada gastou perto do teto de
+  // max_tokens, a resposta provavelmente foi cortada no meio do JSON.
+  const truncated = (output.usage?.completion_tokens ?? 0) >= MAX_COMPLETION_TOKENS * 0.95;
 
   let rawValue: unknown;
   try {
@@ -302,6 +329,7 @@ async function runOne(ai: AiLike, model: (typeof MODELS)[number], testCase: Test
       usedJsonSchema,
       valid: false,
       erro: error instanceof Error ? error.message : String(error),
+      truncated,
       raw: JSON.stringify(output),
     };
   }
@@ -320,6 +348,7 @@ async function runOne(ai: AiLike, model: (typeof MODELS)[number], testCase: Test
       usedJsonSchema,
       valid: false,
       erro: `JSON não encontrado na resposta: ${error instanceof Error ? error.message : String(error)}`,
+      truncated,
       raw: rawText,
     };
   }
@@ -337,6 +366,7 @@ async function runOne(ai: AiLike, model: (typeof MODELS)[number], testCase: Test
       usedJsonSchema,
       valid: false,
       erro: `validação falhou: ${error instanceof Error ? error.message : String(error)}`,
+      truncated,
       raw: rawText,
     };
   }
@@ -351,6 +381,7 @@ async function runOne(ai: AiLike, model: (typeof MODELS)[number], testCase: Test
     valid: true,
     irrelevante: enrichment.irrelevante,
     numConceitos: enrichment.conceitos.length,
+    truncated,
     raw: rawText,
   };
 }
@@ -375,12 +406,13 @@ function buildReport(results: RunResult[]): string {
   lines.push('');
   lines.push('## Resultados');
   lines.push('');
-  lines.push('| Modelo | Caso | Válido | JSON schema | Latência (ms) | Neurons | irrelevante | nº conceitos | Erro |');
-  lines.push('|---|---|---|---|---|---|---|---|---|');
+  lines.push('| Modelo | Caso | Válido | JSON schema | Truncado? | Latência (ms) | Neurons | irrelevante | nº conceitos | Erro |');
+  lines.push('|---|---|---|---|---|---|---|---|---|---|');
   for (const r of results) {
     lines.push(
       `| ${r.label} | ${r.caso} | ${r.valid ? 'sim' : 'NÃO'} | ${r.usedJsonSchema ? 'sim' : 'fallback texto'} | ` +
-        `${r.latencyMs} | ${formatNeurons(r.neurons)} | ${r.irrelevante ?? '-'} | ${r.numConceitos ?? '-'} | ${r.erro ?? '-'} |`,
+        `${r.truncated ? 'SIM (perto do teto de max_tokens)' : 'não'} | ${r.latencyMs} | ${formatNeurons(r.neurons)} | ` +
+        `${r.irrelevante ?? '-'} | ${r.numConceitos ?? '-'} | ${r.erro ?? '-'} |`,
     );
   }
   lines.push('');
