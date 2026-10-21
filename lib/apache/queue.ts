@@ -15,6 +15,7 @@ import {
   getLessonStatus,
   gunzip,
   markFailed,
+  markReported,
   readLesson,
   type R2Like,
 } from './lesson-store.js';
@@ -334,7 +335,7 @@ export async function handleLessonQueueBatch(
 
 const CONTENT_ID_PATTERN = /^[A-Za-z0-9_-]{1,64}$/;
 
-async function assertContentExists(db: D1Like, contentId: string): Promise<void> {
+export async function assertContentExists(db: D1Like, contentId: string): Promise<void> {
   if (!CONTENT_ID_PATTERN.test(contentId)) {
     throw new ApacheError('Conteúdo não encontrado.', 404);
   }
@@ -427,4 +428,31 @@ export async function handleGetAula(
     lesson: renderLesson(loaded.lesson),
     enrichment,
   };
+}
+
+// Orquestra o POST /api/apache/aulas/:contentId/reportar (card APA-08):
+// markReported (APA-05) marca a aula como 'reportada' e diz se este pedido
+// criou mesmo um item novo na fila (`queued`) — só manda a MENSAGEM pro
+// consumer (Cloudflare Queues) nesse caso: reportar de novo enquanto a
+// geração anterior ainda está pendente/em andamento (ou adiada por cota,
+// que markReported também trata como "já pendente") não deve mandar uma
+// segunda mensagem pro mesmo item, e `kind === 'aula_manual'` (aula
+// escrita a mão pelo Claude) nunca é regenerada pela IA (sweepQueue também
+// ignora esse kind) — fica só como item de backlog manual, sem gastar
+// neurons. enqueueLessonIfNeeded reaproveita o claim atômico/recuperação
+// de item preso do APA-07 pra achar o id certo a mandar. assertContentExists
+// primeiro (mesmo padrão do handleGetAula): valida o formato do contentId
+// e sua existência antes de tocar atlas_apache_lessons/_queue.
+export async function handleReportAula(
+  db: D1Like,
+  queue: QueueLike | null,
+  contentId: string,
+  now: string,
+): Promise<void> {
+  await assertContentExists(db, contentId);
+  const { kind, queued } = await markReported(db, contentId, now);
+  if (kind === 'aula' && queued && queue) {
+    const queueId = await enqueueLessonIfNeeded(db, contentId, 'aula', now);
+    if (queueId) await queue.send({ queueId, contentId });
+  }
 }

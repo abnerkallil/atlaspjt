@@ -10,6 +10,7 @@ import {
   enqueueLessonIfNeeded,
   handleGetAula,
   handleLessonQueueBatch,
+  handleReportAula,
   processQueueItem,
   sweepQueue,
   type LessonQueueMessage,
@@ -547,4 +548,87 @@ void test('handleLessonQueueBatch dá retry (não ack) quando processQueueItem l
   await handleLessonQueueBatch({ messages: [message] }, brokenDb, fakeBucket(), ai);
   assert.equal(message.retried, true);
   assert.equal(message.acked, false);
+});
+
+void test('handleReportAula (APA-08) marca reportada e manda a aula pra fila para kind=aula', async () => {
+  const sqlite = migratedDatabase();
+  seedContent(sqlite, 'X-001');
+  sqlite.exec(
+    `INSERT INTO atlas_apache_lessons (id, content_id, status, version, model, object_key, generated_at, reported_count, updated_at)
+     VALUES ('l1', 'X-001', 'gerada', 1, '${LESSON_MODEL}', 'apache/aulas/X-001/v1.json.gz', '${now}', 0, '${now}')`,
+  );
+  const db = d1(sqlite);
+  const queue = fakeQueue();
+
+  await handleReportAula(db, queue, 'X-001', now);
+
+  assert.equal(lessonStatus(sqlite, 'X-001'), 'reportada');
+  assert.equal(queue.sent.length, 1);
+  assert.equal(queue.sent[0]?.contentId, 'X-001');
+  const row = sqlite
+    .prepare(`SELECT kind, status FROM atlas_apache_queue WHERE content_id = 'X-001'`)
+    .get() as { kind: string; status: string } | undefined;
+  assert.equal(row?.kind, 'aula');
+  assert.equal(row?.status, 'pendente');
+});
+
+void test('handleReportAula não manda pra fila quando a aula é claude-manual (kind=aula_manual)', async () => {
+  const sqlite = migratedDatabase();
+  seedContent(sqlite, 'X-001');
+  sqlite.exec(
+    `INSERT INTO atlas_apache_lessons (id, content_id, status, version, model, object_key, generated_at, reported_count, updated_at)
+     VALUES ('l1', 'X-001', 'gerada', 1, 'claude-manual', 'apache/aulas/X-001/v1.json.gz', '${now}', 0, '${now}')`,
+  );
+  const db = d1(sqlite);
+  const queue = fakeQueue();
+
+  await handleReportAula(db, queue, 'X-001', now);
+
+  assert.equal(lessonStatus(sqlite, 'X-001'), 'reportada');
+  assert.equal(queue.sent.length, 0);
+  const row = sqlite
+    .prepare(`SELECT kind, status FROM atlas_apache_queue WHERE content_id = 'X-001'`)
+    .get() as { kind: string; status: string } | undefined;
+  assert.equal(row?.kind, 'aula_manual');
+});
+
+void test('handleReportAula lança 404 para um contentId inválido, sem tocar o D1', async () => {
+  const sqlite = migratedDatabase();
+  const db = d1(sqlite);
+  const queue = fakeQueue();
+
+  await assert.rejects(
+    handleReportAula(db, queue, '../etc/passwd', now),
+    (error) => {
+      assert.ok(error instanceof ApacheError);
+      assert.equal(error.status, 404);
+      return true;
+    },
+  );
+  assert.equal(queue.sent.length, 0);
+});
+
+void test('handleReportAula é idempotente: reportar de novo não manda uma segunda mensagem pra fila', async () => {
+  const sqlite = migratedDatabase();
+  seedContent(sqlite, 'X-001');
+  sqlite.exec(
+    `INSERT INTO atlas_apache_lessons (id, content_id, status, version, model, object_key, generated_at, reported_count, updated_at)
+     VALUES ('l1', 'X-001', 'gerada', 1, '${LESSON_MODEL}', 'apache/aulas/X-001/v1.json.gz', '${now}', 0, '${now}')`,
+  );
+  const db = d1(sqlite);
+  const queue = fakeQueue();
+
+  await handleReportAula(db, queue, 'X-001', now);
+  const later = '2026-10-21T12:01:00.000Z';
+  await handleReportAula(db, queue, 'X-001', later);
+
+  assert.equal(queue.sent.length, 1);
+  const rows = sqlite
+    .prepare(`SELECT status FROM atlas_apache_lessons WHERE content_id = 'X-001'`)
+    .get() as { status: string } | undefined;
+  assert.equal(rows?.status, 'reportada');
+  const count = sqlite
+    .prepare(`SELECT COUNT(*) AS n FROM atlas_apache_queue WHERE content_id = 'X-001'`)
+    .get() as { n: number };
+  assert.equal(count.n, 1);
 });

@@ -17,17 +17,22 @@ export function ContentLesson({ contentId }: { contentId: string }) {
   const [loadError, setLoadError] = useState('');
   const [hidden, setHidden] = useState(false);
   const [reporting, setReporting] = useState(false);
+  const [reportError, setReportError] = useState('');
 
-  async function reportError() {
+  async function sendReport() {
     if (!window.confirm('Avisar que esta aula tem um erro? Ela entra na fila de revisão.')) return;
     setReporting(true);
+    setReportError('');
     try {
       const response = await fetch(`/api/apache/aulas/${encodeURIComponent(contentId)}/reportar`, {
         method: 'POST',
       });
       if (!response.ok) {
         const body = (await response.json().catch(() => null)) as { error?: string } | null;
-        setLoadError(body?.error ?? 'Não foi possível reportar o erro.');
+        // Falha ao reportar não deve esconder a aula já carregada — por
+        // isso um estado próprio, nunca o loadError do polling (que oculta
+        // tudo, inclusive o .al-body que acabou de ser exibido).
+        setReportError(body?.error ?? 'Não foi possível reportar o erro.');
         return;
       }
       setData((current) => (current ? { ...current, status: 'reportada' } : current));
@@ -160,9 +165,12 @@ export function ContentLesson({ contentId }: { contentId: string }) {
               <h3>Resumo</h3>
               <p>{data.lesson.resumo}</p>
             </section>
-            <Button variant="outline" className="ss-outline" onClick={() => void reportError()} disabled={reporting}>
-              <Flag size={14} /> Reportar erro
-            </Button>
+            {reportError && <p className="al-flag" role="alert">{reportError}</p>}
+            {data.status !== 'reportada' && (
+              <Button variant="outline" className="ss-outline" onClick={() => void sendReport()} disabled={reporting}>
+                <Flag size={14} /> Reportar erro
+              </Button>
+            )}
           </article>
         </>
       )}
