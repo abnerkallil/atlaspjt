@@ -14,6 +14,27 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #93 — Upload do material do aluno (APA-12)
+
+- Ponto de restauração: branch `restore/pre-apa-12` (main antes do merge).
+- O que muda no site: a sessão de estudo de qualquer conteúdo ganha um
+  formulário "Enriquecer com meu material" — o aluno manda um PDF/DOCX/
+  XLSX (até 10MB) ou uma foto/print (OCR no navegador, com fallback pra
+  letra de mão) e o Apache extrai os conceitos relevantes do material.
+  Quando o envio é pequeno, o resultado aparece na hora; um envio maior
+  (2+ "pedaços" de texto) processa em segundo plano e aparece na próxima
+  vez que a aula carregar. A aula passa a mostrar uma seção "Do seu
+  material" com conceitos novos e reforços que o material trouxe além do
+  que a aula já tinha. Limite: 90 páginas por dia por usuário (reseta à
+  meia-noite UTC); reenviar o mesmo arquivo de novo não gasta cota nem
+  neurons outra vez.
+- Sem migration nova (usa as tabelas/colunas já criadas pelo APA-02,
+  migration 0027, em produção desde aquele PR).
+- Se algo der errado: reverter para `restore/pre-apa-12` tira o formulário
+  de upload e a seção "Do seu material" da aula; nenhuma aula ou nota
+  existente é apagada (as fichas de enriquecimento ficam guardadas, só
+  deixam de ser lidas).
+
 ## PR #92 — Reportar erro na aula (APA-08)
 
 - Ponto de restauração: branch `restore/pre-apa-08` (main antes do merge).
