@@ -14,6 +14,25 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #87 — OCR de foto/print/PDF escaneado, no navegador (APA-10)
+
+- Ponto de restauração: branch `restore/pre-apa-10` (main antes do merge).
+- O que muda no site: nada visível ainda. Este PR só adiciona
+  `lib/apache/ocr.ts` (`ocrFile`): roda OCR em português inteiramente no
+  navegador (Tesseract.js) para foto/print (`image/*`) ou PDF escaneado
+  (renderiza cada página como imagem com `unpdf`, reaproveitado — sem
+  dependência nova de PDF), devolve texto + confiança por página, e rejeita
+  arquivo maior que 10 MB ou com mais páginas que a cota diária (90) antes
+  de processar. `components/apache/ocr-progress.tsx` traz a barra de
+  progresso pronta, mas nenhuma tela ainda a usa — isso é o APA-12. Os
+  arquivos do Tesseract (worker, núcleo WASM, dados do idioma português)
+  passam a ser servidos pelo próprio Atlas em `/tesseract/`, em vez de um
+  CDN de terceiro.
+- Sem migration nova.
+- Se algo der errado: reverter para `restore/pre-apa-10` remove o módulo de
+  OCR e os arquivos em `public/tesseract/`; como nenhuma rota ou tela os usa
+  ainda, nada no site muda.
+
 ## PR #86 — Storage R2 das aulas do Apache, gzip (APA-05)
 
 - Ponto de restauração: branch `restore/pre-apa-05` (main antes do merge).
