@@ -1,6 +1,6 @@
 # APA-17 — Resultado do bake-off de modelo (enriquecimento)
 
-Gerado automaticamente por `scripts/apache-bakeoff.ts` em 2026-10-21T11:50:58.172Z.
+Gerado automaticamente por `scripts/apache-bakeoff.ts` em 2026-10-21T11:59:51.158Z.
 
 Compara 3 modelos do catálogo Workers AI na tarefa de EXTRAÇÃO de ficha de enriquecimento (`ApacheEnrichment`, não a aula base) em 2 casos de teste: material relevante e material irrelevante ao conteúdo. Taxas de neurons de `lib/apache/neuron-meter.ts` (APA-15).
 
@@ -8,12 +8,12 @@ Compara 3 modelos do catálogo Workers AI na tarefa de EXTRAÇÃO de ficha de en
 
 | Modelo | Caso | Válido | JSON schema | Latência (ms) | Neurons | irrelevante | nº conceitos | Erro |
 |---|---|---|---|---|---|---|---|---|
-| Llama 3.3 70B (baseline da aula, APA-06) | material relevante | sim | sim | 6957 | 51.4 | false | 3 | - |
-| Llama 3.3 70B (baseline da aula, APA-06) | material irrelevante | sim | sim | 906 | 15.1 | true | 0 | - |
-| Gemma 4 26B | material relevante | NÃO | sim | 10377 | 17.5 | - | - | validação falhou: ficha inválida: não é um objeto |
-| Gemma 4 26B | material irrelevante | NÃO | sim | 6778 | 13.4 | - | - | validação falhou: ficha inválida: não é um objeto |
-| Qwen3 30B | material relevante | NÃO | sim | 3594 | 17.4 | - | - | validação falhou: ficha inválida: não é um objeto |
-| Qwen3 30B | material irrelevante | sim | sim | 2384 | 11.0 | true | 0 | - |
+| Llama 3.3 70B (baseline da aula, APA-06) | material relevante | sim | sim | 5765 | 51.4 | false | 3 | - |
+| Llama 3.3 70B (baseline da aula, APA-06) | material irrelevante | sim | sim | 1076 | 15.1 | true | 0 | - |
+| Gemma 4 26B | material relevante | NÃO | sim | 9715 | 17.5 | - | - | JSON não encontrado na resposta: nenhum bloco { ... } encontrado na resposta |
+| Gemma 4 26B | material irrelevante | sim | sim | 8116 | 13.4 | true | 0 | - |
+| Qwen3 30B | material relevante | NÃO | sim | 3007 | 13.4 | - | - | validação falhou: ficha inválida: não é um objeto |
+| Qwen3 30B | material irrelevante | NÃO | sim | 557 | 2.6 | - | - | validação falhou: ficha inválida: não é um objeto |
 
 ## Saída bruta de cada chamada (para avaliação qualitativa manual)
 
@@ -38,7 +38,11 @@ Compara 3 modelos do catálogo Workers AI na tarefa de EXTRAÇÃO de ficha de en
 ### Gemma 4 26B — material irrelevante
 
 ```json
-(sem resposta)
+{
+  "v": 1,
+  "conceitos": [],
+  "irrelevante": true
+}
 ```
 
 ### Qwen3 30B — material relevante
@@ -50,12 +54,12 @@ null
 ### Qwen3 30B — material irrelevante
 
 ```json
-{"v":1,"conceitos":[],"irrelevante":true}
+null
 ```
 
 ## Custo total deste bake-off
 
-125.8 neurons (orçamento diário: 10.000, ver `DAILY_NEURON_BUDGET`).
+113.4 neurons (orçamento diário: 10.000, ver `DAILY_NEURON_BUDGET`).
 
 ## Recomendação
 
