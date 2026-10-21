@@ -1019,10 +1019,10 @@ custo/qualidade documentada no card; confirmação final com o Abner).
   hardcoded.
 
 **Checklist**
-- [ ] Script de bake-off com os 3 modelos
-- [ ] `docs/apache-bakeoff-resultado.md`
-- [ ] `APACHE_ENRICHMENT_MODEL` como config
-- [ ] Pergunta enviada ao Abner com a recomendação, antes do APA-12 fechar
+- [x] Script de bake-off com os 3 modelos (`scripts/apache-bakeoff.ts`)
+- [x] `docs/apache-bakeoff-resultado.md` (3 rodadas reais, 2026-10-21)
+- [x] `APACHE_ENRICHMENT_MODEL` como config — decisão: `@cf/google/gemma-4-26b-a4b-it`, variável de ambiente para o APA-12 ler, nunca hardcoded (ver seção "Recomendação" de `docs/apache-bakeoff-resultado.md`)
+- [x] Recomendação registrada e levada ao Abner via coordenador, antes do APA-12 fechar
 
 ---
 
