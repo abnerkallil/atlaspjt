@@ -216,26 +216,33 @@ void test('enqueueLessonIfNeeded não reprocessa (nem duplica) um item adiado po
   assert.equal(count.n, 1);
 });
 
-void test('sweepQueue só agenda itens pendentes criados antes da meia-noite UTC mais recente (kind=aula)', async () => {
+void test('sweepQueue só agenda itens pendentes criados antes da meia-noite UTC mais recente (kind=aula e enriquecimento, nunca aula_manual)', async () => {
   const sqlite = migratedDatabase();
   seedContent(sqlite, 'X-001');
   seedContent(sqlite, 'X-002');
   seedContent(sqlite, 'X-003');
+  seedContent(sqlite, 'X-004');
   sqlite.exec(`
     INSERT INTO atlas_apache_queue (id, content_id, kind, status, attempts, created_at)
       VALUES ('old', 'X-001', 'aula', 'pendente', 0, '2026-10-20T23:00:00.000Z');
     INSERT INTO atlas_apache_queue (id, content_id, kind, status, attempts, created_at)
       VALUES ('today', 'X-002', 'aula', 'pendente', 0, '2026-10-21T01:00:00.000Z');
     INSERT INTO atlas_apache_queue (id, content_id, kind, status, attempts, created_at)
-      VALUES ('other-kind', 'X-003', 'enriquecimento', 'pendente', 0, '2026-10-20T20:00:00.000Z');
+      VALUES ('old-enrich', 'X-003', 'enriquecimento', 'pendente', 0, '2026-10-20T20:00:00.000Z');
+    INSERT INTO atlas_apache_queue (id, content_id, kind, status, attempts, created_at)
+      VALUES ('old-manual', 'X-004', 'aula_manual', 'pendente', 0, '2026-10-20T20:00:00.000Z');
   `);
   const db = d1(sqlite);
   const queue = fakeQueue();
 
   await sweepQueue(db, queue, now);
-  assert.deepEqual(queue.sent, [{ queueId: 'old', contentId: 'X-001' }]);
+  assert.deepEqual(
+    new Set(queue.sent.map((m) => m.queueId)),
+    new Set(['old', 'old-enrich']),
+    'kind=aula e kind=enriquecimento antigos são retomados; aula_manual nunca (fora do escopo da IA)',
+  );
   assert.equal(queueRow(sqlite, 'today')?.status, 'pendente', 'ainda não passou da meia-noite seguinte');
-  assert.equal(queueRow(sqlite, 'other-kind')?.status, 'pendente', 'kind != aula nunca é tocado por esta varredura');
+  assert.equal(queueRow(sqlite, 'old-manual')?.status, 'pendente', 'kind=aula_manual nunca é tocado por esta varredura');
 });
 
 void test('sweepQueue recupera processando preso há mais de 5 min (independente de created_at)', async () => {

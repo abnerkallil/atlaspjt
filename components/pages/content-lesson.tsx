@@ -172,6 +172,27 @@ export function ContentLesson({ contentId }: { contentId: string }) {
               </Button>
             )}
           </article>
+
+          {data.enrichment?.status === 'concluido' &&
+            (data.enrichment.novos.length > 0 || data.enrichment.reforcos.length > 0) && (
+              <section className="al-enrich">
+                <p className="eyebrow">NOVOS CONCEITOS DO SEU MATERIAL</p>
+                {data.enrichment.novos.map((conceito) => (
+                  <div key={conceito.id}>
+                    <h3>{conceito.nome}</h3>
+                    <p>{conceito.def}</p>
+                  </div>
+                ))}
+                {data.enrichment.reforcos.length > 0 && (
+                  <section>
+                    <h3>Reforços</h3>
+                    {data.enrichment.reforcos.map((reforco) => (
+                      <p key={reforco.conceitoId}>{reforco.texto}</p>
+                    ))}
+                  </section>
+                )}
+              </section>
+            )}
         </>
       )}
     </section>

@@ -8,6 +8,12 @@
 import { getApacheUserId } from '../auth.js';
 import type { D1Like } from '../pedagogy/transitions.js';
 import { ApacheError } from './errors.js';
+import {
+  APACHE_DEFAULT_ENRICHMENT_MODEL,
+  STUCK_ENRICHMENT_ERROR_MESSAGE,
+  giveUpEnrichmentQueueItem,
+  processEnrichmentQueueItem,
+} from './enrichment.js';
 import type { AiLike } from './lesson-writer.js';
 import { writeLesson } from './lesson-writer.js';
 import {
@@ -80,6 +86,9 @@ type QueueRow = {
   started_at: string | null;
   attempts: number;
   last_error: string | null;
+  kind: string;
+  user_id: string | null;
+  temp_object_key: string | null;
 };
 
 function isStaleProcessing(row: { status: string; started_at: string | null }, now: string): boolean {
@@ -108,6 +117,52 @@ async function recoverStaleItem(db: D1Like, row: QueueRow, now: string): Promise
       // Não deveria faltar a linha em atlas_apache_lessons aqui (ela existe
       // desde que o item foi enfileirado) — mas não deixa isso derrubar a
       // recuperação da fila em si.
+    }
+    return 'erro';
+  }
+  await db.batch([
+    db
+      .prepare(`UPDATE atlas_apache_queue SET status = 'pendente', attempts = ?2, started_at = NULL, last_error = NULL WHERE id = ?1`)
+      .bind(row.id, attempts),
+  ]);
+  return 'pendente';
+}
+
+// Mesmo princípio de recoverStaleItem, mas para `kind='enriquecimento'`
+// (APA-12): depois de esgotar as tentativas, desiste de verdade via
+// giveUpEnrichmentQueueItem (refund de páginas + markErrored + apaga o
+// texto temporário) em vez de markFailed (que é só de atlas_apache_lessons).
+// `bucket` pode ser null (ex.: chamada sem R2 configurado) -- nesse caso só
+// não apaga o texto temporário, sem derrubar o refund/markErrored.
+async function recoverStaleEnrichmentItem(
+  db: D1Like,
+  bucket: R2Like | null,
+  row: QueueRow,
+  now: string,
+): Promise<'pendente' | 'erro'> {
+  const attempts = row.attempts + 1;
+  if (attempts >= MAX_QUEUE_ATTEMPTS) {
+    await db.batch([
+      db
+        .prepare(`UPDATE atlas_apache_queue SET status = 'erro', attempts = ?2, started_at = NULL, last_error = ?3 WHERE id = ?1`)
+        .bind(row.id, attempts, STUCK_ENRICHMENT_ERROR_MESSAGE),
+    ]);
+    if (row.user_id) {
+      try {
+        await giveUpEnrichmentQueueItem(
+          db,
+          bucket,
+          row.content_id,
+          row.user_id,
+          row.temp_object_key,
+          STUCK_ENRICHMENT_ERROR_MESSAGE,
+          now,
+        );
+      } catch {
+        // Mesma tolerância de recoverStaleItem acima: não deixa uma falha
+        // aqui (ex.: linha de atlas_apache_enrichments já removida) derrubar
+        // a recuperação da fila em si.
+      }
     }
     return 'erro';
   }
@@ -181,22 +236,31 @@ function mostRecentUtcMidnight(now: string): string {
 
 // Varredura (Gate APA-01, opção (b) revisada: Cloudflare Queues em vez de
 // waitUntil, mas o mesmo princípio de "sem Cron Trigger" — roda em toda
-// chamada da rota, pra qualquer conteúdo, nunca kind='aula_manual'/
-// 'enriquecimento' (fora do escopo deste card). Dois papéis: (1) destrava
-// 'processando' preso há mais de 5 min — salvaguarda de último nível pra
-// quando o consumer trava sem chamar ack()/retry() (a fila já reentrega
-// sozinha em qualquer outro caso de falha); (2) retoma 'pendente' criado
-// antes da meia-noite UTC mais recente — cobre tanto um item recém-recuperado
-// de um travamento quanto um adiado por cota (QUOTA_DEFERRED_MARKER), já
-// que depois do reset a cota de ontem não importa mais. Usa só os índices
+// chamada da rota, pra qualquer conteúdo. Cobre `kind` 'aula' e
+// 'enriquecimento' (APA-12) — nunca 'aula_manual' (aula escrita a mão, nunca
+// regenerada pela IA). Dois papéis: (1) destrava 'processando' preso há mais
+// de 5 min — salvaguarda de último nível pra quando o consumer trava sem
+// chamar ack()/retry() (a fila já reentrega sozinha em qualquer outro caso
+// de falha); (2) retoma 'pendente' criado antes da meia-noite UTC mais
+// recente — cobre tanto um item recém-recuperado de um travamento quanto um
+// adiado por cota (QUOTA_DEFERRED_MARKER), já que depois do reset a cota de
+// ontem não importa mais. Usa só os índices
 // idx_atlas_apache_queue_status/idx_atlas_apache_queue_content_kind_status.
-export async function sweepQueue(db: D1Like, queue: QueueLike, now: string, limit = SWEEP_LIMIT): Promise<void> {
+// `bucket` só é usado pra desistir de verdade de um item de enriquecimento
+// preso há muitas tentativas (apaga o texto temporário); pode ser null.
+export async function sweepQueue(
+  db: D1Like,
+  queue: QueueLike,
+  now: string,
+  bucket: R2Like | null = null,
+  limit = SWEEP_LIMIT,
+): Promise<void> {
   const midnight = mostRecentUtcMidnight(now);
   const staleBefore = new Date(new Date(now).getTime() - STALE_PROCESSING_MS).toISOString();
   const { results } = await db
     .prepare(
-      `SELECT id, content_id, status, started_at, attempts, last_error FROM atlas_apache_queue
-       WHERE kind = 'aula' AND (
+      `SELECT id, content_id, status, started_at, attempts, last_error, kind, user_id, temp_object_key FROM atlas_apache_queue
+       WHERE kind IN ('aula', 'enriquecimento') AND (
          (status = 'pendente' AND created_at < ?1)
          OR (status = 'processando' AND started_at < ?2)
        )
@@ -207,7 +271,10 @@ export async function sweepQueue(db: D1Like, queue: QueueLike, now: string, limi
 
   for (const row of results) {
     if (row.status === 'processando') {
-      const nextStatus = await recoverStaleItem(db, row, now);
+      const nextStatus =
+        row.kind === 'enriquecimento'
+          ? await recoverStaleEnrichmentItem(db, bucket, row, now)
+          : await recoverStaleItem(db, row, now);
       if (nextStatus === 'pendente') await queue.send({ queueId: row.id, contentId: row.content_id });
       continue;
     }
@@ -248,6 +315,15 @@ async function deferForQuota(db: D1Like, queueId: string, contentId: string, now
 // erro. Nunca lança: a chamadora (handleLessonQueueBatch) só precisa decidir
 // ack()/retry() a partir de uma exceção genuína de infraestrutura (ex.: D1
 // fora do ar), não de uma falha de geração (já virou estado no banco).
+type QueueItemKindInfo = { kind: string; user_id: string | null; temp_object_key: string | null };
+
+async function loadQueueItemKindInfo(db: D1Like, queueId: string): Promise<QueueItemKindInfo | null> {
+  return db
+    .prepare(`SELECT kind, user_id, temp_object_key FROM atlas_apache_queue WHERE id = ?1`)
+    .bind(queueId)
+    .first<QueueItemKindInfo>();
+}
+
 export async function processQueueItem(
   db: D1Like,
   bucket: R2Like,
@@ -255,7 +331,45 @@ export async function processQueueItem(
   queueId: string,
   contentId: string,
   now: string,
+  enrichmentModel: string = APACHE_DEFAULT_ENRICHMENT_MODEL,
+  producerQueue: QueueLike | null = null,
 ): Promise<void> {
+  // APA-12: itens `kind='enriquecimento'` usam o mesmo claim/consumer desta
+  // fila (`atlas-apache-aulas`), mas um fluxo próprio (texto temporário em
+  // R2, chunk a chunk, sem `atlas_apache_lessons`) -- despachado aqui pelo
+  // `kind` da própria linha, antes de qualquer lógica específica de aula.
+  // `producerQueue` é o mesmo binding produtor usado pelas rotas (ver
+  // worker-entry.ts) -- processEnrichmentQueueItem manda este item de volta
+  // pra fila sozinho quando sobram chunks além do teto por invocação.
+  const kindInfo = await loadQueueItemKindInfo(db, queueId);
+  if (!kindInfo) return; // item não existe mais (não deveria acontecer; sem o quê reivindicar)
+  if (kindInfo.kind === 'enriquecimento') {
+    if (!kindInfo.user_id || !kindInfo.temp_object_key) {
+      // Linha de enriquecimento sem user_id/temp_object_key é inconsistente
+      // (sempre preenchidos por enqueueEnrichment) -- marca erro em vez de
+      // reivindicar e travar tentando ler um texto que não existe.
+      await db.batch([
+        db
+          .prepare(`UPDATE atlas_apache_queue SET status = 'erro', last_error = ?2, processed_at = ?3 WHERE id = ?1 AND status = 'pendente'`)
+          .bind(queueId, 'item de enriquecimento sem user_id/temp_object_key', now),
+      ]);
+      return;
+    }
+    await processEnrichmentQueueItem(
+      db,
+      bucket,
+      ai,
+      enrichmentModel,
+      queueId,
+      contentId,
+      kindInfo.user_id,
+      kindInfo.temp_object_key,
+      now,
+      producerQueue,
+    );
+    return;
+  }
+
   const [claim] = await db.batch([
     db
       .prepare(`UPDATE atlas_apache_queue SET status = 'processando', started_at = ?2, last_error = NULL WHERE id = ?1 AND status = 'pendente'`)
@@ -314,6 +428,8 @@ export async function handleLessonQueueBatch(
   db: D1Like,
   bucket: R2Like,
   ai: AiLike,
+  enrichmentModel: string = APACHE_DEFAULT_ENRICHMENT_MODEL,
+  producerQueue: QueueLike | null = null,
 ): Promise<void> {
   // `now` por mensagem, nunca uma vez só pro lote: com max_batch_size > 1,
   // a hora do início do lote ficaria velha nas últimas mensagens — se as
@@ -324,7 +440,7 @@ export async function handleLessonQueueBatch(
   for (const message of batch.messages) {
     const now = new Date().toISOString();
     try {
-      await processQueueItem(db, bucket, ai, message.body.queueId, message.body.contentId, now);
+      await processQueueItem(db, bucket, ai, message.body.queueId, message.body.contentId, now, enrichmentModel, producerQueue);
       message.ack();
     } catch (error) {
       console.error('Apache: falha ao processar item da fila de aulas', error);
@@ -381,7 +497,7 @@ export async function handleGetAula(
   now: string,
 ): Promise<LessonResponse> {
   if (queue) {
-    await sweepQueue(db, queue, now);
+    await sweepQueue(db, queue, now, bucket);
   }
 
   await assertContentExists(db, contentId);
