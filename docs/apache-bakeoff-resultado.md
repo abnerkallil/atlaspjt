@@ -83,4 +83,49 @@ Compara 3 modelos do catálogo Workers AI na tarefa de EXTRAÇÃO de ficha de en
 
 ## Recomendação
 
-_Pendente — revisar a qualidade das fichas extraídas acima (conceitos corretos, definições fiéis ao material, acerto do campo "irrelevante" no caso B) e o custo em neurons, e preencher esta seção com o modelo escolhido para `APACHE_ENRICHMENT_MODEL` antes do APA-12 fechar._
+**Modelo escolhido para `APACHE_ENRICHMENT_MODEL`: `@cf/google/gemma-4-26b-a4b-it` (Gemma 4 26B).**
+
+### Gemma 4 26B × Llama 3.3 70B (baseline da aula)
+
+Qualidade equivalente nos dois casos de teste: nos dois modelos, o caso
+relevante extraiu exatamente os 3 conceitos certos (Controle Difuso,
+Controle Concentrado, Cláusula de Reserva de Plenário), sem inventar nada
+que não estivesse no material; o caso irrelevante foi corretamente marcado
+`irrelevante: true` com `conceitos: []` nos dois. A ficha do Gemma é até
+mais completa — inclui o `art. 97 da CF` (citado no material) e os apelidos
+"via de defesa"/"via de ação" como parte da própria definição, em vez de
+criar conceitos novos para eles (o Qwen3 cometeu esse erro, ver abaixo).
+
+Custo: Gemma usou 11,3 + 3,9 = 15,2 neurons nos 2 casos contra 51,2 + 15,1 =
+66,3 do Llama — **~4,4× mais barato**, pela mesma qualidade nesta tarefa de
+extração (bem mais simples que escrever uma aula inteira do zero, onde o
+Llama continua sendo a escolha certa, APA-06).
+
+### Qwen3 30B — não escolhido
+
+Causa raiz confirmada na saída bruta desta rodada (ver acima): mesmo com
+`enable_thinking: false`, o endpoint do Qwen3 no Workers AI sempre devolve
+`message.content: null` e põe a resposta inteira em `message.reasoning`/
+`message.reasoning_content` — um comportamento do parser de raciocínio do
+modelo que o parâmetro não desliga por completo nesta versão hospedada.
+Isso por si só é contornável (bastaria ler `reasoning_content` como
+fallback), mas a ficha extraída nesse fallback (visível na saída bruta
+acima) tem um problema de qualidade: o Qwen3 separou "Via de Defesa" e "Via
+de Ação" como 2 conceitos à parte, quando no material eles são só apelidos
+do Controle Difuso/Concentrado — um falso positivo de "conceito novo" que
+poluiria a ficha de enriquecimento real (`diffEnrichmentAgainstLesson`
+trataria isso como 2 reforços/novos conceitos espúrios). Sem vantagem de
+custo clara sobre o Gemma (13,7+2,6 = 16,3 neurons, praticamente empatado)
+para compensar essa fragilidade de formato + qualidade pior. **Registrado
+como não avaliado para uso em produção**: formato de resposta instável
+nesta tarefa e sem indício de que valha o esforço extra de parsing.
+
+### Decisão para o APA-12
+
+`APACHE_ENRICHMENT_MODEL=@cf/google/gemma-4-26b-a4b-it` deve ser lido como
+variável de ambiente (nunca hardcoded) no código que o APA-12 escrever para
+a chamada de enriquecimento — mesmo padrão de binding condicional que
+`lib/apache/lesson-writer.ts` usa para `LESSON_MODEL`. O APA-12 deve tratar
+a resposta no formato nativo `{ response, usage }` (confirmado para Gemma
+nesta rodada) — não precisa do fallback `choices`/`reasoning_content` que
+este script criou para também comparar o Qwen3.
