@@ -14,6 +14,27 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #91 — Fila, geração lazy da aula e diff na leitura (APA-07)
+
+- Ponto de restauração: branch `restore/pre-apa-07` (main antes do merge).
+- O que muda no site: a sessão de estudo de qualquer conteúdo passa a
+  mostrar uma **aula base** (do Apache) em vez de "Nenhum material anexado
+  ainda" — a aula aparece automaticamente, com um spinner enquanto é gerada
+  pela primeira vez. **Importante: depois do próximo "Publicar Atlas", a
+  primeira vez que alguém abrir cada conteúdo vai disparar uma geração de
+  verdade pelo Llama 3.3 70B (Workers AI), gastando ~490 neurons por aula**
+  — dentro do teto diário de 10.000 do plano Free, mas é consumo real, não
+  simulado. A geração roda numa fila (Cloudflare Queues, `atlas-apache-aulas`)
+  em segundo plano: a tela sempre responde rápido, só mostra "gerando" até
+  a aula ficar pronta (poll de 5s). Se a cota diária de neurons acabar, a
+  aula fica pendente até o reset (meia-noite UTC) — sem travar nem cobrar
+  nada além do Free.
+- Sem migration nova (a tabela `atlas_apache_queue` já existia desde o
+  APA-02).
+- Se algo der errado: reverter para `restore/pre-apa-07` volta a tela de
+  "Nenhum material anexado ainda" (comportamento anterior), sem perder nada
+  — nenhuma aula gerada é apagada, só para de aparecer até reaplicar o PR.
+
 ## PR #90 — Bake-off de modelo para enriquecimento (APA-17)
 
 - Ponto de restauração: branch `restore/pre-apa-17` (main antes do merge).
