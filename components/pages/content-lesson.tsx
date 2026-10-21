@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Flag } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { resolvePollOutcome, type LessonResponse } from '@/lib/apache/lesson-poll';
 
@@ -14,6 +16,25 @@ export function ContentLesson({ contentId }: { contentId: string }) {
   const [data, setData] = useState<LessonResponse | null>(null);
   const [loadError, setLoadError] = useState('');
   const [hidden, setHidden] = useState(false);
+  const [reporting, setReporting] = useState(false);
+
+  async function reportError() {
+    if (!window.confirm('Avisar que esta aula tem um erro? Ela entra na fila de revisão.')) return;
+    setReporting(true);
+    try {
+      const response = await fetch(`/api/apache/aulas/${encodeURIComponent(contentId)}/reportar`, {
+        method: 'POST',
+      });
+      if (!response.ok) {
+        const body = (await response.json().catch(() => null)) as { error?: string } | null;
+        setLoadError(body?.error ?? 'Não foi possível reportar o erro.');
+        return;
+      }
+      setData((current) => (current ? { ...current, status: 'reportada' } : current));
+    } finally {
+      setReporting(false);
+    }
+  }
 
   useEffect(() => {
     let active = true;
@@ -139,6 +160,9 @@ export function ContentLesson({ contentId }: { contentId: string }) {
               <h3>Resumo</h3>
               <p>{data.lesson.resumo}</p>
             </section>
+            <Button variant="outline" className="ss-outline" onClick={() => void reportError()} disabled={reporting}>
+              <Flag size={14} /> Reportar erro
+            </Button>
           </article>
         </>
       )}
