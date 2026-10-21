@@ -190,7 +190,10 @@ async function ocrScannedPdf(
       await safeTerminate(worker);
     }
   } finally {
-    await pdf.destroy();
+    // PDFDocumentProxy não tem destroy() (isso é da loading task, já
+    // resolvida por getDocumentProxy) — cleanup() é o que libera os
+    // recursos do documento nas duas threads.
+    await pdf.cleanup();
   }
 }
 

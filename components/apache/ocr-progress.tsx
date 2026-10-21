@@ -14,6 +14,10 @@ type ApacheOcrRunnerProps = {
   onError: (message: string) => void;
 };
 
+// Quem monta este componente deve dar um `key` por arquivo (ex.: key={file
+// hash/nome}) — troca de `file` sem remontar reaproveita o `progress` da
+// rodada anterior até o primeiro evento de progresso chegar.
+
 const GENERIC_ERROR = 'Não foi possível ler o arquivo. Tente novamente ou envie outra foto/PDF.';
 
 function statusLabel(progress: ApacheOcrProgress | null): string {
@@ -32,7 +36,6 @@ export function ApacheOcrRunner({ file, onDone, onError }: ApacheOcrRunnerProps)
 
   useEffect(() => {
     const controller = new AbortController();
-    setProgress(null);
     ocrFile(file, setProgress, controller.signal)
       .then((pages) => {
         if (!controller.signal.aborted) onDone(pages);
@@ -44,8 +47,10 @@ export function ApacheOcrRunner({ file, onDone, onError }: ApacheOcrRunnerProps)
         onError(error instanceof Error ? error.message : GENERIC_ERROR);
       });
     return () => controller.abort();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [file]);
+    // onDone/onError na dependência: quem usa este componente (APA-12)
+    // deve passar callbacks estáveis (useCallback) para não reiniciar o
+    // OCR em todo re-render.
+  }, [file, onDone, onError]);
 
   const value = progress ? Math.round(progress.progress * 100) : 0;
 
