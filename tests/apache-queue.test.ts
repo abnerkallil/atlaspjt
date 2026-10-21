@@ -145,6 +145,28 @@ void test('enqueueLessonIfNeeded não duplica quando já existe um pendente saud
   assert.equal(count.n, 1);
 });
 
+// APA-16: a chamada sequencial acima (await, depois await) nunca exercitou a
+// janela real entre a leitura e o INSERT — as duas chamadas aqui saem juntas
+// (sem await entre elas) pra simular 2 requisições HTTP quase simultâneas ao
+// mesmo content_id (ex.: 2 abas abertas no mesmo conteúdo). Sem o INSERT
+// atômico (`WHERE NOT EXISTS`) do enqueueLessonIfNeeded, isto criava 2 linhas
+// e as duas IDs retornadas eram diferentes — regressão real encontrada
+// escrevendo este teste, corrigida no próprio enqueueLessonIfNeeded.
+void test('enqueueLessonIfNeeded sob concorrência real (2 chamadas simultâneas) cria só 1 linha na fila (APA-16)', async () => {
+  const sqlite = migratedDatabase();
+  seedContent(sqlite, 'X-001');
+  const db = d1(sqlite);
+
+  const [a, b] = await Promise.all([
+    enqueueLessonIfNeeded(db, 'X-001', 'aula', now),
+    enqueueLessonIfNeeded(db, 'X-001', 'aula', now),
+  ]);
+  assert.ok(a);
+  assert.equal(a, b, 'as duas chamadas concorrentes devem apontar para o mesmo item da fila');
+  const count = sqlite.prepare('SELECT COUNT(*) AS n FROM atlas_apache_queue').get() as { n: number };
+  assert.equal(count.n, 1, 'concorrência real não deve criar uma segunda linha para o mesmo content_id+kind');
+});
+
 void test('enqueueLessonIfNeeded não cria nada quando já existe um processando saudável', async () => {
   const sqlite = migratedDatabase();
   seedContent(sqlite, 'X-001');

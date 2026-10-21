@@ -775,6 +775,10 @@ Cloudflare Queues em vez de `waitUntil`, ver DEC-019):**
 - [ ] Corte por `neuronBudgetRemaining` antes de cada item
 - [ ] Restore `restore/pre-apa-07` + `CHANGELOG_VISUAL.md`
 
+> **Atualização (APA-16):** a dedupe de fila descrita acima (consulta antes
+> do insert) tinha uma janela de corrida real sob 2 chamadas simultâneas —
+> ver achado e correção na seção do APA-16.
+
 ---
 
 ## APA-08 — Reportar erro
@@ -879,22 +883,11 @@ pra essa faixa evita gastar banda/CPU em resolução que o modelo não usa.)
 
 **Aviso operacional (não é código) — aceite da licença:** a aceitação do
 `@cf/meta/llama-3.2-11b-vision-instruct` é uma chamada de API (não é um
-botão no painel da Cloudflare), feita uma única vez por conta. Depois que a
-Publicar Atlas estiver rodando com o binding `AI` (depende do APA-06, PR
-#88), o Abner roda isto no PowerShell, na pasta do projeto:
-
-```powershell
-# 1) Descobrir o Account ID (se não estiver logado, roda "pnpm wrangler login" antes):
-pnpm wrangler whoami
-# A tabela que aparece tem uma coluna "Account ID" -- copia o valor dali.
-
-# 2) Colar o Account ID copiado no lugar de <ACCOUNT_ID> abaixo e rodar.
-# Token: gerar um em dash.cloudflare.com/profile/api-tokens (permissão
-# "Workers AI: Edit"), colar quando o Read-Host pedir (nunca commitar):
-$env:CLOUDFLARE_ACCOUNT_ID = "<ACCOUNT_ID>"
-$env:CLOUDFLARE_API_TOKEN = Read-Host -AsSecureString "Cole o token" | ConvertFrom-SecureString -AsPlainText
-curl.exe "https://api.cloudflare.com/client/v4/accounts/$env:CLOUDFLARE_ACCOUNT_ID/ai/run/@cf/meta/llama-3.2-11b-vision-instruct" -X POST -H "Authorization: Bearer $env:CLOUDFLARE_API_TOKEN" -d '{ "prompt": "agree" }'
-```
+botão no painel da Cloudflare), feita uma única vez por conta. O comando
+exato (via `pnpm run apache:aceitar-licenca-visao`, reaproveitando o login do
+wrangler — sem token manual) está na seção **"O que o Abner precisa fazer"**
+no final deste documento, item 1 — ainda não rodado por ele (APA-16, PR
+atual).
 
 **Checklist**
 - [ ] `lib/apache/ingest-handwriting.ts`
@@ -1026,26 +1019,53 @@ export async function refundQuota(userId: string, pages: number): Promise<void> 
 
 ---
 
-## APA-16 — Dedupe: documentação e teste (sem código novo isolado)
+## APA-16 — Dedupe: documentação e teste (sem código novo isolado) — CONCLUÍDO
 
 **Prioridade:** P2. **Áreas:** Backend, Qualidade. **Depende de:** APA-07,
-APA-12 (o dedupe em si já é implementado dentro desses dois cards). **Gate:**
+APA-12 (o dedupe em si já era implementado dentro desses dois cards). **Gate:**
 não.
 
-Este card não cria biblioteca nova: o dedupe de fila já está no APA-07
-(índice `idx_atlas_apache_queue_content_kind_status` + checagem antes do
-insert) e o dedupe de arquivo já está no APA-12 (`source_file_hash` +
-`userId`). Este card existe para **testar os dois juntos** depois que ambos
-estiverem prontos e documentar o comportamento em `docs/APACHE.md`.
+Este card não criou biblioteca nova: o dedupe de arquivo do APA-12
+(`source_file_hash` + `userId`, já testado desde o PR #93 em
+`tests/apache-enrichment.test.ts`) continua como estava. O dedupe de **fila**
+do APA-07, porém, **tinha um bug real** descoberto escrevendo o teste de
+concorrência pedido por este card — corrigido aqui, dentro do próprio
+`enqueueLessonIfNeeded` (não é biblioteca nova, é a mesma função):
 
-**Aceite:** dois acessos simultâneos a um conteúdo sem aula geram uma linha
-só na fila; enviar o mesmo arquivo duas vezes ao mesmo conteúdo não gasta
-neurons na segunda vez.
+> **Achado:** `enqueueLessonIfNeeded` fazia uma leitura (`SELECT ... WHERE
+> status IN ('pendente', 'processando')`) e, se nada saudável fosse
+> encontrado, um `INSERT` simples depois. O índice
+> `idx_atlas_apache_queue_content_kind_status` do APA-02 **nunca foi
+> `UNIQUE`** — só acelera essa leitura, não impede 2 linhas. Entre a leitura e
+> o `INSERT`, 2 chamadas quase simultâneas (2 requisições HTTP reais ao mesmo
+> `content_id`, ex.: 2 abas abertas no mesmo conteúdo) podiam ambas ler "nada
+> saudável" e cada uma inserir sua própria linha — 2 itens na fila para o
+> mesmo `content_id`+`kind`, e a aula seria gerada 2x (neurons desperdiçados).
+> Reproduzido com 2 chamadas em `Promise.all` (sem `await` entre elas) contra
+> o SQLite de teste: sem a correção, resultava em 2 linhas; o teste sequencial
+> que já existia (`await` entre as 2 chamadas) nunca exercitava essa janela.
+>
+> **Correção:** o `INSERT` final agora é um único `INSERT ... SELECT ...
+> WHERE NOT EXISTS (...)` (mesmo padrão já usado em `lib/agenda.ts`) — SQLite/D1
+> executa isso como uma instrução atômica só, sem o intervalo check-then-act
+> de antes. Se a chamada perde a corrida (`changes = 0`), devolve o id do item
+> que a chamada concorrente já criou, em vez de inserir uma segunda linha. Ver
+> `lib/apache/queue.ts`, `enqueueLessonIfNeeded`.
+
+**Aceite (confirmado por teste):** dois acessos simultâneos a um conteúdo sem
+aula geram uma linha só na fila; enviar o mesmo arquivo duas vezes ao mesmo
+conteúdo não gasta neurons na segunda vez.
 
 **Checklist**
-- [ ] Teste de concorrência do dedupe de fila (APA-07)
-- [ ] Teste de reenvio do mesmo arquivo (APA-12)
-- [ ] Nenhum código novo fora de teste/documentação
+- [x] Teste de concorrência do dedupe de fila (APA-07) —
+  `tests/apache-queue.test.ts`: *"enqueueLessonIfNeeded sob concorrência real
+  (2 chamadas simultâneas) cria só 1 linha na fila (APA-16)"*
+- [x] Teste de reenvio do mesmo arquivo (APA-12) — já cobria o aceite, de
+  `tests/apache-enrichment.test.ts`: *"APA-12: reenvio do mesmo arquivo (hash
+  igual) é reaproveitado, sem gastar neurons/páginas"*
+- [x] Nenhuma biblioteca nova — a única mudança de código é a correção do
+  bug de concorrência dentro de `enqueueLessonIfNeeded` (função já existente
+  do APA-07), não uma abstração nova
 
 ---
 
@@ -1097,3 +1117,55 @@ pesquisa de legislação por uma reescrita automática.
 - [ ] Revisão humana por amostragem antes de cada merge
 - [ ] Regra de `kind='aula_manual'` nunca regenerada automaticamente, aplicada
 - [ ] Todos os conteúdos do roadmap atual cobertos
+
+---
+
+## Operação — o que o Abner precisa fazer (APA-16)
+
+Três coisas pendentes depois que este PR for mesclado e publicado — nenhuma
+é código, são comandos para rodar no `cmd` do Windows, na pasta do projeto.
+
+**1) Aceitar a licença do modelo de visão (APA-11), ainda não rodado.**
+`@cf/meta/llama-3.2-11b-vision-instruct` (fallback de letra de mão) é um
+modelo "gated": precisa aceitar a licença uma vez por conta antes do binding
+`AI` funcionar com ele. Em vez de gerar um API Token manual no painel da
+Cloudflare, o comando abaixo reaproveita o MESMO login (`wrangler login`)
+que a Publicar Atlas já usa para `wrangler d1 execute --remote` —
+`scripts/apache-accept-vision-license.ts`, mesmo mecanismo (`getPlatformProxy`)
+do bake-off do APA-17:
+
+```
+cd C:\Users\abner\OneDrive\Desktop\Projetos\Atlas\atlaspjt-atual && pnpm run apache:aceitar-licenca-visao
+```
+
+Se a saída disser que não está autenticado, roda `pnpm wrangler login`
+(abre o navegador para confirmar) e tenta o comando acima de novo. Rodar 1x
+é suficiente — rodar de novo não tem efeito nem custo (a licença já aceita
+fica aceita).
+
+**2) Conferir o CPU por requisição depois de um deploy (risco do teto de
+10ms do Workers Free no upload do material, APA-12/APA-14).** O Workers Free
+só tem 10ms de CPU por requisição; só o PROCESSAMENTO (não a espera de
+rede/IA) conta. Depois de publicar (passo 3 abaixo), com o site aberto numa
+aba:
+
+```
+cd C:\Users\abner\OneDrive\Desktop\Projetos\Atlas\atlaspjt-atual && npx wrangler tail --config dist\server\wrangler.json
+```
+
+Deixa esse comando rodando no terminal e, numa aba do navegador, testa o
+"Adicionar material"/enriquecimento (APA-12) com um arquivo de verdade —
+principalmente o fallback de letra de mão (APA-11, upload de foto) e um PDF
+grande (perto de 10MB), que são os pontos mais pesados de CPU (decodificar
+a imagem/arquivo antes de mandar pra IA). Cada requisição aparece como uma
+linha no terminal; se algum teto de CPU for excedido, a linha mostra
+**"Exceeded CPU Limit"** no lugar de "Ok" — é só isso que precisa observar,
+não um número exato de milissegundos (`wrangler tail` não mostra o valor
+exato, só se excedeu ou não). Se aparecer, avisa o coordenador com a URL/rota
+da linha que deu "Exceeded CPU Limit" antes de usar essa função normalmente.
+`Ctrl+C` para parar de observar.
+
+**3) Publicar Atlas.** Sem mudança — o mesmo de sempre: dois cliques em
+`Publicar Atlas.cmd` (pasta do projeto) e digitar `production` quando pedir.
+Roda as migrations pendentes do D1 e o `wrangler deploy`, e deixa
+`dist/server/wrangler.json` pronto para o passo 2 acima.

@@ -176,14 +176,26 @@ async function recoverStaleEnrichmentItem(
 
 // Garante no máximo 1 item pendente/processando saudável na fila para este
 // content_id+kind (dedupe de fila, índice idx_atlas_apache_queue_content_kind_status
-// do APA-02). Um item 'processando' preso é recuperado aqui mesmo; se a
-// recuperação esgota as tentativas (vira 'erro'), ou se o único pendente
-// existente foi adiado por cota (QUOTA_DEFERRED_MARKER), NENHUM item novo é
-// criado nem devolvido: um item 'erro' é terminal (a aula já virou erro) e
-// um item adiado por cota só pode ser retomado pela varredura pós-reset —
-// nunca a cada poll de 5s do cliente, senão isso mandaria mensagem pra fila
-// de novo enquanto a cota não reseta. Retorna o id do item pendente para
-// mandar pra fila agora, ou null se não há nada saudável para mandar.
+// do APA-02 — o índice só acelera a leitura abaixo, NÃO é UNIQUE, então quem
+// garante o dedupe de verdade é esta função). Um item 'processando' preso é
+// recuperado aqui mesmo; se a recuperação esgota as tentativas (vira 'erro'),
+// ou se o único pendente existente foi adiado por cota (QUOTA_DEFERRED_MARKER),
+// NENHUM item novo é criado nem devolvido: um item 'erro' é terminal (a aula
+// já virou erro) e um item adiado por cota só pode ser retomado pela
+// varredura pós-reset — nunca a cada poll de 5s do cliente, senão isso
+// mandaria mensagem pra fila de novo enquanto a cota não reseta. Retorna o id
+// do item pendente para mandar pra fila agora, ou null se não há nada
+// saudável para mandar.
+//
+// APA-16 achou (teste de concorrência) que a leitura acima seguida de um
+// INSERT simples deixava uma janela real: duas chamadas desta função quase
+// simultâneas (2 requisições HTTP ao mesmo content_id, ex.: 2 abas abertas no
+// mesmo conteúdo) podiam ambas ler "nada saudável" antes de qualquer uma
+// inserir, e cada uma criar sua própria linha — 2 itens na fila para o mesmo
+// content_id+kind, gerando a aula 2x (neurons desperdiçados). O INSERT final
+// agora é um único `INSERT ... SELECT ... WHERE NOT EXISTS`: SQLite/D1
+// executa isso como uma instrução atômica só, sem o intervalo
+// check-then-act de duas chamadas separadas — fecha a janela de corrida.
 export async function enqueueLessonIfNeeded(
   db: D1Like,
   contentId: string,
@@ -218,15 +230,30 @@ export async function enqueueLessonIfNeeded(
   if (blocked) return null;
 
   const id = crypto.randomUUID();
-  await db.batch([
+  const [insert] = await db.batch([
     db
       .prepare(
         `INSERT INTO atlas_apache_queue (id, content_id, kind, status, attempts, created_at)
-         VALUES (?1, ?2, ?3, 'pendente', 0, ?4)`,
+         SELECT ?1, ?2, ?3, 'pendente', 0, ?4
+         WHERE NOT EXISTS (
+           SELECT 1 FROM atlas_apache_queue WHERE content_id = ?2 AND kind = ?3 AND status IN ('pendente', 'processando')
+         )`,
       )
       .bind(id, contentId, kind, now),
   ]);
-  return id;
+  if (insert.meta.changes > 0) return id;
+
+  // Perdeu a corrida: outra chamada concorrente já criou o item saudável
+  // entre a leitura acima e este INSERT. Devolve o id dela em vez de criar
+  // uma segunda linha.
+  const winner = await db
+    .prepare(
+      `SELECT id FROM atlas_apache_queue WHERE content_id = ?1 AND kind = ?2 AND status IN ('pendente', 'processando')
+       ORDER BY created_at LIMIT 1`,
+    )
+    .bind(contentId, kind)
+    .first<{ id: string }>();
+  return winner?.id ?? null;
 }
 
 function mostRecentUtcMidnight(now: string): string {
