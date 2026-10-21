@@ -5,28 +5,29 @@ quando o script roda contra a conta Cloudflare real. Ainda não rodou.
 
 ## Como rodar
 
-Precisa de uma API Token da Cloudflare com permissão **Workers AI - Read** (ou
-Edit) e do **Account ID** da conta onde o Atlas está implantado:
+Não precisa de API Token nem de Account ID manual — o script usa
+`getPlatformProxy` do pacote `wrangler` para pegar um binding `AI` remoto de
+verdade, autenticado com o MESMO login (`wrangler login`, OAuth) que já é
+usado para `wrangler d1 execute --remote` no Publicar Atlas. Se esse login
+já está feito na máquina, é só rodar.
 
-1. Account ID: `npx wrangler whoami` imprime o(s) Account ID(s) disponíveis
-   para a conta logada (ou veja a barra lateral direita de qualquer página do
-   dashboard da Cloudflare, em "Account ID").
-2. API Token: no dashboard da Cloudflare, **My Profile > API Tokens > Create
-   Token**, usar o template **"Workers AI"** (ou um token customizado com a
-   permissão **Account > Workers AI > Read**), e copiar o valor assim que for
-   gerado (não aparece de novo depois).
-
-Depois, no PowerShell, em `C:\Users\abner\OneDrive\Desktop\Projetos\Atlas\atlaspjt-atual`:
+No PowerShell, em `C:\Users\abner\OneDrive\Desktop\Projetos\Atlas\atlaspjt-atual`,
+na branch deste PR:
 
 ```powershell
-$env:CLOUDFLARE_ACCOUNT_ID = "SEU_ACCOUNT_ID_AQUI"; $env:CLOUDFLARE_API_TOKEN = "SEU_TOKEN_AQUI"; pnpm run apache:bakeoff
+git fetch origin claude/project-thread-oj1mbh; git checkout claude/project-thread-oj1mbh; pnpm install; pnpm run apache:bakeoff; git add docs/apache-bakeoff-resultado.md; git commit -m "docs: resultado real do bake-off APA-17"; git push origin claude/project-thread-oj1mbh; git checkout main
 ```
 
-O script faz 6 chamadas (3 modelos × 2 casos de teste), custando bem menos de
-50 neurons no total (orçamento diário é 10.000), e regrava este arquivo com a
-tabela de resultados, a saída bruta de cada chamada e uma seção de
-recomendação a preencher depois da análise.
+O script faz 6 chamadas (3 modelos × 2 casos de teste). No PIOR CASO (toda
+chamada gastando o teto de 500 tokens de saída) custa até ~300 neurons no
+total — bem abaixo da cota diária de 10.000 (compartilhada com o resto do
+Apache); na prática o gasto real é bem menor, porque a ficha de
+enriquecimento é curta. Regrava este arquivo com a tabela de resultados, a
+saída bruta de cada chamada e uma seção de recomendação a preencher depois
+da análise de qualidade.
 
-Depois de rodar, commitar o `docs/apache-bakeoff-resultado.md` atualizado (ou
-colar o conteúdo de volta nesta thread) para a análise e a decisão final de
-`APACHE_ENRICHMENT_MODEL`.
+O comando acima já commita e dá push do resultado no mesmo branch do PR e
+volta a pasta para `main` no final, para não deixar nada fora do estado do
+GitHub (necessário para o Publicar Atlas funcionar). Depois disso, é só
+avisar na thread que rodou — eu leio o resultado direto do PR e volto com a
+análise e a recomendação final de `APACHE_ENRICHMENT_MODEL`.

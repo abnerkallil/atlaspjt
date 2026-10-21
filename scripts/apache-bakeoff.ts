@@ -1,31 +1,56 @@
 // APA-17: bake-off de modelo para o ENRIQUECIMENTO do Apache (a extração da
 // "ficha" do material do aluno — ApacheEnrichment, lib/apache/schema.ts —
-// não a aula base, que já está decidida em Llama 3.3 70B, APA-06). Roda
-// LOCALMENTE, fora do Worker: chama a REST API do Workers AI diretamente
-// (não há binding `AI` fora de um Worker), com o mesmo formato de chamada
-// (response_format json_schema) que lib/apache/lesson-writer.ts usa, para o
-// resultado do bake-off valer para a implementação real (APA-12).
+// não a aula base, que já está decidida em Llama 3.3 70B, APA-06, e não é
+// testada aqui — o card pede só o enriquecimento). Roda LOCALMENTE, fora do
+// Worker: usa `getPlatformProxy` do próprio pacote `wrangler` para pegar um
+// binding `AI` remoto de verdade, autenticado com o MESMO login (wrangler
+// OAuth) que o Abner já usa para `wrangler d1 execute --remote` no Publicar
+// Atlas — nenhum API Token manual, nenhuma conta para preencher. O formato
+// de chamada (response_format json_schema, max_tokens explícito) é o mesmo
+// de lib/apache/lesson-writer.ts, para o resultado valer para o APA-12.
 //
 // Testa os 3 modelos do card: Llama 3.3 70B (baseline, já escolhido para a
-// aula, para comparação de custo/qualidade) contra Gemma 4 26B e Qwen3 30B
-// (candidatos ao enriquecimento). IDs e taxas de neurons já confirmados no
-// catálogo do Workers AI em lib/apache/neuron-meter.ts (APA-15, verificado
-// 2026-10-20) — reaproveitados daqui, nunca redigitados.
+// aula, só para referência de custo/qualidade) contra Gemma 4 26B e Qwen3
+// 30B (candidatos reais ao enriquecimento). IDs e taxas de neurons já
+// confirmados no catálogo do Workers AI em lib/apache/neuron-meter.ts
+// (APA-15, verificado 2026-10-20) — reaproveitados daqui, nunca redigitados.
 //
-// Custo deste bake-off: 3 modelos × 2 casos de teste × ~500 tokens de
-// entrada/300 de saída no pior caso ≈ bem abaixo de 50 neurons no total
-// (orçamento diário é 10.000 — ver DAILY_NEURON_BUDGET) — não compete de
-// forma relevante com o resto do Apache no dia em que rodar.
+// Custo deste bake-off (3 modelos × 2 casos de teste, MAX_COMPLETION_TOKENS
+// = 500): no PIOR CASO (toda chamada usando os 500 tokens de saída inteiros)
+// ≈ 300 neurons no total — a maior parte disso é só o Llama, que é ~6x mais
+// caro em neurons que os outros dois; na prática a ficha de enriquecimento é
+// curta e o gasto real fica bem menor. Orçamento diário é 10.000 (ver
+// DAILY_NEURON_BUDGET em lib/apache/neuron-meter.ts) — este bake-off usa no
+// máximo ~3% dele, mesmo no pior caso.
 //
-// Uso (precisa de uma API Token da Cloudflare com permissão "Workers AI -
-// Read/Edit" e do Account ID — ver docs/apache-bakeoff-resultado.md para
-// onde encontrar os dois):
-//   CLOUDFLARE_API_TOKEN=... CLOUDFLARE_ACCOUNT_ID=... pnpm run apache:bakeoff
-import { writeFileSync } from 'node:fs';
+// Uso (só precisa estar logado no wrangler — `npx wrangler login`, o mesmo
+// login já usado para `wrangler d1 execute --remote`):
+//   pnpm run apache:bakeoff
+import { writeFileSync, mkdirSync } from 'node:fs';
+import { getPlatformProxy } from 'wrangler';
+import type { AiLike } from '../lib/apache/lesson-writer.js';
 import { estimateNeurons, NEURON_RATE_PER_MILLION_TOKENS } from '../lib/apache/neuron-meter.js';
 import { validateEnrichment, type ApacheEnrichment } from '../lib/apache/schema.js';
 
 const RESULT_FILE = 'docs/apache-bakeoff-resultado.md';
+
+// Config mínima só para este bake-off ganhar um binding `AI` via
+// getPlatformProxy — não é o wrangler.jsonc do deploy real, por isso fica
+// separado em .wrangler/ (já ignorado pelo git, ver wrangler.local.jsonc).
+const BAKEOFF_WRANGLER_CONFIG_PATH = '.wrangler/apache-bakeoff-config.json';
+
+function ensureBakeoffWranglerConfig(): void {
+  mkdirSync('.wrangler', { recursive: true });
+  writeFileSync(
+    BAKEOFF_WRANGLER_CONFIG_PATH,
+    JSON.stringify({
+      name: 'apache-bakeoff',
+      compatibility_date: '2026-05-15',
+      compatibility_flags: ['nodejs_compat'],
+      ai: { binding: 'AI' },
+    }),
+  );
+}
 
 // Mesmos 2 modelos candidatos ao enriquecimento + o baseline da aula (Llama),
 // só para referência de custo/qualidade — a decisão deste card é entre os
@@ -38,7 +63,7 @@ const MODELS = [
   { label: 'Qwen3 30B', id: '@cf/qwen/qwen3-30b-a3b-fp8' },
 ] as const;
 
-const MAX_COMPLETION_TOKENS = 1200; // ficha de enriquecimento é bem menor que uma aula inteira
+const MAX_COMPLETION_TOKENS = 500; // ficha de enriquecimento é curta (poucos conceitos), não precisa do teto de uma aula inteira
 
 // Mesmo delimitador de prompt-injection do Gate APA-14 (DEC-020 item 1),
 // usado em lesson-writer.ts — o material do aluno nunca é instrução.
@@ -133,36 +158,13 @@ Responda só em JSON, exatamente neste formato (nada fora do JSON):
 }`;
 }
 
-type CloudflareAiResponse = {
-  success: boolean;
-  errors?: { code: number; message: string }[];
-  result?: {
-    response?: unknown;
-    usage?: { prompt_tokens?: number; completion_tokens?: number };
-  };
+// Mesmo formato de retorno de env.AI.run() usado em lesson-writer.ts:
+// response_format json_schema pode devolver `response` como string OU
+// objeto já parseado, dependendo do modelo.
+type AiRunOutput = {
+  response?: unknown;
+  usage?: { prompt_tokens?: number; completion_tokens?: number };
 };
-
-async function callModel(
-  accountId: string,
-  apiToken: string,
-  modelId: string,
-  prompt: string,
-  useJsonSchema: boolean,
-): Promise<CloudflareAiResponse> {
-  const body: Record<string, unknown> = {
-    messages: [{ role: 'user', content: prompt }],
-    max_tokens: MAX_COMPLETION_TOKENS,
-  };
-  if (useJsonSchema) {
-    body.response_format = { type: 'json_schema', json_schema: ENRICHMENT_JSON_SCHEMA };
-  }
-  const res = await fetch(`https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${modelId}`, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${apiToken}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
-  return (await res.json()) as CloudflareAiResponse;
-}
 
 function extractJsonBlock(text: string): unknown {
   const start = text.indexOf('{');
@@ -187,61 +189,57 @@ type RunResult = {
   raw: string;
 };
 
-async function runOne(accountId: string, apiToken: string, model: (typeof MODELS)[number], testCase: TestCase): Promise<RunResult> {
+async function callModel(ai: AiLike, modelId: string, prompt: string, useJsonSchema: boolean): Promise<AiRunOutput> {
+  const inputs: Record<string, unknown> = {
+    messages: [{ role: 'user', content: prompt }],
+    max_tokens: MAX_COMPLETION_TOKENS,
+  };
+  if (useJsonSchema) {
+    inputs.response_format = { type: 'json_schema', json_schema: ENRICHMENT_JSON_SCHEMA };
+  }
+  return (await ai.run(modelId, inputs)) as AiRunOutput;
+}
+
+async function runOne(ai: AiLike, model: (typeof MODELS)[number], testCase: TestCase): Promise<RunResult> {
   const prompt = buildPrompt(testCase);
   const start = Date.now();
-  let apiResponse: CloudflareAiResponse;
+  let output: AiRunOutput;
   let usedJsonSchema = true;
   try {
-    apiResponse = await callModel(accountId, apiToken, model.id, prompt, true);
+    output = await callModel(ai, model.id, prompt, true);
+  } catch {
     // Alguns modelos do catálogo podem não suportar response_format ainda —
-    // se vier erro, cai para o modo "JSON pedido só pelo texto do prompt".
-    if (!apiResponse.success) {
-      usedJsonSchema = false;
-      apiResponse = await callModel(accountId, apiToken, model.id, prompt, false);
+    // se a chamada com json_schema falhar, cai para "JSON pedido só pelo
+    // texto do prompt".
+    usedJsonSchema = false;
+    try {
+      output = await callModel(ai, model.id, prompt, false);
+    } catch (fallbackError) {
+      return {
+        model: model.id,
+        label: model.label,
+        caso: testCase.label,
+        latencyMs: Date.now() - start,
+        neurons: 0,
+        usedJsonSchema,
+        valid: false,
+        erro: `chamada falhou (com e sem json_schema): ${fallbackError instanceof Error ? fallbackError.message : String(fallbackError)}`,
+        raw: '',
+      };
     }
-  } catch (error) {
-    return {
-      model: model.id,
-      label: model.label,
-      caso: testCase.label,
-      latencyMs: Date.now() - start,
-      neurons: 0,
-      usedJsonSchema,
-      valid: false,
-      erro: `chamada falhou: ${error instanceof Error ? error.message : String(error)}`,
-      raw: '',
-    };
   }
   const latencyMs = Date.now() - start;
 
-  if (!apiResponse.success) {
-    const message = apiResponse.errors?.map((e) => `${e.code}: ${e.message}`).join('; ') ?? 'erro desconhecido';
-    return {
-      model: model.id,
-      label: model.label,
-      caso: testCase.label,
-      latencyMs,
-      neurons: 0,
-      usedJsonSchema,
-      valid: false,
-      erro: `API retornou erro: ${message}`,
-      raw: JSON.stringify(apiResponse),
-    };
-  }
-
-  const usage = apiResponse.result?.usage;
   const neurons = estimateNeurons(
     model.id,
-    usage ? { promptTokens: usage.prompt_tokens ?? 0, completionTokens: usage.completion_tokens ?? 0 } : undefined,
+    output.usage ? { promptTokens: output.usage.prompt_tokens ?? 0, completionTokens: output.usage.completion_tokens ?? 0 } : undefined,
   );
 
-  const responseField = apiResponse.result?.response;
-  const rawText = typeof responseField === 'string' ? responseField : JSON.stringify(responseField);
+  const rawText = typeof output.response === 'string' ? output.response : JSON.stringify(output.response);
 
   let parsed: unknown;
   try {
-    parsed = typeof responseField === 'string' ? extractJsonBlock(responseField) : responseField;
+    parsed = typeof output.response === 'string' ? extractJsonBlock(output.response) : output.response;
   } catch (error) {
     return {
       model: model.id,
@@ -344,36 +342,43 @@ function buildReport(results: RunResult[]): string {
 }
 
 async function main(): Promise<void> {
-  const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
-  const apiToken = process.env.CLOUDFLARE_API_TOKEN;
-  if (!accountId || !apiToken) {
-    throw new Error(
-      'Informe CLOUDFLARE_ACCOUNT_ID e CLOUDFLARE_API_TOKEN no ambiente (ver docs/apache-bakeoff-resultado.md para onde encontrar os dois).',
-    );
-  }
   for (const model of MODELS) {
     if (!NEURON_RATE_PER_MILLION_TOKENS[model.id]) {
       throw new Error(`Modelo "${model.id}" sem taxa de neurons cadastrada em lib/apache/neuron-meter.ts.`);
     }
   }
 
-  const results: RunResult[] = [];
-  for (const model of MODELS) {
-    for (const testCase of TEST_CASES) {
-      console.log(`Rodando ${model.label} / ${testCase.label}...`);
-      const result = await runOne(accountId, apiToken, model, testCase);
-      results.push(result);
-      console.log(
-        `  -> válido=${result.valid} neurons=${formatNeurons(result.neurons)} latencia=${result.latencyMs}ms${result.erro ? ` erro=${result.erro}` : ''}`,
-      );
-    }
-  }
+  ensureBakeoffWranglerConfig();
+  // persist: false — este bake-off não precisa (nem deve) deixar estado de
+  // Miniflare gravado em .wrangler/state; remoteBindings fica no default
+  // (true), que é o que faz o binding AI falar com a conta real via o login
+  // do wrangler já feito (mesmo mecanismo do `wrangler d1 execute --remote`).
+  const proxy = await getPlatformProxy<{ AI: AiLike }>({
+    configPath: BAKEOFF_WRANGLER_CONFIG_PATH,
+    persist: false,
+  });
 
-  const report = buildReport(results);
-  writeFileSync(RESULT_FILE, report);
-  console.log(`\nRelatório gravado em ${RESULT_FILE}.`);
-  const total = results.reduce((sum, r) => sum + r.neurons, 0);
-  console.log(`Custo total: ${formatNeurons(total)} neurons.`);
+  try {
+    const results: RunResult[] = [];
+    for (const model of MODELS) {
+      for (const testCase of TEST_CASES) {
+        console.log(`Rodando ${model.label} / ${testCase.label}...`);
+        const result = await runOne(proxy.env.AI, model, testCase);
+        results.push(result);
+        console.log(
+          `  -> válido=${result.valid} neurons=${formatNeurons(result.neurons)} latencia=${result.latencyMs}ms${result.erro ? ` erro=${result.erro}` : ''}`,
+        );
+      }
+    }
+
+    const report = buildReport(results);
+    writeFileSync(RESULT_FILE, report);
+    console.log(`\nRelatório gravado em ${RESULT_FILE}.`);
+    const total = results.reduce((sum, r) => sum + r.neurons, 0);
+    console.log(`Custo total: ${formatNeurons(total)} neurons.`);
+  } finally {
+    await proxy.dispose();
+  }
 }
 
 main().catch((error) => {
