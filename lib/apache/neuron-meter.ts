@@ -68,6 +68,29 @@ export async function recordNeuronUsage(db: D1Like, amount: number, now: string)
   ]);
 }
 
+// Ajusta o medidor por um delta (pode ser negativo) — usado pra corrigir
+// uma reserva pelo pior caso (ver writeLesson, APA-06) pro uso real depois
+// que a chamada responde, sem round-trip de leitura. MAX(0, ...) tanto no
+// INSERT quanto no UPDATE: um ajuste negativo nunca deixa o contador do dia
+// abaixo de zero, mesmo se vier antes de qualquer reserva registrada (ex.:
+// corrida entre duas chamadas).
+export async function adjustNeuronUsage(db: D1Like, delta: number, now: string): Promise<void> {
+  if (!Number.isFinite(delta) || delta === 0) return;
+  const day = utcDay(now);
+  const rounded = Math.round(delta);
+  await db.batch([
+    db
+      .prepare(
+        `INSERT INTO atlas_apache_neuron_meter (day, neurons_used, updated_at)
+         VALUES (?1, MAX(0, ?2), ?3)
+         ON CONFLICT(day) DO UPDATE SET
+           neurons_used = MAX(0, neurons_used + ?2),
+           updated_at = ?3`,
+      )
+      .bind(day, rounded, now),
+  ]);
+}
+
 export type NeuronBudget = { used: number; remaining: number; overLimit: boolean };
 
 export async function neuronBudgetRemaining(db: D1Like, now: string): Promise<NeuronBudget> {

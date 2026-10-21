@@ -695,17 +695,30 @@ foi chamado.
     presa, não bloqueia o dedupe — ver regra abaixo), responde `{ status:
     'pendente' }`, e chama `ctx.waitUntil(processQueueItem(...))` para
     processar depois de responder.
-  - **Em toda chamada** (independente do status da aula): também checa se há
-    itens pendentes na fila com `created_at` anterior ao reset diário mais
-    recente (meia-noite UTC) — se houver, dispara o processamento deles via
-    `waitUntil` também, para destravar itens que ficaram parados da meia-noite
-    até agora (opção (b) do Gate APA-01).
+  - **Em toda chamada** (independente do status da aula, e para `kind='aula'`
+    apenas — nunca `aula_manual`/`enriquecimento`, fora do escopo deste
+    card): também checa se há itens `pendente` na fila com `created_at`
+    anterior ao reset diário mais recente (meia-noite UTC) — se houver,
+    dispara o processamento deles via `waitUntil` também, para destravar
+    itens que ficaram parados da meia-noite até agora (opção (b) do Gate
+    APA-01) — inclui tanto um item parado por travamento de infraestrutura
+    quanto um adiado por falta de cota (a cota de ontem não importa mais
+    depois do reset). Um item `pendente` adiado por falta de cota **não**
+    pode ser reprocessado a cada poll de 5s do cliente — só esta varredura
+    pós-reset o retoma, senão cada poll chamaria a IA de novo enquanto a
+    cota não reseta.
   - **Item preso em `'processando'`**: o `waitUntil` pode ser interrompido
     antes da geração terminar. Tanto a varredura pós-reset quanto o `enqueue`
     acima tratam um item `'processando'` com `started_at` mais velho que 5
     minutos como preso — voltam para `'pendente'` e incrementam `attempts`;
     depois de 3 tentativas, o item vira `'erro'` em vez de voltar para
-    `'pendente'` de novo (schema: `atlas_apache_queue.started_at`, APA-02).
+    `'pendente'` de novo (schema: `atlas_apache_queue.started_at`, APA-02) —
+    e, nesse caso, a aula em si também é marcada como `'erro'`
+    (`markFailed`, APA-05): sem isso ela ficava `'pendente'` para sempre e o
+    cliente nunca veria um erro, só o spinner indefinidamente. Pelo mesmo
+    motivo, qualquer outra falha de `processQueueItem` que não seja um 429
+    (ex.: uma falha de R2/D1 fora do controle do `writeLesson`) também
+    marca a aula como `'erro'`.
   - `status` existente (`'gerada'`/`'reportada'`): carrega a aula
     (`readLesson`, APA-05) e, se existir uma ficha de enriquecimento
     `concluido` para esse `content_id`+`userId` (`getApacheUserId()`), carrega
@@ -713,7 +726,10 @@ foi chamado.
     **na leitura, não gravado** — para montar `enrichment: { status: 'concluido',
     novos, reforcos }` na resposta. Responde
     `{ status, lesson: renderLesson(lesson), enrichment, errorMessage: undefined }`.
-  - `status: 'erro'`: responde `{ status, errorMessage: row.error_message }`.
+  - `status: 'erro'`: responde `{ status, errorMessage }` com uma mensagem
+    **genérica** fixa, nunca `row.error_message` — esse campo é só para
+    log/painel interno; repassá-lo ao cliente quebraria o Gate
+    APA-14/DEC-020 item 8 (nunca vazar detalhe interno na resposta).
 - `processQueueItem`: marca `processando` e grava `started_at=now`, checa
   `neuronBudgetRemaining` (APA-15) — se `overLimit`, deixa `pendente` e sai
   sem tentar; senão chama `writeLesson` (APA-06) e marca `concluido`/`erro`.

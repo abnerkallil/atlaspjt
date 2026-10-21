@@ -23,9 +23,9 @@ export type LessonResponse = {
   errorMessage?: string;
 };
 
-// Enquanto a API do APA-07 não existe, toda sessão de estudo recebe 404 daqui
-// — não é um erro para mostrar, é "funcionalidade ainda não disponível":
-// a tela não deve exibir nada (nem o card .al-*).
+// A rota do APA-07 responde 404 só quando o conteúdo em si não existe — não
+// é um erro para mostrar, é "este conteúdo não tem aula do Apache": a tela
+// não deve exibir nada (nem o card .al-*).
 export const MAX_POLL_ATTEMPTS = 120; // 120 x 5s ≈ 10 minutos
 
 export type LessonPollOutcome =
