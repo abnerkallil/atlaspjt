@@ -9,6 +9,7 @@ import { env } from 'cloudflare:workers';
 import { getApacheUserId } from '@/lib/auth';
 import { ApacheError } from '@/lib/apache/errors';
 import { extractHandwriting, MAX_HANDWRITING_FILE_BYTES, type VisionAi } from '@/lib/apache/ingest-handwriting';
+import { assertQuota, refundQuota } from '@/lib/apache/quota';
 import type { D1Like } from '@/lib/pedagogy/transitions';
 
 export const runtime = 'edge';
@@ -63,9 +64,22 @@ export async function POST(request: Request) {
     const file = form.get('file');
     if (!(file instanceof File)) throw new ApacheError('Informe o arquivo.', 400);
 
+    // Debita 1 página pela imagem transcrita (card APA-12/APA-13) -- esta
+    // rota não grava nada em atlas_apache_enrichments (quem faz isso é
+    // /texto, depois de juntar este texto com o resto do OCR), então o
+    // débito/refund aqui não tem windowStart salvo em lugar nenhum: usa o
+    // que assertQuota devolveu nesta mesma chamada.
+    const now = new Date();
+    const windowStart = await assertQuota(db, userId, 1, now);
+
     const bytes = await file.arrayBuffer();
-    const { text } = await extractHandwriting(ai, db, bytes, file.type);
-    return Response.json({ text });
+    try {
+      const { text } = await extractHandwriting(ai, db, bytes, file.type);
+      return Response.json({ text });
+    } catch (error) {
+      await refundQuota(db, userId, 1, windowStart, now);
+      throw error;
+    }
   } catch (error) {
     return apacheErrorResponse(error);
   }

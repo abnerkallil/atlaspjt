@@ -5,7 +5,7 @@
 // DEC-019: Cloudflare Queues em vez de waitUntil). O fetch em si passa
 // direto para o vinext, sem nenhuma lógica própria.
 import vinextHandler from 'vinext/server/fetch-handler';
-import { handleLessonQueueBatch, type LessonQueueMessage, type QueueBatchLike } from './lib/apache/queue';
+import { handleLessonQueueBatch, type LessonQueueMessage, type QueueBatchLike, type QueueLike } from './lib/apache/queue';
 import type { AiLike } from './lib/apache/lesson-writer';
 import type { D1Like } from './lib/pedagogy/transitions';
 import type { R2Like } from './lib/apache/lesson-store';
@@ -18,6 +18,11 @@ type ApacheEnv = {
   // ambiente -- nunca hardcoded aqui (lib/apache/enrichment.ts só cai no
   // default se a env var não estiver configurada).
   APACHE_ENRICHMENT_MODEL?: string;
+  // Mesmo binding produtor usado pelas rotas (vite.config.ts) -- um binding
+  // de fila do Cloudflare Workers produz e consome no mesmo Worker.
+  // processEnrichmentQueueItem (APA-12) usa isto pra mandar o próprio item
+  // de volta pra fila quando sobram chunks além do teto por invocação.
+  APACHE_LESSON_QUEUE?: QueueLike;
 };
 
 export default {
@@ -27,13 +32,13 @@ export default {
   // processada; processQueueItem já é idempotente (claim atômico por
   // status='pendente'), então reentrega nunca gera uma 2ª chamada de IA.
   async queue(batch: QueueBatchLike, env: ApacheEnv): Promise<void> {
-    const { DB, ATTACHMENTS, AI, APACHE_ENRICHMENT_MODEL } = env;
+    const { DB, ATTACHMENTS, AI, APACHE_ENRICHMENT_MODEL, APACHE_LESSON_QUEUE } = env;
     if (!DB || !ATTACHMENTS || !AI) {
       console.error('Apache: fila de aulas recebeu um lote sem DB/ATTACHMENTS/AI configurados.');
       for (const message of batch.messages) message.retry();
       return;
     }
-    await handleLessonQueueBatch(batch, DB, ATTACHMENTS, AI, APACHE_ENRICHMENT_MODEL);
+    await handleLessonQueueBatch(batch, DB, ATTACHMENTS, AI, APACHE_ENRICHMENT_MODEL, APACHE_LESSON_QUEUE ?? null);
   },
 } satisfies {
   fetch: typeof vinextHandler.fetch;

@@ -9,6 +9,7 @@ import type { R2Like } from '@/lib/apache/lesson-store';
 import type { EnrichmentQueueLike } from '@/lib/apache/enrichment';
 import { extractDigital, type MarkdownConversionAi } from '@/lib/apache/ingest-digital';
 import { MAX_APACHE_UPLOAD_BYTES, validateApacheUpload } from '@/lib/apache/upload-validation';
+import { assertContentExists } from '@/lib/apache/queue';
 import type { D1Like } from '@/lib/pedagogy/transitions';
 
 export const runtime = 'edge';
@@ -82,17 +83,25 @@ export async function POST(request: Request) {
     if (typeof contentId !== 'string' || !contentId.trim()) throw new ApacheError('Informe contentId.', 400);
     if (!(file instanceof File)) throw new ApacheError('Informe o arquivo.', 400);
 
+    // Antes de qualquer trabalho pesado (extração) ou débito de cota: um
+    // contentId inexistente senão debitaria a cota e falharia só depois, na
+    // inserção em atlas_apache_enrichments (FK).
+    await assertContentExists(db, contentId);
+
     const bytes = await file.arrayBuffer();
     validateApacheUpload(bytes, file.type);
 
-    // Hash calculado antes de qualquer descarte de bytes (card APA-12) --
-    // dedupe aqui evita até o custo de extração num reenvio idêntico.
-    const sourceHash = await sha256Hex(bytes);
     const now = new Date().toISOString();
-
     const extraction = await extractDigital(ai, { bytes, mimeType: file.type, name: file.name });
     // Os bytes originais nunca vão para R2 -- só o texto extraído segue
     // adiante, e esta função não guarda referência a `bytes` depois daqui.
+
+    // Hash do texto EXTRAÍDO, não dos bytes crus do upload (até 10MB): o
+    // dedupe (card APA-12) só precisa identificar o MESMO conteúdo
+    // processado, e hashear o texto já extraído (no máximo MAX_EXTRACTED_CHARS,
+    // bem menor que 10MB) é bem mais barato em CPU que hashear o arquivo
+    // original inteiro -- checar o custo real com `wrangler tail` depois do
+    // deploy.
 
     if (extraction.provavelmenteEscaneado) {
       // PDF escaneado: toMarkdown (sem OCR) voltou vazio/quase vazio -- o
@@ -100,6 +109,8 @@ export async function POST(request: Request) {
       // extraído para POST /api/apache/enriquecimento/texto.
       return Response.json({ scanned: true }, { status: 200 });
     }
+
+    const sourceHash = await sha256Hex(new TextEncoder().encode(extraction.markdown).buffer as ArrayBuffer);
 
     const outcome = await submitEnrichment({
       db,

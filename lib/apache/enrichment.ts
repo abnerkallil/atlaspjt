@@ -9,6 +9,7 @@ import type { AiLike } from './lesson-writer.js';
 import type { R2Like } from './lesson-store.js';
 import { assertQuota, refundQuota } from './quota.js';
 import {
+  adjustNeuronUsage,
   estimateNeurons,
   neuronBudgetRemaining,
   recordNeuronUsage,
@@ -232,6 +233,12 @@ export async function processEnrichmentChunk(
       throw new ApacheError(BUDGET_EXHAUSTED_MESSAGE, 429);
     }
 
+    // Reserva pelo pior caso ANTES da chamada (mesmo padrão de writeLesson,
+    // lesson-writer.ts): se o isolate for cortado no meio do ai.run, o gasto
+    // real já cobrado pela Cloudflare não fica de fora do medidor local.
+    // Ajusta pro valor real abaixo quando (e se) a chamada responder.
+    await recordNeuronUsage(db, worstCase, now);
+
     let output: AiChunkOutput;
     try {
       output = (await ai.run(model, {
@@ -248,16 +255,13 @@ export async function processEnrichmentChunk(
       continue;
     }
 
-    await recordNeuronUsage(
-      db,
-      estimateNeurons(
-        model,
-        output.usage
-          ? { promptTokens: output.usage.prompt_tokens ?? 0, completionTokens: output.usage.completion_tokens ?? 0 }
-          : undefined,
-      ),
-      now,
+    const actual = estimateNeurons(
+      model,
+      output.usage
+        ? { promptTokens: output.usage.prompt_tokens ?? 0, completionTokens: output.usage.completion_tokens ?? 0 }
+        : undefined,
     );
+    await adjustNeuronUsage(db, actual - worstCase, now);
 
     try {
       const ficha = validateEnrichment(extractJson(resolveModelOutput(output)));
@@ -271,12 +275,41 @@ export async function processEnrichmentChunk(
   throw new ApacheError('Não foi possível extrair o material agora.', 502);
 }
 
+// Mesmo critério de normalização de nome usado por diffEnrichmentAgainstLesson
+// (schema.ts, não exportado de lá) -- aqui só para decidir duplicata entre
+// chunks diferentes do MESMO material (ex.: um conceito repetido em dois
+// parágrafos distantes do upload).
+function normalizeConceptName(nome: string): string {
+  return nome
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .trim();
+}
+
 // Acumula os conceitos de todos os chunks numa única ficha. Descartado só
-// quando TODO chunk veio marcado como irrelevante.
+// quando TODO chunk veio marcado como irrelevante. Dedupe por nome
+// normalizado (mantém a 1ª ocorrência) e teto de MAX_LIST_ITEMS -- sem isso,
+// um upload com muitos chunks poderia passar de 20 conceitos no total e
+// falhar validateEnrichment só na leitura (APA-07), fazendo a ficha inteira
+// desaparecer silenciosamente. `id` é reatribuído (índice sequencial): o id
+// que a IA gera por chunk não é único entre chunks diferentes, e aqui ele só
+// serve de key React (ApacheEnrichmentUpload/ContentLesson).
 export function mergeChunkResults(results: ChunkResult[]): ApacheEnrichment {
+  const byName = new Map<string, ApacheConcept>();
+  for (const result of results) {
+    for (const concept of result.conceitos) {
+      const key = normalizeConceptName(concept.nome);
+      if (!byName.has(key)) byName.set(key, concept);
+    }
+  }
+  const conceitos = [...byName.values()].slice(0, MAX_LIST_ITEMS).map((concept, index) => ({
+    ...concept,
+    id: `c${index}`,
+  }));
   return {
     v: 1,
-    conceitos: results.flatMap((result) => result.conceitos),
+    conceitos,
     irrelevante: results.length > 0 && results.every((result) => result.irrelevante),
   };
 }
@@ -543,6 +576,15 @@ export async function submitEnrichment(input: SubmitEnrichmentInput): Promise<En
     return { kind: 'reused' };
   }
 
+  // Reenvio enquanto um item anterior ainda está pendente/processando na
+  // fila: nem debita página de novo (já foi debitada no envio original),
+  // nem deixa de "confirmar" o envio -- devolve 'queued' sem tocar em cota
+  // nem na linha de atlas_apache_enrichments (quem está processando é o
+  // item já enfileirado).
+  if (await findPendingEnrichmentQueueItem(db, contentId, userId)) {
+    return { kind: 'queued' };
+  }
+
   const windowStart = await assertQuota(db, userId, pages, new Date(now));
   await upsertProcessing(db, contentId, userId, sourceHash, pages, now);
 
@@ -560,7 +602,7 @@ export async function submitEnrichment(input: SubmitEnrichmentInput): Promise<En
   try {
     const contentTitle = await loadContentTitle(db, contentId);
     const result = await processEnrichmentChunk(db, ai, model, contentTitle, chunks[0], now);
-    const ficha = mergeChunkResults([result]);
+    const ficha = validateEnrichment(mergeChunkResults([result]));
     if (ficha.irrelevante) {
       await markDiscarded(db, contentId, userId, now);
       return { kind: 'sync', status: 'descartado' };
@@ -599,15 +641,121 @@ async function deleteTempTextSafely(bucket: R2Like, key: string): Promise<void> 
   }
 }
 
+// Teto de chunks processados por invocação do consumer: um upload de
+// 540.000 caracteres (~270 chunks) processado inteiro numa mensagem só
+// passaria tanto do teto de ~15min de execução do consumer quanto do
+// STALE_PROCESSING_MS (5min) do sweepQueue (queue.ts), que reenviaria o
+// mesmo item pra fila enquanto ele ainda está rodando. Depois de
+// MAX_CHUNKS_PER_INVOCATION chunks, o progresso é persistido e o item volta
+// pra 'pendente' com uma nova mensagem mandada pra ele mesmo continuar.
+const MAX_CHUNKS_PER_INVOCATION = 10;
+
+// Mesmo princípio de MAX_QUEUE_ATTEMPTS (queue.ts, aulas): depois de algumas
+// recuperações sem sucesso, desiste de verdade (markErrored + refund) em vez
+// de tentar pendente->processando->erro de infra pra sempre.
+const MAX_ENRICHMENT_QUEUE_ATTEMPTS = 3;
+
+type EnrichmentProgress = { ficha: ApacheEnrichment | null; cursor: number };
+
+// `partial_result` guarda {ficha, cursor} enquanto o item ainda está em
+// andamento (chunk a chunk, ou pausado entre invocações pelo teto acima) --
+// formato interno só desta fila, nunca lido fora daqui (diferente do
+// ApacheEnrichment puro que fica em `object_key`/R2 quando concluído).
+async function readEnrichmentProgress(db: D1Like, contentId: string, userId: string): Promise<EnrichmentProgress> {
+  const row = await db
+    .prepare(`SELECT partial_result FROM atlas_apache_enrichments WHERE content_id = ?1 AND user_id = ?2`)
+    .bind(contentId, userId)
+    .first<{ partial_result: string | null }>();
+  if (!row?.partial_result) return { ficha: null, cursor: 0 };
+  try {
+    const parsed = JSON.parse(row.partial_result) as { ficha?: unknown; cursor?: unknown };
+    if (typeof parsed.cursor === 'number' && parsed.ficha) {
+      return { ficha: validateEnrichment(parsed.ficha), cursor: parsed.cursor };
+    }
+  } catch {
+    // partial_result corrompido/formato antigo -- reprocessa do chunk 0 em
+    // vez de travar o item pra sempre.
+  }
+  return { ficha: null, cursor: 0 };
+}
+
+async function writeEnrichmentProgress(
+  db: D1Like,
+  contentId: string,
+  userId: string,
+  ficha: ApacheEnrichment,
+  cursor: number,
+  now: string,
+): Promise<void> {
+  await db.batch([
+    db
+      .prepare(
+        `UPDATE atlas_apache_enrichments SET partial_result = ?3, updated_at = ?4 WHERE content_id = ?1 AND user_id = ?2`,
+      )
+      .bind(contentId, userId, JSON.stringify({ ficha, cursor }), now),
+  ]);
+}
+
+async function deferEnrichmentForQuota(db: D1Like, queueId: string, now: string): Promise<void> {
+  // created_at = now, mesmo motivo de deferForQuota em queue.ts: sem isso o
+  // item voltaria a ser mandado pra fila em todo poll enquanto a cota não
+  // reseta. O texto temporário e o progresso (partial_result) NUNCA são
+  // apagados aqui -- o item é retomado depois do reset (sweepQueue), não
+  // descartado.
+  await db.batch([
+    db
+      .prepare(
+        `UPDATE atlas_apache_queue SET status = 'pendente', started_at = NULL, last_error = ?2, created_at = ?3 WHERE id = ?1`,
+      )
+      .bind(queueId, ENRICHMENT_QUOTA_DEFERRED_MARKER, now),
+  ]);
+}
+
+// Desiste de verdade de 1 item de enriquecimento: devolve as páginas
+// debitadas, marca a linha como erro (mensagem genérica pro cliente, Gate
+// APA-14/DEC-020 item 8) e só então apaga o texto temporário -- chamado
+// tanto por processEnrichmentQueueItem (tentativas esgotadas) quanto por
+// sweepQueue (queue.ts) quando um item 'processando' preso esgota
+// MAX_QUEUE_ATTEMPTS lá. Exportado só para isso (evita duplicar a lógica de
+// refund+markErrored em queue.ts).
+export async function giveUpEnrichmentQueueItem(
+  db: D1Like,
+  bucket: R2Like | null,
+  contentId: string,
+  userId: string,
+  tempObjectKey: string | null,
+  message: string,
+  now: string,
+): Promise<void> {
+  const row = await getEnrichmentRow(db, contentId, userId);
+  if (row) {
+    const windowStart = await currentQuotaWindowStart(db, userId);
+    await refundQuota(db, userId, row.pages_used, windowStart, new Date(now));
+  }
+  await markErrored(db, contentId, userId, message, now);
+  if (bucket && tempObjectKey) await deleteTempTextSafely(bucket, tempObjectKey);
+}
+
+// Exportado para sweepQueue (queue.ts) usar na mesma mensagem quando um
+// item 'processando' preso esgota as tentativas de recuperação lá.
+export const STUCK_ENRICHMENT_ERROR_MESSAGE =
+  'Não foi possível processar este material depois de várias tentativas (o processamento foi interrompido repetidamente).';
+
 // Processa 1 item `kind='enriquecimento'` da fila (despachado por
 // `processQueueItem` em queue.ts, a partir do `kind` da linha): claim
 // atômico (mesmo princípio do processQueueItem de aulas -- a entrega da
 // Cloudflare Queues é "pelo menos uma vez"), lê o texto temporário do R2,
-// processa chunk a chunk (gravando `partial_result` depois de cada um,
-// card APA-12), salva a ficha final ou descarta, sempre apaga o texto
-// temporário ao fim (sucesso ou erro), nunca lança para a chamadora decidir
-// ack()/retry() a partir de uma falha de geração -- só uma exceção
-// genuína de infraestrutura (D1/R2 fora do ar) deveria escapar daqui.
+// processa até MAX_CHUNKS_PER_INVOCATION chunks a partir do cursor salvo em
+// `partial_result` (card APA-12 + teto de execução), e: se sobrarem chunks,
+// persiste o progresso e manda este MESMO item de volta pra fila
+// (`producerQueue`, pode ser null em dev sem a fila configurada -- o item
+// fica 'pendente' esperando o próximo sweepQueue/poll); se não, salva a
+// ficha final ou descarta e apaga o texto temporário. Nunca apaga o texto
+// nem o progresso ao adiar por cota (deferEnrichmentForQuota) -- só em
+// sucesso, descarte ou desistência real (giveUpEnrichmentQueueItem). Nunca
+// lança para a chamadora decidir ack()/retry() a partir de uma falha de
+// geração -- só uma exceção genuína de infraestrutura (D1/R2 fora do ar)
+// deveria escapar daqui.
 export async function processEnrichmentQueueItem(
   db: D1Like,
   bucket: R2Like,
@@ -618,6 +766,7 @@ export async function processEnrichmentQueueItem(
   userId: string,
   tempObjectKey: string,
   now: string,
+  producerQueue: EnrichmentQueueLike | null = null,
 ): Promise<void> {
   const [claim] = await db.batch([
     db
@@ -630,13 +779,7 @@ export async function processEnrichmentQueueItem(
 
   const budget = await neuronBudgetRemaining(db, now);
   if (budget.overLimit) {
-    await db.batch([
-      db
-        .prepare(
-          `UPDATE atlas_apache_queue SET status = 'pendente', started_at = NULL, last_error = ?2, created_at = ?3 WHERE id = ?1`,
-        )
-        .bind(queueId, ENRICHMENT_QUOTA_DEFERRED_MARKER, now),
-    ]);
+    await deferEnrichmentForQuota(db, queueId, now);
     return;
   }
 
@@ -644,54 +787,72 @@ export async function processEnrichmentQueueItem(
     const text = await readTempText(bucket, tempObjectKey);
     const contentTitle = await loadContentTitle(db, contentId);
     const chunks = chunkMaterialText(text);
-    const results: ChunkResult[] = [];
-    for (const chunk of chunks) {
-      const result = await processEnrichmentChunk(db, ai, model, contentTitle, chunk, now);
-      results.push(result);
-      const partial = mergeChunkResults(results);
-      await db.batch([
-        db
-          .prepare(
-            `UPDATE atlas_apache_enrichments SET partial_result = ?3, updated_at = ?4 WHERE content_id = ?1 AND user_id = ?2`,
-          )
-          .bind(contentId, userId, JSON.stringify(partial), now),
-      ]);
+    const progress = await readEnrichmentProgress(db, contentId, userId);
+    const start = Math.min(progress.cursor, chunks.length);
+    const end = Math.min(chunks.length, start + MAX_CHUNKS_PER_INVOCATION);
+
+    const newResults: ChunkResult[] = [];
+    for (let i = start; i < end; i++) {
+      newResults.push(await processEnrichmentChunk(db, ai, model, contentTitle, chunks[i], now));
     }
-    const ficha = mergeChunkResults(results);
-    if (ficha.irrelevante) {
+    const soFar: ChunkResult[] = progress.ficha
+      ? [{ conceitos: progress.ficha.conceitos, irrelevante: progress.ficha.irrelevante }, ...newResults]
+      : newResults;
+    const merged = validateEnrichment(mergeChunkResults(soFar));
+
+    if (end < chunks.length) {
+      // Ainda sobram chunks: persiste o progresso, volta pra 'pendente' (sem
+      // tocar attempts -- não é uma falha) e manda este mesmo item de volta
+      // pra fila pra continuar na próxima invocação. Texto temporário fica.
+      await writeEnrichmentProgress(db, contentId, userId, merged, end, now);
+      await db.batch([
+        db.prepare(`UPDATE atlas_apache_queue SET status = 'pendente', started_at = NULL WHERE id = ?1`).bind(queueId, now),
+      ]);
+      if (producerQueue) await producerQueue.send({ queueId, contentId });
+      return;
+    }
+
+    if (merged.irrelevante) {
       await markDiscarded(db, contentId, userId, now);
     } else {
-      await saveFicha(db, bucket, contentId, userId, ficha, now);
+      await saveFicha(db, bucket, contentId, userId, merged, now);
     }
     await deleteTempTextSafely(bucket, tempObjectKey);
     await db.batch([
       db.prepare(`UPDATE atlas_apache_queue SET status = 'concluido', processed_at = ?2 WHERE id = ?1`).bind(queueId, now),
     ]);
   } catch (error) {
-    await deleteTempTextSafely(bucket, tempObjectKey);
-
     if (error instanceof ApacheError && error.status === 429) {
-      await db.batch([
-        db
-          .prepare(
-            `UPDATE atlas_apache_queue SET status = 'pendente', started_at = NULL, last_error = ?2, created_at = ?3 WHERE id = ?1`,
-          )
-          .bind(queueId, ENRICHMENT_QUOTA_DEFERRED_MARKER, now),
-      ]);
+      await deferEnrichmentForQuota(db, queueId, now);
       return;
     }
 
     const message = error instanceof Error ? error.message : String(error);
-    const row = await getEnrichmentRow(db, contentId, userId);
-    if (row) {
-      const windowStart = await currentQuotaWindowStart(db, userId);
-      await refundQuota(db, userId, row.pages_used, windowStart, new Date(now));
+    const attemptsRow = await db
+      .prepare(`SELECT attempts FROM atlas_apache_queue WHERE id = ?1`)
+      .bind(queueId)
+      .first<{ attempts: number }>();
+    const attempts = (attemptsRow?.attempts ?? 0) + 1;
+
+    if (attempts < MAX_ENRICHMENT_QUEUE_ATTEMPTS) {
+      // Ainda não esgotou as tentativas: volta pra 'pendente' pra ser
+      // recuperado (sweepQueue, queue.ts, ou a reentrega nativa da fila) --
+      // texto temporário e progresso ficam, não é desistência ainda.
+      await db.batch([
+        db
+          .prepare(
+            `UPDATE atlas_apache_queue SET status = 'pendente', started_at = NULL, attempts = ?2, last_error = ?3 WHERE id = ?1`,
+          )
+          .bind(queueId, attempts, message.slice(0, MAX_QUEUE_LAST_ERROR_CHARS)),
+      ]);
+      return;
     }
-    await markErrored(db, contentId, userId, message, now);
+
+    await giveUpEnrichmentQueueItem(db, bucket, contentId, userId, tempObjectKey, message, now);
     await db.batch([
       db
-        .prepare(`UPDATE atlas_apache_queue SET status = 'erro', last_error = ?2, processed_at = ?3 WHERE id = ?1`)
-        .bind(queueId, message.slice(0, MAX_QUEUE_LAST_ERROR_CHARS), now),
+        .prepare(`UPDATE atlas_apache_queue SET status = 'erro', attempts = ?2, last_error = ?3, processed_at = ?4 WHERE id = ?1`)
+        .bind(queueId, attempts, message.slice(0, MAX_QUEUE_LAST_ERROR_CHARS), now),
     ]);
   }
 }

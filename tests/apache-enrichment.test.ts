@@ -95,6 +95,32 @@ void test('APA-12: mergeChunkResults só descarta quando TODO chunk é irrelevan
   assert.equal(allIrrelevant.irrelevante, true);
 });
 
+void test('APA-12: mergeChunkResults deduplica por nome e nunca passa de MAX_LIST_ITEMS', () => {
+  const dedup = mergeChunkResults([
+    { conceitos: [{ id: 'a1', nome: 'Patrimônio Líquido', def: 'primeira definição' }], irrelevante: false },
+    { conceitos: [{ id: 'a2', nome: 'patrimônio líquido', def: 'segunda definição (ignorada)' }], irrelevante: false },
+  ]);
+  assert.equal(dedup.conceitos.length, 1, 'mesmo nome normalizado em chunks diferentes conta 1 vez só');
+  assert.equal(dedup.conceitos[0].def, 'primeira definição', 'mantém a 1ª ocorrência');
+
+  // 3 chunks de 8 conceitos cada (24 no total, todos com nomes distintos) --
+  // mais que MAX_LIST_ITEMS (20) somado entre chunks, o caso que o card não
+  // cobria: sem o teto aqui, validateEnrichment (schema.ts) rejeitaria a
+  // ficha inteira só na leitura (APA-07), fazendo tudo desaparecer.
+  const manyChunks = Array.from({ length: 3 }, (_, chunkIndex) => ({
+    conceitos: Array.from({ length: 8 }, (_, i) => ({
+      id: `c${chunkIndex}-${i}`,
+      nome: `Conceito ${chunkIndex}-${i}`,
+      def: 'def',
+    })),
+    irrelevante: false,
+  }));
+  const capped = mergeChunkResults(manyChunks);
+  assert.equal(capped.conceitos.length, 20, 'nunca passa de MAX_LIST_ITEMS mesmo com 24 conceitos distintos');
+  const ids = new Set(capped.conceitos.map((c) => c.id));
+  assert.equal(ids.size, 20, 'ids reatribuídos são todos únicos (key do React)');
+});
+
 void test('APA-12: processa síncrono (1 chunk), salva a ficha e debita a cota', async () => {
   const sqlite = migratedDatabase();
   seedContent(sqlite, 'ct1');
@@ -249,6 +275,53 @@ void test('APA-12: 2+ chunks vão para a fila (texto temporário em R2 + mensage
   assert.equal(row.kind, 'enriquecimento');
   assert.equal(row.user_id, USER_ID);
   assert.equal(row.status, 'pendente');
+});
+
+void test('APA-12: reenvio enquanto um item já está na fila não debita a cota de novo', async () => {
+  const sqlite = migratedDatabase();
+  seedContent(sqlite, 'ct4b');
+  const database = d1(sqlite);
+  const bucket = fakeBucket();
+  const queue = fakeQueue();
+  const ai = fakeAi(async () => jsonResponse({ v: 1, conceitos: [], irrelevante: false }));
+
+  const bigParagraph = (label: string) => `${label} ${'x'.repeat(2500)}`;
+  const text = `${bigParagraph('p1')}\n\n${bigParagraph('p2')}`;
+
+  const input = {
+    db: database,
+    bucket,
+    ai,
+    model: MODEL,
+    queue,
+    contentId: 'ct4b',
+    userId: USER_ID,
+    pages: 3,
+    now,
+  };
+
+  const first = await submitEnrichment({
+    ...input,
+    text,
+    sourceHash: await sha256Hex(new TextEncoder().encode(text).buffer as ArrayBuffer),
+  });
+  assert.deepEqual(first, { kind: 'queued' });
+
+  // Reenvio com um arquivo DIFERENTE (hash diferente) enquanto o 1º ainda
+  // está pendente na fila -- não deve debitar outras 3 páginas, nem criar
+  // uma 2ª mensagem/linha na fila.
+  const second = await submitEnrichment({
+    ...input,
+    text: `${text}\n\nmais texto`,
+    sourceHash: await sha256Hex(new TextEncoder().encode(`${text}\n\nmais texto`).buffer as ArrayBuffer),
+  });
+  assert.deepEqual(second, { kind: 'queued' });
+  assert.equal(queue.sent.length, 1, 'não deve mandar uma 2ª mensagem pra fila');
+
+  const quota = sqlite.prepare('SELECT pages_used FROM atlas_apache_quota WHERE user_id = ?').get(USER_ID) as {
+    pages_used: number;
+  };
+  assert.equal(quota.pages_used, 3, 'só debita 1 vez enquanto o item anterior está pendente');
 });
 
 void test('APA-12: consumer da fila processa os chunks, salva a ficha e apaga o texto temporário', async () => {

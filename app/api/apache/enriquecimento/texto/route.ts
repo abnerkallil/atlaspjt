@@ -13,11 +13,20 @@ import {
   APACHE_DEFAULT_ENRICHMENT_MODEL,
   type EnrichmentQueueLike,
 } from '@/lib/apache/enrichment';
+import { MAX_EXTRACTED_CHARS } from '@/lib/apache/ingest-digital';
+import { APACHE_DAILY_PAGE_LIMIT } from '@/lib/apache/quota';
+import { assertContentExists } from '@/lib/apache/queue';
 import type { AiLike } from '@/lib/apache/lesson-writer';
 import type { R2Like } from '@/lib/apache/lesson-store';
 import type { D1Like } from '@/lib/pedagogy/transitions';
 
 export const runtime = 'edge';
+
+// Margem de folga em cima de MAX_EXTRACTED_CHARS (texto em JSON, com escape
+// de aspas/quebras de linha pode inflar um pouco o payload) -- teto de
+// content-length ANTES de `request.json()`, pra nunca alocar/parsear um
+// corpo gigante só pra rejeitar depois pelo teto de `text.length`.
+const MAX_TEXT_BODY_BYTES = 3.5 * 1024 * 1024;
 
 type ApacheBindings = {
   DB?: D1Like;
@@ -66,6 +75,11 @@ export async function POST(request: Request) {
     const { db, bucket, ai, queue, limiter, model } = bindings();
     await assertRateLimit(limiter, userId);
 
+    const declared = Number(request.headers.get('content-length'));
+    if (Number.isFinite(declared) && declared > MAX_TEXT_BODY_BYTES) {
+      throw new ApacheError('Texto maior que o esperado.', 413);
+    }
+
     const body = await request.json().catch(() => null);
     if (!body || typeof body !== 'object') throw new ApacheError('Envio inválido.', 400);
     const { contentId, text, pages } = body as Record<string, unknown>;
@@ -75,12 +89,23 @@ export async function POST(request: Request) {
     if (typeof pages !== 'number' || !Number.isInteger(pages) || pages <= 0) {
       throw new ApacheError('Informe pages (número de páginas do envio).', 400);
     }
-    // Gate APA-14: teto de tamanho de texto proporcional ao número de
-    // páginas informado -- um `pages` mentiroso não contorna a cota diária
-    // (APA-13) nem o corte síncrono/fila.
+    // Gate APA-14 item 6/APA-13: teto absoluto (independente do `pages`
+    // declarado) ANTES do teto proporcional abaixo -- um `pages` pequeno com
+    // um texto gigante não deveria nem chegar a ser hasheado/processado.
+    if (pages > APACHE_DAILY_PAGE_LIMIT) {
+      throw new ApacheError(`pages não pode passar de ${APACHE_DAILY_PAGE_LIMIT}.`, 413);
+    }
+    if (text.length > MAX_EXTRACTED_CHARS) {
+      throw new ApacheError('Texto maior que o teto de extração.', 413);
+    }
+    // Teto de tamanho de texto proporcional ao número de páginas informado
+    // -- um `pages` mentiroso não contorna a cota diária (APA-13) nem o
+    // corte síncrono/fila.
     if (text.length > pages * MAX_TEXT_CHARS_PER_PAGE) {
       throw new ApacheError('Texto maior que o esperado para o número de páginas informado.', 413);
     }
+
+    await assertContentExists(db, contentId);
 
     const now = new Date().toISOString();
     const sourceHash = await sha256Hex(new TextEncoder().encode(text).buffer as ArrayBuffer);
