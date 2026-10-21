@@ -21,7 +21,10 @@ export const NEURON_RATE_PER_MILLION_TOKENS: Record<string, { input: number; out
 // Tokens de fallback por geração (~3k de entrada + ~2k de saída) quando
 // response.usage não vier da chamada. Com essas taxas: Llama 3.3 70B ~490,
 // Gemma 4 26B ~82, Qwen3 30B ~75, Llama 3.2 11B vision ~136 neurons.
-const FALLBACK_PROMPT_TOKENS = 3_000;
+// Exportado porque APA-11 (ingest-handwriting.ts) reusa o mesmo número como
+// estimativa de pior caso para checar orçamento antes de uma chamada de
+// visão, na ausência de uma fórmula oficial de tokens-por-imagem.
+export const FALLBACK_PROMPT_TOKENS = 3_000;
 const FALLBACK_COMPLETION_TOKENS = 2_000;
 
 // Estima neurons de uma geração: tokens × taxa do modelo. Use
