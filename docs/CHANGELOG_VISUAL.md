@@ -14,6 +14,22 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #92 — Reportar erro na aula (APA-08)
+
+- Ponto de restauração: branch `restore/pre-apa-08` (main antes do merge).
+- O que muda no site: a aula do Apache (sessão de estudo) ganha um botão
+  "Reportar erro" no final. Ao clicar, confirma com "Avisar que esta aula
+  tem um erro? Ela entra na fila de revisão." — a aula **continua visível**
+  (nunca some), só ganha o aviso "Erro reportado — esta aula está na fila
+  de revisão e pode ser atualizada em breve." e dispara uma nova geração
+  em segundo plano (mesma fila do PR #91, mesmo custo de ~490 neurons por
+  regeneração). Se a aula atual foi escrita a mão (não é o caso ainda, só
+  acontece quando o Claude escrever aulas manualmente pro roadmap inteiro),
+  o report fica só como item de backlog, sem gastar neurons.
+- Sem migration nova.
+- Se algo der errado: reverter para `restore/pre-apa-08` tira o botão e a
+  rota de reportar; nenhuma aula ou report existente é apagado.
+
 ## PR #91 — Fila, geração lazy da aula e diff na leitura (APA-07)
 
 - Ponto de restauração: branch `restore/pre-apa-07` (main antes do merge).
