@@ -14,6 +14,23 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #89 — Fallback de letra de mão, Workers AI vision (APA-11)
+
+- Ponto de restauração: branch `restore/pre-apa-11` (main antes do merge).
+- O que muda no site: nada visível ainda. Este PR só adiciona
+  `lib/apache/ingest-handwriting.ts` (`extractHandwriting`): transcreve
+  letra de mão chamando o Workers AI (Llama 3.2 11B vision) quando a
+  confiança do OCR em navegador (APA-10) de uma página fica abaixo de 70,
+  checa o orçamento diário de neurons pelo pior caso antes de cada chamada
+  e registra o gasto real depois, e reconhece quando a cota diária do
+  Workers AI esgota (vira "tenta de novo depois da meia-noite UTC",
+  distinto de uma simples sobrecarga temporária de capacidade). Teto de
+  1.5MB por imagem (CPU do Workers Free). Nenhuma tela ou rota ainda chama
+  isso — é o futuro APA-12 (pipeline de enriquecimento) que vai acionar.
+- Sem migration nova.
+- Se algo der errado: reverter para `restore/pre-apa-11` remove o módulo;
+  como nenhuma rota ainda chama `extractHandwriting`, nada no site muda.
+
 ## PR #88 — Gerador da aula base do Apache, Workers AI (APA-06)
 
 - Ponto de restauração: branch `restore/pre-apa-06` (main antes do merge).
