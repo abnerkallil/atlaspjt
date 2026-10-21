@@ -39,11 +39,12 @@ type QueueRowFixture = {
   attempts: number;
   started_at: string | null;
   last_error: string | null;
+  created_at: string;
 };
 
 function queueRow(sqlite: ReturnType<typeof migratedDatabase>, id: string): QueueRowFixture | undefined {
   return sqlite
-    .prepare('SELECT id, content_id, kind, status, attempts, started_at, last_error FROM atlas_apache_queue WHERE id = ?')
+    .prepare('SELECT id, content_id, kind, status, attempts, started_at, last_error, created_at FROM atlas_apache_queue WHERE id = ?')
     .get(id) as QueueRowFixture | undefined;
 }
 
@@ -272,6 +273,33 @@ void test('processQueueItem deixa pendente sem chamar a IA quando o orçamento d
   const row = queueRow(sqlite, 'q1');
   assert.equal(row?.status, 'pendente');
   assert.equal(row?.last_error, 'cota_diaria_esgotada');
+  assert.equal(row?.created_at, now, 'created_at precisa virar "agora", senão a varredura reenvia a cada poll');
+});
+
+void test('deferForQuota atualiza created_at — sweepQueue não reenvia o item adiado no mesmo dia a cada poll', async () => {
+  const sqlite = migratedDatabase();
+  seedContent(sqlite, 'X-001');
+  const db = d1(sqlite);
+  await recordNeuronUsage(db, 9_500, now);
+  // Item criado ANTES da meia-noite de hoje (ontem) — é esse o caso que
+  // revelava o bug: sem atualizar created_at no adiamento, a linha
+  // continuava com created_at de ontem, e o filtro de sweepQueue
+  // (created_at < meia-noite mais recente) a pegava de novo em todo poll.
+  const yesterday = '2026-10-20T23:00:00.000Z';
+  sqlite.exec(
+    `INSERT INTO atlas_apache_queue (id, content_id, kind, status, attempts, created_at) VALUES ('q1', 'X-001', 'aula', 'pendente', 0, '${yesterday}')`,
+  );
+  const ai = fakeAi(async () => ({ response: JSON.stringify(sampleLesson()) }));
+
+  await processQueueItem(db, fakeBucket(), ai, 'q1', 'X-001', now);
+  assert.equal(queueRow(sqlite, 'q1')?.last_error, 'cota_diaria_esgotada');
+
+  // Poll seguinte, ainda no mesmo dia (mesma meia-noite de referência): a
+  // varredura não deve mandar o item pra fila de novo.
+  const laterSameDay = '2026-10-21T12:05:00.000Z';
+  const queue = fakeQueue();
+  await sweepQueue(db, queue, laterSameDay);
+  assert.deepEqual(queue.sent, [], 'adiado por cota hoje — não deve ser reenviado antes da próxima meia-noite UTC');
 });
 
 void test('processQueueItem não processa 2x o mesmo item (claim atômico: WHERE status=pendente)', async () => {
@@ -367,7 +395,7 @@ void test('handleGetAula na primeira chamada cria a linha pendente e manda 1 men
   // acima mandou — é ele que de fato chama a IA e gera a aula.
   const ai = fakeAi(async () => ({ response: JSON.stringify(sampleLesson()) }));
   const message = fakeMessage(queue.sent[0]);
-  await handleLessonQueueBatch({ messages: [message] }, db, bucket, ai, now);
+  await handleLessonQueueBatch({ messages: [message] }, db, bucket, ai);
   assert.equal(message.acked, true);
 
   const stored = await readLesson(db, bucket, 'X-001');
@@ -488,7 +516,7 @@ void test('handleLessonQueueBatch processa cada mensagem do lote e dá ack em ca
   const m1 = fakeMessage({ queueId: 'q1', contentId: 'X-001' });
   const m2 = fakeMessage({ queueId: 'q2', contentId: 'X-002' });
 
-  await handleLessonQueueBatch({ messages: [m1, m2] }, db, bucket, ai, now);
+  await handleLessonQueueBatch({ messages: [m1, m2] }, db, bucket, ai);
 
   assert.equal(m1.acked, true);
   assert.equal(m2.acked, true);
@@ -516,7 +544,7 @@ void test('handleLessonQueueBatch dá retry (não ack) quando processQueueItem l
   const ai = fakeAi(async () => ({ response: JSON.stringify(sampleLesson()) }));
   const message = fakeMessage({ queueId: 'q1', contentId: 'X-001' });
 
-  await handleLessonQueueBatch({ messages: [message] }, brokenDb, fakeBucket(), ai, now);
+  await handleLessonQueueBatch({ messages: [message] }, brokenDb, fakeBucket(), ai);
   assert.equal(message.retried, true);
   assert.equal(message.acked, false);
 });

@@ -46,18 +46,22 @@ const localBindingConfig = {
   // APA-07 (DEC-019): geração da aula roda no consumer desta fila
   // (worker-entry.ts), nunca na rota GET — o produtor só manda uma
   // mensagem leve {queueId, contentId}. Plano Free: 10.000 operações/dia
-  // (leitura+escrita+exclusão somadas), ~3-4 operações por aula (send +
-  // leitura do lote + ack/retry). max_retries: 3, coerente com o limite de
-  // tentativas já aplicado em lib/apache/queue.ts; sem dead_letter_queue —
-  // um item que esgota os retries da própria Cloudflare ainda é recuperado
-  // pela varredura (sweepQueue) depois da meia-noite UTC.
+  // (leitura+escrita+exclusão somadas), ~6-12 operações por aula (send +
+  // leitura do lote + ack/retry, contando que a varredura pode reenviar).
+  // max_batch_size: 1 — cada mensagem já leva segundos (chamada de IA);
+  // um lote maior deixaria a hora de início do lote velha para as últimas
+  // mensagens, fazendo a varredura achar que elas travaram e reenviá-las
+  // (gerando a aula 2x) — ver `now` por mensagem em handleLessonQueueBatch.
+  // max_retries: 3, coerente com o limite de tentativas já aplicado em
+  // lib/apache/queue.ts; sem dead_letter_queue — um item que esgota os
+  // retries da própria Cloudflare ainda é recuperado pela varredura
+  // (sweepQueue) depois da meia-noite UTC.
   queues: {
     producers: [{ queue: 'atlas-apache-aulas', binding: 'APACHE_LESSON_QUEUE' }],
     consumers: [
       {
         queue: 'atlas-apache-aulas',
-        max_batch_size: 5,
-        max_batch_timeout: 10,
+        max_batch_size: 1,
         max_retries: 3,
       },
     ],

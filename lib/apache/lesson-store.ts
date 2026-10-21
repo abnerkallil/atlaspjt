@@ -174,8 +174,8 @@ export async function markReported(db: D1Like, contentId: string, now: string): 
     )
     .bind(contentId, kind)
     .all<{ status: string; started_at: string | null }>();
-  // Um item 'processando' preso (waitUntil interrompido, started_at há mais
-  // de 5 min — regra do APA-02/07) não bloqueia um novo pedido.
+  // Um item 'processando' preso (consumer da fila interrompido, started_at
+  // há mais de 5 min — regra do APA-02/07) não bloqueia um novo pedido.
   const pending = candidates.results.some(
     (item) =>
       item.status === 'pendente' ||

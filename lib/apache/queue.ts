@@ -216,9 +216,17 @@ export async function sweepQueue(db: D1Like, queue: QueueLike, now: string, limi
 
 async function deferForQuota(db: D1Like, queueId: string, contentId: string, now: string): Promise<void> {
   await db.batch([
+    // created_at = now também: senão o item fica com o created_at de ANTES
+    // do adiamento (de ontem, se foi adiado perto da meia-noite, ou de há
+    // pouco se foi adiado hoje mesmo) — e sweepQueue manda pendente com
+    // created_at < meia-noite mais recente de volta pra fila. Sem bumpar
+    // created_at, o item voltaria a ser mandado pra fila em TODO poll de 5s
+    // enquanto a cota não reseta (exatamente o loop de chamadas 3036 que
+    // este sentinela existe para evitar) — só depois de um created_at
+    // atualizado é que ele fica fora do filtro até a PRÓXIMA meia-noite.
     db
-      .prepare(`UPDATE atlas_apache_queue SET status = 'pendente', started_at = NULL, last_error = ?2 WHERE id = ?1`)
-      .bind(queueId, QUOTA_DEFERRED_MARKER),
+      .prepare(`UPDATE atlas_apache_queue SET status = 'pendente', started_at = NULL, last_error = ?2, created_at = ?3 WHERE id = ?1`)
+      .bind(queueId, QUOTA_DEFERRED_MARKER, now),
     db
       .prepare(`UPDATE atlas_apache_lessons SET status = 'pendente', updated_at = ?2 WHERE content_id = ?1 AND status = 'gerando'`)
       .bind(contentId, now),
@@ -305,9 +313,15 @@ export async function handleLessonQueueBatch(
   db: D1Like,
   bucket: R2Like,
   ai: AiLike,
-  now: string,
 ): Promise<void> {
+  // `now` por mensagem, nunca uma vez só pro lote: com max_batch_size > 1,
+  // a hora do início do lote ficaria velha nas últimas mensagens — se as
+  // anteriores levarem mais de 5 min pra processar, isStaleProcessing()
+  // acharia que o claim desta mensagem já travou e a varredura a reenviaria
+  // pra fila, gerando a aula 2x. Lote de 1 (vite.config.ts) já evita isso na
+  // prática, mas o cálculo por mensagem é a garantia real.
   for (const message of batch.messages) {
+    const now = new Date().toISOString();
     try {
       await processQueueItem(db, bucket, ai, message.body.queueId, message.body.contentId, now);
       message.ack();

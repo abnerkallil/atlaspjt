@@ -29,7 +29,7 @@ export default {
       for (const message of batch.messages) message.retry();
       return;
     }
-    await handleLessonQueueBatch(batch, DB, ATTACHMENTS, AI, new Date().toISOString());
+    await handleLessonQueueBatch(batch, DB, ATTACHMENTS, AI);
   },
 } satisfies {
   fetch: typeof vinextHandler.fetch;

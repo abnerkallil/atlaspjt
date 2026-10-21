@@ -230,7 +230,7 @@ export async function writeLesson(
     await assertBudgetForAttempt(db, now, worstCase);
 
     // Reserva pelo pior caso ANTES da chamada: se o isolate for cortado no
-    // meio do ai.run (ex.: pelo limite de tempo do waitUntil), o gasto real
+    // meio do ai.run (ex.: o consumer da fila sendo reciclado), o gasto real
     // que a Cloudflare já cobrou não fica de fora do medidor local — ajusta
     // pro valor real abaixo quando (e se) a chamada responder.
     await recordNeuronUsage(db, worstCase, now);

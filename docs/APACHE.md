@@ -1,9 +1,11 @@
 # Apache — IA criadora de conteúdo pedagógico (aula base + enriquecimento)
 
 **Revisão 4** (2026-10-20, depois do Abner responder os 6 itens dos Gates):
-registra a decisão da execução periódica — **opção (b)**, `waitUntil` + checagem
-no primeiro acesso do dia, sem depender de um `scheduled` customizado do
-vinext — e corrige a relação enriquecimento×versão da aula: como o arquivo
+registra a decisão da execução periódica — **opção (b)**, fila processada em
+segundo plano + checagem no primeiro acesso do dia, sem depender de um
+`scheduled` customizado do vinext (mecanismo revisado em 2026-10-21 para
+Cloudflare Queues, ver abaixo e DEC-019) — e corrige a relação
+enriquecimento×versão da aula: como o arquivo
 original do aluno é sempre apagado, a **ficha extraída** (os conceitos que a
 IA tirou do material) agora é guardada **separada** do resultado comparado com
 a aula; quando a aula muda de versão, só a comparação é refeita —
@@ -39,9 +41,10 @@ gastaria neurons sem terminar a aula). A rota GET só manda uma mensagem leve
 request HTTP recebido depois do reset diário de cota (meia-noite UTC) — ela
 só manda mensagens pra fila (nunca chama a IA direto), para não deixar itens
 travados até alguém acessar o Atlas por acaso. Cloudflare Queues está no
-plano Free: 10.000 operações/dia (leitura+escrita+exclusão somadas), ~3-4
-operações por aula — sem depender de um mecanismo do vinext não documentado
-para cron nem de `scheduled`.
+plano Free: 10.000 operações/dia (leitura+escrita+exclusão somadas), ~6-12
+operações por aula (a varredura pode reenviar um item adiado por cota ou
+recuperado de um travamento) — sem depender de um mecanismo do vinext não
+documentado para cron nem de `scheduled`.
 
 ## Convenções que todo card abaixo segue
 
@@ -197,8 +200,8 @@ formalmente em `docs/quests/ARCHITECTURE_GATE.md` / `docs/ATLAS_DECISIONS.md`.
 > Queues** (fila `atlas-apache-aulas`) — não mais via `ctx.waitUntil`, que só
 > garante ~30s depois da resposta e o Llama 3.3 70B com retry passa disso com
 > frequência. A rota GET só manda a mensagem `{queueId, contentId}` pra fila;
-> quem chama a IA é o consumer. Plano Free: 10.000 operações/dia, ~3-4 por
-> aula. Mantém a checagem de itens pendentes no primeiro request HTTP
+> quem chama a IA é o consumer. Plano Free: 10.000 operações/dia, ~6-12 por
+> aula (a varredura pode reenviar). Mantém a checagem de itens pendentes no primeiro request HTTP
 > recebido depois do reset diário de cota (meia-noite UTC) — ela só manda
 > mensagens pra fila.
 
@@ -349,7 +352,7 @@ CREATE TABLE `atlas_apache_queue` (
   `attempts` integer NOT NULL DEFAULT 0,
   `last_error` text,
   `temp_object_key` text, -- texto extraído do upload, em apache/tmp/, até o job terminar
-  `started_at` text, -- marcado quando status vira 'processando'; destrava item preso se o waitUntil for interrompido antes da geração terminar (ver regra abaixo)
+  `started_at` text, -- marcado quando status vira 'processando'; destrava item preso se o consumer for interrompido antes da geração terminar (ver regra abaixo)
   `created_at` text NOT NULL,
   `processed_at` text,
   FOREIGN KEY (`content_id`) REFERENCES `atlas_contents`(`id`) ON UPDATE no action ON DELETE cascade
@@ -371,9 +374,10 @@ para revisão humana (ver regra no APA-18).
 
 **Item preso em `'processando'`** (decidido pelo coordenador em 2026-10-20,
 detalhe técnico dentro do Gate já aprovado, sem precisar de nova decisão do
-Abner): o `waitUntil` que processa a fila pode ser interrompido antes da
-geração no Llama 70B terminar (janela de execução curta), deixando o item
-em `'processando'` para sempre — o dedupe do APA-07 bloquearia reenfileirar
+Abner): o consumer que processa a fila (Cloudflare Queues desde 2026-10-21,
+ver DEC-019) pode ser interrompido antes da geração no Llama 70B terminar
+sem nunca chamar `ack()`/`retry()`, deixando o item em `'processando'` para
+sempre — o dedupe do APA-07 bloquearia reenfileirar
 esse `content_id`+`kind`, e a varredura pós-meia-noite só olha itens
 `'pendente'`. Por isso `atlas_apache_queue.started_at` é marcado quando o
 status vira `'processando'`; tanto a varredura pós-reset quanto o próprio
