@@ -157,7 +157,9 @@ export async function readLesson(
 // andamento do mesmo kind para este conteúdo.
 const STALE_PROCESSING_MS = 5 * 60 * 1000;
 
-export async function markReported(db: D1Like, contentId: string, now: string): Promise<void> {
+export type MarkReportedResult = { kind: 'aula' | 'aula_manual'; queued: boolean };
+
+export async function markReported(db: D1Like, contentId: string, now: string): Promise<MarkReportedResult> {
   const row = await getLessonRow(db, contentId);
   if (!row) throw new ApacheError(`Aula do conteúdo "${contentId}" não existe.`, 404);
   // Só uma aula exibível (gerada ou já reportada antes) pode ser reportada de
@@ -204,6 +206,15 @@ export async function markReported(db: D1Like, contentId: string, now: string): 
     );
   }
   await db.batch(statements);
+  // `queued` diz pro chamador (handleReportAula, APA-08) se este pedido
+  // precisa mandar uma mensagem nova pra Cloudflare Queues: quando já havia
+  // um item pendente/em andamento saudável (`pending`), a mensagem dele já
+  // foi mandada quando ele foi criado — mandar de novo aqui duplicaria o
+  // envio sem nenhum item novo por trás (ex.: reportar duas vezes enquanto
+  // a 1ª geração ainda está na fila, ou enquanto está adiada por cota:
+  // `deferForQuota` mantém `status = 'pendente'`, então entra em `pending`
+  // também, sem precisar checar o sentinela aqui).
+  return { kind, queued: !pending };
 }
 
 const MAX_ERROR_MESSAGE_CHARS = 200;
