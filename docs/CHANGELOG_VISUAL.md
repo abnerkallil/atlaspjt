@@ -14,6 +14,23 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #90 — Bake-off de modelo para enriquecimento (APA-17)
+
+- Ponto de restauração: branch `restore/pre-apa-17` (main antes do merge).
+- O que muda no site: nada visível. Este PR adiciona só um script de
+  desenvolvimento (`scripts/apache-bakeoff.ts`, `pnpm run apache:bakeoff`)
+  que compara 3 modelos do Workers AI (Llama 3.3 70B, Gemma 4 26B, Qwen3
+  30B) na extração da ficha de enriquecimento, e registra a decisão em
+  `docs/apache-bakeoff-resultado.md`: `APACHE_ENRICHMENT_MODEL=
+  @cf/google/gemma-4-26b-a4b-it` — mesma qualidade do Llama nessa tarefa,
+  ~4,4× mais barato em neurons. Essa variável ainda não é lida por nenhum
+  código do site (fica pronta para o futuro APA-12, que vai implementar o
+  pipeline de enriquecimento de verdade).
+- Sem migration nova.
+- Se algo der errado: reverter para `restore/pre-apa-17` remove o script e
+  a decisão documentada; como nenhuma rota ainda lê
+  `APACHE_ENRICHMENT_MODEL`, nada no site muda.
+
 ## PR #89 — Fallback de letra de mão, Workers AI vision (APA-11)
 
 - Ponto de restauração: branch `restore/pre-apa-11` (main antes do merge).
