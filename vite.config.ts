@@ -40,6 +40,8 @@ const localBindingConfig = {
       simple: { limit: 10, period: 60 as const },
     },
   ],
+  // Workers AI (APA-06): gerador da aula base do Apache, lib/apache/lesson-writer.ts.
+  ai: { binding: 'AI' },
 };
 
 export default defineConfig(async () => {
