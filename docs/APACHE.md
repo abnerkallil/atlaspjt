@@ -816,16 +816,44 @@ Acionado quando a `confidence` do OCR (APA-10) de uma página ficar abaixo de
 **70** (escala 0–100 do Tesseract), ou quando a pessoa marcar manualmente o
 checkbox "Este arquivo tem letra de mão" no formulário de envio (APA-12). Os
 bytes da imagem são apagados imediatamente depois da chamada ao modelo de
-visão retornar (sucesso ou erro) — nunca ficam em R2. **Aviso operacional (não
-é código):** o modelo `@cf/meta/llama-3.2-11b-vision-instruct` pede aceite de
-licença uma vez no painel da Cloudflare antes do primeiro uso — confirme isso
-antes de testar este card, fora do código.
+visão retornar (sucesso ou erro) — nunca ficam em R2.
+
+**Teto de tamanho (1.5MB, não 10MB):** este card roda no Worker (servidor),
+não no navegador como o OCR do APA-10 — e o Workers Free tem só 10ms de CPU
+por request. Codificar a imagem em base64 custa CPU proporcional ao tamanho
+do arquivo, então 1.5MB já é folga generosa pro teto real
+(`MAX_HANDWRITING_FILE_BYTES`). O formulário de envio (APA-12) precisa
+redimensionar a imagem no navegador **antes** de mandar pra este fallback —
+lado maior por volta de 1120px, salva como JPEG. (A arquitetura original do
+Llama 3.2 Vision processa a imagem em até 4 tiles de 560×560px; a Cloudflare
+não documenta esse detalhe para o binding hospedado, mas reduzir o envio
+pra essa faixa evita gastar banda/CPU em resolução que o modelo não usa.)
+
+**Aviso operacional (não é código) — aceite da licença:** a aceitação do
+`@cf/meta/llama-3.2-11b-vision-instruct` é uma chamada de API (não é um
+botão no painel da Cloudflare), feita uma única vez por conta. Depois que a
+Publicar Atlas estiver rodando com o binding `AI` (depende do APA-06, PR
+#88), o Abner roda isto no PowerShell, na pasta do projeto:
+
+```powershell
+# 1) Descobrir o Account ID (se não estiver logado, roda "pnpm wrangler login" antes):
+pnpm wrangler whoami
+# A tabela que aparece tem uma coluna "Account ID" -- copia o valor dali.
+
+# 2) Colar o Account ID copiado no lugar de <ACCOUNT_ID> abaixo e rodar.
+# Token: gerar um em dash.cloudflare.com/profile/api-tokens (permissão
+# "Workers AI: Edit"), colar quando o Read-Host pedir (nunca commitar):
+$env:CLOUDFLARE_ACCOUNT_ID = "<ACCOUNT_ID>"
+$env:CLOUDFLARE_API_TOKEN = Read-Host -AsSecureString "Cole o token" | ConvertFrom-SecureString -AsPlainText
+curl.exe "https://api.cloudflare.com/client/v4/accounts/$env:CLOUDFLARE_ACCOUNT_ID/ai/run/@cf/meta/llama-3.2-11b-vision-instruct" -X POST -H "Authorization: Bearer $env:CLOUDFLARE_API_TOKEN" -d '{ "prompt": "agree" }'
+```
 
 **Checklist**
 - [ ] `lib/apache/ingest-handwriting.ts`
 - [ ] Acionado por `confidence < 70` ou checkbox manual
 - [ ] Bytes da imagem apagados logo após a chamada
-- [ ] Licença do modelo de visão aceita no painel Cloudflare (operacional)
+- [ ] Teto de 1.5MB (não 10MB) -- APA-12 redimensiona antes de enviar
+- [ ] Licença do modelo de visão aceita via chamada de API (operacional, não é o painel)
 - [ ] Restore `restore/pre-apa-11` + `CHANGELOG_VISUAL.md`
 
 ---

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { ApacheError } from '../lib/apache/errors.js';
 import {
+  MAX_HANDWRITING_FILE_BYTES,
   MAX_OUTPUT_TOKENS,
   extractHandwriting,
   type VisionAi,
@@ -74,33 +75,39 @@ void test('rejeita mimeType que não é imagem suportada, sem chamar a IA', asyn
   assert.equal(ai.calls, 0);
 });
 
-void test('rejeita arquivo maior que 10 MB, sem chamar a IA', async () => {
+void test('rejeita arquivo maior que o teto (orçamento de CPU do Workers Free), sem chamar a IA', async () => {
   const db = d1(migratedDatabase());
   const ai = fakeAi();
-  const big = new ArrayBuffer(10 * 1024 * 1024 + 1);
+  const big = new ArrayBuffer(MAX_HANDWRITING_FILE_BYTES + 1);
   await assertApacheError(() => extractHandwriting(ai, db, big, 'image/png', NOW), 413);
   assert.equal(ai.calls, 0);
 });
 
-void test('resposta vazia da IA é rejeitada', async () => {
+void test('resposta vazia da IA é rejeitada, mas os neurons já gastos são registrados', async () => {
   const db = d1(migratedDatabase());
-  const ai = fakeAi(async () => ({ response: '   ' }));
+  const ai = fakeAi(async () => ({ response: '   ', usage: { prompt_tokens: 3000, completion_tokens: 50 } }));
   await assertApacheError(
     () => extractHandwriting(ai, db, new Uint8Array([1]).buffer, 'image/png', NOW),
     422,
   );
+  const budget = await neuronBudgetRemaining(db, NOW.toISOString());
+  assert.ok(budget.used > 0, 'a chamada rodou e gastou neurons mesmo com resposta vazia');
 });
 
-void test('resposta em formato inesperado (ex.: objeto de modo JSON) é rejeitada sem tentar serializar', async () => {
+void test('resposta em formato inesperado (ex.: objeto de modo JSON) é rejeitada sem tentar serializar, mas registra o gasto', async () => {
   const db = d1(migratedDatabase());
-  const ai = fakeAi(async () => ({ response: { nota: 'não deveria vir assim' } }) as never);
+  const ai = fakeAi(
+    async () => ({ response: { nota: 'não deveria vir assim' }, usage: { prompt_tokens: 3000, completion_tokens: 50 } }) as never,
+  );
   await assertApacheError(
     () => extractHandwriting(ai, db, new Uint8Array([1]).buffer, 'image/png', NOW),
     500,
   );
+  const budget = await neuronBudgetRemaining(db, NOW.toISOString());
+  assert.ok(budget.used > 0);
 });
 
-void test('erro genérico da IA nunca chega crú ao chamador (DEC-020 item 8)', async () => {
+void test('erro genérico da IA nunca chega crú ao chamador (DEC-020 item 8), mas registra o pior caso por segurança', async () => {
   const db = d1(migratedDatabase());
   const ai = fakeAi(async () => {
     throw new Error('stack trace interno do provedor, caminho/arquivo.ts:42');
@@ -110,6 +117,8 @@ void test('erro genérico da IA nunca chega crú ao chamador (DEC-020 item 8)', 
     500,
     /^Não foi possível ler a letra de mão/,
   );
+  const budget = await neuronBudgetRemaining(db, NOW.toISOString());
+  assert.ok(budget.used > 0, 'erro sem código reconhecido: contamos o pior caso, nunca subestimamos');
 });
 
 void test('orçamento já no corte de 90%% bloqueia antes de chamar a IA (DEC-019)', async () => {
@@ -130,14 +139,12 @@ void test('orçamento já no corte de 90%% bloqueia antes de chamar a IA (DEC-01
   assert.equal(ai.calls, 0);
 });
 
-void test('restam menos neurons que o pior caso desta chamada: bloqueia mesmo sem ter batido o corte de 90%%', async () => {
+void test('restam neurons suficientes perto do corte: não gera falso positivo', async () => {
   // Com os limites de hoje (corte em 9000/10000, ~1000 de margem) o pior
   // caso deste modelo (~136 neurons) nunca é o motivo real do bloqueio --
-  // o corte de 90% já dispara primeiro. Este teste fixa esse comportamento
-  // diretamente contra worstCaseNeuronEstimate() via estimateNeurons, para
-  // continuar valendo se as constantes do medidor mudarem: aqui simulamos
-  // isso forçando overLimit=false e remaining bem menor que o pior caso,
-  // via um `now` cujo "dia" ainda não tem overLimit mas já está no osso.
+  // o corte de 90% já dispara primeiro quando a margem fica curta. Este
+  // teste fixa que a checagem por "restante < pior caso" não bloqueia à
+  // toa logo abaixo do corte.
   const db = d1(migratedDatabase());
   const almostAllUsed = NEURON_OVERLIMIT_THRESHOLD - 1; // 8999: overLimit ainda é false
   await db.batch([
@@ -149,23 +156,36 @@ void test('restam menos neurons que o pior caso desta chamada: bloqueia mesmo se
   ]);
   const budgetBefore = await neuronBudgetRemaining(db, NOW.toISOString());
   assert.equal(budgetBefore.overLimit, false, 'pré-condição: ainda não bateu o corte de 90%');
-  // Com a margem real (~1000) isto não bloqueia -- confirma que o teste 9
-  // (corte de 90%) é quem cobre o caso prático, e que a checagem por
-  // "restante < pior caso" não gera falso positivo perto do corte.
   const ai = fakeAi();
   const result = await extractHandwriting(ai, db, new Uint8Array([1]).buffer, 'image/png', NOW);
   assert.ok(result.text.length > 0);
   assert.equal(ai.calls, 1);
 });
 
-void test('código 3036 (orçamento do Workers AI) devolvido pela própria chamada também vira 429 reconhecível', async () => {
+void test('código 3036 (cota diária do Workers AI) vira 429 "orçamento esgotado" e não registra neurons', async () => {
   const db = d1(migratedDatabase());
   const ai = fakeAi(async () => {
-    throw { code: 3036, message: 'capacity temporarily exceeded' };
+    throw { code: 3036, message: 'Account limited: daily free allocation of neurons used' };
   });
   await assertApacheError(
     () => extractHandwriting(ai, db, new Uint8Array([1]).buffer, 'image/png', NOW),
     429,
     /Orçamento diário/,
   );
+  const budget = await neuronBudgetRemaining(db, NOW.toISOString());
+  assert.equal(budget.used, 0, '3036 significa que nada foi processado -- não há gasto a registrar');
+});
+
+void test('código 3040 (capacidade, não cota) vira 429 de capacidade -- mensagem diferente da de orçamento', async () => {
+  const db = d1(migratedDatabase());
+  const ai = fakeAi(async () => {
+    throw { code: 3040, message: 'Capacity temporarily exceeded, please try again.' };
+  });
+  await assertApacheError(
+    () => extractHandwriting(ai, db, new Uint8Array([1]).buffer, 'image/png', NOW),
+    429,
+    /capacidade/i,
+  );
+  const budget = await neuronBudgetRemaining(db, NOW.toISOString());
+  assert.ok(budget.used > 0, '3040 pode ter consumido capacidade parcialmente -- contamos o pior caso');
 });
