@@ -1,4 +1,4 @@
-import type { RenderedLesson } from "./schema.js";
+import type { ApacheConcept, RenderedLesson } from "./schema.js";
 
 // Lógica pura do polling de ContentLesson (APA-04) — sem fetch, sem DOM, sem
 // React, para poder ser testada com node:test (o repo não tem jsdom/Testing
@@ -6,9 +6,20 @@ import type { RenderedLesson } from "./schema.js";
 
 export type LessonStatus = "pendente" | "gerando" | "gerada" | "reportada" | "erro";
 
+// `enrichment` (APA-07): diff do enriquecimento concluído contra a aula
+// atual, calculado na leitura (schema.ts: diffEnrichmentAgainstLesson),
+// nunca gravado. O componente ContentLesson (APA-04) ainda não exibe este
+// campo — fica pronto para o card que adicionar esse bloco na UI.
+export type LessonEnrichmentDiff = {
+  status: "concluido";
+  novos: ApacheConcept[];
+  reforcos: { conceitoId: string; texto: string }[];
+};
+
 export type LessonResponse = {
   status: LessonStatus;
   lesson?: RenderedLesson;
+  enrichment?: LessonEnrichmentDiff;
   errorMessage?: string;
 };
 
