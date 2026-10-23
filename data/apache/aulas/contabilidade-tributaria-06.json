@@ -1,0 +1,541 @@
+[
+  {
+    "contentId": "CT-046",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar quem está obrigado ao Lucro Real, quando a opção é facultativa, e as duas modalidades de apuração (trimestral definitiva e anual com estimativas mensais).",
+      "cc": [
+        {
+          "id": "lucro-real-conceito",
+          "nome": "Lucro Real",
+          "def": "Regime de tributação do IRPJ e da CSLL em que a base de cálculo é o lucro líquido contábil do período, ajustado pelas adições, exclusões e compensações previstas na legislação fiscal; é o regime obrigatório para quem a lei determina e facultativo para os demais."
+        },
+        {
+          "id": "obrigatoriedade-lucro-real",
+          "nome": "Hipóteses de obrigatoriedade",
+          "def": "Pela Lei nº 9.718/1998, art. 14, são obrigadas ao Lucro Real: pessoas jurídicas com receita total no ano-calendário anterior superior a R$ 78.000.000,00 (ou limite proporcional ao número de meses, se o período de atividade for inferior a 12 meses); instituições financeiras e equiparadas; empresas com lucros, rendimentos ou ganhos de capital provenientes do exterior; empresas que usufruam de benefícios fiscais de isenção/redução do imposto; empresas que, no ano-calendário, já tenham feito pagamentos mensais por estimativa (art. 2º da Lei nº 9.430/1996); empresas de factoring; e empresas que explorem securitização de créditos."
+        },
+        {
+          "id": "modalidade-trimestral-real",
+          "nome": "Modalidade trimestral",
+          "def": "Apuração definitiva do IRPJ e da CSLL a cada trimestre civil (encerrado em 31/03, 30/06, 30/09 e 31/12), com base no resultado contábil do próprio trimestre ajustado pelas adições e exclusões, sem reabertura posterior do período já apurado."
+        },
+        {
+          "id": "modalidade-anual-estimativas",
+          "nome": "Modalidade anual com estimativas mensais",
+          "def": "Apuração anual do IRPJ e da CSLL, com recolhimentos mensais antecipados calculados por estimativa (com base em percentuais de presunção sobre a receita bruta mensal, semelhantes aos do Lucro Presumido), ajustados ao final do ano-calendário no balanço de ajuste anual, que recalcula o tributo definitivo sobre o lucro real do ano inteiro."
+        }
+      ],
+      "rl": [
+        { "de": "obrigatoriedade-lucro-real", "para": "lucro-real-conceito", "tipo": "determina a sujeição a" },
+        { "de": "modalidade-trimestral-real", "para": "lucro-real-conceito", "tipo": "é uma forma de apurar" },
+        { "de": "modalidade-anual-estimativas", "para": "lucro-real-conceito", "tipo": "é uma forma de apurar" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "obrigatoriedade-lucro-real",
+          "texto": "Uma empresa com receita total de R$ 90.000.000,00 no ano-calendário anterior está obrigada ao Lucro Real no ano seguinte, mesmo que preferisse o Lucro Presumido, porque ultrapassou o limite de R$ 78.000.000,00 do art. 14 da Lei nº 9.718/1998."
+        },
+        {
+          "conceitoId": "modalidade-anual-estimativas",
+          "texto": "Uma empresa no Lucro Real anual recolhe mensalmente um valor estimado com base na receita bruta do mês; no encerramento do ano, ela apura o lucro real efetivo do ano inteiro e compara com o total já recolhido pelas estimativas, pagando a diferença ou tendo saldo a compensar."
+        }
+      ],
+      "pg": [
+        "A obrigatoriedade ao Lucro Real pelo limite de receita é sobre a receita total do ano-calendário ANTERIOR, da mesma forma que o limite do Lucro Presumido — os dois limites são espelhados (R$ 78.000.000,00).",
+        "Mesmo uma empresa com receita baixa é obrigada ao Lucro Real se tiver lucros/rendimentos do exterior, usufruir de benefícios fiscais de isenção/redução do IRPJ, ou explorar factoring ou securitização — a obrigatoriedade não depende só do porte.",
+        "Na modalidade anual, os valores mensais são apenas antecipações por estimativa: o tributo definitivo só é conhecido no ajuste de final de ano, diferente da modalidade trimestral, em que cada trimestre já é definitivo."
+      ],
+      "rs": "O Lucro Real é o regime em que o IRPJ e a CSLL incidem sobre o lucro líquido contábil ajustado pela legislação fiscal. É obrigatório para empresas com receita total anual acima de R$ 78.000.000,00 (ou proporcional), instituições financeiras, empresas com resultados do exterior, empresas com benefícios fiscais de isenção/redução, empresas que já pagaram por estimativa no ano e empresas de factoring ou securitização; os demais podem optar. Há duas modalidades: apuração trimestral definitiva, ou apuração anual com recolhimentos mensais por estimativa ajustados ao final do ano."
+    }
+  },
+  {
+    "contentId": "CT-047",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar como o lucro líquido contábil do período é convertido em lucro real por meio de adições, exclusões e compensações (a 'ponte fiscal').",
+      "cc": [
+        {
+          "id": "lucro-liquido-ponto-partida",
+          "nome": "Lucro líquido do período como ponto de partida",
+          "def": "Resultado contábil apurado antes da provisão para o IRPJ e a CSLL do próprio período, levantado conforme as normas contábeis (Lei nº 6.404/1976 e CPCs), que serve de ponto de partida para o cálculo do lucro real."
+        },
+        {
+          "id": "adicoes-lucro-real",
+          "nome": "Adições",
+          "def": "Valores que aumentam o lucro líquido contábil para formar o lucro real: despesas e custos contabilizados que a legislação fiscal não admite como dedutíveis (indedutíveis) e resultados ou receitas que a lei determina tributar mas que não foram computados integralmente no lucro líquido do período."
+        },
+        {
+          "id": "exclusoes-lucro-real",
+          "nome": "Exclusões",
+          "def": "Valores que reduzem o lucro líquido contábil para formar o lucro real: receitas computadas no resultado contábil que a legislação fiscal não tributa (ou já tributou em período anterior) e valores que a lei permite deduzir além do que já foi registrado contabilmente."
+        },
+        {
+          "id": "compensacoes-lucro-real",
+          "nome": "Compensações",
+          "def": "Dedução de prejuízos fiscais de períodos anteriores do lucro líquido ajustado por adições e exclusões, respeitando o limite legal de 30% desse lucro ajustado, para formar o lucro real final do período."
+        },
+        {
+          "id": "lucro-real-formula-conceito",
+          "nome": "Lucro real como resultado da ponte fiscal",
+          "def": "O lucro real é o resultado final obtido após somar as adições, subtrair as exclusões e, se houver saldo positivo e prejuízo fiscal disponível, deduzir a compensação, tudo a partir do lucro líquido contábil do período; é a base de cálculo do IRPJ (e, de forma análoga, da CSLL)."
+        }
+      ],
+      "rl": [
+        { "de": "lucro-liquido-ponto-partida", "para": "lucro-real-formula-conceito", "tipo": "é o ponto de partida de" },
+        { "de": "adicoes-lucro-real", "para": "lucro-real-formula-conceito", "tipo": "aumenta" },
+        { "de": "exclusoes-lucro-real", "para": "lucro-real-formula-conceito", "tipo": "reduz" },
+        { "de": "compensacoes-lucro-real", "para": "lucro-real-formula-conceito", "tipo": "reduz, após adições e exclusões," }
+      ],
+      "fm": [
+        {
+          "id": "lucro-real-formula",
+          "expr": "Lucro Real = Lucro líquido do período + Adições − Exclusões − Compensações (até 30% do lucro ajustado por adições e exclusões)",
+          "legenda": "As compensações só se aplicam sobre o resultado positivo remanescente após adições e exclusões, e nunca podem reduzir mais que 30% desse valor."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "adicoes-lucro-real",
+          "texto": "Uma empresa registrou R$ 10.000,00 de multa de trânsito (despesa indedutível) no lucro líquido contábil; esse valor é adicionado de volta na apuração do lucro real, pois reduziu o resultado contábil mas não pode reduzir a base fiscal."
+        },
+        {
+          "conceitoId": "exclusoes-lucro-real",
+          "texto": "A reversão de uma provisão que havia sido adicionada (indedutível) em período anterior é excluída do lucro líquido do período da reversão, para não tributar esse valor duas vezes."
+        }
+      ],
+      "pg": [
+        "Adições e exclusões partem sempre do que já está no lucro líquido contábil: uma despesa indedutível já reduziu o lucro contábil e por isso precisa ser adicionada de volta, não subtraída de novo.",
+        "A ordem importa: a compensação de prejuízos fiscais só se aplica depois de somadas as adições e subtraídas as exclusões, nunca diretamente sobre o lucro líquido contábil bruto.",
+        "Uma receita que a lei não tributa (por exemplo, já tributada em período anterior como adição de variação cambial) é excluída, não adicionada — confundir o sentido da operação é erro comum."
+      ],
+      "rs": "O lucro real parte do lucro líquido contábil do período (antes da provisão de IRPJ/CSLL) e aplica adições (despesas indedutíveis e receitas fiscalmente exigidas não computadas), exclusões (receitas não tributáveis ou já tributadas, deduções fiscais adicionais) e, por último, a compensação de prejuízos fiscais de períodos anteriores, limitada a 30% do lucro já ajustado por adições e exclusões. Esse percurso do resultado contábil até a base fiscal é chamado de 'ponte fiscal'."
+    }
+  },
+  {
+    "contentId": "CT-048",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar os critérios legais de dedutibilidade de despesas no Lucro Real (necessidade, usualidade e normalidade) e identificar as principais despesas indedutíveis.",
+      "cc": [
+        {
+          "id": "despesa-operacional-dedutivel",
+          "nome": "Despesa operacional dedutível",
+          "def": "Despesa necessária à atividade da empresa e à manutenção da respectiva fonte produtora, usual ou normal no tipo de transações, operações ou atividades da empresa, devidamente comprovada por documentação hábil e idônea, conforme a Lei nº 4.506/1964, art. 47."
+        },
+        {
+          "id": "multas-dedutibilidade",
+          "nome": "Multas: compensatórias x punitivas",
+          "def": "Multas de natureza compensatória (por exemplo, por descumprimento contratual, de caráter indenizatório) são dedutíveis como despesa operacional; multas de natureza punitiva por infração à lei (por exemplo, multas de trânsito ou de fiscalização, inclusive algumas multas fiscais) não são dedutíveis."
+        },
+        {
+          "id": "provisoes-indedutiveis",
+          "nome": "Provisões em geral",
+          "def": "Como regra, provisões contábeis (perdas estimadas, contingências, garantias) não são dedutíveis para fins fiscais no momento da constituição, por não representarem despesa já incorrida e comprovada; a legislação admite dedutibilidade apenas para hipóteses expressamente previstas (por exemplo, provisão para férias e 13º salário dos empregados)."
+        },
+        {
+          "id": "despesas-sem-comprovacao",
+          "nome": "Despesas sem comprovação ou sem relação com a atividade",
+          "def": "Despesas sem documentação hábil e idônea, ou que não guardam relação com a atividade da empresa (por exemplo, despesas de sócios ou administradores de interesse pessoal, liberalidades e doações fora das hipóteses legalmente admitidas), não são dedutíveis."
+        }
+      ],
+      "rl": [
+        { "de": "despesa-operacional-dedutivel", "para": "multas-dedutibilidade", "tipo": "serve de critério para avaliar" },
+        { "de": "despesa-operacional-dedutivel", "para": "provisoes-indedutiveis", "tipo": "é contrastado por" },
+        { "de": "despesas-sem-comprovacao", "para": "despesa-operacional-dedutivel", "tipo": "não atende ao requisito de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "multas-dedutibilidade",
+          "texto": "Uma multa paga a um fornecedor por atraso contratual na entrega é dedutível (natureza compensatória); já uma multa de trânsito paga pela empresa em um veículo da frota não é dedutível (natureza punitiva por infração à lei)."
+        },
+        {
+          "conceitoId": "provisoes-indedutiveis",
+          "texto": "Uma provisão para perdas estimadas em um processo judicial é indedutível quando constituída; se e quando a perda se concretizar (pagamento efetivo ou perda definitiva do direito), o valor efetivamente incorrido passa a ser dedutível, mediante a exclusão correspondente."
+        }
+      ],
+      "pg": [
+        "Nem toda multa é indedutível: a distinção entre multa compensatória (dedutível) e punitiva por infração à lei (indedutível) é o que decide, não o simples fato de ser 'multa'.",
+        "A regra geral é que provisões não são dedutíveis quando constituídas; apenas quando a lei admite expressamente (como férias e 13º) ou quando a perda provisionada se concretiza, a dedução passa a ser possível.",
+        "Documentação hábil e idônea é requisito independente da necessidade da despesa: uma despesa genuinamente necessária, mas sem comprovação adequada, ainda é indedutível."
+      ],
+      "rs": "Para ser dedutível no Lucro Real, uma despesa precisa ser necessária à atividade e à manutenção da fonte produtora, usual ou normal, e estar comprovada por documentação hábil e idônea (Lei nº 4.506/1964, art. 47). Multas punitivas por infração à lei, provisões em geral (salvo exceções legais expressas) e despesas sem comprovação ou sem relação com a atividade são indedutíveis e precisam ser adicionadas de volta ao lucro líquido na apuração do lucro real."
+    }
+  },
+  {
+    "contentId": "CT-049",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a função do e-Lalur e do e-Lacs, a distinção entre Parte A e Parte B, e sua integração à ECF.",
+      "cc": [
+        {
+          "id": "e-lalur-e-lacs-conceito",
+          "nome": "e-Lalur e e-Lacs",
+          "def": "Livros eletrônicos de apuração do lucro real (Lalur) e da base de cálculo da CSLL (Lacs), instituídos pela Instrução Normativa RFB nº 1.422/2013, integrados à Escrituração Contábil Fiscal (ECF), onde são registrados os ajustes fiscais que convertem o lucro líquido contábil em base de cálculo do IRPJ e da CSLL."
+        },
+        {
+          "id": "parte-a-lalur",
+          "nome": "Parte A",
+          "def": "Seção do e-Lalur/e-Lacs onde são lançadas as adições, exclusões e compensações do próprio período de apuração, que resultam diretamente no lucro real (ou na base de CSLL) daquele período."
+        },
+        {
+          "id": "parte-b-lalur",
+          "nome": "Parte B",
+          "def": "Seção do e-Lalur/e-Lacs destinada ao controle de valores que não afetam o resultado do período atual, mas que poderão afetar a apuração de períodos futuros — como o saldo de prejuízo fiscal e de base negativa de CSLL a compensar, e outros controles de natureza fiscal que se estendem por mais de um período."
+        },
+        {
+          "id": "rastreabilidade-lalur",
+          "nome": "Rastreabilidade entre períodos",
+          "def": "A Parte B garante que valores controlados em um período (como o saldo de prejuízo fiscal disponível) sejam corretamente transportados e utilizados nos períodos seguintes, permitindo auditoria e continuidade do controle fiscal de um ano para outro."
+        }
+      ],
+      "rl": [
+        { "de": "e-lalur-e-lacs-conceito", "para": "parte-a-lalur", "tipo": "é composto por" },
+        { "de": "e-lalur-e-lacs-conceito", "para": "parte-b-lalur", "tipo": "é composto por" },
+        { "de": "parte-b-lalur", "para": "rastreabilidade-lalur", "tipo": "garante" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "parte-a-lalur",
+          "texto": "A adição de uma multa punitiva indedutível do próprio trimestre é lançada na Parte A, pois afeta diretamente o lucro real daquele período."
+        },
+        {
+          "conceitoId": "parte-b-lalur",
+          "texto": "O saldo de prejuízo fiscal de R$ 500.000,00 ainda não compensado é controlado na Parte B; quando parte desse saldo for usado em um período futuro (respeitando a trava de 30%), a compensação correspondente é lançada na Parte A daquele período futuro, com a baixa refletida na Parte B."
+        }
+      ],
+      "pg": [
+        "A Parte A registra o que afeta o resultado fiscal do próprio período; a Parte B controla o que vai afetar períodos futuros — confundir as duas partes é o erro mais comum.",
+        "O e-Lalur e o e-Lacs são integrados à ECF, não são livros separados entregues isoladamente; não existe mais o Lalur em papel ou em formulário próprio fora da ECF."
+      ],
+      "rs": "O e-Lalur (IRPJ) e o e-Lacs (CSLL), instituídos pela IN RFB nº 1.422/2013 e integrados à ECF, registram os ajustes fiscais do Lucro Real. A Parte A lança as adições, exclusões e compensações que afetam o resultado fiscal do próprio período; a Parte B controla valores — como o saldo de prejuízo fiscal e de base negativa de CSLL — que não afetam o período atual, mas serão usados em períodos futuros, garantindo rastreabilidade entre um ano-calendário e outro."
+    }
+  },
+  {
+    "contentId": "CT-050",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a compensação de prejuízo fiscal (IRPJ) e de base de cálculo negativa (CSLL), o limite de 30% e sua ausência de prazo de prescrição.",
+      "cc": [
+        {
+          "id": "prejuizo-fiscal-conceito",
+          "nome": "Prejuízo fiscal",
+          "def": "Resultado negativo apurado na forma da legislação do IRPJ (lucro líquido contábil ajustado pelas adições e exclusões), distinto do prejuízo contábil, que pode ser compensado com lucros reais de períodos futuros."
+        },
+        {
+          "id": "base-negativa-csll",
+          "nome": "Base de cálculo negativa da CSLL",
+          "def": "Equivalente ao prejuízo fiscal, mas apurado na forma da legislação da CSLL, compensável com bases de cálculo positivas de CSLL de períodos futuros, de forma independente e paralela ao controle do prejuízo fiscal de IRPJ."
+        },
+        {
+          "id": "trava-30-por-cento",
+          "nome": "Trava dos 30%",
+          "def": "Limite legal (Lei nº 9.065/1995, arts. 15 e 16) segundo o qual a compensação de prejuízo fiscal ou de base negativa de CSLL em cada período não pode reduzir o lucro líquido ajustado (ou o resultado ajustado, para a CSLL) em mais de 30%, ainda que o saldo de prejuízo disponível seja suficiente para abater o valor inteiro."
+        },
+        {
+          "id": "ausencia-prazo-prescricao-prejuizo",
+          "nome": "Ausência de prazo para compensar",
+          "def": "O direito de compensar prejuízo fiscal e base negativa de CSLL não tem prazo de decadência ou prescrição: o saldo pode ser carregado indefinidamente para períodos futuros, sempre respeitando o limite de 30% em cada período de compensação, desde que a empresa mantenha a documentação fiscal comprobatória."
+        }
+      ],
+      "rl": [
+        { "de": "trava-30-por-cento", "para": "prejuizo-fiscal-conceito", "tipo": "limita a compensação de" },
+        { "de": "trava-30-por-cento", "para": "base-negativa-csll", "tipo": "limita a compensação de" },
+        { "de": "ausencia-prazo-prescricao-prejuizo", "para": "prejuizo-fiscal-conceito", "tipo": "caracteriza" }
+      ],
+      "fm": [
+        {
+          "id": "compensacao-prejuizo-formula",
+          "expr": "Valor compensável no período = MIN(saldo de prejuízo fiscal disponível; 30% × lucro líquido ajustado pelas adições e exclusões do período)",
+          "legenda": "O limite de 30% aplica-se mesmo que o saldo de prejuízo acumulado seja maior, postergando o uso do excedente para períodos seguintes."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "trava-30-por-cento",
+          "texto": "Uma empresa com lucro líquido ajustado de R$ 200.000,00 no trimestre e saldo de prejuízo fiscal de R$ 300.000,00 só pode compensar R$ 60.000,00 (30% de R$ 200.000,00) nesse período, mantendo os R$ 240.000,00 restantes do saldo para compensação em períodos futuros."
+        },
+        {
+          "conceitoId": "ausencia-prazo-prescricao-prejuizo",
+          "texto": "Um prejuízo fiscal apurado há oito anos ainda pode ser compensado hoje, respeitando a trava de 30% em cada período, desde que a empresa tenha mantido os livros e documentos fiscais que comprovam o montante do prejuízo."
+        }
+      ],
+      "pg": [
+        "A trava de 30% incide sobre o lucro líquido JÁ AJUSTADO por adições e exclusões do período, não sobre o lucro líquido contábil bruto nem sobre o saldo de prejuízo acumulado.",
+        "O saldo de prejuízo fiscal não compensado por causa da trava não se perde: fica disponível indefinidamente para compensação em períodos futuros.",
+        "Prejuízo fiscal (IRPJ) e base negativa de CSLL são controlados separadamente na Parte B do e-Lalur e do e-Lacs; uma compensação de um não afeta automaticamente o saldo disponível do outro."
+      ],
+      "rs": "O prejuízo fiscal (IRPJ) e a base de cálculo negativa (CSLL) são apurados conforme a legislação fiscal de cada tributo e podem ser compensados com resultados positivos de períodos futuros, sem prazo de prescrição, desde que mantida a documentação comprobatória. Em cada período, a compensação é limitada a 30% do lucro líquido (ou resultado) já ajustado pelas adições e exclusões — a chamada trava dos 30% (Lei nº 9.065/1995, arts. 15 e 16) —, e o saldo não utilizado permanece disponível para os períodos seguintes."
+    }
+  },
+  {
+    "contentId": "CT-051",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o cálculo das estimativas mensais no Lucro Real anual e o uso de balanços ou balancetes de suspensão ou redução do pagamento mensal.",
+      "cc": [
+        {
+          "id": "base-estimativa-mensal",
+          "nome": "Base de cálculo da estimativa mensal",
+          "def": "Base calculada mensalmente aplicando percentuais de presunção (semelhantes aos do Lucro Presumido) sobre a receita bruta do mês, somada a ganhos de capital, demais receitas e resultados positivos de participações, conforme a Lei nº 9.430/1996, art. 2º e a Lei nº 8.981/1995, art. 29 e seguintes."
+        },
+        {
+          "id": "balanco-suspensao",
+          "nome": "Balanço ou balancete de suspensão",
+          "def": "Demonstração contábil mensal (Lei nº 8.981/1995, art. 35) levantada conforme as leis comerciais e fiscais e transcrita no Livro Diário, usada para demonstrar que o valor do IRPJ/CSLL devido, apurado pelo resultado real acumulado no ano até aquele mês, é igual a zero ou negativo, permitindo suspender totalmente o recolhimento por estimativa daquele mês."
+        },
+        {
+          "id": "balanco-reducao",
+          "nome": "Balanço ou balancete de redução",
+          "def": "Mesma demonstração contábil mensal do balanço de suspensão, mas usada quando o imposto devido pelo resultado real acumulado é positivo, porém menor que o valor calculado pela estimativa padrão, permitindo reduzir o recolhimento do mês à diferença apurada, em vez de suspendê-lo integralmente."
+        },
+        {
+          "id": "efeito-restrito-ano-calendario",
+          "nome": "Efeito restrito ao próprio ano-calendário",
+          "def": "Os balanços ou balancetes de suspensão ou redução produzem efeitos apenas para o IRPJ e a CSLL do próprio ano-calendário em que foram levantados, não se comunicando com a apuração de anos anteriores ou posteriores."
+        }
+      ],
+      "rl": [
+        { "de": "base-estimativa-mensal", "para": "balanco-suspensao", "tipo": "pode ser substituída, para fins de recolhimento, por" },
+        { "de": "base-estimativa-mensal", "para": "balanco-reducao", "tipo": "pode ser substituída, para fins de recolhimento, por" },
+        { "de": "efeito-restrito-ano-calendario", "para": "balanco-suspensao", "tipo": "delimita o alcance de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "balanco-suspensao",
+          "texto": "Uma empresa no Lucro Real anual apura, em balancete acumulado de janeiro a maio, que teve resultado fiscal negativo até aquele mês; com esse balancete transcrito no Diário, ela suspende o recolhimento por estimativa de maio, em vez de pagar com base na receita bruta do mês."
+        },
+        {
+          "conceitoId": "balanco-reducao",
+          "texto": "Se o balancete acumulado até junho mostrar imposto devido de R$ 8.000,00, menor que os R$ 15.000,00 que resultariam da estimativa padrão sobre a receita bruta de junho, a empresa recolhe apenas a diferença entre o imposto devido acumulado e o já pago nos meses anteriores, reduzindo o valor do mês."
+        }
+      ],
+      "pg": [
+        "O balanço de suspensão/redução é sempre acumulado desde janeiro do ano-calendário, não apenas o resultado do mês isolado — por isso ele reflete a situação real da empresa no ano até aquele ponto.",
+        "Suspender ou reduzir o recolhimento mensal não dispensa a apuração definitiva do lucro real ao final do ano: é apenas uma forma de antecipação mais precisa do que a estimativa padrão.",
+        "O balanço/balancete precisa estar formalmente transcrito no Livro Diário para ter validade perante o Fisco; um cálculo informal não substitui a exigência legal."
+      ],
+      "rs": "No Lucro Real anual, os recolhimentos mensais por estimativa usam percentuais de presunção sobre a receita bruta do mês, somados a outras receitas e ganhos. Em vez da estimativa padrão, a empresa pode levantar balanço ou balancete acumulado desde janeiro (Lei nº 8.981/1995, art. 35) para suspender o recolhimento (se o resultado fiscal acumulado for zero ou negativo) ou reduzi-lo (se o imposto devido acumulado for menor que a estimativa), com efeitos restritos ao próprio ano-calendário."
+    }
+  },
+  {
+    "contentId": "CT-052",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o tratamento fiscal atual das subvenções para investimento e dos principais incentivos fiscais regionais no Lucro Real.",
+      "cc": [
+        {
+          "id": "subvencao-investimento-regime-atual",
+          "nome": "Crédito fiscal de subvenção para investimento",
+          "def": "Regime instituído pela Lei nº 14.789/2023, vigente desde 1º de janeiro de 2024, pelo qual a receita de subvenção para investimento concedida por ente federativo é tributada normalmente (sem a antiga exclusão do lucro real), mas a pessoa jurídica habilitada previamente na Receita Federal pode apurar um crédito fiscal de IRPJ, correspondente a 25% das receitas de subvenção reconhecidas, aproveitável por compensação ou ressarcimento."
+        },
+        {
+          "id": "habilitacao-previa-subvencao",
+          "nome": "Habilitação prévia",
+          "def": "Exigência da Lei nº 14.789/2023 de que a pessoa jurídica obtenha habilitação específica perante a Receita Federal, comprovando ser beneficiária de subvenção para investimento concedida por ente federativo como estímulo à implantação ou expansão de empreendimento econômico, antes de poder apurar o crédito fiscal."
+        },
+        {
+          "id": "incentivos-regionais-sudam-sudene",
+          "nome": "Incentivos fiscais regionais (SUDAM/SUDENE)",
+          "def": "Redução do IRPJ (inclusive adicional) para empresas instaladas nas áreas de atuação da SUDAM e da SUDENE, com projetos de implantação, modernização, ampliação ou diversificação em setores considerados prioritários para o desenvolvimento regional, sujeita a requisitos de aprovação do projeto e manutenção das condições que justificaram o benefício."
+        },
+        {
+          "id": "revogacao-regime-anterior-subvencao",
+          "nome": "Fim da exclusão direta do lucro real",
+          "def": "A Lei nº 14.789/2023 revogou o regime anterior (art. 30 da Lei nº 12.973/2014), que permitia excluir diretamente a receita de subvenção para investimento do lucro real, desde que registrada em reserva de incentivos fiscais; desde 2024, a receita é tributada e o benefício passa a ser o crédito fiscal apurado separadamente."
+        }
+      ],
+      "rl": [
+        { "de": "habilitacao-previa-subvencao", "para": "subvencao-investimento-regime-atual", "tipo": "é condição para aproveitar" },
+        { "de": "revogacao-regime-anterior-subvencao", "para": "subvencao-investimento-regime-atual", "tipo": "foi substituído por" },
+        { "de": "incentivos-regionais-sudam-sudene", "para": "lucro-real-formula-conceito", "tipo": "reduz o tributo apurado sobre" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "subvencao-investimento-regime-atual",
+          "texto": "Uma empresa habilitada recebe isenção de ICMS de R$ 1.000.000,00 concedida pelo estado como estímulo à expansão de sua fábrica; ela tributa normalmente essa receita no lucro real, mas apura um crédito fiscal de 25% (R$ 250.000,00) para compensar com outros tributos federais ou pedir ressarcimento."
+        },
+        {
+          "conceitoId": "revogacao-regime-anterior-subvencao",
+          "texto": "Até 2023, essa mesma subvenção poderia ser excluída diretamente do lucro real se registrada em reserva de incentivos fiscais (regime do art. 30 da Lei nº 12.973/2014); a partir de 2024, esse mecanismo de exclusão direta não se aplica mais a novas subvenções."
+        }
+      ],
+      "pg": [
+        "Desde 2024, a subvenção para investimento não é mais excluída diretamente do lucro real: ela é tributada, e o benefício vem de um crédito fiscal apurado à parte, condicionado à habilitação prévia na Receita Federal.",
+        "Incentivos fiscais regionais (SUDAM/SUDENE) são regimes distintos do crédito fiscal de subvenção da Lei nº 14.789/2023: aplicam-se a projetos aprovados em áreas e setores específicos, com redução direta do IRPJ devido."
+      ],
+      "rs": "Desde 1º de janeiro de 2024, a Lei nº 14.789/2023 substituiu o antigo regime de exclusão direta das subvenções para investimento do lucro real (art. 30 da Lei nº 12.973/2014) por um crédito fiscal de IRPJ de 25% sobre as receitas de subvenção, condicionado à habilitação prévia da empresa na Receita Federal. Paralelamente, incentivos fiscais regionais como os da SUDAM e da SUDENE continuam reduzindo o IRPJ devido por empresas com projetos aprovados em setores prioritários nessas regiões."
+    }
+  },
+  {
+    "contentId": "CT-053",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a dedutibilidade dos juros sobre capital próprio, as regras de preços de transferência e os limites de subcapitalização aplicáveis a operações com partes relacionadas no Lucro Real.",
+      "cc": [
+        {
+          "id": "jcp-dedutibilidade",
+          "nome": "Juros sobre capital próprio (JCP)",
+          "def": "Remuneração paga ou creditada a sócios ou acionistas sobre contas do patrimônio líquido, dedutível do lucro real (Lei nº 9.249/1995, art. 9º) e limitada à variação, pro rata dia, da TJLP, desde que o lucro do período (apurado antes da própria dedução dos juros) ou os lucros acumulados e reservas de lucros sejam iguais ou superiores ao dobro dos juros pagos ou creditados — o que equivale a um limite de 50% desse lucro ou reservas."
+        },
+        {
+          "id": "jcp-tributacao-beneficiario",
+          "nome": "Tributação na fonte do JCP",
+          "def": "Os juros sobre capital próprio ficam sujeitos a imposto de renda retido na fonte no momento do pagamento ou crédito, à alíquota vigente para essa retenção, sendo esse IRRF definitivo para a maioria dos beneficiários pessoa física e antecipação do IRPJ devido para beneficiários pessoa jurídica."
+        },
+        {
+          "id": "precos-transferencia-conceito",
+          "nome": "Preços de transferência",
+          "def": "Conjunto de regras (Lei nº 9.430/1996, arts. 18 a 24, com novo marco legal dado pela Lei nº 14.596/2023, obrigatório a partir de 2024, alinhado ao padrão da OCDE) que ajusta, para fins fiscais, os preços praticados em operações entre partes relacionadas (ou com residentes em jurisdições de tributação favorecida) que divirjam dos preços que seriam praticados entre partes independentes em condições comparáveis."
+        },
+        {
+          "id": "subcapitalizacao-conceito",
+          "nome": "Subcapitalização (thin capitalization)",
+          "def": "Regras (Lei nº 12.249/2010, arts. 24 e 25) que limitam a dedutibilidade de juros pagos ou creditados a parte relacionada no exterior: o endividamento com a parte vinculada não pode superar 2 vezes a participação dela (ou o patrimônio líquido da empresa brasileira, se a vinculada não detiver participação) para que os juros sejam dedutíveis; para vinculadas em jurisdições de tributação favorecida, o limite é mais rígido, equivalente a 0,3 vez o patrimônio líquido."
+        }
+      ],
+      "rl": [
+        { "de": "jcp-dedutibilidade", "para": "jcp-tributacao-beneficiario", "tipo": "gera, ao ser paga/creditada," },
+        { "de": "precos-transferencia-conceito", "para": "subcapitalizacao-conceito", "tipo": "complementa, com foco em juros," },
+        { "de": "subcapitalizacao-conceito", "para": "despesa-operacional-dedutivel", "tipo": "restringe adicionalmente" }
+      ],
+      "fm": [
+        {
+          "id": "jcp-limite-formula",
+          "expr": "JCP dedutível (por período) ≤ Variação pro rata dia da TJLP sobre o patrimônio líquido elegível, e o lucro do período (antes do JCP) ou os lucros acumulados/reservas de lucros devem ser ≥ 2 × o valor dos juros pagos/creditados",
+          "legenda": "Os dois limites (TJLP sobre o PL, e o dobro do lucro/reservas) se aplicam cumulativamente; o menor deles é o que efetivamente restringe a dedução."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "jcp-dedutibilidade",
+          "texto": "Uma empresa com lucro do período de R$ 400.000,00 (antes da dedução dos juros) só pode deduzir até R$ 200.000,00 de JCP nesse período, pois o lucro precisa ser igual ou superior ao dobro dos juros pagos — ainda que a variação da TJLP sobre o patrimônio líquido permitisse um valor maior."
+        },
+        {
+          "conceitoId": "subcapitalizacao-conceito",
+          "texto": "Uma subsidiária brasileira com patrimônio líquido de R$ 1.000.000,00 pode ter até R$ 2.000.000,00 de dívida com sua controladora no exterior (que detém participação) com juros integralmente dedutíveis; juros sobre o valor que exceder esse limite são indedutíveis."
+        }
+      ],
+      "pg": [
+        "A dedutibilidade do JCP tem dois limites independentes e cumulativos: a variação da TJLP sobre o patrimônio líquido elegível, e a exigência de que o lucro do período (ou lucros acumulados/reservas) seja ao menos o dobro dos juros — ambos precisam ser respeitados, prevalecendo o mais restritivo.",
+        "As regras de subcapitalização só se aplicam a dívidas com parte relacionada no EXTERIOR; dívidas com instituições financeiras independentes não entram nesse limite.",
+        "O limite de subcapitalização para jurisdições de tributação favorecida (0,3 vez o patrimônio líquido) é muito mais restritivo que o limite geral (2 vezes), independentemente de a vinculada deter ou não participação na empresa brasileira."
+      ],
+      "rs": "No Lucro Real, operações com sócios e partes relacionadas têm regras próprias de dedutibilidade: os juros sobre capital próprio (Lei nº 9.249/1995, art. 9º) são limitados pela variação da TJLP sobre o patrimônio líquido e pela exigência de que o lucro do período ou as reservas de lucros sejam ao menos o dobro dos juros pagos, além de sujeitos a IRRF no pagamento; as regras de preços de transferência (Lei nº 9.430/1996, atualizada pela Lei nº 14.596/2023) ajustam preços entre partes relacionadas ao padrão de mercado; e as regras de subcapitalização (Lei nº 12.249/2010, arts. 24-25) limitam a dedutibilidade de juros pagos a vinculadas no exterior conforme o grau de endividamento, com limite mais rígido para jurisdições de tributação favorecida."
+    }
+  },
+  {
+    "contentId": "CT-054",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a distinção contábil entre tributo corrente e tributo diferido sobre o lucro, e como as diferenças temporárias entre o resultado contábil e o lucro real geram ativos e passivos fiscais diferidos.",
+      "cc": [
+        {
+          "id": "tributo-corrente-conceito",
+          "nome": "Tributo corrente",
+          "def": "Valor de IRPJ e CSLL a pagar (ou a recuperar) relativo ao lucro real (ou à base de CSLL) do próprio período, calculado conforme a legislação fiscal vigente, correspondente ao que efetivamente será liquidado com o Fisco naquele período."
+        },
+        {
+          "id": "diferencas-temporarias-conceito",
+          "nome": "Diferenças temporárias",
+          "def": "Diferenças entre o valor contábil de um ativo ou passivo e sua base fiscal, que se revertem em períodos futuros — por exemplo, uma despesa contabilizada e adicionada no lucro real do período (como uma provisão indedutível), cuja dedução fiscal só ocorrerá quando a perda se concretizar."
+        },
+        {
+          "id": "tributo-diferido-ativo-passivo",
+          "nome": "Ativo e passivo fiscal diferido",
+          "def": "Reconhecimento contábil (CPC 32) do efeito tributário futuro das diferenças temporárias: um ativo fiscal diferido quando a diferença temporária resultará em dedução fiscal futura (reduzindo o tributo a pagar em períodos seguintes), e um passivo fiscal diferido quando resultará em tributação futura adicional."
+        },
+        {
+          "id": "taxa-efetiva-divulgacao",
+          "nome": "Taxa efetiva e divulgação em notas explicativas",
+          "def": "A taxa efetiva de tributo sobre o lucro (tributo total, corrente mais diferido, dividido pelo resultado contábil antes dos tributos) pode diferir da alíquota nominal combinada de IRPJ e CSLL por causa de diferenças permanentes e de itens não recorrentes; o CPC 32 exige a conciliação entre a taxa efetiva e a nominal, divulgada em notas explicativas."
+        }
+      ],
+      "rl": [
+        { "de": "diferencas-temporarias-conceito", "para": "tributo-diferido-ativo-passivo", "tipo": "origina" },
+        { "de": "tributo-corrente-conceito", "para": "tributo-diferido-ativo-passivo", "tipo": "é complementado, na demonstração do resultado, por" },
+        { "de": "tributo-diferido-ativo-passivo", "para": "taxa-efetiva-divulgacao", "tipo": "afeta o cálculo de" }
+      ],
+      "fm": [
+        {
+          "id": "tributo-total-formula",
+          "expr": "Tributo total sobre o lucro (demonstração do resultado) = Tributo corrente + Variação do tributo diferido no período",
+          "legenda": "O tributo diferido pode ser positivo (despesa) ou negativo (receita), dependendo de o saldo líquido de ativos e passivos fiscais diferidos aumentar ou diminuir no período."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "diferencas-temporarias-conceito",
+          "texto": "Uma empresa constitui provisão para perda em processo judicial de R$ 100.000,00, indedutível no período da constituição (gerando adição no lucro real); essa diferença temporária gera um ativo fiscal diferido, pois quando a perda se concretizar, a dedução fiscal reduzirá o tributo a pagar naquele período futuro."
+        },
+        {
+          "conceitoId": "taxa-efetiva-divulgacao",
+          "texto": "Uma empresa com resultado contábil de R$ 1.000.000,00 e tributo total (corrente mais diferido) de R$ 240.000,00 tem taxa efetiva de 24%, que pode ser menor que a alíquota nominal combinada de IRPJ e CSLL por causa de diferenças permanentes, como receitas de dividendos recebidos isentas."
+        }
+      ],
+      "pg": [
+        "Tributo diferido não é um tributo 'extra' pago ao Fisco: é apenas o reconhecimento contábil do efeito fiscal futuro de diferenças já existentes, sem desembolso no período em que é registrado.",
+        "Diferenças PERMANENTES (que nunca se revertem, como uma receita isenta) não geram tributo diferido; só as diferenças TEMPORÁRIAS (que se revertem em período futuro) geram ativo ou passivo fiscal diferido.",
+        "O ativo fiscal diferido só pode ser reconhecido quando for provável que a empresa terá lucro tributável futuro suficiente para utilizá-lo, conforme os critérios do CPC 32."
+      ],
+      "rs": "O tributo corrente é o IRPJ/CSLL efetivamente devido sobre o lucro real do próprio período. Diferenças temporárias entre o valor contábil e a base fiscal de ativos e passivos — como adições que só se tornarão dedutíveis em períodos futuros — geram, conforme o CPC 32, ativos ou passivos fiscais diferidos, que ajustam a despesa de tributo sobre o lucro reconhecida na demonstração do resultado além do valor corrente. A taxa efetiva resultante (tributo total sobre o resultado contábil) pode diferir da alíquota nominal por causa de diferenças permanentes, exigindo conciliação em notas explicativas."
+    }
+  },
+  {
+    "contentId": "CT-055",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o papel da ECF no fechamento anual do Lucro Real, sua integração com a ECD e o e-Lalur/e-Lacs, e o prazo de entrega.",
+      "cc": [
+        {
+          "id": "ecf-conceito",
+          "nome": "Escrituração Contábil Fiscal (ECF)",
+          "def": "Obrigação acessória anual, instituída pela Instrução Normativa RFB nº 1.422/2013, que substituiu a antiga DIPJ e consolida, em um único arquivo digital, a apuração do IRPJ e da CSLL do Lucro Real (e também do Lucro Presumido e do Lucro Arbitrado), incluindo o e-Lalur e o e-Lacs."
+        },
+        {
+          "id": "ecf-recuperacao-ecd",
+          "nome": "Recuperação de dados da ECD",
+          "def": "A ECF recupera, por meio de blocos de vinculação, os saldos contábeis já enviados na Escrituração Contábil Digital (ECD) do mesmo ano-calendário, evitando redigitação e permitindo validações cruzadas entre as duas escriturações para garantir consistência entre a contabilidade e a apuração fiscal."
+        },
+        {
+          "id": "prazo-entrega-ecf",
+          "nome": "Prazo de entrega",
+          "def": "A ECF deve ser entregue até o último dia útil do mês de julho do ano-calendário subsequente ao da escrituração (por exemplo, a ECF do ano-calendário 2025 é entregue em julho de 2026), sob pena de multa por atraso ou não entrega."
+        },
+        {
+          "id": "fechamento-ciclo-anual-lucro-real",
+          "nome": "Fechamento do ciclo anual do Lucro Real",
+          "def": "Encerramento formal, na ECF, do ano-calendário do Lucro Real: consolidação de todas as adições, exclusões e compensações lançadas na Parte A do e-Lalur/e-Lacs ao longo do ano (ou do ajuste anual, na modalidade de estimativas mensais), atualização dos saldos de controle na Parte B e apuração definitiva do IRPJ e da CSLL do período."
+        }
+      ],
+      "rl": [
+        { "de": "ecf-conceito", "para": "ecf-recuperacao-ecd", "tipo": "realiza" },
+        { "de": "ecf-conceito", "para": "prazo-entrega-ecf", "tipo": "está sujeita a" },
+        { "de": "ecf-conceito", "para": "fechamento-ciclo-anual-lucro-real", "tipo": "formaliza" },
+        { "de": "e-lalur-e-lacs-conceito", "para": "ecf-conceito", "tipo": "está integrado a" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "ecf-recuperacao-ecd",
+          "texto": "Uma divergência entre o saldo de uma conta de resultado na ECD e o valor usado como ponto de partida na apuração do lucro real na ECF gera inconsistência detectável nas validações cruzadas, exigindo correção antes da transmissão."
+        },
+        {
+          "conceitoId": "prazo-entrega-ecf",
+          "texto": "A ECF referente ao ano-calendário de 2025 deve ser entregue até o último dia útil de julho de 2026; entregar fora desse prazo sujeita a empresa a multa, mesmo que o IRPJ e a CSLL do período já tenham sido corretamente pagos."
+        }
+      ],
+      "pg": [
+        "A ECF é anual e sempre entregue no ano seguinte ao da escrituração — não deve ser confundida com as apurações trimestrais ou com os recolhimentos mensais por estimativa, que ocorrem durante o próprio ano-calendário.",
+        "A recuperação de dados da ECD pela ECF não dispensa a revisão dos valores: inconsistências entre as duas escriturações geram apontamentos que precisam ser corrigidos antes da entrega.",
+        "A multa por atraso na entrega da ECF incide independentemente de o IRPJ e a CSLL terem sido pagos corretamente: a ECF é uma obrigação acessória autônoma, distinta da obrigação principal de pagar o tributo."
+      ],
+      "rs": "A ECF é a obrigação acessória anual (IN RFB nº 1.422/2013) que fecha o ciclo do Lucro Real: integra o e-Lalur e o e-Lacs, recupera os saldos já enviados na ECD do mesmo ano-calendário para validações cruzadas, e consolida a apuração definitiva do IRPJ e da CSLL do período. Deve ser entregue até o último dia útil de julho do ano seguinte ao da escrituração, sob pena de multa autônoma, independente do correto pagamento dos tributos."
+    }
+  }
+]
