@@ -14,6 +14,34 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #102 — APA-18: aulas base de Contabilidade Tributária (sub-lote 5b)
+
+- Ponto de restauração: branch `restore/pre-apa-18-contabilidade-tributaria-02`
+  (commit `5cd425e`, main antes do merge).
+- O que muda no site: nada visível ainda — este PR só adiciona os dados; as
+  7 aulas só aparecem depois de o Abner rodar o comando de carga para esse
+  arquivo (não precisa de "Publicar Atlas": o script grava direto em D1/R2).
+  O carregamento em produção de toda a Contabilidade Tributária será feito
+  num único comando ao final de todos os 15 sub-lotes, a pedido do Abner.
+- O que muda fora do site: segundo sub-lote de Contabilidade Tributária em
+  `data/apache/aulas/contabilidade-tributaria-02.json` (7 dos 124
+  conteúdos: CT-013 a CT-019, unidade "Contabilização", na ordem do
+  catálogo, `model='claude-manual'`), usando o mesmo mecanismo de carga dos
+  PRs #95-#101 (`scripts/apache-carregar-aulas.mjs`). Conteúdo: tributos a
+  recuperar e a recolher, reconhecimento por competência, tributos sobre
+  compras/vendas/resultado, conciliação contábil-fiscal, provisões e
+  contingências fiscais (CPC 25), tributos sobre o lucro corrente e
+  diferido (CPC 32) e fechamento tributário integrado; cita apenas de forma
+  genérica Lei nº 6.404/1976 arts. 177 e 187, CPC 00, CPC 16, CPC 25 e CPC
+  32 — pronunciamentos/artigos consolidados e amplamente conhecidos, sem
+  texto literal de dispositivo e sem reforma tributária (fora do escopo
+  desta unidade). `docs/APACHE-18-plano.md` atualizado (sub-lote 5b
+  mesclado; Tributária em 19/124).
+- Se algo der errado: reverter para
+  `restore/pre-apa-18-contabilidade-tributaria-02` volta ao estado anterior;
+  nenhuma aula ainda foi carregada em produção, então reverter sem ter
+  rodado o script de carga não perde nada.
+
 ## PR #101 (pendente) — APA-18: aulas base de Contabilidade Tributária (sub-lote 5a)
 
 - Ponto de restauração: branch `restore/pre-apa-18-contabilidade-tributaria-01`

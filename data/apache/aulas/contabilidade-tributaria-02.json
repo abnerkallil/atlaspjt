@@ -1,0 +1,372 @@
+[
+  {
+    "contentId": "CT-013",
+    "lesson": {
+      "v": 1,
+      "obj": "Identificar a natureza contábil dos tributos a recuperar e a recolher e como seus saldos se formam e se compensam.",
+      "cc": [
+        {
+          "id": "tributo-a-recuperar",
+          "nome": "Tributo a recuperar",
+          "def": "Conta de natureza de ativo que registra o direito a crédito de tributos não cumulativos (como ICMS, IPI, PIS e Cofins) apurados nas entradas/compras ou retidos por terceiros, utilizável para abater o tributo devido nas saídas ou para restituição/compensação."
+        },
+        {
+          "id": "tributo-a-recolher",
+          "nome": "Tributo a recolher",
+          "def": "Conta de natureza de passivo que registra a obrigação de pagar ao fisco o tributo apurado no período (débito gerado pelas operações, pela folha ou pelo resultado), até a data do efetivo pagamento ou compensação."
+        },
+        {
+          "id": "nao-cumulatividade-contabil",
+          "nome": "Não cumulatividade (débito e crédito)",
+          "def": "Mecânica de apuração em que o tributo incidente nas saídas (débito) é compensado com o tributo incidente nas entradas (crédito), de modo que o valor recolhido corresponda apenas à diferença entre débitos e créditos do período, quando o tributo for não cumulativo."
+        },
+        {
+          "id": "compensacao-saldos",
+          "nome": "Compensação de saldos",
+          "def": "Lançamento contábil periódico que confronta o saldo acumulado de tributo a recuperar com o débito apurado no período, apresentando no balanço apenas o saldo líquido remanescente (ativo, se credor, ou passivo, se devedor)."
+        }
+      ],
+      "rl": [
+        { "de": "nao-cumulatividade-contabil", "para": "tributo-a-recuperar", "tipo": "gera o crédito registrado em" },
+        { "de": "nao-cumulatividade-contabil", "para": "tributo-a-recolher", "tipo": "gera o débito registrado em" },
+        { "de": "compensacao-saldos", "para": "tributo-a-recuperar", "tipo": "confronta o saldo de" },
+        { "de": "compensacao-saldos", "para": "tributo-a-recolher", "tipo": "confronta o saldo de" }
+      ],
+      "fm": [
+        {
+          "id": "saldo-tributo-nao-cumulativo",
+          "expr": "Saldo a recolher = Débitos do período − Créditos do período (ou saldo credor a recuperar, se o resultado for negativo)",
+          "legenda": "Apuração líquida de um tributo não cumulativo: quando créditos superam débitos, o excedente fica registrado como tributo a recuperar."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "tributo-a-recuperar",
+          "texto": "Uma empresa compra mercadorias com R$ 1.000 de ICMS destacado na nota (crédito) e vende com R$ 1.400 de ICMS destacado (débito). O saldo a recolher no período é R$ 400; se as compras tivessem gerado R$ 1.600 de crédito, o saldo de R$ 200 ficaria como ICMS a recuperar (ativo)."
+        },
+        {
+          "conceitoId": "tributo-a-recolher",
+          "texto": "O IRRF retido de um prestador de serviço autônomo é registrado como tributo a recolher (passivo) até a data do recolhimento ao fisco, mesmo que o valor já tenha sido descontado do pagamento ao prestador."
+        }
+      ],
+      "pg": [
+        "Tributo a recuperar é ATIVO (direito de crédito), e tributo a recolher é PASSIVO (obrigação) — a prova costuma inverter essa classificação para testar a natureza das contas.",
+        "Nem todo tributo gera crédito a recuperar: tributos cumulativos (sem direito a crédito na entrada) ou tributos definitivamente suportados como custo não circulam por essa conta.",
+        "Saldo credor acumulado de tributo a recuperar não é lucro nem receita: é apenas um direito a compensar ou restituir, sem efeito no resultado até sua realização."
+      ],
+      "rs": "Tributos a recuperar (ativo) e a recolher (passivo) registram, respectivamente, o crédito e o débito que a não cumulatividade gera entre entradas e saídas. A compensação periódica desses saldos apresenta no balanço apenas o valor líquido: a recolher, se os débitos superarem os créditos, ou a recuperar, no caso contrário."
+    }
+  },
+  {
+    "contentId": "CT-014",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar por que o reconhecimento contábil de um tributo segue o regime de competência, mesmo quando sua apuração e seu pagamento ocorrem em momentos distintos.",
+      "cc": [
+        {
+          "id": "regime-competencia-tributario",
+          "nome": "Regime de competência aplicado a tributos",
+          "def": "Princípio pelo qual o tributo é reconhecido contabilmente no período em que o fato gerador (a operação, a receita ou o resultado) ocorre, independentemente do momento em que é apurado nas guias/declarações ou efetivamente pago ao fisco (Lei nº 6.404/1976, art. 177, e Estrutura Conceitual - CPC 00)."
+        },
+        {
+          "id": "fato-gerador-contabil",
+          "nome": "Fato gerador como gatilho do reconhecimento",
+          "def": "Evento econômico (venda, prestação de serviço, apuração do lucro, folha de pagamento) que faz nascer a obrigação tributária e, no mesmo momento, o dever de reconhecer contabilmente a despesa ou o passivo correspondente."
+        },
+        {
+          "id": "apuracao-posterior",
+          "nome": "Apuração e pagamento posteriores ao reconhecimento",
+          "def": "Etapas administrativas (cálculo em guia/declaração e recolhimento em data própria) que ocorrem depois do reconhecimento contábil, sem alterar o período em que a despesa e o passivo já foram registrados."
+        },
+        {
+          "id": "estimativa-tributaria",
+          "nome": "Estimativa de tributo ainda não apurado",
+          "def": "Quando o valor exato do tributo do período só é conhecido após o encerramento (ex.: tributos apurados mensalmente com vencimento no mês seguinte), a empresa registra uma estimativa confiável baseada nas operações já ocorridas, ajustando-a quando a apuração definitiva estiver disponível."
+        }
+      ],
+      "rl": [
+        { "de": "fato-gerador-contabil", "para": "regime-competencia-tributario", "tipo": "determina o período de reconhecimento conforme" },
+        { "de": "regime-competencia-tributario", "para": "apuracao-posterior", "tipo": "não depende de" },
+        { "de": "estimativa-tributaria", "para": "regime-competencia-tributario", "tipo": "viabiliza o cumprimento de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "regime-competencia-tributario",
+          "texto": "Uma venda ocorrida em 30 de março gera reconhecimento do tributo sobre a venda em março, mesmo que a guia só seja apurada em abril e o pagamento vença em maio: o resultado de março já reflete a despesa/obrigação correspondente."
+        },
+        {
+          "conceitoId": "estimativa-tributaria",
+          "texto": "No encerramento mensal, antes de a apuração definitiva da folha estar pronta, a empresa provisiona a contribuição previdenciária com base nos salários já lançados, ajustando o valor quando o cálculo oficial é concluído."
+        }
+      ],
+      "pg": [
+        "Reconhecer o tributo apenas na data do pagamento (regime de caixa) é erro comum: o regime de competência exige o reconhecimento no período do fato gerador, não no período do desembolso.",
+        "'Apuração' e 'reconhecimento contábil' não são sinônimos: a apuração é o cálculo formal em guia/declaração; o reconhecimento contábil já deveria ter ocorrido antes, no período de competência.",
+        "Uma estimativa de tributo não apurado ainda é registrada mesmo sem o valor definitivo em mãos — a falta de apuração formal não justifica omitir a despesa/obrigação do período."
+      ],
+      "rs": "O tributo é reconhecido contabilmente no período do fato gerador, por força do regime de competência, e não no período em que é apurado em guia/declaração ou pago. Quando o valor exato ainda não está disponível no encerramento, usa-se uma estimativa confiável, ajustada depois pela apuração definitiva."
+    }
+  },
+  {
+    "contentId": "CT-015",
+    "lesson": {
+      "v": 1,
+      "obj": "Classificar os tributos relacionados a compras, vendas e resultado conforme seu efeito contábil: ativo recuperável, custo, dedução da receita ou despesa sobre o lucro.",
+      "cc": [
+        {
+          "id": "tributo-recuperavel-compra",
+          "nome": "Tributo recuperável na compra",
+          "def": "Tributo não cumulativo destacado na aquisição de mercadorias, insumos ou serviços, que gera direito a crédito e, por isso, não integra o custo do bem ou serviço adquirido."
+        },
+        {
+          "id": "tributo-nao-recuperavel-compra",
+          "nome": "Tributo não recuperável na compra",
+          "def": "Tributo que, por não gerar direito a crédito na operação (tributação cumulativa, ou impossibilidade de aproveitamento), integra o custo de aquisição do bem, insumo ou serviço (CPC 16 e CPC 00)."
+        },
+        {
+          "id": "tributo-sobre-receita",
+          "nome": "Tributo incidente sobre a venda",
+          "def": "Tributo cujo fato gerador é a receita/faturamento (como ICMS, ISS, PIS e Cofins sobre vendas), apresentado na Demonstração do Resultado como dedução da receita bruta para chegar à receita líquida (Lei nº 6.404/1976, art. 187)."
+        },
+        {
+          "id": "tributo-sobre-lucro-resultado",
+          "nome": "Tributo sobre o lucro",
+          "def": "Tributo cujo fato gerador é o resultado do período (IRPJ e CSLL), reconhecido como despesa do exercício na Demonstração do Resultado, separadamente dos tributos sobre vendas."
+        }
+      ],
+      "rl": [
+        { "de": "tributo-recuperavel-compra", "para": "tributo-nao-recuperavel-compra", "tipo": "se distingue de" },
+        { "de": "tributo-nao-recuperavel-compra", "para": "tributo-sobre-receita", "tipo": "é apresentado no custo, diferente de" },
+        { "de": "tributo-sobre-receita", "para": "tributo-sobre-lucro-resultado", "tipo": "é deduzido antes do resultado, diferente de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "tributo-nao-recuperavel-compra",
+          "texto": "Em uma compra de material de uso e consumo sem direito a crédito, o tributo destacado na nota é somado ao valor do material e debitado como custo/despesa, e não como tributo a recuperar."
+        },
+        {
+          "conceitoId": "tributo-sobre-receita",
+          "texto": "Na DRE, a receita bruta de vendas é reduzida pelos tributos sobre vendas (ICMS, PIS, Cofins) para apurar a receita líquida, antes de subtrair o custo dos produtos vendidos."
+        }
+      ],
+      "pg": [
+        "Tributo recuperável NUNCA compõe custo ou despesa: ele é um direito (ativo). Só o tributo não recuperável se soma ao custo de aquisição.",
+        "Tributo sobre vendas reduz a receita bruta na DRE; tributo sobre o lucro é uma despesa distinta, calculada depois da apuração do resultado antes dos tributos — eles nunca aparecem juntos na mesma linha da demonstração.",
+        "Classificar um tributo recuperável como despesa (em vez de ativo) distorce tanto o resultado do período quanto o saldo patrimonial do tributo a recuperar."
+      ],
+      "rs": "Tributos ligados a compras, vendas e resultado recebem tratamentos contábeis diferentes conforme sua natureza: recuperável é ativo, não recuperável compõe o custo de aquisição, o incidente sobre a venda reduz a receita bruta na DRE, e o incidente sobre o lucro é despesa do exercício apurada após o resultado antes dos tributos."
+    }
+  },
+  {
+    "contentId": "CT-016",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a finalidade da conciliação contábil-fiscal e como ela evidencia diferenças entre a escrituração contábil e as apurações fiscais.",
+      "cc": [
+        {
+          "id": "conciliacao-contabil-fiscal",
+          "nome": "Conciliação contábil-fiscal",
+          "def": "Procedimento de controle que confronta os saldos e lançamentos do Livro Razão com os valores apurados nas guias, declarações e documentos fiscais, para garantir que o tributo contabilizado corresponda ao tributo efetivamente devido e declarado."
+        },
+        {
+          "id": "diferenca-temporal",
+          "nome": "Diferença temporal",
+          "def": "Divergência entre o período de reconhecimento contábil e o período de apuração/pagamento fiscal de um mesmo valor, que se resolve naturalmente com o tempo (ex.: tributo reconhecido em um mês e pago no mês seguinte)."
+        },
+        {
+          "id": "diferenca-permanente-conciliacao",
+          "nome": "Diferença permanente",
+          "def": "Divergência entre o valor contábil e o valor fiscal que não se reverte em período futuro, exigindo investigação e ajuste pontual (ex.: lançamento contábil incorreto, guia calculada com base equivocada, ou tributo não reconhecido por erro)."
+        },
+        {
+          "id": "evidencia-documental",
+          "nome": "Evidência documental de suporte",
+          "def": "Conjunto de documentos (memórias de cálculo, guias, declarações, extratos) que sustenta cada lançamento de tributo a recolher ou a recuperar, necessário para a conciliação e para eventual auditoria ou fiscalização."
+        }
+      ],
+      "rl": [
+        { "de": "conciliacao-contabil-fiscal", "para": "diferenca-temporal", "tipo": "identifica e monitora" },
+        { "de": "conciliacao-contabil-fiscal", "para": "diferenca-permanente-conciliacao", "tipo": "identifica e investiga" },
+        { "de": "evidencia-documental", "para": "conciliacao-contabil-fiscal", "tipo": "sustenta" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "diferenca-temporal",
+          "texto": "O saldo contábil de ICMS a recolher de março é R$ 10.000 e a guia de apuração, gerada no início de abril, também aponta R$ 10.000: a diferença é apenas de calendário (reconhecido em março, pago em abril), não exige ajuste."
+        },
+        {
+          "conceitoId": "diferenca-permanente-conciliacao",
+          "texto": "Se a conciliação revela que o Razão registrou R$ 9.000 de PIS a recolher, mas a guia apurada corretamente totaliza R$ 9.500, a diferença de R$ 500 indica um lançamento contábil incompleto que precisa ser corrigido, não apenas uma questão de prazo."
+        }
+      ],
+      "pg": [
+        "Nem toda diferença encontrada na conciliação é erro: diferenças temporais (calendário entre reconhecimento e apuração/pagamento) são esperadas e se resolvem sozinhas.",
+        "A ausência de conciliação periódica não significa que não há erro — apenas que o erro, se existir, ainda não foi detectado.",
+        "Guia ou declaração entregue ao fisco não substitui a conciliação com o Razão: a obrigação declarada pode estar incorreta mesmo que já tenha sido transmitida."
+      ],
+      "rs": "A conciliação contábil-fiscal confronta o Razão com as apurações fiscais para confirmar que o tributo contabilizado é o tributo devido. Diferenças temporais são normais e se resolvem com o calendário; diferenças permanentes indicam erro e exigem investigação e correção, sempre apoiadas em evidência documental."
+    }
+  },
+  {
+    "contentId": "CT-017",
+    "lesson": {
+      "v": 1,
+      "obj": "Aplicar os critérios de reconhecimento e mensuração de provisões e contingências a riscos fiscais, conforme o CPC 25.",
+      "cc": [
+        {
+          "id": "provisao-fiscal",
+          "nome": "Provisão para risco fiscal",
+          "def": "Passivo de valor ou prazo incerto, reconhecido quando há obrigação presente decorrente de evento passado (autuação, interpretação divergente de norma), a saída de recursos é provável e o valor pode ser estimado com confiabilidade (CPC 25)."
+        },
+        {
+          "id": "contingencia-fiscal-passiva",
+          "nome": "Contingência passiva fiscal",
+          "def": "Possível obrigação tributária cuja existência depende de evento futuro incerto, ou cuja saída de recursos é apenas possível (não provável): não é reconhecida no balanço, apenas divulgada em nota explicativa."
+        },
+        {
+          "id": "classificacao-probabilidade",
+          "nome": "Classificação por probabilidade (provável, possível, remota)",
+          "def": "Critério do CPC 25 para decidir o tratamento do risco fiscal: provável leva a provisão reconhecida no passivo; possível leva apenas a divulgação em nota; remota não exige nem provisão nem divulgação."
+        },
+        {
+          "id": "deposito-judicial-fiscal",
+          "nome": "Depósito judicial relacionado a tributo",
+          "def": "Valor depositado em juízo para suspender a exigibilidade de um tributo discutido administrativa ou judicialmente, registrado como ativo (direito de levantamento ou compensação futura), distinto da provisão do passivo relacionada ao mesmo processo."
+        }
+      ],
+      "rl": [
+        { "de": "classificacao-probabilidade", "para": "provisao-fiscal", "tipo": "resulta em provisão quando a probabilidade é provável, ver" },
+        { "de": "classificacao-probabilidade", "para": "contingencia-fiscal-passiva", "tipo": "resulta em divulgação quando a probabilidade é possível, ver" },
+        { "de": "deposito-judicial-fiscal", "para": "provisao-fiscal", "tipo": "pode coexistir, sem se compensar automaticamente com" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "provisao-fiscal",
+          "texto": "Uma empresa autuada por deixar de recolher um tributo, com jurisprudência majoritariamente desfavorável e laudo jurídico apontando perda provável, reconhece uma provisão pelo valor estimado da perda, incluindo juros e multa esperados."
+        },
+        {
+          "conceitoId": "contingencia-fiscal-passiva",
+          "texto": "Uma discussão tributária em que o laudo jurídico classifica a chance de perda como possível (não provável) é apenas divulgada em nota explicativa, descrevendo a natureza do risco e, quando praticável, uma estimativa do valor envolvido."
+        }
+      ],
+      "pg": [
+        "Depositar em juízo não extingue nem reduz a provisão do passivo: o depósito é um ativo separado, e a provisão continua sendo avaliada por sua própria probabilidade e mensuração.",
+        "Contingência possível NÃO é reconhecida no balanço — só provável gera provisão. Confundir 'possível' com 'provável' é o erro mais comum nessa classificação.",
+        "A mensuração da provisão fiscal deve considerar a melhor estimativa, incluindo os encargos (juros e multa) esperados até a resolução, não apenas o valor principal do tributo discutido."
+      ],
+      "rs": "Riscos fiscais seguem os critérios do CPC 25: obrigação presente com saída provável e valor estimável com confiabilidade gera provisão no passivo; risco apenas possível é divulgado em nota, sem reconhecimento; risco remoto não exige nem uma coisa nem outra. Depósitos judiciais são ativos separados da provisão correspondente."
+    }
+  },
+  {
+    "contentId": "CT-018",
+    "lesson": {
+      "v": 1,
+      "obj": "Distinguir tributo corrente e tributo diferido sobre o lucro e explicar como diferenças temporárias geram ativos e passivos fiscais diferidos, conforme o CPC 32.",
+      "cc": [
+        {
+          "id": "tributo-corrente",
+          "nome": "Tributo corrente",
+          "def": "Valor de IRPJ e CSLL a pagar (ou a recuperar) relativo ao lucro tributável do período, calculado conforme as regras fiscais vigentes aplicadas à base tributável apurada para aquele exercício (CPC 32)."
+        },
+        {
+          "id": "tributo-diferido",
+          "nome": "Tributo diferido",
+          "def": "Efeito contábil de diferenças temporárias entre a base contábil e a base fiscal de ativos e passivos, reconhecido como ativo fiscal diferido (tributo pago antecipadamente ou prejuízo fiscal a compensar) ou passivo fiscal diferido (tributo a pagar em período futuro)."
+        },
+        {
+          "id": "diferenca-temporaria-cpc32",
+          "nome": "Diferença temporária",
+          "def": "Diferença entre o valor contábil de um ativo ou passivo e sua base fiscal, que se reverterá em períodos futuros, gerando tributo a pagar ou a recuperar nesses períodos seguintes (ex.: despesa reconhecida contabilmente antes de ser dedutível fiscalmente)."
+        },
+        {
+          "id": "taxa-efetiva-tributo",
+          "nome": "Taxa efetiva de tributo sobre o lucro",
+          "def": "Relação entre a despesa total de tributo sobre o lucro (corrente mais diferido) e o lucro contábil antes dos tributos, usada para explicar por que essa relação pode diferir da alíquota nominal de IRPJ/CSLL."
+        }
+      ],
+      "rl": [
+        { "de": "diferenca-temporaria-cpc32", "para": "tributo-diferido", "tipo": "origina" },
+        { "de": "tributo-corrente", "para": "tributo-diferido", "tipo": "se soma a, para formar a despesa total de tributo sobre o lucro, diferente de" },
+        { "de": "taxa-efetiva-tributo", "para": "tributo-corrente", "tipo": "é calculada a partir da soma de tributo diferido com" }
+      ],
+      "fm": [
+        {
+          "id": "taxa-efetiva",
+          "expr": "Taxa efetiva = (Tributo corrente + Tributo diferido) ÷ Lucro contábil antes dos tributos",
+          "legenda": "Mede quanto do lucro contábil antes dos tributos é efetivamente consumido pela despesa total de IRPJ/CSLL (corrente mais diferido), podendo divergir da alíquota nominal por efeito das diferenças permanentes e temporárias."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "diferenca-temporaria-cpc32",
+          "texto": "Uma provisão para risco fiscal reconhecida contabilmente, mas ainda não dedutível fiscalmente, gera uma diferença temporária: a empresa reconhece um ativo fiscal diferido, pois pagará menos tributo no futuro, quando a despesa se tornar dedutível."
+        },
+        {
+          "conceitoId": "tributo-diferido",
+          "texto": "Um prejuízo fiscal apurado no período, que poderá reduzir o tributo a pagar em exercícios futuros (respeitados os limites legais de compensação), pode gerar o reconhecimento de um ativo fiscal diferido, quando há expectativa de lucro tributável futuro suficiente para realizá-lo."
+        }
+      ],
+      "pg": [
+        "Tributo diferido não é um tributo 'a menos': é o reconhecimento contábil, no período presente, do efeito futuro de diferenças que já existem hoje entre a base contábil e a base fiscal.",
+        "Ativo fiscal diferido só é reconhecido quando há expectativa razoável de lucro tributável futuro suficiente para realizá-lo — reconhecê-lo sem essa expectativa viola o CPC 32.",
+        "Diferença permanente (que nunca se reverte) não gera tributo diferido; só a diferença temporária (que se reverte em período futuro) gera ativo ou passivo fiscal diferido."
+      ],
+      "rs": "O CPC 32 separa o tributo sobre o lucro em corrente (devido pelo lucro tributável do período) e diferido (efeito de diferenças temporárias entre base contábil e fiscal, reconhecido como ativo ou passivo fiscal diferido). A soma dos dois forma a despesa total de tributo sobre o lucro, cuja relação com o lucro contábil antes dos tributos é a taxa efetiva, que pode divergir da alíquota nominal."
+    }
+  },
+  {
+    "contentId": "CT-019",
+    "lesson": {
+      "v": 1,
+      "obj": "Descrever como o fechamento tributário integra calendário, responsáveis, conferências e provisões para assegurar que as obrigações do período sejam corretamente contabilizadas e pagas.",
+      "cc": [
+        {
+          "id": "calendario-fechamento-tributario",
+          "nome": "Calendário de fechamento tributário",
+          "def": "Cronograma que organiza, por tributo e por competência, as etapas de apuração, conferência, provisionamento, entrega de guias/declarações e pagamento, evitando atrasos e garantindo que cada obrigação seja tratada na ordem e no prazo corretos."
+        },
+        {
+          "id": "responsaveis-fechamento",
+          "nome": "Responsáveis pelo fechamento",
+          "def": "Papéis definidos (quem apura, quem revisa, quem aprova o pagamento) para que cada etapa do fechamento tributário tenha segregação de funções e trilha de responsabilidade, reduzindo o risco de erro ou lançamento sem revisão."
+        },
+        {
+          "id": "conferencia-cruzada-fechamento",
+          "nome": "Conferência cruzada",
+          "def": "Verificação que cruza o saldo contábil de cada tributo a recolher/recuperar com a guia ou declaração correspondente antes do pagamento, aplicando a lógica da conciliação contábil-fiscal como etapa obrigatória do fechamento."
+        },
+        {
+          "id": "evidencias-fechamento",
+          "nome": "Evidências do fechamento",
+          "def": "Conjunto de documentos (memórias de cálculo, guias geradas, comprovantes de pagamento, aprovações) arquivado ao final de cada ciclo, comprovando que cada etapa do fechamento tributário foi cumprida e revisada."
+        }
+      ],
+      "rl": [
+        { "de": "calendario-fechamento-tributario", "para": "responsaveis-fechamento", "tipo": "organiza as etapas atribuídas a" },
+        { "de": "responsaveis-fechamento", "para": "conferencia-cruzada-fechamento", "tipo": "executam" },
+        { "de": "conferencia-cruzada-fechamento", "para": "evidencias-fechamento", "tipo": "produz" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "calendario-fechamento-tributario",
+          "texto": "Antes de pagar um tributo com vencimento no dia 20, o calendário de fechamento prevê que a apuração esteja pronta até o dia 15, a conferência cruzada até o dia 17 e a aprovação do pagamento até o dia 19, deixando folga para corrigir eventuais divergências."
+        },
+        {
+          "conceitoId": "conferencia-cruzada-fechamento",
+          "texto": "Antes de autorizar o pagamento de um tributo, a equipe confere se o saldo do Razão, o valor da guia gerada e o valor informado na declaração correspondente são idênticos; qualquer diferença é investigada antes do pagamento, não depois."
+        }
+      ],
+      "pg": [
+        "Pagar um tributo sem concluir a conferência cruzada antecipa o risco: o pagamento de um valor errado pode gerar tanto multa por insuficiência quanto necessidade de pedido de restituição por excesso.",
+        "Fechamento tributário não é apenas 'gerar a guia': inclui a conferência com a contabilidade e a aprovação por um responsável diferente de quem apurou, para reduzir o risco de erro não detectado.",
+        "A ausência de evidências documentais de um fechamento já concluído dificulta tanto uma auditoria interna quanto uma fiscalização, mesmo que o tributo tenha sido pago corretamente."
+      ],
+      "rs": "O fechamento tributário integrado organiza, por um calendário, as etapas de apuração, conferência cruzada e aprovação de cada tributo, com responsáveis definidos para cada etapa e evidências documentais que comprovam o cumprimento do processo antes do pagamento."
+    }
+  }
+]
