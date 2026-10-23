@@ -14,6 +14,38 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #101 (pendente) — APA-18: aulas base de Contabilidade Tributária (sub-lote 5a)
+
+- Ponto de restauração: branch `restore/pre-apa-18-contabilidade-tributaria-01`
+  (commit `5cfed63`, main antes do merge).
+- O que muda no site: nada visível ainda — este PR só adiciona os dados; as
+  12 aulas só aparecem depois de o Abner rodar o comando de carga para esse
+  arquivo (não precisa de "Publicar Atlas": o script grava direto em D1/R2).
+  O carregamento em produção de toda a Contabilidade Tributária será feito
+  num único comando ao final de todos os 15 sub-lotes, a pedido do Abner.
+- O que muda fora do site: primeiro sub-lote de Contabilidade Tributária em
+  `data/apache/aulas/contabilidade-tributaria-01.json` (12 dos 124
+  conteúdos: CT-001 a CT-012, unidade "Fundamentos", na ordem do catálogo,
+  `model='claude-manual'`), usando o mesmo mecanismo de carga dos PRs
+  #95-#100 (`scripts/apache-carregar-aulas.mjs`). Conteúdo: atividade
+  financeira do Estado, Sistema Tributário Nacional, competência e
+  repartição de receitas, espécies tributárias (teoria pentapartite),
+  princípios e limitações ao poder de tributar, obrigação tributária
+  (principal e acessória), hipótese de incidência e fato gerador, sujeitos
+  da relação tributária, crédito tributário e lançamento, suspensão/
+  extinção/exclusão do crédito, responsabilidade/solidariedade/sucessão e
+  interpretação/vigência/aplicação da legislação; cita apenas de forma
+  genérica dispositivos consolidados e amplamente conhecidos da
+  Constituição Federal de 1988 (arts. 145 a 162, 150) e do CTN (Lei nº
+  5.172/1966, arts. 3º, 96 a 138, 142 a 156, 173 a 175), sem texto literal
+  de dispositivo e sem citar reforma tributária (fora do escopo desta
+  unidade). `docs/APACHE-18-plano.md` atualizado: sub-lote 5a mesclado,
+  Contabilidade Tributária em 12/124.
+- Se algo der errado: reverter para `restore/pre-apa-18-contabilidade-tributaria-01`
+  volta ao estado anterior; as aulas só existem em D1/R2 depois de o Abner
+  rodar o comando de carga, então reverter sem ter rodado o comando não
+  perde nada em produção.
+
 ## PR #100 (pendente) — APA-18: aulas base de Contabilidade Geral (sub-lote 4c, disciplina completa)
 
 - Ponto de restauração: branch `restore/pre-apa-18-contabilidade-geral-3`

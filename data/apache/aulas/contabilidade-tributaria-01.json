@@ -1,0 +1,708 @@
+[
+  {
+    "contentId": "CT-001",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a atividade financeira do Estado e o papel da arrecadação de tributos no financiamento das suas finalidades.",
+      "cc": [
+        {
+          "id": "atividade-financeira",
+          "nome": "Atividade financeira do Estado",
+          "def": "Conjunto de ações do Estado para obter, gerir e aplicar recursos necessários à realização de suas finalidades (saúde, educação, segurança, infraestrutura). Envolve basicamente receita, despesa, orçamento e crédito público."
+        },
+        {
+          "id": "receita-publica",
+          "nome": "Receita pública",
+          "def": "Entrada de recursos nos cofres públicos. Divide-se em receita originária (decorre da exploração do próprio patrimônio do Estado, de natureza contratual) e receita derivada (decorre do poder de império do Estado sobre o patrimônio particular, como os tributos)."
+        },
+        {
+          "id": "despesa-publica",
+          "nome": "Despesa pública",
+          "def": "Aplicação de recursos públicos para a realização dos serviços e finalidades do Estado, autorizada e discriminada no orçamento."
+        },
+        {
+          "id": "orcamento-publico",
+          "nome": "Orçamento público",
+          "def": "Instrumento de planejamento que estima as receitas e fixa as despesas para um período, viabilizando o controle e a transparência da atividade financeira do Estado."
+        },
+        {
+          "id": "tributo",
+          "nome": "Tributo",
+          "def": "Principal espécie de receita derivada: prestação pecuniária compulsória, em moeda, que não constitui sanção de ato ilícito, instituída em lei e cobrada mediante atividade administrativa plenamente vinculada (definição do art. 3º do CTN)."
+        }
+      ],
+      "rl": [
+        { "de": "tributo", "para": "receita-publica", "tipo": "é a principal espécie de" },
+        { "de": "receita-publica", "para": "despesa-publica", "tipo": "financia" },
+        { "de": "orcamento-publico", "para": "receita-publica", "tipo": "estima" },
+        { "de": "orcamento-publico", "para": "despesa-publica", "tipo": "fixa" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "receita-publica",
+          "texto": "O aluguel que o Estado recebe por ceder um imóvel público é receita originária (relação contratual, sem poder de império); o IPTU cobrado do proprietário desse mesmo tipo de imóvel é receita derivada (tributo, imposto pelo poder de tributar)."
+        },
+        {
+          "conceitoId": "tributo",
+          "texto": "Uma multa de trânsito não é tributo, mesmo sendo compulsória e em dinheiro, porque decorre de um ato ilícito (infração); o tributo, por definição, nunca é sanção de ato ilícito."
+        }
+      ],
+      "pg": [
+        "Nem toda entrada de dinheiro nos cofres públicos é tributo: preços públicos, tarifas e receitas de alienação de bens são receitas, mas não tributos.",
+        "Multa tributária é obrigação pecuniária compulsória, mas não é tributo, pois decorre de descumprimento de obrigação (ato ilícito) — a multa é cobrada JUNTO com o tributo, não se confunde com ele.",
+        "'Cobrada mediante atividade administrativa plenamente vinculada' significa que a autoridade não tem discricionariedade para cobrar ou não o tributo devido: constatado o fato gerador, a cobrança é obrigatória."
+      ],
+      "rs": "A atividade financeira do Estado obtém, gerencia e aplica recursos para custear suas finalidades, por meio de receitas (originárias e derivadas), despesas e do orçamento que os planeja. O tributo é a principal receita derivada: prestação pecuniária compulsória, não sancionatória, instituída em lei e cobrada por atividade vinculada, conforme a definição do art. 3º do CTN."
+    }
+  },
+  {
+    "contentId": "CT-002",
+    "lesson": {
+      "v": 1,
+      "obj": "Identificar as fontes do Sistema Tributário Nacional e a hierarquia entre Constituição, lei complementar, lei ordinária e normas infralegais.",
+      "cc": [
+        {
+          "id": "stn",
+          "nome": "Sistema Tributário Nacional (STN)",
+          "def": "Conjunto de normas constitucionais e infraconstitucionais que organiza a tributação no Brasil: distribui competências entre os entes federativos, define espécies tributárias e impõe limitações ao poder de tributar. Está estruturado principalmente no Título VI, Capítulo I, da Constituição Federal de 1988 (arts. 145 a 162)."
+        },
+        {
+          "id": "constituicao-tributaria",
+          "nome": "Constituição Federal",
+          "def": "Norma de maior hierarquia: outorga as competências tributárias aos entes federativos, define as espécies de tributo e estabelece os princípios e as limitações ao poder de tributar. Não cria tributos, apenas autoriza sua instituição por lei."
+        },
+        {
+          "id": "codigo-tributario-nacional",
+          "nome": "Código Tributário Nacional (CTN)",
+          "def": "Lei nº 5.172, de 1966, recepcionada pela Constituição de 1988 com status de lei complementar. Estabelece as normas gerais de direito tributário aplicáveis a todos os entes federativos: fato gerador, obrigação, crédito tributário, lançamento, prescrição e decadência, entre outras."
+        },
+        {
+          "id": "lei-complementar-tributaria",
+          "nome": "Lei complementar em matéria tributária",
+          "def": "Instrumento normativo exigido pela Constituição para disciplinar conflitos de competência, regular limitações constitucionais ao poder de tributar e estabelecer normas gerais de direito tributário (CF, art. 146), além de instituir certos tributos específicos, como empréstimos compulsórios e alguns impostos residuais."
+        },
+        {
+          "id": "lei-ordinaria-tributaria",
+          "nome": "Lei ordinária em matéria tributária",
+          "def": "Instrumento normal para a instituição e majoração da maioria dos tributos, em obediência ao princípio da legalidade. É o veículo padrão, salvo quando a Constituição exige expressamente lei complementar."
+        },
+        {
+          "id": "normas-infralegais",
+          "nome": "Normas complementares (infralegais)",
+          "def": "Atos normativos subordinados à lei que apenas detalham sua aplicação, sem poder criar ou majorar tributo: atos normativos expedidos por autoridades administrativas, decisões normativas de órgãos administrativos, práticas reiteradas da Administração e convênios entre entes federativos (CTN, art. 100)."
+        }
+      ],
+      "rl": [
+        { "de": "constituicao-tributaria", "para": "stn", "tipo": "é a base estrutural do" },
+        { "de": "codigo-tributario-nacional", "para": "lei-complementar-tributaria", "tipo": "tem status equivalente a" },
+        { "de": "lei-complementar-tributaria", "para": "lei-ordinaria-tributaria", "tipo": "está em patamar hierárquico superior a, quando exigida pela Constituição, em relação a" },
+        { "de": "normas-infralegais", "para": "lei-ordinaria-tributaria", "tipo": "é subordinada a" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "lei-ordinaria-tributaria",
+          "texto": "Um município institui ou majora o IPTU por lei ordinária municipal — regra geral da legalidade tributária, sem necessidade de lei complementar."
+        },
+        {
+          "conceitoId": "lei-complementar-tributaria",
+          "texto": "O empréstimo compulsório (CF, art. 148) e a instituição de impostos residuais da União (CF, art. 154, I) exigem lei complementar, não lei ordinária — exceção expressa da Constituição."
+        }
+      ],
+      "pg": [
+        "A Constituição Federal não cria nenhum tributo: ela apenas outorga competência para que o ente federativo o institua por lei.",
+        "O CTN é formalmente uma lei ordinária de 1966, mas foi recepcionado pela Constituição de 1988 com força de lei complementar: por isso só pode ser alterado por lei complementar, nunca por lei ordinária.",
+        "Normas complementares (CTN, art. 100), como instruções normativas e portarias, não podem inovar nem criar obrigação tributária nova — apenas regulamentam a aplicação da lei."
+      ],
+      "rs": "O Sistema Tributário Nacional é organizado em camadas hierárquicas: a Constituição Federal distribui competências e limita o poder de tributar; o CTN, com status de lei complementar, traz as normas gerais; leis complementares específicas tratam de matérias reservadas pela Constituição; leis ordinárias instituem e majoram a maioria dos tributos; e normas infralegais apenas detalham a aplicação da lei, sem poder criar obrigação nova."
+    }
+  },
+  {
+    "contentId": "CT-003",
+    "lesson": {
+      "v": 1,
+      "obj": "Distinguir a competência tributária dos entes federativos e a repartição constitucional das receitas tributárias.",
+      "cc": [
+        {
+          "id": "competencia-tributaria",
+          "nome": "Competência tributária",
+          "def": "Poder constitucional, atribuído a União, Estados, Distrito Federal e Municípios, de instituir tributos por lei própria. É indelegável, intransferível e exercida com liberdade dentro dos limites fixados pela Constituição."
+        },
+        {
+          "id": "competencia-privativa",
+          "nome": "Competência privativa",
+          "def": "Atribuição de determinado imposto a um único ente federativo com exclusividade, como o IR e o IPI para a União, o ICMS para os Estados e o ISS para os Municípios."
+        },
+        {
+          "id": "competencia-comum",
+          "nome": "Competência comum",
+          "def": "Atribuição que permite a todos os entes federativos instituir o mesmo tributo, dentro de sua esfera de atuação: aplica-se a taxas (pelo exercício do poder de polícia ou pela prestação de serviço público específico e divisível) e a contribuições de melhoria."
+        },
+        {
+          "id": "competencia-residual",
+          "nome": "Competência residual",
+          "def": "Poder, exclusivo da União, de instituir por lei complementar impostos não previstos expressamente na Constituição, desde que não cumulativos e com fato gerador e base de cálculo diferentes dos já existentes (CF, art. 154, I)."
+        },
+        {
+          "id": "capacidade-tributaria-ativa",
+          "nome": "Capacidade tributária ativa",
+          "def": "Atribuição das funções de arrecadar ou fiscalizar tributos, ou de executar leis e atos administrativos em matéria tributária, que pode ser delegada por uma pessoa jurídica de direito público a outra (CTN, art. 7º), diferentemente da competência tributária, que é indelegável."
+        },
+        {
+          "id": "repartição-receitas",
+          "nome": "Repartição de receitas tributárias",
+          "def": "Mecanismo constitucional (CF, arts. 157 a 162) pelo qual parte da arrecadação de certos impostos da União e dos Estados é repassada obrigatoriamente a outros entes, como o Fundo de Participação dos Municípios (FPM) e o Fundo de Participação dos Estados (FPE)."
+        }
+      ],
+      "rl": [
+        { "de": "competencia-tributaria", "para": "capacidade-tributaria-ativa", "tipo": "é indelegável, ao contrário da" },
+        { "de": "competencia-privativa", "para": "competencia-comum", "tipo": "contrasta com" },
+        { "de": "competencia-residual", "para": "competencia-privativa", "tipo": "complementa, no caso da União," },
+        { "de": "repartição-receitas", "para": "competencia-tributaria", "tipo": "não altera a titularidade da" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "capacidade-tributaria-ativa",
+          "texto": "A União pode delegar a fiscalização do ITR a municípios que celebrem convênio, transferindo a capacidade tributária ativa, mas sem transferir a competência tributária, que continua sendo da União."
+        },
+        {
+          "conceitoId": "repartição-receitas",
+          "texto": "Parte do IR e do IPI arrecadados pela União é repassada aos Estados e Municípios via FPE e FPM: a União continua sendo competente para instituir e cobrar esses impostos, apenas parte da receita é repartida."
+        }
+      ],
+      "pg": [
+        "Competência tributária e capacidade tributária ativa não são sinônimos: a primeira (instituir o tributo) é indelegável; a segunda (arrecadar/fiscalizar) pode ser delegada a outra pessoa jurídica de direito público.",
+        "A repartição de receitas não cria competência tributária para quem recebe o repasse: o Município que recebe parte do IPI não passa a poder legislar sobre esse imposto.",
+        "A competência residual da União exige lei complementar, imposto não cumulativo e fato gerador/base de cálculo distintos dos impostos já existentes — os três requisitos cumulativamente."
+      ],
+      "rs": "A competência tributária é o poder, indelegável, de instituir tributos, distribuído pela Constituição entre os entes federativos de forma privativa (a maioria dos impostos), comum (taxas e contribuição de melhoria) ou residual (novos impostos da União). Não se confunde com a capacidade tributária ativa, que pode ser delegada, nem é afetada pela repartição constitucional de receitas, que apenas distribui parte do produto da arrecadação."
+    }
+  },
+  {
+    "contentId": "CT-004",
+    "lesson": {
+      "v": 1,
+      "obj": "Classificar as cinco espécies tributárias previstas no ordenamento brasileiro segundo a teoria pentapartite.",
+      "cc": [
+        {
+          "id": "imposto",
+          "nome": "Imposto",
+          "def": "Tributo cujo fato gerador independe de qualquer atividade estatal específica relativa ao contribuinte (CTN, art. 16); financia despesas gerais do Estado, sem vinculação direta à receita de um serviço específico."
+        },
+        {
+          "id": "taxa",
+          "nome": "Taxa",
+          "def": "Tributo vinculado: cobrado em razão do exercício regular do poder de polícia ou da utilização, efetiva ou potencial, de serviço público específico e divisível prestado ou posto à disposição do contribuinte (CF, art. 145, II)."
+        },
+        {
+          "id": "contribuicao-melhoria",
+          "nome": "Contribuição de melhoria",
+          "def": "Tributo cobrado em razão de obra pública que resulte em valorização imobiliária para o contribuinte, tendo como limite total a despesa realizada e como limite individual o acréscimo de valor do imóvel beneficiado."
+        },
+        {
+          "id": "emprestimo-compulsorio",
+          "nome": "Empréstimo compulsório",
+          "def": "Tributo de competência exclusiva da União, instituído por lei complementar, para atender a despesas extraordinárias decorrentes de calamidade pública ou guerra externa, ou em caso de investimento público urgente e de relevante interesse nacional (CF, art. 148). O valor arrecadado deve ser restituído ao contribuinte."
+        },
+        {
+          "id": "contribuicao-especial",
+          "nome": "Contribuições especiais",
+          "def": "Tributos de competência da União (em regra), destinados a finalidades específicas: contribuições sociais, de intervenção no domínio econômico (CIDE) e de interesse de categorias profissionais ou econômicas (CF, art. 149). Estados, DF e Municípios podem instituir contribuição previdenciária de seus servidores e contribuição para custeio de iluminação pública."
+        },
+        {
+          "id": "teoria-pentapartite",
+          "nome": "Teoria pentapartite",
+          "def": "Entendimento consolidado pelo Supremo Tribunal Federal de que existem cinco espécies tributárias autônomas (impostos, taxas, contribuição de melhoria, empréstimos compulsórios e contribuições especiais), e não apenas as três mencionadas literalmente no art. 5º do CTN."
+        }
+      ],
+      "rl": [
+        { "de": "imposto", "para": "taxa", "tipo": "distingue-se por ser não vinculado, enquanto a taxa é vinculada a" },
+        { "de": "taxa", "para": "contribuicao-melhoria", "tipo": "é vinculada a atividade estatal, assim como a" },
+        { "de": "teoria-pentapartite", "para": "emprestimo-compulsorio", "tipo": "reconhece como espécie autônoma o" },
+        { "de": "teoria-pentapartite", "para": "contribuicao-especial", "tipo": "reconhece como espécie autônoma a" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "taxa",
+          "texto": "A taxa de coleta de lixo domiciliar é cobrada porque o Município presta um serviço público específico e divisível (identifica-se o imóvel beneficiado), diferentemente do IPTU, imposto não vinculado a nenhum serviço específico."
+        },
+        {
+          "conceitoId": "emprestimo-compulsorio",
+          "texto": "Diante de uma calamidade pública nacional, a União poderia instituir empréstimo compulsório por lei complementar, com a obrigação de devolver o valor arrecadado aos contribuintes posteriormente — diferença central frente aos demais tributos, que não são restituíveis."
+        }
+      ],
+      "pg": [
+        "O art. 5º do CTN, de 1966, cita apenas três espécies (impostos, taxas e contribuições de melhoria); a doutrina e o STF, com base na Constituição de 1988, adotam a teoria pentapartite, que soma empréstimos compulsórios e contribuições especiais.",
+        "Taxa não pode ter base de cálculo idêntica à de imposto (CF, art. 145, §2º) nem ser calculada em função do capital das empresas — distingue a taxa, tributo vinculado e contraprestacional, do imposto.",
+        "O valor arrecadado com empréstimo compulsório é o único, entre as cinco espécies, com obrigação de restituição ao contribuinte: não se trata de perda definitiva de patrimônio como nas demais espécies."
+      ],
+      "rs": "O ordenamento brasileiro reconhece cinco espécies tributárias pela teoria pentapartite: imposto (não vinculado), taxa (vinculada ao poder de polícia ou a serviço público específico e divisível), contribuição de melhoria (vinculada a obra pública valorizadora), empréstimo compulsório (restituível, exclusivo da União) e contribuições especiais (vinculadas a finalidades específicas)."
+    }
+  },
+  {
+    "contentId": "CT-005",
+    "lesson": {
+      "v": 1,
+      "obj": "Reconhecer os princípios constitucionais e as limitações ao poder de tributar previstos no art. 150 da Constituição Federal.",
+      "cc": [
+        {
+          "id": "legalidade-tributaria",
+          "nome": "Princípio da legalidade",
+          "def": "Veda a exigência ou o aumento de tributo sem lei que o estabeleça (CF, art. 150, I). Em regra, instituição e majoração dependem de lei em sentido estrito, ressalvadas exceções expressas, como a alteração de alíquotas de certos tributos extrafiscais por ato do Poder Executivo."
+        },
+        {
+          "id": "isonomia-tributaria",
+          "nome": "Princípio da isonomia",
+          "def": "Veda tratamento desigual entre contribuintes que se encontrem em situação equivalente, sendo proibida qualquer distinção em razão de ocupação profissional ou função exercida (CF, art. 150, II)."
+        },
+        {
+          "id": "irretroatividade-tributaria",
+          "nome": "Princípio da irretroatividade",
+          "def": "Veda cobrar tributos em relação a fatos geradores ocorridos antes do início da vigência da lei que os houver instituído ou aumentado (CF, art. 150, III, 'a')."
+        },
+        {
+          "id": "anterioridade-anual",
+          "nome": "Anterioridade anual (de exercício)",
+          "def": "Veda cobrar tributo no mesmo exercício financeiro em que haja sido publicada a lei que o instituiu ou aumentou (CF, art. 150, III, 'b'), com exceções expressas, como II, IE, IPI e IOF."
+        },
+        {
+          "id": "anterioridade-nonagesimal",
+          "nome": "Anterioridade nonagesimal (noventena)",
+          "def": "Veda cobrar tributo antes de decorridos noventa dias da data em que haja sido publicada a lei que o instituiu ou aumentou (CF, art. 150, III, 'c'), aplicada cumulativamente com a anterioridade anual na maioria dos tributos, mas com exceções próprias, como IR e base de cálculo do IPTU/IPVA."
+        },
+        {
+          "id": "vedacao-confisco",
+          "nome": "Vedação ao confisco",
+          "def": "Veda utilizar tributo com efeito de confisco (CF, art. 150, IV): a carga tributária não pode ser tão elevada a ponto de absorver, na prática, parte substancial do patrimônio ou da renda do contribuinte."
+        },
+        {
+          "id": "imunidade-tributaria",
+          "nome": "Imunidade tributária",
+          "def": "Limitação constitucional que impede a própria incidência da norma tributária sobre determinadas pessoas, bens ou situações, como templos de qualquer culto, patrimônio de partidos políticos e entidades sindicais de trabalhadores, livros, jornais e periódicos (CF, art. 150, VI)."
+        }
+      ],
+      "rl": [
+        { "de": "anterioridade-anual", "para": "anterioridade-nonagesimal", "tipo": "aplica-se cumulativamente, na maioria dos tributos, com a" },
+        { "de": "legalidade-tributaria", "para": "irretroatividade-tributaria", "tipo": "é complementado pela" },
+        { "de": "imunidade-tributaria", "para": "isonomia-tributaria", "tipo": "é uma limitação distinta da" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "anterioridade-nonagesimal",
+          "texto": "Uma lei que majora o IPI publicada em dezembro já produz efeitos em janeiro do exercício seguinte (IPI é exceção à anterioridade anual), mas só pode ser cobrada após 90 dias da publicação, por ser exceção apenas à anterioridade anual, não à noventena."
+        },
+        {
+          "conceitoId": "imunidade-tributaria",
+          "texto": "Um templo religioso não paga IPTU sobre o imóvel utilizado para suas finalidades essenciais, por força da imunidade do art. 150, VI, 'b', da Constituição — a norma de incidência do imposto sequer alcança essa situação."
+        }
+      ],
+      "pg": [
+        "Imunidade (prevista na Constituição, impede a competência de tributar) não se confunde com isenção (prevista em lei, dispensa o pagamento de um tributo cuja competência existe) — distinção central cobrada em prova.",
+        "Nem todo tributo segue as duas anterioridades juntas: II, IE, IPI e IOF são exceção à anterioridade anual (podem ser cobrados no mesmo exercício); contribuições sociais seguem só a noventena (CF, art. 195, §6º); IR é exceção só à noventena.",
+        "A legalidade tributária admite exceções pontuais e expressas (alteração de alíquotas de II, IE, IPI, IOF e CIDE-combustíveis por ato do Executivo, dentro dos limites legais) — não é absoluta, mas a regra geral permanece a reserva de lei."
+      ],
+      "rs": "O art. 150 da Constituição estabelece as principais limitações ao poder de tributar: legalidade, isonomia, irretroatividade, as duas anterioridades (anual e nonagesimal), vedação ao confisco e as imunidades. Cada princípio tem suas próprias exceções constitucionais expressas, que devem ser conhecidas tributo a tributo, especialmente quanto às anterioridades."
+    }
+  },
+  {
+    "contentId": "CT-006",
+    "lesson": {
+      "v": 1,
+      "obj": "Diferenciar a obrigação tributária principal da obrigação tributária acessória e explicar a conversão desta em principal por descumprimento.",
+      "cc": [
+        {
+          "id": "obrigacao-tributaria",
+          "nome": "Obrigação tributária",
+          "def": "Vínculo jurídico que surge com a ocorrência de um fato previsto em lei, pelo qual o sujeito passivo fica obrigado a uma prestação em favor do sujeito ativo. O CTN (art. 113) divide a obrigação tributária em principal e acessória."
+        },
+        {
+          "id": "obrigacao-principal",
+          "nome": "Obrigação principal",
+          "def": "Obrigação de dar: surge com a ocorrência do fato gerador e tem por objeto o pagamento de tributo ou de penalidade pecuniária (multa), extinguindo-se junto com o crédito dela decorrente (CTN, art. 113, §1º)."
+        },
+        {
+          "id": "obrigacao-acessoria",
+          "nome": "Obrigação acessória",
+          "def": "Obrigação de fazer ou não fazer: decorre da legislação tributária e tem por objeto prestações, positivas ou negativas, no interesse da arrecadação ou da fiscalização dos tributos, como emitir nota fiscal, escriturar livros ou entregar declarações (CTN, art. 113, §2º)."
+        },
+        {
+          "id": "conversao-acessoria",
+          "nome": "Conversão da acessória em principal",
+          "def": "Regra pela qual a obrigação acessória, pelo simples fato de sua inobservância, converte-se em obrigação principal relativamente à penalidade pecuniária (CTN, art. 113, §3º). Ou seja, o descumprimento gera multa, que é obrigação principal."
+        }
+      ],
+      "rl": [
+        { "de": "obrigacao-tributaria", "para": "obrigacao-principal", "tipo": "divide-se em" },
+        { "de": "obrigacao-tributaria", "para": "obrigacao-acessoria", "tipo": "divide-se em" },
+        { "de": "obrigacao-acessoria", "para": "conversao-acessoria", "tipo": "sofre, quando descumprida," },
+        { "de": "conversao-acessoria", "para": "obrigacao-principal", "tipo": "resulta em" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "obrigacao-acessoria",
+          "texto": "Uma empresa isenta de IR ainda assim é obrigada a entregar a declaração do imposto de renda: a obrigação acessória (declarar) existe independentemente de haver obrigação principal (pagar) a cumprir."
+        },
+        {
+          "conceitoId": "conversao-acessoria",
+          "texto": "Uma empresa deixa de emitir nota fiscal de uma venda (descumpre obrigação acessória). A multa aplicada por essa omissão é, ela mesma, uma obrigação principal, nos termos do art. 113, §3º, do CTN."
+        }
+      ],
+      "pg": [
+        "A obrigação acessória não depende da existência de obrigação principal: mesmo um contribuinte imune ou isento pode ter obrigações acessórias a cumprir (ex.: declarar, escriturar).",
+        "'Principal' não significa 'mais importante': é apenas a obrigação de pagar (tributo ou multa), em contraste com a acessória, que é de fazer ou não fazer.",
+        "A multa por descumprimento de obrigação acessória é obrigação principal, mas isso não transforma a obrigação acessória original em tributo: o tributo nunca é sanção por ato ilícito (CTN, art. 3º)."
+      ],
+      "rs": "A obrigação tributária se divide em principal, que é a obrigação de pagar tributo ou multa, e acessória, que são prestações de fazer ou não fazer no interesse da arrecadação e fiscalização. O descumprimento da obrigação acessória gera multa, que por sua vez é classificada como obrigação principal, nos termos do art. 113 do CTN."
+    }
+  },
+  {
+    "contentId": "CT-007",
+    "lesson": {
+      "v": 1,
+      "obj": "Identificar os aspectos da hipótese de incidência e sua concretização no fato gerador, distinguindo incidência, não incidência e isenção.",
+      "cc": [
+        {
+          "id": "hipotese-incidencia",
+          "nome": "Hipótese de incidência",
+          "def": "Descrição abstrata, prevista em lei, de uma situação que, uma vez ocorrida no plano concreto, faz nascer a obrigação tributária. É a previsão legal, ainda não concretizada."
+        },
+        {
+          "id": "fato-gerador",
+          "nome": "Fato gerador",
+          "def": "Ocorrência concreta, no mundo real, da situação descrita na hipótese de incidência, fazendo nascer a obrigação tributária. O CTN distingue fato gerador da obrigação principal (situação definida em lei como necessária e suficiente à sua ocorrência, art. 114) e da obrigação acessória (qualquer situação que imponha a prática ou abstenção de ato, art. 115)."
+        },
+        {
+          "id": "aspecto-material",
+          "nome": "Aspecto material",
+          "def": "Elemento da hipótese de incidência que descreve o núcleo da situação tributada: o verbo e o complemento da ação (ex.: 'auferir renda', 'prestar serviço')."
+        },
+        {
+          "id": "aspecto-temporal",
+          "nome": "Aspecto temporal",
+          "def": "Elemento que indica o momento em que se considera ocorrido o fato gerador, relevante para determinar a lei aplicável e o prazo de pagamento."
+        },
+        {
+          "id": "aspecto-espacial",
+          "nome": "Aspecto espacial",
+          "def": "Elemento que indica o local em que se considera ocorrido o fato gerador, relevante para determinar o ente competente e a legislação territorialmente aplicável."
+        },
+        {
+          "id": "aspecto-pessoal",
+          "nome": "Aspecto pessoal",
+          "def": "Elemento que identifica os sujeitos da relação jurídico-tributária: quem é o sujeito ativo (credor) e quem é o sujeito passivo (devedor)."
+        },
+        {
+          "id": "aspecto-quantitativo",
+          "nome": "Aspecto quantitativo",
+          "def": "Elemento que permite calcular o valor devido: a base de cálculo e a alíquota aplicável ao fato gerador."
+        },
+        {
+          "id": "isencao",
+          "nome": "Isenção",
+          "def": "Dispensa legal do pagamento de um tributo cuja hipótese de incidência efetivamente ocorre (há competência e fato gerador), diferentemente da não incidência, em que a situação simplesmente não se enquadra em nenhuma hipótese de incidência prevista em lei (CTN, art. 175, I, trata a isenção como causa de exclusão do crédito tributário)."
+        }
+      ],
+      "rl": [
+        { "de": "hipotese-incidencia", "para": "fato-gerador", "tipo": "concretiza-se, no mundo real, como" },
+        { "de": "fato-gerador", "para": "aspecto-material", "tipo": "é composto pelo" },
+        { "de": "fato-gerador", "para": "aspecto-temporal", "tipo": "é composto pelo" },
+        { "de": "fato-gerador", "para": "aspecto-quantitativo", "tipo": "é composto pelo" },
+        { "de": "isencao", "para": "hipotese-incidencia", "tipo": "pressupõe a ocorrência da, ao contrário da não incidência" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "isencao",
+          "texto": "Uma lei estadual isenta de ICMS a venda de determinado produto: o fato gerador ocorre normalmente (há venda de mercadoria, dentro da competência do Estado), mas a lei dispensa o pagamento. Já a venda de um imóvel não gera ICMS por não incidência — está fora da hipótese de incidência desse imposto."
+        },
+        {
+          "conceitoId": "aspecto-temporal",
+          "texto": "No ICMS, o aspecto temporal do fato gerador costuma ser o momento da saída da mercadoria do estabelecimento, e não o momento do pagamento ou da entrega ao comprador."
+        }
+      ],
+      "pg": [
+        "Isenção não é o mesmo que não incidência: na isenção, o fato gerador ocorre e há dispensa legal do pagamento; na não incidência, a situação sequer se enquadra em nenhuma hipótese de incidência tributária.",
+        "A imunidade (limite constitucional) impede que a lei sequer crie hipótese de incidência sobre aquela situação; a isenção (dispensa legal) pressupõe que a hipótese de incidência existe e que o fato gerador ocorreria normalmente, não fosse a dispensa.",
+        "Os cinco aspectos (material, temporal, espacial, pessoal, quantitativo) são construção doutrinária para analisar a hipótese de incidência; o CTN, em si, não usa essa divisão em artigos específicos."
+      ],
+      "rs": "A hipótese de incidência é a previsão abstrata em lei; o fato gerador é sua ocorrência concreta, analisável pelos aspectos material, temporal, espacial, pessoal e quantitativo. A isenção dispensa o pagamento de um tributo cujo fato gerador efetivamente ocorreu, o que a diferencia da não incidência, em que a situação está fora do alcance da norma tributária."
+    }
+  },
+  {
+    "contentId": "CT-008",
+    "lesson": {
+      "v": 1,
+      "obj": "Identificar os sujeitos da relação jurídico-tributária e distinguir contribuinte, responsável e substituto tributário.",
+      "cc": [
+        {
+          "id": "sujeito-ativo",
+          "nome": "Sujeito ativo",
+          "def": "Pessoa jurídica de direito público titular da competência para exigir o cumprimento da obrigação tributária (CTN, art. 119), em regra o próprio ente federativo competente, podendo a capacidade de arrecadar/fiscalizar ser delegada a outra pessoa jurídica de direito público."
+        },
+        {
+          "id": "sujeito-passivo",
+          "nome": "Sujeito passivo",
+          "def": "Pessoa obrigada ao cumprimento da obrigação tributária, seja o pagamento de tributo ou penalidade (sujeito passivo da obrigação principal), seja a prática das prestações acessórias (CTN, art. 121 e 122)."
+        },
+        {
+          "id": "contribuinte",
+          "nome": "Contribuinte",
+          "def": "Sujeito passivo que tem relação pessoal e direta com a situação que constitui o fato gerador (CTN, art. 121, parágrafo único, I)."
+        },
+        {
+          "id": "responsavel-tributario",
+          "nome": "Responsável tributário",
+          "def": "Sujeito passivo que, sem revestir a condição de contribuinte, tem sua obrigação decorrente de disposição expressa de lei (CTN, art. 121, parágrafo único, II), por manter algum vínculo com o fato gerador."
+        },
+        {
+          "id": "substituicao-tributaria",
+          "nome": "Substituição tributária",
+          "def": "Técnica de arrecadação em que a lei atribui a um terceiro (substituto), em geral situado em etapa anterior da cadeia econômica, a responsabilidade pelo recolhimento do tributo devido por outro contribuinte (substituído), antes ou no lugar da ocorrência do fato gerador deste."
+        }
+      ],
+      "rl": [
+        { "de": "sujeito-passivo", "para": "contribuinte", "tipo": "pode ser" },
+        { "de": "sujeito-passivo", "para": "responsavel-tributario", "tipo": "pode ser" },
+        { "de": "substituicao-tributaria", "para": "responsavel-tributario", "tipo": "é uma técnica que atribui obrigação a um tipo de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "substituicao-tributaria",
+          "texto": "Na substituição tributária 'para frente' do ICMS, a indústria (substituta) recolhe antecipadamente o imposto devido por toda a cadeia até o consumidor final, mesmo antes de as vendas seguintes ocorrerem."
+        },
+        {
+          "conceitoId": "responsavel-tributario",
+          "texto": "O adquirente de um imóvel com IPTU em atraso pode ser responsável tributário pelo débito, mesmo não tendo sido o proprietário (contribuinte) à época do fato gerador, por expressa disposição legal."
+        }
+      ],
+      "pg": [
+        "Contribuinte tem relação PESSOAL E DIRETA com o fato gerador; responsável não tem essa relação direta, mas a lei o vincula à obrigação por outro motivo (ex.: sucessão, substituição).",
+        "A capacidade tributária passiva independe da capacidade civil da pessoa natural: até um menor de idade pode ser contribuinte, se praticar o fato gerador (CTN, art. 126).",
+        "Convenções particulares sobre quem deve pagar o tributo não são oponíveis à Fazenda Pública, salvo disposição de lei em contrário (CTN, art. 123) — um contrato entre particulares não muda quem é o sujeito passivo perante o Fisco."
+      ],
+      "rs": "A relação jurídico-tributária tem como sujeito ativo o ente credor e como sujeito passivo quem deve cumprir a obrigação, podendo ser contribuinte (relação pessoal e direta com o fato gerador) ou responsável (obrigação decorrente de lei, sem relação direta). A substituição tributária é uma técnica em que um terceiro assume, por lei, o recolhimento do tributo devido por outro."
+    }
+  },
+  {
+    "contentId": "CT-009",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a constituição do crédito tributário pelo lançamento e distinguir suas modalidades.",
+      "cc": [
+        {
+          "id": "credito-tributario",
+          "nome": "Crédito tributário",
+          "def": "Direito de a Fazenda Pública exigir do sujeito passivo o cumprimento da obrigação tributária, formalmente constituído por meio do lançamento (CTN, art. 139). Decorre da obrigação tributária, mas tem existência e regime jurídico próprios."
+        },
+        {
+          "id": "lancamento",
+          "nome": "Lançamento tributário",
+          "def": "Procedimento administrativo vinculado que verifica a ocorrência do fato gerador, determina a matéria tributável, calcula o montante devido, identifica o sujeito passivo e, se cabível, aplica a penalidade, constituindo o crédito tributário (CTN, art. 142)."
+        },
+        {
+          "id": "lancamento-oficio",
+          "nome": "Lançamento de ofício",
+          "def": "Modalidade em que a autoridade administrativa realiza todo o procedimento por conta própria, sem participação do sujeito passivo, como ocorre no IPTU e no IPVA, ou quando aplicada em razão de omissão/fraude do contribuinte (CTN, art. 149)."
+        },
+        {
+          "id": "lancamento-declaracao",
+          "nome": "Lançamento por declaração",
+          "def": "Modalidade em que o sujeito passivo (ou terceiro) presta à autoridade informações sobre matéria de fato, indispensáveis à sua efetivação, cabendo à autoridade calcular o tributo devido (CTN, art. 147). Hoje é modalidade menos frequente, com exemplo tradicional no ITBI em alguns municípios."
+        },
+        {
+          "id": "lancamento-homologacao",
+          "nome": "Lançamento por homologação (autolançamento)",
+          "def": "Modalidade em que o próprio sujeito passivo apura e antecipa o pagamento do tributo sem prévio exame da autoridade, que posteriormente o homologa, expressa ou tacitamente (CTN, art. 150). É a modalidade mais comum atualmente (ex.: IR, ICMS, PIS/Cofins)."
+        }
+      ],
+      "rl": [
+        { "de": "lancamento", "para": "credito-tributario", "tipo": "constitui o" },
+        { "de": "lancamento", "para": "lancamento-oficio", "tipo": "classifica-se em" },
+        { "de": "lancamento", "para": "lancamento-declaracao", "tipo": "classifica-se em" },
+        { "de": "lancamento", "para": "lancamento-homologacao", "tipo": "classifica-se em" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "lancamento-homologacao",
+          "texto": "Uma empresa apura e recolhe o ICMS devido no mês sem que o Fisco precise agir previamente; passado o prazo legal sem manifestação da autoridade, considera-se homologado tacitamente o lançamento (homologação tácita, CTN, art. 150, §4º)."
+        },
+        {
+          "conceitoId": "lancamento-oficio",
+          "texto": "O Município calcula e envia o carnê de IPTU ao proprietário do imóvel, sem que este precise declarar nada previamente: típico lançamento de ofício."
+        }
+      ],
+      "pg": [
+        "A obrigação tributária nasce com o fato gerador, mas o crédito tributário só se torna exigível formalmente após o lançamento: são momentos distintos.",
+        "No lançamento por homologação, é o contribuinte quem calcula e paga antecipadamente; a autoridade apenas confirma (homologa) depois — não é a autoridade que lança originalmente.",
+        "A omissão ou a fraude do contribuinte no lançamento por homologação ou por declaração não impede que a autoridade proceda, de ofício, ao lançamento complementar para cobrar a diferença não declarada ou paga."
+      ],
+      "rs": "O lançamento é o procedimento administrativo vinculado que constitui o crédito tributário, nas modalidades de ofício (autoridade atua sozinha), por declaração (contribuinte informa, autoridade calcula) e por homologação (contribuinte calcula e paga, autoridade homologa depois) — esta última a mais comum na prática atual."
+    }
+  },
+  {
+    "contentId": "CT-010",
+    "lesson": {
+      "v": 1,
+      "obj": "Diferenciar as causas de suspensão, extinção e exclusão do crédito tributário previstas no CTN.",
+      "cc": [
+        {
+          "id": "suspensao-credito",
+          "nome": "Suspensão do crédito tributário",
+          "def": "Situações que impedem temporariamente a exigibilidade do crédito já constituído, sem extingui-lo (CTN, art. 151): moratória, depósito do montante integral, reclamações e recursos administrativos, concessão de medida liminar ou de tutela antecipada, e parcelamento."
+        },
+        {
+          "id": "extincao-credito",
+          "nome": "Extinção do crédito tributário",
+          "def": "Causas que fazem desaparecer definitivamente o crédito tributário (CTN, art. 156): pagamento, compensação, transação, remissão, prescrição, decadência, conversão de depósito em renda, pagamento antecipado com homologação, consignação em pagamento julgada procedente, decisão administrativa ou judicial irreformável e dação em pagamento de bens imóveis."
+        },
+        {
+          "id": "exclusao-credito",
+          "nome": "Exclusão do crédito tributário",
+          "def": "Causas que impedem a própria constituição do crédito tributário (CTN, art. 175): isenção e anistia, abrangendo apenas a obrigação principal, sem dispensar o cumprimento das obrigações acessórias."
+        },
+        {
+          "id": "decadencia-tributaria",
+          "nome": "Decadência tributária",
+          "def": "Perda do direito de a Fazenda Pública constituir o crédito tributário pelo lançamento, pelo decurso do prazo, em regra de cinco anos (CTN, art. 173)."
+        },
+        {
+          "id": "prescricao-tributaria",
+          "nome": "Prescrição tributária",
+          "def": "Perda do direito de a Fazenda Pública cobrar judicialmente o crédito tributário já constituído, pelo decurso do prazo, em regra de cinco anos contados da constituição definitiva do crédito (CTN, art. 174)."
+        }
+      ],
+      "rl": [
+        { "de": "suspensao-credito", "para": "extincao-credito", "tipo": "é temporária, diferentemente da" },
+        { "de": "exclusao-credito", "para": "extincao-credito", "tipo": "impede a constituição do crédito, ao contrário da" },
+        { "de": "decadencia-tributaria", "para": "prescricao-tributaria", "tipo": "ocorre antes do lançamento, enquanto a" },
+        { "de": "decadencia-tributaria", "para": "extincao-credito", "tipo": "é uma causa de" },
+        { "de": "prescricao-tributaria", "para": "extincao-credito", "tipo": "é uma causa de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "suspensao-credito",
+          "texto": "Um contribuinte que parcela um débito tributário tem a exigibilidade do crédito suspensa: o Fisco não pode cobrar judicialmente enquanto o parcelamento estiver sendo cumprido regularmente."
+        },
+        {
+          "conceitoId": "decadencia-tributaria",
+          "texto": "Se o Fisco não lançar um tributo sujeito a lançamento de ofício dentro do prazo decadencial de cinco anos, perde definitivamente o direito de constituir aquele crédito — mesmo que o fato gerador tenha realmente ocorrido."
+        }
+      ],
+      "pg": [
+        "Decadência atinge o direito de LANÇAR (antes de constituir o crédito); prescrição atinge o direito de COBRAR judicialmente (depois de o crédito já estar constituído) — não confundir o momento de cada uma.",
+        "A exclusão impede que o crédito sequer se constitua; já a extinção pressupõe um crédito já constituído, que deixa de existir por alguma das causas do art. 156.",
+        "Isenção e anistia (causas de exclusão) dispensam apenas a obrigação PRINCIPAL; as obrigações acessórias continuam exigíveis, salvo disposição legal em contrário."
+      ],
+      "rs": "O CTN organiza o ciclo de vida do crédito tributário em três momentos possíveis: exclusão (impede sua constituição, por isenção ou anistia), suspensão (paralisa temporariamente sua exigibilidade, sem extingui-lo) e extinção (o faz desaparecer definitivamente, por pagamento, prescrição, decadência, entre outras causas do art. 156)."
+    }
+  },
+  {
+    "contentId": "CT-011",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar os regimes de responsabilidade tributária de terceiros, solidariedade e sucessão previstos no CTN.",
+      "cc": [
+        {
+          "id": "solidariedade-tributaria",
+          "nome": "Solidariedade tributária",
+          "def": "Ocorre quando duas ou mais pessoas têm interesse comum na situação que constitui o fato gerador, ou quando a lei expressamente as designa como solidariamente obrigadas (CTN, art. 124), não comportando benefício de ordem entre os devedores."
+        },
+        {
+          "id": "responsabilidade-terceiros",
+          "nome": "Responsabilidade de terceiros",
+          "def": "Atribuição de responsabilidade solidária a pessoas que, por lei, devem zelar pelo cumprimento da obrigação tributária de quem representam ou administram, como pais, tutores, administradores de bens de terceiros, inventariante e sócios-gerentes, nos atos em que intervierem ou pelas omissões de que forem responsáveis (CTN, art. 134), ou de forma pessoal quando agirem com excesso de poderes ou infração à lei (CTN, art. 135)."
+        },
+        {
+          "id": "sucessao-tributaria",
+          "nome": "Sucessão tributária",
+          "def": "Transferência da responsabilidade pelo crédito tributário a quem sucede o contribuinte original, como no caso de aquisição de imóvel (sucessão imobiliária), fusão, incorporação, cisão ou aquisição de fundo de comércio ou estabelecimento (CTN, arts. 130 a 133)."
+        },
+        {
+          "id": "responsabilidade-infracoes",
+          "nome": "Responsabilidade por infrações",
+          "def": "Regra geral de que a responsabilidade por infrações à legislação tributária independe da intenção do agente ou da efetividade, natureza e extensão dos efeitos do ato (CTN, art. 136), salvo disposição legal em contrário, sendo admitida a denúncia espontânea como forma de afastar a responsabilidade por infrações (CTN, art. 138)."
+        }
+      ],
+      "rl": [
+        { "de": "solidariedade-tributaria", "para": "responsabilidade-terceiros", "tipo": "é o regime geral do qual a responsabilidade de terceiros é uma hipótese específica em" },
+        { "de": "sucessao-tributaria", "para": "solidariedade-tributaria", "tipo": "é um regime distinto da" },
+        { "de": "responsabilidade-infracoes", "para": "responsabilidade-terceiros", "tipo": "pode se somar à" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "sucessao-tributaria",
+          "texto": "Uma empresa que incorpora outra torna-se responsável pelos tributos devidos pela incorporada até a data do ato, mesmo que a dívida só seja descoberta posteriormente."
+        },
+        {
+          "conceitoId": "responsabilidade-terceiros",
+          "texto": "Um sócio-gerente que pratica ato com infração à lei ou ao contrato social (ex.: dissolução irregular da empresa) pode responder pessoalmente pelos tributos devidos pela sociedade, nos termos do art. 135 do CTN — diferente da regra geral, em que o sócio não responde pessoalmente pelas dívidas da pessoa jurídica."
+        }
+      ],
+      "pg": [
+        "Responsabilidade solidária não tem benefício de ordem (CTN, art. 124, parágrafo único): o Fisco pode cobrar o crédito integralmente de qualquer um dos devedores solidários, sem precisar esgotar antes o patrimônio dos demais.",
+        "A simples condição de sócio não gera responsabilidade pessoal pelos tributos da empresa: é preciso haver excesso de poderes, infração à lei, ao contrato social ou aos estatutos (CTN, art. 135), como na dissolução irregular.",
+        "A denúncia espontânea (art. 138) afasta a responsabilidade por infrações quando o contribuinte confessa e paga o tributo devido antes de qualquer procedimento fiscal, mas não exclui o próprio tributo nem os juros, apenas a multa."
+      ],
+      "rs": "O CTN prevê diferentes regimes para atribuir obrigação tributária a quem não é o contribuinte original: a solidariedade (interesse comum ou previsão legal, sem benefício de ordem), a responsabilidade de terceiros (quem administra bens ou interesses de outrem, podendo ser pessoal em caso de excesso de poderes ou infração à lei) e a sucessão (transferência da dívida a quem sucede o contribuinte, como em fusões e aquisições)."
+    }
+  },
+  {
+    "contentId": "CT-012",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar as regras do CTN sobre vigência, aplicação, interpretação e integração da legislação tributária.",
+      "cc": [
+        {
+          "id": "vigencia-legislacao",
+          "nome": "Vigência da legislação tributária",
+          "def": "Momento a partir do qual a norma tributária passa a produzir efeitos, seguindo, em regra, as normas gerais de direito, salvo disposição específica do CTN (arts. 101 a 104), como a exigência de publicação no exercício anterior para leis que instituem ou majoram impostos sobre o patrimônio ou a renda, em razão do princípio da anterioridade."
+        },
+        {
+          "id": "aplicacao-legislacao",
+          "nome": "Aplicação da legislação tributária",
+          "def": "Regra geral de que a legislação tributária se aplica a fatos geradores futuros e pendentes (CTN, art. 105), sendo a retroatividade admitida apenas em hipóteses expressas do art. 106, como lei interpretativa e lei que comine penalidade menos severa que a vigente ao tempo da prática do ato (retroatividade benigna)."
+        },
+        {
+          "id": "interpretacao-legislacao",
+          "nome": "Interpretação da legislação tributária",
+          "def": "Regras específicas do CTN sobre como interpretar normas tributárias: interpretação literal nas hipóteses de suspensão/exclusão do crédito e dispensa de obrigações acessórias (art. 111), e interpretação mais favorável ao acusado em caso de dúvida quanto à definição de infrações ou à graduação de penalidades (art. 112)."
+        },
+        {
+          "id": "integracao-legislacao",
+          "nome": "Integração da legislação tributária",
+          "def": "Métodos, na ordem estabelecida pelo art. 108 do CTN, para suprir lacunas da legislação tributária: analogia, princípios gerais de direito tributário, princípios gerais de direito público e equidade — ressalvado que a analogia não pode resultar em exigência de tributo não previsto em lei, e a equidade não pode dispensar o pagamento de tributo devido."
+        }
+      ],
+      "rl": [
+        { "de": "vigencia-legislacao", "para": "aplicacao-legislacao", "tipo": "precede a" },
+        { "de": "integracao-legislacao", "para": "interpretacao-legislacao", "tipo": "é empregada apenas na ausência de norma expressa, diferentemente da" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "aplicacao-legislacao",
+          "texto": "Uma lei nova que reduz a multa por atraso no pagamento de um tributo se aplica retroativamente a um processo ainda não definitivamente julgado, por força da retroatividade benigna (CTN, art. 106, II) — mas não se aplica a processos já definitivamente encerrados."
+        },
+        {
+          "conceitoId": "integracao-legislacao",
+          "texto": "Diante de uma lacuna na lei, a autoridade pode usar a analogia para resolver o caso, mas jamais para cobrar um tributo que a lei não previu expressamente — limite do art. 108, §1º, do CTN."
+        }
+      ],
+      "pg": [
+        "A analogia na integração da legislação tributária NUNCA pode criar ou majorar tributo (CTN, art. 108, §1º); já a equidade NUNCA pode dispensar o pagamento de tributo devido (art. 108, §2º) — limites frequentemente invertidos em pegadinhas de prova.",
+        "A retroatividade benigna em matéria de penalidade só se aplica a ato não definitivamente julgado — não alcança créditos já definitivamente constituídos e pagos ou com decisão irreformável.",
+        "A interpretação literal (art. 111) é exigida apenas para suspensão/exclusão do crédito, outorga de isenção e dispensa de obrigação acessória — fora dessas hipóteses específicas, aplicam-se as regras gerais de hermenêutica."
+      ],
+      "rs": "O CTN disciplina vigência e aplicação da legislação tributária em regra para fatos futuros e pendentes, admitindo retroatividade apenas em hipóteses expressas, como lei interpretativa e penalidade mais branda. Para interpretação, exige leitura literal em casos específicos (isenção, suspensão/exclusão) e a mais favorável ao acusado em matéria de infração; para integrar lacunas, segue a ordem analogia, princípios gerais de direito tributário, princípios gerais de direito público e equidade, com os limites de que a analogia não cria tributo e a equidade não dispensa tributo devido."
+    }
+  }
+]
