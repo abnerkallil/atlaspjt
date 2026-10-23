@@ -1,0 +1,313 @@
+[
+  {
+    "contentId": "AD-001",
+    "lesson": {
+      "v": 1,
+      "obj": "Calcular e interpretar os índices de liquidez (corrente, seca, geral e imediata) e o Capital Circulante Líquido.",
+      "cc": [
+        {
+          "id": "liquidez-corrente",
+          "nome": "Liquidez corrente",
+          "def": "Relação entre o Ativo Circulante e o Passivo Circulante. Mede quantos reais de bens e direitos de curto prazo a empresa tem para cada real de obrigação de curto prazo. Resultado maior que 1 indica, em princípio, folga de curto prazo."
+        },
+        {
+          "id": "liquidez-seca",
+          "nome": "Liquidez seca",
+          "def": "Igual à liquidez corrente, mas exclui os estoques do Ativo Circulante antes de dividir pelo Passivo Circulante. Mostra a capacidade de pagar o curto prazo sem depender da venda do estoque, que é o ativo circulante menos líquido e mais sujeito a perdas de valor."
+        },
+        {
+          "id": "liquidez-geral",
+          "nome": "Liquidez geral",
+          "def": "Soma do Ativo Circulante com o Realizável a Longo Prazo, dividida pela soma do Passivo Circulante com o Passivo Não Circulante. Mede a capacidade de pagamento considerando TODAS as dívidas da empresa, não só as de curto prazo."
+        },
+        {
+          "id": "liquidez-imediata",
+          "nome": "Liquidez imediata",
+          "def": "Relação entre as Disponibilidades (caixa, bancos e aplicações de liquidez imediata) e o Passivo Circulante. Mede a parcela das dívidas de curto prazo que a empresa já consegue pagar sem esperar nenhum recebimento ou venda."
+        },
+        {
+          "id": "ccl",
+          "nome": "Capital Circulante Líquido (CCL)",
+          "def": "Diferença entre o Ativo Circulante e o Passivo Circulante, em valor absoluto (não em índice). CCL positivo indica que o Ativo Circulante é maior que o Passivo Circulante; CCL negativo indica o contrário, sinal de possível dependência de financiamento de longo prazo para sustentar o giro."
+        }
+      ],
+      "rl": [
+        { "de": "liquidez-seca", "para": "liquidez-corrente", "tipo": "é uma versão mais conservadora de" },
+        { "de": "liquidez-corrente", "para": "ccl", "tipo": "mesma base de contas, expressa como índice em vez de valor absoluto" },
+        { "de": "liquidez-geral", "para": "liquidez-corrente", "tipo": "amplia o horizonte de curto prazo para toda a dívida" }
+      ],
+      "fm": [
+        { "id": "lc", "expr": "Liquidez corrente = Ativo Circulante ÷ Passivo Circulante", "legenda": "Quanto maior, mais folga de curto prazo, em princípio." },
+        { "id": "ls", "expr": "Liquidez seca = (Ativo Circulante − Estoques) ÷ Passivo Circulante", "legenda": "Remove o item mais incerto do Ativo Circulante." },
+        { "id": "lg", "expr": "Liquidez geral = (Ativo Circulante + Realizável a Longo Prazo) ÷ (Passivo Circulante + Passivo Não Circulante)", "legenda": "Cobre o endividamento total, não só o de curto prazo." },
+        { "id": "li", "expr": "Liquidez imediata = Disponibilidades ÷ Passivo Circulante", "legenda": "Só considera o que já está em caixa/equivalentes." },
+        { "id": "ccl", "expr": "CCL = Ativo Circulante − Passivo Circulante", "legenda": "Mesmo numerador/denominador da liquidez corrente, mas como diferença, não razão." }
+      ],
+      "ex": [
+        {
+          "conceitoId": "liquidez-corrente",
+          "texto": "Ativo Circulante de R$ 300.000 e Passivo Circulante de R$ 200.000: liquidez corrente = 300.000 ÷ 200.000 = 1,5. Para cada R$ 1 de dívida de curto prazo, a empresa tem R$ 1,50 em bens e direitos de curto prazo."
+        },
+        {
+          "conceitoId": "ccl",
+          "texto": "Com os mesmos valores do exemplo anterior, CCL = 300.000 − 200.000 = R$ 100.000 positivo."
+        }
+      ],
+      "pg": [
+        "Liquidez corrente boa (>1) não garante que a empresa consiga pagar as contas no prazo certo: o Ativo Circulante pode estar concentrado em estoque de giro lento ou em recebíveis de clientes inadimplentes.",
+        "Liquidez geral usa Realizável a Longo Prazo e Passivo Não Circulante, não apenas contas circulantes — esquecer isso é o erro mais comum de prova.",
+        "CCL é um valor em R$, não um índice; dois CCLs iguais em valor podem representar situações de liquidez bem diferentes se as empresas tiverem portes distintos."
+      ],
+      "rs": "Os índices de liquidez comparam o que a empresa tem para pagar com o que ela deve, em diferentes recortes: corrente (tudo de curto prazo), seca (removendo estoque), geral (toda a dívida, de curto e longo prazo) e imediata (só o que já está disponível). O CCL mostra a mesma ideia da liquidez corrente, mas como diferença em reais, não como razão."
+    }
+  },
+  {
+    "contentId": "AD-002",
+    "lesson": {
+      "v": 1,
+      "obj": "Calcular o giro de estoque e os prazos médios de estocagem, recebimento e pagamento, e montar o ciclo operacional e o ciclo financeiro.",
+      "cc": [
+        {
+          "id": "giro-estoque",
+          "nome": "Giro de estoque",
+          "def": "Número de vezes que o estoque é renovado (comprado e vendido) durante um período, calculado como o Custo das Mercadorias/Produtos Vendidos dividido pelo estoque médio do período."
+        },
+        {
+          "id": "pme",
+          "nome": "Prazo Médio de Estocagem (PME)",
+          "def": "Número médio de dias que a mercadoria permanece em estoque antes de ser vendida. É o inverso do giro de estoque, expresso em dias."
+        },
+        {
+          "id": "pmrv",
+          "nome": "Prazo Médio de Recebimento de Vendas (PMRV)",
+          "def": "Número médio de dias entre a venda a prazo e o efetivo recebimento do cliente, calculado a partir do saldo médio de contas a receber e da receita de vendas do período."
+        },
+        {
+          "id": "pmpc",
+          "nome": "Prazo Médio de Pagamento de Compras (PMPC)",
+          "def": "Número médio de dias entre a compra a prazo e o efetivo pagamento ao fornecedor, calculado a partir do saldo médio de fornecedores e do total de compras do período."
+        },
+        {
+          "id": "ciclo-operacional",
+          "nome": "Ciclo operacional",
+          "def": "Tempo total, em dias, entre a compra da mercadoria/matéria-prima e o recebimento da venda ao cliente: soma do prazo de estocagem com o prazo de recebimento das vendas."
+        },
+        {
+          "id": "ciclo-financeiro",
+          "nome": "Ciclo financeiro (ciclo de caixa)",
+          "def": "Tempo, em dias, que a empresa precisa financiar com capital próprio ou de terceiros, do pagamento ao fornecedor até o recebimento do cliente: ciclo operacional menos o prazo médio de pagamento das compras."
+        }
+      ],
+      "rl": [
+        { "de": "giro-estoque", "para": "pme", "tipo": "é convertido em dias por meio de" },
+        { "de": "pme", "para": "ciclo-operacional", "tipo": "compõe" },
+        { "de": "pmrv", "para": "ciclo-operacional", "tipo": "compõe" },
+        { "de": "ciclo-operacional", "para": "ciclo-financeiro", "tipo": "base para calcular" },
+        { "de": "pmpc", "para": "ciclo-financeiro", "tipo": "é subtraído do ciclo operacional para chegar a" }
+      ],
+      "fm": [
+        { "id": "giro", "expr": "Giro de estoque = CMV (ou CPV) do período ÷ Estoque médio", "legenda": "Quantas vezes o estoque girou no período." },
+        { "id": "pme", "expr": "PME = 360 ÷ Giro de estoque", "legenda": "Converte o giro (vezes no ano) em dias médios de estocagem." },
+        { "id": "co", "expr": "Ciclo operacional = PME + PMRV", "legenda": "Da compra até o recebimento da venda." },
+        { "id": "cf", "expr": "Ciclo financeiro = Ciclo operacional − PMPC", "legenda": "Tempo efetivamente financiado pela empresa, sem o prazo que o fornecedor concede." }
+      ],
+      "ex": [
+        {
+          "conceitoId": "giro-estoque",
+          "texto": "CMV do ano de R$ 900.000 e estoque médio de R$ 150.000: giro = 900.000 ÷ 150.000 = 6 vezes no ano."
+        },
+        {
+          "conceitoId": "pme",
+          "texto": "Com giro de 6 vezes no ano, PME = 360 ÷ 6 = 60 dias: a mercadoria fica em média 60 dias em estoque."
+        },
+        {
+          "conceitoId": "ciclo-financeiro",
+          "texto": "Ciclo operacional de 90 dias (PME 60 + PMRV 30) e PMPC de 40 dias: ciclo financeiro = 90 − 40 = 50 dias financiados pela própria empresa."
+        }
+      ],
+      "pg": [
+        "Giro de estoque usa CMV/CPV (custo), não a receita de vendas, no numerador — usar a receita de vendas é um erro comum e infla o giro.",
+        "PME é o INVERSO do giro, não o giro em si: giro alto significa PME baixo (estoque gira rápido, fica pouco tempo parado).",
+        "Ciclo financeiro pode ficar negativo quando o prazo de pagamento aos fornecedores é maior que o ciclo operacional: nesse caso, os próprios fornecedores financiam o giro da empresa."
+      ],
+      "rs": "O giro de estoque mostra quantas vezes o estoque se renova no período; seu inverso em dias é o PME. Somando o PME ao prazo médio de recebimento das vendas (PMRV) chega-se ao ciclo operacional — do momento da compra até o recebimento da venda. Subtraindo desse ciclo o prazo médio de pagamento aos fornecedores (PMPC), chega-se ao ciclo financeiro: o tempo que a empresa precisa financiar com recursos próprios ou de terceiros."
+    }
+  },
+  {
+    "contentId": "AD-003",
+    "lesson": {
+      "v": 1,
+      "obj": "Calcular o lucro bruto e a margem bruta, e interpretar o que esse indicador revela sobre a estrutura de custos da empresa.",
+      "cc": [
+        {
+          "id": "lucro-bruto",
+          "nome": "Lucro bruto",
+          "def": "Diferença entre a Receita Líquida de Vendas e o Custo das Mercadorias ou Produtos Vendidos (CMV/CPV). É a primeira linha de resultado da DRE, antes de deduzir despesas operacionais, financeiras e tributos sobre o lucro."
+        },
+        {
+          "id": "margem-bruta",
+          "nome": "Margem de lucro bruto",
+          "def": "Lucro bruto dividido pela Receita Líquida de Vendas, expresso em percentual. Mostra quantos centavos de cada real vendido sobram depois de pagar apenas o custo direto do produto ou mercadoria vendida, antes de qualquer outra despesa."
+        }
+      ],
+      "rl": [
+        { "de": "lucro-bruto", "para": "margem-bruta", "tipo": "é a base (numerador) de" }
+      ],
+      "fm": [
+        { "id": "lb", "expr": "Lucro bruto = Receita Líquida de Vendas − CMV (ou CPV)", "legenda": "Primeira margem de resultado da DRE." },
+        { "id": "mb", "expr": "Margem bruta = Lucro bruto ÷ Receita Líquida de Vendas", "legenda": "Expressa o lucro bruto como percentual da receita." }
+      ],
+      "ex": [
+        {
+          "conceitoId": "margem-bruta",
+          "texto": "Receita líquida de R$ 500.000 e CMV de R$ 350.000: lucro bruto = R$ 150.000; margem bruta = 150.000 ÷ 500.000 = 30%."
+        }
+      ],
+      "pg": [
+        "Margem bruta usa a RECEITA LÍQUIDA (já deduzida de devoluções, descontos e tributos sobre vendas) como denominador, não a receita bruta.",
+        "Lucro bruto alto não significa lucro líquido alto: despesas operacionais, financeiras e tributos sobre o lucro ainda não entraram na conta.",
+        "Comparar margem bruta entre empresas de setores diferentes (ex.: comércio varejista vs. indústria de bens de capital) costuma levar a conclusões erradas, porque a estrutura de custos típica de cada setor é muito diferente."
+      ],
+      "rs": "O lucro bruto é o que resta da receita líquida depois de pagar apenas o custo do produto ou mercadoria vendida, sem considerar nenhuma outra despesa. A margem bruta expressa esse resultado como percentual da receita e serve para avaliar a eficiência da empresa em precificar e produzir, isoladamente de sua estrutura de despesas operacionais."
+    }
+  },
+  {
+    "contentId": "AD-004",
+    "lesson": {
+      "v": 1,
+      "obj": "Calcular a margem líquida, o ROE e o ROA, e distinguir o que cada indicador de rentabilidade mede.",
+      "cc": [
+        {
+          "id": "margem-liquida",
+          "nome": "Margem líquida",
+          "def": "Lucro líquido do período dividido pela Receita Líquida de Vendas. Mostra quantos centavos de cada real vendido sobram como lucro final, depois de todas as despesas, receitas e despesas financeiras e tributos sobre o lucro."
+        },
+        {
+          "id": "roe",
+          "nome": "ROE (Return on Equity / Retorno sobre o Patrimônio Líquido)",
+          "def": "Lucro líquido do período dividido pelo Patrimônio Líquido (geralmente o médio entre início e fim do período). Mede o retorno gerado para quem investiu capital próprio na empresa — os sócios/acionistas."
+        },
+        {
+          "id": "roa",
+          "nome": "ROA (Return on Assets / Retorno sobre o Ativo)",
+          "def": "Lucro líquido do período dividido pelo Ativo Total (geralmente o médio entre início e fim do período). Mede o retorno gerado por TODO o ativo da empresa, independente de ter sido financiado com capital próprio ou de terceiros."
+        }
+      ],
+      "rl": [
+        { "de": "margem-liquida", "para": "roe", "tipo": "mede rentabilidade sobre a receita, enquanto este mede sobre" },
+        { "de": "roe", "para": "roa", "tipo": "isola o efeito do capital de terceiros, ao contrário de" }
+      ],
+      "fm": [
+        { "id": "ml", "expr": "Margem líquida = Lucro líquido ÷ Receita Líquida de Vendas", "legenda": "Rentabilidade sobre o que foi vendido." },
+        { "id": "roe", "expr": "ROE = Lucro líquido ÷ Patrimônio Líquido médio", "legenda": "Retorno sobre o capital próprio investido pelos sócios." },
+        { "id": "roa", "expr": "ROA = Lucro líquido ÷ Ativo Total médio", "legenda": "Retorno sobre todos os ativos, financiados com capital próprio ou de terceiros." }
+      ],
+      "ex": [
+        {
+          "conceitoId": "roe",
+          "texto": "Lucro líquido de R$ 80.000 e Patrimônio Líquido médio de R$ 400.000: ROE = 80.000 ÷ 400.000 = 20%."
+        },
+        {
+          "conceitoId": "roa",
+          "texto": "Com o mesmo lucro líquido de R$ 80.000 e Ativo Total médio de R$ 1.000.000: ROA = 80.000 ÷ 1.000.000 = 8%. O ROE (20%) é maior que o ROA (8%) porque parte do ativo foi financiada com capital de terceiros, não só com o PL."
+        }
+      ],
+      "pg": [
+        "ROE maior que ROA é normal e esperado quando a empresa usa capital de terceiros (alavancagem financeira) de forma vantajosa; não é, por si só, sinal de problema.",
+        "Margem líquida e ROE/ROA respondem perguntas diferentes: margem líquida compara o lucro com o que foi vendido; ROE e ROA comparam o lucro com o que foi investido (capital próprio ou ativo total).",
+        "Usar o Patrimônio Líquido ou o Ativo Total do FINAL do período, em vez da média entre início e fim, é uma simplificação aceitável só quando a prova não fornecer os dois saldos — o cálculo tecnicamente correto usa a média."
+      ],
+      "rs": "Margem líquida, ROE e ROA são indicadores de rentabilidade que usam o mesmo numerador (lucro líquido) mas denominadores diferentes: a receita de vendas (margem líquida), o capital próprio investido pelos sócios (ROE) ou todo o ativo da empresa (ROA). Comparar os três revela, entre outras coisas, o efeito da alavancagem financeira sobre o retorno dos sócios."
+    }
+  },
+  {
+    "contentId": "AD-005",
+    "lesson": {
+      "v": 1,
+      "obj": "Calcular o EBITDA e a margem EBITDA, e usar indicadores de liquidez, rentabilidade e giro de forma combinada na análise de uma empresa.",
+      "cc": [
+        {
+          "id": "ebitda",
+          "nome": "EBITDA",
+          "def": "Sigla em inglês para Lucro Antes de Juros, Impostos, Depreciação e Amortização (Earnings Before Interest, Taxes, Depreciation and Amortization). Aproxima a geração de caixa operacional da empresa, somando ao resultado operacional (EBIT) as despesas de depreciação e amortização, que não representam saída de caixa no período."
+        },
+        {
+          "id": "margem-ebitda",
+          "nome": "Margem EBITDA",
+          "def": "EBITDA dividido pela Receita Líquida de Vendas, expresso em percentual. Mostra a capacidade operacional de geração de caixa da empresa como proporção da receita, sem o efeito de despesas financeiras, tributos sobre o lucro e itens não caixa."
+        }
+      ],
+      "rl": [
+        { "de": "ebitda", "para": "margem-ebitda", "tipo": "é a base (numerador) de" }
+      ],
+      "fm": [
+        { "id": "ebitda", "expr": "EBITDA = Lucro Operacional (EBIT) + Depreciação + Amortização", "legenda": "Parte do resultado operacional e devolve de volta os itens não caixa já deduzidos dele." },
+        { "id": "me", "expr": "Margem EBITDA = EBITDA ÷ Receita Líquida de Vendas", "legenda": "EBITDA como percentual da receita." }
+      ],
+      "ex": [
+        {
+          "conceitoId": "ebitda",
+          "texto": "Lucro operacional (EBIT) de R$ 120.000, com depreciação de R$ 30.000 e amortização de R$ 10.000 incluídas nesse resultado: EBITDA = 120.000 + 30.000 + 10.000 = R$ 160.000."
+        },
+        {
+          "conceitoId": "margem-ebitda",
+          "texto": "Com o EBITDA de R$ 160.000 e receita líquida de R$ 800.000: margem EBITDA = 160.000 ÷ 800.000 = 20%."
+        }
+      ],
+      "pg": [
+        "EBITDA NÃO é igual a caixa gerado no período: ele ignora variações de capital de giro (estoques, recebíveis, fornecedores) e investimentos, que também afetam o caixa real.",
+        "EBITDA é calculado a partir do lucro OPERACIONAL (EBIT), não do lucro líquido — não somar depreciação/amortização ao lucro líquido, que já tem juros e tributos sobre o lucro deduzidos.",
+        "Uma empresa pode ter EBITDA positivo e lucro líquido negativo (ou o contrário) quando as despesas financeiras, a depreciação/amortização ou os tributos sobre o lucro forem muito relevantes — por isso EBITDA e margem líquida respondem perguntas diferentes e devem ser lidos junto com os demais indicadores (liquidez, giro e rentabilidade) para formar uma visão completa da empresa."
+      ],
+      "rs": "O EBITDA aproxima a geração de caixa operacional somando a depreciação e a amortização de volta ao lucro operacional, isolando o efeito de itens não caixa, juros e tributos sobre o lucro. A margem EBITDA expressa esse valor como percentual da receita. Na análise de uma empresa, EBITDA, margem EBITDA e os demais indicadores (liquidez, giro, margem bruta, margem líquida, ROE e ROA) se complementam: nenhum isolado conta a história inteira."
+    }
+  },
+  {
+    "contentId": "AD-006",
+    "lesson": {
+      "v": 1,
+      "obj": "Calcular a Taxa Interna de Retorno (TIR) e o Valor Presente Líquido (VPL) de um investimento, e usá-los para decidir pela viabilidade do projeto.",
+      "cc": [
+        {
+          "id": "vpl",
+          "nome": "VPL (Valor Presente Líquido)",
+          "def": "Soma de todos os fluxos de caixa futuros de um investimento, trazidos a valor presente por uma taxa de desconto (taxa mínima de atratividade), subtraída do investimento inicial. VPL positivo indica que o projeto gera valor acima do custo de capital usado como taxa de desconto."
+        },
+        {
+          "id": "tir",
+          "nome": "TIR (Taxa Interna de Retorno)",
+          "def": "Taxa de desconto que torna o VPL de um investimento exatamente igual a zero. Representa a rentabilidade intrínseca do próprio projeto, independente da taxa mínima de atratividade usada para compará-lo."
+        },
+        {
+          "id": "payback",
+          "nome": "Payback",
+          "def": "Tempo necessário para que os fluxos de caixa gerados por um investimento recuperem o valor do investimento inicial. Pode ser simples (sem trazer os fluxos a valor presente) ou descontado (trazendo os fluxos a valor presente antes de acumulá-los)."
+        }
+      ],
+      "rl": [
+        { "de": "tir", "para": "vpl", "tipo": "é a taxa de desconto que zera" },
+        { "de": "vpl", "para": "payback", "tipo": "mede valor gerado, enquanto este mede apenas o tempo de recuperação, sem o mesmo critério de" }
+      ],
+      "fm": [
+        { "id": "vpl", "expr": "VPL = Σ [FCt ÷ (1 + i)^t] − Investimento inicial", "legenda": "FCt é o fluxo de caixa do período t; i é a taxa mínima de atratividade (taxa de desconto)." },
+        { "id": "tir", "expr": "TIR é o valor de i que torna VPL = 0", "legenda": "Resolvido por tentativa/interpolação ou calculadora financeira; não tem fórmula direta fechada em geral." }
+      ],
+      "ex": [
+        {
+          "conceitoId": "vpl",
+          "texto": "Investimento inicial de R$ 100.000 e um único fluxo de R$ 130.000 ao final de 1 ano, com taxa mínima de atratividade de 10% ao ano: VPL = 130.000 ÷ 1,10 − 100.000 = 118.181,82 − 100.000 ≈ R$ 18.181,82, positivo, logo o projeto é viável nessa taxa."
+        },
+        {
+          "conceitoId": "tir",
+          "texto": "No mesmo exemplo, a TIR é a taxa que zera o VPL: 130.000 ÷ (1+i) − 100.000 = 0 → i = 30.000/100.000 = 30% ao ano. Como a TIR (30%) é maior que a taxa mínima de atratividade (10%), o projeto é aceito pelos dois critérios."
+        }
+      ],
+      "pg": [
+        "VPL positivo e TIR maior que a taxa mínima de atratividade normalmente levam à mesma decisão (aceitar o projeto), mas, ao COMPARAR projetos diferentes entre si (não apenas decidir aceitar ou rejeitar um único projeto), VPL e TIR podem indicar rankings diferentes — nesses casos, o VPL é considerado o critério tecnicamente superior por medir valor em reais, não taxa percentual.",
+        "A taxa usada para descontar os fluxos no VPL é a taxa mínima de atratividade (custo de capital/oportunidade), não a TIR do próprio projeto — são conceitos diferentes que não devem ser trocados na fórmula.",
+        "Payback (simples ou descontado) não considera os fluxos de caixa que ocorrem DEPOIS do prazo de recuperação, por isso não deve ser usado como único critério de decisão, apenas como complemento ao VPL e à TIR."
+      ],
+      "rs": "O VPL traz todos os fluxos futuros de um investimento a valor presente, pela taxa mínima de atratividade, e subtrai o investimento inicial: positivo significa que o projeto gera valor acima do custo de capital. A TIR é a taxa que zeraria esse VPL, representando a rentabilidade própria do projeto. O payback mede apenas o tempo de recuperação do investimento, sem avaliar o valor gerado depois desse prazo — por isso é usado como complemento, nunca como critério único."
+    }
+  }
+]
