@@ -1,0 +1,506 @@
+[
+  {
+    "contentId": "CT-020",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar como CNPJ, CNAE e a estrutura matriz/filial determinam obrigações e tratamentos tributários distintos dentro de uma mesma empresa.",
+      "cc": [
+        {
+          "id": "cnpj-estabelecimento",
+          "nome": "CNPJ por estabelecimento",
+          "def": "Cadastro Nacional da Pessoa Jurídica em que cada estabelecimento (matriz ou filial) recebe um número próprio, composto pela raiz comum do grupo econômico e um sufixo de ordem, o que permite tratar cada local como sujeito de obrigações tributárias distintas."
+        },
+        {
+          "id": "cnae-atividade",
+          "nome": "CNAE (principal e secundárias)",
+          "def": "Classificação Nacional de Atividades Econômicas que identifica a(s) atividade(s) exercida(s) por um estabelecimento; a CNAE principal costuma determinar regras como enquadramento em regimes especiais e certas obrigações acessórias, enquanto as CNAEs secundárias registram atividades adicionais efetivamente exercidas."
+        },
+        {
+          "id": "natureza-juridica-cadastral",
+          "nome": "Natureza jurídica",
+          "def": "Código cadastral que identifica o tipo de constituição da pessoa jurídica (sociedade limitada, sociedade anônima, empresário individual, entre outros), usado por diversos sistemas fiscais para aplicar regras próprias de cada formato societário."
+        },
+        {
+          "id": "estabelecimento-autonomia-fiscal",
+          "nome": "Autonomia fiscal do estabelecimento",
+          "def": "Princípio pelo qual, para a maioria dos tributos e obrigações acessórias, cada estabelecimento (matriz ou filial) apura e cumpre suas obrigações de forma independente, mesmo pertencendo à mesma pessoa jurídica, o que explica por que filiais em diferentes locais podem ter tratamentos tributários diferentes."
+        }
+      ],
+      "rl": [
+        { "de": "cnpj-estabelecimento", "para": "estabelecimento-autonomia-fiscal", "tipo": "identifica o sujeito de" },
+        { "de": "cnae-atividade", "para": "estabelecimento-autonomia-fiscal", "tipo": "influencia as regras aplicadas a" },
+        { "de": "natureza-juridica-cadastral", "para": "estabelecimento-autonomia-fiscal", "tipo": "complementa a identificação de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "estabelecimento-autonomia-fiscal",
+          "texto": "Uma empresa com matriz em um estado e filial em outro pode ter alíquotas e obrigações acessórias diferentes em cada local, mesmo prestando o mesmo serviço, porque cada estabelecimento tem CNPJ, inscrições e regras próprias."
+        },
+        {
+          "conceitoId": "cnae-atividade",
+          "texto": "Uma indústria com CNAE principal de fabricação de móveis que também presta serviços de manutenção registra essa segunda atividade como CNAE secundária, para que o sistema fiscal reconheça as duas operações exercidas."
+        }
+      ],
+      "pg": [
+        "Matriz e filial têm o mesmo CNPJ raiz, mas números completos diferentes — tratar os dois estabelecimentos como se tivessem exatamente o mesmo cadastro fiscal é erro comum.",
+        "A CNAE principal não é escolhida livremente a cada período: reflete a atividade de maior relevância econômica do estabelecimento, e sua troca indevida pode gerar inconsistência com outras obrigações.",
+        "A autonomia fiscal do estabelecimento não significa que matriz e filiais são 'empresas diferentes' para todos os efeitos — a responsabilidade tributária final ainda recai sobre a mesma pessoa jurídica."
+      ],
+      "rs": "Cada estabelecimento (matriz ou filial) tem CNPJ próprio, dentro da raiz comum do grupo, e cadastro de CNAE (principal e secundárias) e natureza jurídica que moldam suas obrigações tributárias. Por autonomia fiscal, estabelecimentos da mesma empresa podem ter tratamentos tributários distintos conforme local e atividade exercida."
+    }
+  },
+  {
+    "contentId": "CT-021",
+    "lesson": {
+      "v": 1,
+      "obj": "Distinguir os domicílios fiscais (federal, estadual e municipal) e os canais eletrônicos usados para comunicação com cada ente tributante.",
+      "cc": [
+        {
+          "id": "inscricao-estadual",
+          "nome": "Inscrição estadual",
+          "def": "Cadastro que identifica o contribuinte perante a administração tributária estadual, exigido para empresas sujeitas a tributos estaduais (como ICMS), necessário para emissão de documentos fiscais vinculados a essas operações."
+        },
+        {
+          "id": "inscricao-municipal",
+          "nome": "Inscrição municipal",
+          "def": "Cadastro que identifica o contribuinte perante a administração tributária municipal, exigido para empresas sujeitas a tributos municipais (como ISS), necessário para emissão de notas fiscais de serviço no município correspondente."
+        },
+        {
+          "id": "domicilio-tributario-eletronico",
+          "nome": "Domicílio tributário eletrônico (DTE)",
+          "def": "Canal eletrônico pelo qual o contribuinte recebe comunicações oficiais do fisco (intimações, notificações, avisos), substituindo ou complementando a comunicação por correspondência física, com prazos que correm a partir da ciência eletrônica."
+        },
+        {
+          "id": "ecac",
+          "nome": "e-CAC",
+          "def": "Centro Virtual de Atendimento da administração tributária federal, usado para consultar situação fiscal, declarações, parcelamentos e outras informações e serviços relacionados a obrigações federais."
+        }
+      ],
+      "rl": [
+        { "de": "inscricao-estadual", "para": "domicilio-tributario-eletronico", "tipo": "é complementada pela comunicação via" },
+        { "de": "inscricao-municipal", "para": "domicilio-tributario-eletronico", "tipo": "é complementada pela comunicação via" },
+        { "de": "ecac", "para": "domicilio-tributario-eletronico", "tipo": "concentra, na esfera federal, o acesso equivalente a" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "domicilio-tributario-eletronico",
+          "texto": "Uma empresa cadastrada no DTE de seu estado recebe uma notificação de pendência fiscal diretamente no sistema eletrônico, e o prazo para resposta começa a contar a partir da data em que a mensagem é considerada lida (ciência), não da data de postagem de uma carta."
+        },
+        {
+          "conceitoId": "ecac",
+          "texto": "Antes de assinar um contrato relevante, a empresa consulta o e-CAC para confirmar sua situação fiscal federal (regularidade de declarações e eventuais pendências), evitando surpresas em uma certidão posterior."
+        }
+      ],
+      "pg": [
+        "Inscrição estadual e municipal não são intercambiáveis: cada uma habilita o contribuinte perante um ente tributante diferente, e faltar uma delas pode impedir a emissão do documento fiscal correspondente.",
+        "Não acessar o domicílio tributário eletrônico não paralisa o prazo da notificação: a ciência costuma ser presumida após um intervalo definido em norma, mesmo sem abertura efetiva pelo contribuinte.",
+        "O e-CAC concentra serviços federais; consultas e obrigações estaduais ou municipais exigem os sistemas próprios de cada ente, não substituídos pelo portal federal."
+      ],
+      "rs": "Inscrições estadual e municipal habilitam o contribuinte perante os respectivos entes tributantes, cada uma vinculada aos tributos daquela esfera. A comunicação oficial com o fisco ocorre por canais eletrônicos como o domicílio tributário eletrônico (estadual/municipal) e o e-CAC (federal), com prazos que correm a partir da ciência eletrônica."
+    }
+  },
+  {
+    "contentId": "CT-022",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a função do certificado digital e das procurações eletrônicas na prática tributária e por que a segregação de funções nesses acessos é um controle relevante.",
+      "cc": [
+        {
+          "id": "certificado-digital-icp",
+          "nome": "Certificado digital ICP-Brasil",
+          "def": "Documento eletrônico que identifica, com validade jurídica, a pessoa física ou jurídica em operações digitais (assinatura de documentos fiscais, acesso a sistemas do fisco), emitido dentro da Infraestrutura de Chaves Públicas Brasileira (ICP-Brasil)."
+        },
+        {
+          "id": "perfil-acesso-certificado",
+          "nome": "Perfis de certificado (e-CNPJ, e-CPF)",
+          "def": "Tipos de certificado digital conforme o titular: e-CNPJ identifica a pessoa jurídica e e-CPF identifica a pessoa física, cada um usado conforme a natureza da operação ou do sistema acessado."
+        },
+        {
+          "id": "procuracao-eletronica",
+          "nome": "Procuração eletrônica",
+          "def": "Autorização registrada em sistema do fisco pela qual a empresa (outorgante) permite que uma pessoa física ou outro CNPJ (outorgado, como o escritório de contabilidade) pratique determinados atos em seu nome, sem a necessidade de certificado próprio do outorgado em todas as operações."
+        },
+        {
+          "id": "segregacao-acessos-fiscal",
+          "nome": "Segregação de funções em acessos fiscais",
+          "def": "Prática de controle que separa quem possui o certificado/procuração para acessar sistemas do fisco, quem apura o tributo e quem aprova o pagamento, reduzindo o risco de um único indivíduo controlar toda a cadeia de uma obrigação tributária sensível."
+        }
+      ],
+      "rl": [
+        { "de": "certificado-digital-icp", "para": "perfil-acesso-certificado", "tipo": "se divide, por titular, em" },
+        { "de": "procuracao-eletronica", "para": "certificado-digital-icp", "tipo": "pode dispensar o uso direto de, pelo outorgado, do" },
+        { "de": "segregacao-acessos-fiscal", "para": "procuracao-eletronica", "tipo": "organiza o uso controlado de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "procuracao-eletronica",
+          "texto": "Uma empresa outorga procuração eletrônica ao seu escritório de contabilidade para que ele consulte declarações e entregue obrigações acessórias em nome da empresa, sem que o escritório precise usar o certificado digital da própria empresa."
+        },
+        {
+          "conceitoId": "segregacao-acessos-fiscal",
+          "texto": "Em um controle bem desenhado, a pessoa que tem acesso para gerar a guia de pagamento não é a mesma que aprova a liberação do pagamento ao banco, reduzindo o risco de erro ou fraude não detectada."
+        }
+      ],
+      "pg": [
+        "Certificado digital não é só 'uma senha forte': é um documento com validade jurídica de identificação, cuja perda ou uso indevido pode comprometer atos praticados em nome da empresa.",
+        "Procuração eletrônica tem escopo definido (os atos que autoriza) — tratá-la como autorização irrestrita para qualquer ato no nome da empresa é um erro de interpretação do controle.",
+        "A ausência de segregação de funções nos acessos fiscais não impede operações em dia a dia, mas aumenta o risco de erro ou fraude não detectado, especialmente em obrigações de maior valor."
+      ],
+      "rs": "O certificado digital ICP-Brasil (e-CNPJ ou e-CPF) identifica juridicamente quem pratica atos eletrônicos perante o fisco, e a procuração eletrônica permite delegar certos atos a terceiros, como o escritório de contabilidade, sem uso direto do certificado da empresa. A segregação de funções nesses acessos é um controle relevante para reduzir o risco de erro ou fraude em obrigações tributárias sensíveis."
+    }
+  },
+  {
+    "contentId": "CT-023",
+    "lesson": {
+      "v": 1,
+      "obj": "Mapear o ecossistema de documentos fiscais eletrônicos (NF-e, NFC-e, CT-e, MDF-e, NFS-e) e o papel dos eventos vinculados a cada um.",
+      "cc": [
+        {
+          "id": "documento-fiscal-eletronico",
+          "nome": "Documento fiscal eletrônico (DF-e)",
+          "def": "Documento emitido e validado em formato digital (XML), autorizado por um sistema do fisco antes de amparar a circulação de mercadorias, a prestação de serviço de transporte ou a prestação de serviço, substituindo o documento em papel como meio principal de comprovação fiscal."
+        },
+        {
+          "id": "evento-fiscal-vinculado",
+          "nome": "Evento fiscal vinculado",
+          "def": "Registro eletrônico associado a um documento fiscal já autorizado, que informa uma ocorrência posterior sobre ele (cancelamento, carta de correção, manifestação do destinatário, encerramento de percurso), sem substituir o documento original."
+        },
+        {
+          "id": "chave-acesso-documento-fiscal",
+          "nome": "Chave de acesso do documento fiscal",
+          "def": "Código numérico único de 44 dígitos que identifica cada documento fiscal eletrônico emitido, usado para consulta, vinculação de eventos e conferência de autenticidade perante o sistema do fisco."
+        }
+      ],
+      "rl": [
+        { "de": "documento-fiscal-eletronico", "para": "chave-acesso-documento-fiscal", "tipo": "é identificado unicamente por" },
+        { "de": "evento-fiscal-vinculado", "para": "chave-acesso-documento-fiscal", "tipo": "referencia, ao ser registrado, a" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "documento-fiscal-eletronico",
+          "texto": "Uma venda de mercadoria para outro estado é amparada por uma NF-e, uma prestação de transporte dessa mercadoria por um CT-e, e um serviço de manutenção prestado no mesmo período por uma NFS-e — cada operação tem seu documento fiscal eletrônico próprio."
+        },
+        {
+          "conceitoId": "evento-fiscal-vinculado",
+          "texto": "Após identificar um erro no endereço do destinatário em uma NF-e já autorizada, a empresa registra uma carta de correção eletrônica como evento vinculado a essa nota, sem necessidade de cancelá-la, já que o erro não afeta valores ou tributação."
+        }
+      ],
+      "pg": [
+        "Cada tipo de operação tem seu próprio documento fiscal eletrônico (NF-e para mercadorias, CT-e para transporte, NFS-e para serviços) — usar o documento errado para a operação compromete sua validade fiscal.",
+        "Um evento vinculado não substitui o documento original: ele apenas registra uma ocorrência posterior, e o documento original continua sendo a base da operação.",
+        "A chave de acesso não é opcional nem decorativa: sem ela, não é possível consultar, vincular eventos ou comprovar a autenticidade do documento fiscal eletrônico perante o fisco."
+      ],
+      "rs": "O ecossistema de documentos fiscais eletrônicos reúne tipos específicos para cada operação (NF-e, NFC-e, CT-e, MDF-e, NFS-e), cada um identificado por uma chave de acesso única. Eventos fiscais vinculados (cancelamento, carta de correção, manifestação, encerramento) registram ocorrências posteriores sobre um documento já autorizado, sem substituí-lo."
+    }
+  },
+  {
+    "contentId": "CT-024",
+    "lesson": {
+      "v": 1,
+      "obj": "Descrever o fluxo de emissão e autorização da NF-e e da NFC-e, incluindo contingência e guarda do documento.",
+      "cc": [
+        {
+          "id": "nf-e",
+          "nome": "NF-e (Nota Fiscal Eletrônica)",
+          "def": "Documento fiscal eletrônico que ampara operações de circulação de mercadorias, principalmente entre empresas, emitido em XML e autorizado pelo sistema do fisco antes da circulação da mercadoria, representado visualmente pelo DANFE."
+        },
+        {
+          "id": "nfc-e",
+          "nome": "NFC-e (Nota Fiscal de Consumidor Eletrônica)",
+          "def": "Documento fiscal eletrônico voltado principalmente a operações de venda a consumidor final (varejo), com fluxo de autorização simplificado e representação visual própria (cupom/DANFE-NFC-e), adequado ao grande volume de operações de ponto de venda."
+        },
+        {
+          "id": "danfe",
+          "nome": "DANFE",
+          "def": "Documento Auxiliar da Nota Fiscal Eletrônica: representação gráfica simplificada do XML autorizado, usada para acompanhar a mercadoria em trânsito e para conferência visual, mas sem substituir o XML como documento fiscal válido."
+        },
+        {
+          "id": "contingencia-emissao-fiscal",
+          "nome": "Contingência de emissão",
+          "def": "Mecanismo previsto para quando o sistema de autorização do fisco está indisponível, permitindo a emissão do documento por meio alternativo, com a obrigação de transmitir e regularizar o documento perante o fisco assim que o serviço for restabelecido."
+        }
+      ],
+      "rl": [
+        { "de": "nf-e", "para": "danfe", "tipo": "é representada visualmente por" },
+        { "de": "nfc-e", "para": "nf-e", "tipo": "compartilha o mesmo princípio de autorização eletrônica de, com fluxo mais simples que" },
+        { "de": "contingencia-emissao-fiscal", "para": "nf-e", "tipo": "permite a emissão alternativa de, quando aplicável a" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "nfc-e",
+          "texto": "Uma loja de varejo emite uma NFC-e a cada venda no caixa, entregando ao cliente um cupom com os dados da operação, enquanto o XML correspondente é transmitido e autorizado pelo sistema do fisco."
+        },
+        {
+          "conceitoId": "contingencia-emissao-fiscal",
+          "texto": "Durante uma indisponibilidade do sistema de autorização, a empresa emite a NF-e em contingência, seguindo o procedimento alternativo previsto, e garante que o documento seja regularizado perante o fisco assim que o serviço voltar a funcionar normalmente."
+        }
+      ],
+      "pg": [
+        "O DANFE não é a nota fiscal: é apenas a representação visual do XML autorizado. O documento fiscal válido é o XML, e é ele que deve ser guardado.",
+        "NFC-e não é 'uma NF-e menor' por acaso: tem fluxo próprio, adequado ao alto volume de operações de varejo, e isso muda a forma como contingência e eventos são tratados.",
+        "Emitir em contingência não dispensa a regularização posterior perante o fisco — a contingência é uma solução temporária, não uma forma de evitar a autorização."
+      ],
+      "rs": "A NF-e ampara principalmente operações entre empresas e a NFC-e, vendas a consumidor final, ambas emitidas em XML e autorizadas pelo fisco, representadas visualmente pelo DANFE. Em caso de indisponibilidade do sistema de autorização, a contingência permite emissão alternativa, com regularização obrigatória assim que o serviço for restabelecido."
+    }
+  },
+  {
+    "contentId": "CT-025",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o papel do CT-e e do MDF-e na prestação de serviço de transporte e como esses documentos se relacionam entre si e com a mercadoria transportada.",
+      "cc": [
+        {
+          "id": "ct-e",
+          "nome": "CT-e (Conhecimento de Transporte Eletrônico)",
+          "def": "Documento fiscal eletrônico que ampara a prestação de serviço de transporte de cargas, emitido pelo transportador, identificando tomador, remetente, destinatário e a carga transportada, distinto da nota fiscal que ampara a própria mercadoria."
+        },
+        {
+          "id": "mdf-e",
+          "nome": "MDF-e (Manifesto Eletrônico de Documentos Fiscais)",
+          "def": "Documento fiscal eletrônico que agrupa, para fins de controle em trânsito, os documentos fiscais (NF-e e/ou CT-e) vinculados a uma mesma viagem, exigido conforme critérios de operação (como transporte interestadual) e tipo de veículo."
+        },
+        {
+          "id": "tomador-servico-transporte",
+          "nome": "Tomador do serviço de transporte",
+          "def": "Pessoa responsável por contratar e, em regra, pagar pela prestação do serviço de transporte, que pode ser o remetente, o destinatário ou um terceiro, conforme definido na operação, e que determina parte do tratamento tributário do CT-e."
+        },
+        {
+          "id": "encerramento-mdf-e",
+          "nome": "Encerramento do MDF-e",
+          "def": "Evento que formaliza o fim da viagem amparada por um MDF-e, geralmente após a entrega ou chegada ao destino, permitindo o controle do ciclo completo de uma movimentação de cargas em trânsito."
+        }
+      ],
+      "rl": [
+        { "de": "ct-e", "para": "tomador-servico-transporte", "tipo": "identifica, entre as partes da operação, o" },
+        { "de": "mdf-e", "para": "ct-e", "tipo": "agrupa, para a viagem, documentos como" },
+        { "de": "encerramento-mdf-e", "para": "mdf-e", "tipo": "formaliza o fim do ciclo de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "ct-e",
+          "texto": "Uma transportadora contratada para levar mercadorias de um estado a outro emite um CT-e amparando o serviço de transporte, documento distinto da NF-e que ampara a mercadoria em si."
+        },
+        {
+          "conceitoId": "mdf-e",
+          "texto": "Antes de iniciar uma viagem interestadual com várias NF-e e um CT-e vinculados, o transportador emite um MDF-e reunindo esses documentos para controle da carga durante o trajeto, encerrando-o ao final da viagem."
+        }
+      ],
+      "pg": [
+        "CT-e ampara o serviço de transporte, não a mercadoria — confundir CT-e com a NF-e da carga transportada é um erro comum de quem está começando nesse ecossistema.",
+        "Nem toda viagem exige MDF-e: a exigência depende de critérios como tipo de operação e veículo, então não se deve generalizar que qualquer transporte precisa desse documento.",
+        "Não encerrar o MDF-e ao final da viagem deixa a movimentação formalmente 'em trânsito' no sistema do fisco, mesmo que a entrega já tenha ocorrido de fato."
+      ],
+      "rs": "O CT-e ampara a prestação do serviço de transporte, identificando o tomador entre as partes da operação, enquanto o MDF-e agrupa os documentos fiscais vinculados a uma mesma viagem para controle em trânsito, sendo encerrado ao final do percurso."
+    }
+  },
+  {
+    "contentId": "CT-026",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar as particularidades da NFS-e, incluindo a diversidade de padrões municipais e nacionais e os cuidados com competência e retenção.",
+      "cc": [
+        {
+          "id": "nfs-e",
+          "nome": "NFS-e (Nota Fiscal de Serviços Eletrônica)",
+          "def": "Documento fiscal eletrônico que ampara a prestação de serviços, emitido conforme as regras do município competente (ou, quando aplicável, de um padrão nacional unificado), identificando prestador, tomador, código de serviço e valores da operação."
+        },
+        {
+          "id": "codigo-servico-nfs-e",
+          "nome": "Código de serviço",
+          "def": "Classificação que identifica a natureza do serviço prestado na NFS-e, usada pelo município para aplicar a alíquota e as regras específicas daquela atividade, de forma análoga ao papel da CFOP para mercadorias."
+        },
+        {
+          "id": "retencao-nfs-e",
+          "nome": "Retenção na fonte em NFS-e",
+          "def": "Situação em que o tomador do serviço, em vez do prestador, é responsável por recolher o tributo municipal incidente sobre o serviço, retendo o valor correspondente no momento do pagamento, conforme critérios definidos na legislação do município."
+        },
+        {
+          "id": "diversidade-padroes-municipais",
+          "nome": "Diversidade de padrões municipais",
+          "def": "Situação histórica em que cada município podia adotar seu próprio sistema e layout de NFS-e, exigindo adaptação do emissor a cada praça atendida; um padrão nacional busca unificar progressivamente esse cenário entre os municípios aderentes."
+        }
+      ],
+      "rl": [
+        { "de": "nfs-e", "para": "codigo-servico-nfs-e", "tipo": "é classificada, para fins tributários, pelo" },
+        { "de": "nfs-e", "para": "retencao-nfs-e", "tipo": "pode estar sujeita, conforme o caso, a" },
+        { "de": "diversidade-padroes-municipais", "para": "nfs-e", "tipo": "é uma característica histórica da emissão de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "retencao-nfs-e",
+          "texto": "Em uma prestação de serviço em que o tomador é responsável pela retenção, ele desconta o tributo municipal do valor pago ao prestador e o recolhe diretamente ao município, em vez de o prestador fazer esse recolhimento."
+        },
+        {
+          "conceitoId": "diversidade-padroes-municipais",
+          "texto": "Uma empresa que presta serviços em diferentes municípios historicamente precisava adaptar seu sistema de emissão a cada layout de NFS-e local, cenário que um padrão nacional busca simplificar entre os municípios que o adotam."
+        }
+      ],
+      "pg": [
+        "A competência da NFS-e segue, em regra, o município onde o serviço é considerado prestado para fins tributários, que nem sempre coincide com o município da sede do prestador — confundir os dois é um erro recorrente.",
+        "Quando há retenção na fonte, o prestador não deixa de ter a obrigação de emitir a NFS-e: a retenção muda quem recolhe o tributo, não quem documenta a prestação do serviço.",
+        "Mesmo com avanços de padronização nacional, nem todo município aderiu da mesma forma — tratar a NFS-e como já totalmente uniforme em todo o país é uma simplificação arriscada."
+      ],
+      "rs": "A NFS-e ampara a prestação de serviços, classificada por um código de serviço que define regras e alíquota municipal, podendo estar sujeita à retenção na fonte pelo tomador. Historicamente, cada município definia seu próprio padrão de emissão, cenário que um padrão nacional busca unificar progressivamente."
+    }
+  },
+  {
+    "contentId": "CT-027",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a função do CFOP na identificação da natureza da operação e como ele distingue operações internas, interestaduais, com o exterior, devoluções e remessas.",
+      "cc": [
+        {
+          "id": "cfop",
+          "nome": "CFOP (Código Fiscal de Operações e Prestações)",
+          "def": "Código numérico que identifica a natureza de uma operação ou prestação (venda, devolução, remessa, transferência) e sua localização relativa (interna, interestadual, com o exterior), usado para classificar corretamente cada documento fiscal emitido ou recebido."
+        },
+        {
+          "id": "operacao-interna-interestadual",
+          "nome": "Operação interna e interestadual",
+          "def": "Distinção, dentro do CFOP, entre operações realizadas dentro do mesmo estado (interna) e operações entre estados diferentes (interestadual), relevante porque tributos como o ICMS podem ter tratamento e alíquota diferentes em cada caso."
+        },
+        {
+          "id": "devolucao-fiscal",
+          "nome": "Devolução",
+          "def": "Operação em que a mercadoria retorna ao remetente original (por exemplo, por recusa ou defeito), amparada por CFOP específico que reflete o retorno, distinto do CFOP da venda original."
+        },
+        {
+          "id": "remessa-fiscal",
+          "nome": "Remessa",
+          "def": "Movimentação de mercadoria sem a característica de venda definitiva (como remessa para conserto, para industrialização por terceiro ou em consignação), amparada por CFOP próprio que reflete a finalidade da movimentação, não uma transferência de propriedade."
+        }
+      ],
+      "rl": [
+        { "de": "cfop", "para": "operacao-interna-interestadual", "tipo": "classifica a operação também pela dimensão de" },
+        { "de": "cfop", "para": "devolucao-fiscal", "tipo": "identifica, com código específico, a" },
+        { "de": "cfop", "para": "remessa-fiscal", "tipo": "identifica, com código específico, a" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "operacao-interna-interestadual",
+          "texto": "A venda de uma mercadoria para um cliente no mesmo estado usa um CFOP de operação interna, enquanto a venda do mesmo produto para um cliente em outro estado usa um CFOP de operação interestadual, ainda que a operação econômica seja equivalente."
+        },
+        {
+          "conceitoId": "remessa-fiscal",
+          "texto": "O envio de uma máquina para manutenção em outra empresa, com previsão de retorno, é documentado como remessa para conserto, com CFOP próprio que não representa uma venda, já que não há transferência definitiva de propriedade."
+        }
+      ],
+      "pg": [
+        "Usar o CFOP de venda para uma remessa (ou vice-versa) distorce a natureza fiscal da operação, mesmo que a mercadoria movimentada seja a mesma e o valor informado esteja correto.",
+        "A diferença entre operação interna e interestadual não é apenas geográfica: ela pode mudar diretamente a alíquota e o tratamento tributário aplicável à mesma operação.",
+        "Devolução não é 'cancelamento': é uma nova operação fiscal, com CFOP próprio, documentando o retorno físico da mercadoria já circulada anteriormente."
+      ],
+      "rs": "O CFOP identifica a natureza de cada operação (venda, devolução, remessa, transferência) e sua localização relativa (interna, interestadual, com o exterior), sendo essencial para aplicar corretamente o tratamento tributário de cada documento fiscal emitido ou recebido."
+    }
+  },
+  {
+    "contentId": "CT-028",
+    "lesson": {
+      "v": 1,
+      "obj": "Relacionar NCM, CST, CSOSN e CEST como camadas complementares de classificação fiscal de uma mercadoria.",
+      "cc": [
+        {
+          "id": "ncm",
+          "nome": "NCM (Nomenclatura Comum do Mercosul)",
+          "def": "Código que classifica a mercadoria segundo sua natureza e composição, usado como referência para determinar alíquotas, benefícios e outras regras tributárias aplicáveis a cada tipo de produto, de forma harmonizada entre os países do Mercosul."
+        },
+        {
+          "id": "cst-icms",
+          "nome": "CST (Código de Situação Tributária)",
+          "def": "Código que indica a situação tributária da mercadoria em relação ao ICMS (tributada integralmente, com substituição tributária, isenta, entre outras), além de informar a origem da mercadoria (nacional ou estrangeira)."
+        },
+        {
+          "id": "csosn",
+          "nome": "CSOSN",
+          "def": "Código de Situação da Operação no Simples Nacional, equivalente ao CST, mas usado especificamente por empresas optantes pelo Simples Nacional para indicar a situação tributária da mercadoria em relação ao ICMS dentro desse regime."
+        },
+        {
+          "id": "cest",
+          "nome": "CEST (Código Especificador da Substituição Tributária)",
+          "def": "Código complementar ao NCM que identifica mercadorias sujeitas aos regimes de substituição tributária ou antecipação do ICMS, usado para padronizar nacionalmente essas mercadorias entre os estados."
+        }
+      ],
+      "rl": [
+        { "de": "ncm", "para": "cest", "tipo": "é complementado, para mercadorias sujeitas à substituição tributária, por" },
+        { "de": "cst-icms", "para": "csosn", "tipo": "é substituído, para optantes do Simples Nacional, por" },
+        { "de": "ncm", "para": "cst-icms", "tipo": "serve de referência de classificação para determinar, junto com a operação, a" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "csosn",
+          "texto": "Uma empresa optante pelo Simples Nacional informa o CSOSN em suas operações de venda de mercadorias, em vez do CST usado pelas empresas dos demais regimes, para indicar a situação tributária daquela operação dentro do Simples."
+        },
+        {
+          "conceitoId": "cest",
+          "texto": "Uma mercadoria cujo NCM está sujeito ao regime de substituição tributária recebe também um código CEST, usado para padronizar a identificação dessa mercadoria entre os diferentes estados que aplicam a substituição tributária."
+        }
+      ],
+      "pg": [
+        "NCM, CST/CSOSN e CEST não são a mesma coisa: NCM classifica a mercadoria em si, CST/CSOSN indica a situação tributária da operação, e CEST identifica mercadorias sujeitas à substituição tributária — confundi-los é erro comum na emissão de documentos fiscais.",
+        "Empresa do Simples Nacional usa CSOSN, não CST — usar o código do regime errado invalida a classificação tributária informada no documento fiscal.",
+        "Nem toda mercadoria com NCM sujeito à substituição tributária em um estado está necessariamente sujeita da mesma forma em outro — o CEST ajuda a padronizar a identificação, mas a aplicação depende também da legislação de cada estado."
+      ],
+      "rs": "NCM classifica a mercadoria por natureza e composição; CST (ou CSOSN, para optantes do Simples Nacional) indica a situação tributária da operação em relação ao ICMS; e CEST complementa o NCM para identificar mercadorias sujeitas à substituição tributária, padronizando essa identificação entre os estados."
+    }
+  },
+  {
+    "contentId": "CT-029",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar os principais eventos e correções aplicáveis a documentos fiscais eletrônicos e a importância da guarda documental e da trilha de auditoria.",
+      "cc": [
+        {
+          "id": "cancelamento-documento-fiscal",
+          "nome": "Cancelamento",
+          "def": "Evento que torna sem efeito um documento fiscal eletrônico já autorizado, utilizável dentro de um prazo definido e desde que a operação ainda não tenha produzido seus efeitos (como a circulação efetiva da mercadoria), diferente da correção de um erro pontual."
+        },
+        {
+          "id": "carta-correcao-eletronica",
+          "nome": "Carta de correção eletrônica",
+          "def": "Evento que permite corrigir determinados erros em um documento fiscal já autorizado (como dados cadastrais ou descritivos), sem alterar valores, tributos ou dados que modifiquem a operação registrada, preservando o documento original."
+        },
+        {
+          "id": "manifestacao-destinatario",
+          "nome": "Manifestação do destinatário",
+          "def": "Evento pelo qual o destinatário de um documento fiscal confirma, desconhece ou não realiza a operação informada contra ele, servindo como controle para identificar documentos emitidos indevidamente em seu nome."
+        },
+        {
+          "id": "trilha-auditoria-fiscal",
+          "nome": "Trilha de auditoria documental",
+          "def": "Conjunto de registros (documentos originais, eventos vinculados, prazos de guarda) que permite reconstruir, a qualquer momento, o histórico completo de uma operação fiscal, essencial tanto para controle interno quanto para eventual fiscalização."
+        }
+      ],
+      "rl": [
+        { "de": "cancelamento-documento-fiscal", "para": "trilha-auditoria-fiscal", "tipo": "é registrado, como evento, dentro da" },
+        { "de": "carta-correcao-eletronica", "para": "trilha-auditoria-fiscal", "tipo": "é registrada, como evento, dentro da" },
+        { "de": "manifestacao-destinatario", "para": "trilha-auditoria-fiscal", "tipo": "contribui, como controle do destinatário, para a" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "carta-correcao-eletronica",
+          "texto": "Ao notar que o endereço de entrega estava incorreto em uma NF-e já autorizada, mas sem efeito sobre valores ou tributação, a empresa registra uma carta de correção eletrônica, preservando o documento original com a informação corrigida."
+        },
+        {
+          "conceitoId": "manifestacao-destinatario",
+          "texto": "Ao receber um documento fiscal referente a uma compra que nunca realizou, o destinatário registra manifestação de desconhecimento da operação, sinalizando ao fisco uma possível emissão indevida contra seu CNPJ."
+        }
+      ],
+      "pg": [
+        "Carta de correção não serve para alterar valores, tributos ou partes da operação — esse tipo de erro exige cancelamento (dentro do prazo) ou outro documento fiscal corretivo, não uma simples correção de dados.",
+        "Cancelar um documento fora do prazo ou depois de a operação já ter produzido efeitos (mercadoria já circulada) não é o procedimento correto — nesses casos, outros mecanismos de correção costumam ser exigidos.",
+        "Guardar apenas o DANFE (representação visual) sem o XML correspondente compromete a trilha de auditoria: o documento fiscal válido é o XML, e é ele que deve ser preservado pelo prazo exigido."
+      ],
+      "rs": "Documentos fiscais eletrônicos admitem eventos específicos — cancelamento (dentro do prazo, antes de produzir efeitos), carta de correção (para erros que não alteram valores ou tributação) e manifestação do destinatário (confirmação ou desconhecimento da operação) — todos registrados na trilha de auditoria documental que sustenta o controle interno e eventual fiscalização."
+    }
+  }
+]
