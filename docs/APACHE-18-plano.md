@@ -79,13 +79,57 @@ replica exatamente o que `saveLesson` faz.
    balancete, correção de erros), regime de competência e operações
    usuais (caixa/bancos, clientes, compras/vendas/estoques); cita apenas
    o regime de competência da Lei nº 6.404/1976 art. 177 / CPC 00 de forma
-   genérica, sem outro dispositivo legal específico. Restam 13: CG-028 a
-   CG-040 (nesta ordem do catálogo).
+   genérica, sem outro dispositivo legal específico. **Sub-lote 4c (13/41,
+   CG-028 a CG-040, nesta ordem do catálogo) em
+   `data/apache/aulas/contabilidade-geral-3.json`** — fecha a disciplina:
+   operações usuais finais (CMV, tributos em compras/vendas, folha de
+   pagamento, imobilizado/intangível/depreciação, empréstimos e
+   financiamentos, provisões e contingências, operações com PL),
+   fechamento contábil, demonstrações (Balanço, DRE, DLPA/DMPL/DFC, notas
+   explicativas) e integração do ciclo completo; cita apenas de forma
+   genérica CPC 27 (Imobilizado), CPC 04 (Intangível), CPC 25 (Provisões e
+   Contingências), CPC 03 (Fluxo de Caixa) e Lei 6.404/1976 arts. 178, 182
+   e 187 (estrutura do balanço, PL e DRE) — pronunciamentos/artigos
+   consolidados e amplamente conhecidos, sem citar texto literal de
+   dispositivo. **Contabilidade Geral completa: 41/41.**
 5. **Contabilidade Tributária (124)** — por último e em vários sub-lotes
    pequenos (não a disciplina inteira de uma vez): é onde a pesquisa de
    legislação (tributos, SPED, reforma tributária) é mais pesada e onde um
    artigo de lei errado faria mais estrago. Merece a revisão por amostragem
    mais rigorosa.
+
+   **Proposta de sub-lotes** (seguindo as unidades já definidas em
+   `lib/content-catalog.ts`, cada unidade = um sub-lote próprio, nunca
+   misturando tributos/regimes diferentes no mesmo lote, para isolar o
+   risco de citação legal errada por assunto):
+
+   | Sub-lote | Unidade                                   | Conteúdos | Qtde |
+   |----------|--------------------------------------------|-----------|------|
+   | 5a       | Fundamentos                                | CT-001–012 | 12   |
+   | 5b       | Contabilização                             | CT-013–019 | 7    |
+   | 5c       | Cadastros e documentos                     | CT-020–029 | 10   |
+   | 5d       | Simples Nacional                           | CT-030–039 | 10   |
+   | 5e       | Lucro Presumido                            | CT-040–045 | 6    |
+   | 5f       | Lucro Real                                 | CT-046–055 | 10   |
+   | 5g       | PIS e Cofins                               | CT-056–062 | 7    |
+   | 5h       | ICMS                                       | CT-063–072 | 10   |
+   | 5i       | IPI                                        | CT-073–077 | 5    |
+   | 5j       | ISS                                        | CT-078–082 | 5    |
+   | 5k       | Folha e retenções                          | CT-083–090 | 8    |
+   | 5l       | Obrigações e SPED                          | CT-091–098 | 8    |
+   | 5m       | Reforma tributária                         | CT-099–107 | 9    |
+   | 5n       | Governança e domínio                       | CT-108–117 | 10   |
+   | 5o       | Reforma tributária — Documentos fiscais    | CT-118–124 | 7    |
+
+   Total: 15 sub-lotes, 5–12 conteúdos cada (viável para revisão por
+   amostragem rigorosa). Ordem sugerida: começar por Fundamentos (5a,
+   conceitual, menor risco de citação) e deixar os regimes/tributos
+   específicos (Simples, Lucro Presumido/Real, ICMS, ISS, PIS/Cofins, IPI)
+   e a Reforma Tributária (5m/5o, legislação mais recente e instável) para
+   depois — cada um só avança após reler o trecho relevante de
+   `lib/content-catalog.ts` e confirmar o conjunto exato de `contentId`s
+   antes de escrever qualquer aula. Cada sub-lote só começa com novo pedido
+   explícito do Abner (regra de token saving já em vigor).
 
 ## Checklist desta thread
 
@@ -95,8 +139,8 @@ replica exatamente o que `saveLesson` faz.
 - [x] Lote 1/5 — Contabilidade de Custos (4/4 conteúdos) — PR #95
 - [x] Lote 2/5 — Análise das Demonstrações Financeiras (6/6 conteúdos) — PR #96
 - [x] Lote 3/5 — Contabilidade Avançada (7/7 conteúdos)
-- [ ] Lote 4/5 — Contabilidade Geral (28/41, em sub-lotes; sub-lote 4b nesta PR)
-- [ ] Lote 5/5 — Contabilidade Tributária (0/124, em sub-lotes, pesquisa de legislação)
+- [x] Lote 4/5 — Contabilidade Geral (41/41, em sub-lotes; sub-lote 4c nesta PR — disciplina completa)
+- [ ] Lote 5/5 — Contabilidade Tributária (0/124, em 15 sub-lotes propostos acima, pesquisa de legislação)
 - [ ] Todos os 183 conteúdos cobertos (regra final do card)
 
 ## Como aplicar (Abner, depois do merge)
@@ -107,6 +151,7 @@ pnpm run apache:carregar-aulas -- --file data/apache/aulas/analise-demonstracoes
 pnpm run apache:carregar-aulas -- --file data/apache/aulas/contabilidade-avancada.json --target production
 pnpm run apache:carregar-aulas -- --file data/apache/aulas/contabilidade-geral-1.json --target production
 pnpm run apache:carregar-aulas -- --file data/apache/aulas/contabilidade-geral-2.json --target production
+pnpm run apache:carregar-aulas -- --file data/apache/aulas/contabilidade-geral-3.json --target production
 ```
 
 Não precisa de "Publicar Atlas" — o script grava direto em produção (D1 +
