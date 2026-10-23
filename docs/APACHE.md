@@ -1145,23 +1145,29 @@ custo/qualidade documentada no card; confirmação final com o Abner).
 cards acima. **Gate:** não, mas **não comece sem pedido explícito do Abner**.
 
 **Escopo:** disciplina por disciplina (ou lote menor), com pesquisa de
-legislação, produz `ApacheLesson` (APA-03) de cada conteúdo e grava via
-`saveLesson` (APA-05) — **a mesma rota/caminho de produção** que o APA-06 usa
-(sem script separado de gravação direta: `saveLesson` já escreve em R2/D1 via
-os bindings do Worker, então este card roda como uma chamada administrativa
-contra o Worker implantado, não como um script fora de banda) — com
-`model: 'claude-manual'`. Cada lote é PR separado, revisado antes do merge.
-Uma aula `model='claude-manual'` que seja reportada entra na fila com
+legislação, produz `ApacheLesson` (APA-03) de cada conteúdo e grava pelo
+MESMO caminho de produção que `saveLesson` (APA-05) usa — R2 gzip + upsert em
+D1, versão incrementada, objeto antigo apagado só depois do novo gravado —
+com `model: 'claude-manual'`. Como `saveLesson` só roda dentro do Worker e não
+existe rota HTTP administrativa para chamá-lo de fora, a carga usa
+`scripts/apache-carregar-aulas.mjs` (decisão tomada na thread do APA-18,
+detalhe em `docs/APACHE-18-plano.md`): replica a mesma lógica via CLI do
+`wrangler` (`d1 execute` + `r2 object put/delete`), igual ao padrão já usado
+por `scripts/backup.mjs`/`scripts/apolo-aplicar-curadoria.mjs` — login do
+`wrangler`, nunca token manual. Cada lote é PR separado (dados em
+`data/apache/aulas/<lote>.json`), revisado antes do merge. Uma aula
+`model='claude-manual'` que seja reportada entra na fila com
 `kind='aula_manual'` (ver APA-02): o processador automático **nunca** a
 regenera com o Llama — só sinaliza para revisão humana, para não perder
 pesquisa de legislação por uma reescrita automática.
 
 **Checklist**
-- [ ] Confirmação explícita do Abner para começar
-- [ ] Lotes por disciplina, com pesquisa de legislação
+- [x] Confirmação explícita do Abner para começar (2026-10-23)
+- [x] Mecanismo de carga decidido e implementado (`scripts/apache-carregar-aulas.mjs`)
+- [ ] Lotes por disciplina, com pesquisa de legislação — 1/5 (Contabilidade de Custos, 4/4) nesta PR; plano completo em `docs/APACHE-18-plano.md`
 - [ ] Revisão humana por amostragem antes de cada merge
 - [ ] Regra de `kind='aula_manual'` nunca regenerada automaticamente, aplicada
-- [ ] Todos os conteúdos do roadmap atual cobertos
+- [ ] Todos os conteúdos do roadmap atual cobertos (183 no total)
 
 ---
 

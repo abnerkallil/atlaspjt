@@ -1064,3 +1064,26 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
   volta ao estado anterior; a coluna e a tabela novas ficam vazias até algum
   script gravar nelas, então reverter sem ter rodado o script de aplicação
   não perde nada.
+
+## PR #95 — APA-18: carga administrativa de aulas base + piloto Contabilidade de Custos
+
+- Ponto de restauração: branch `restore/pre-apa-18-contabilidade-de-custos`
+  (commit `aa30d87`, main antes do merge).
+- O que muda no site: nada visível ainda — este PR só adiciona o script e os
+  dados; a aula de Contabilidade de Custos só aparece depois de o Abner
+  rodar `pnpm run apache:carregar-aulas -- --file
+  data/apache/aulas/contabilidade-de-custos.json --target production`
+  (não precisa de "Publicar Atlas": o script grava direto em D1/R2).
+- O que muda fora do site: novo script `scripts/apache-carregar-aulas.mjs`
+  — primeiro mecanismo de carga do APA-18 (aulas base escritas à mão,
+  `model='claude-manual'`), replicando a mesma gravação de `saveLesson`
+  (APA-05: R2 gzip + upsert em D1) via CLI do `wrangler`, já que não existe
+  rota HTTP administrativa para chamar `saveLesson` de fora do Worker.
+  Primeiro lote em `data/apache/aulas/contabilidade-de-custos.json` (4
+  conteúdos: CC-001 a CC-004), escolhido como piloto por não exigir
+  pesquisa de legislação. Plano completo das 4 disciplinas restantes em
+  `docs/APACHE-18-plano.md`.
+- Se algo der errado: reverter para `restore/pre-apa-18-contabilidade-de-custos`
+  volta ao estado anterior; nenhuma aula chega a ser gravada em produção
+  antes de o Abner rodar o comando acima, então reverter sem ter rodado o
+  script não perde nada.

@@ -144,7 +144,8 @@
     "lib/apache/upload-validation.ts",
     "tests/apache-upload-validation.test.ts",
     "lib/apache/enrichment.ts",
-    "tests/apache-enrichment.test.ts"
+    "tests/apache-enrichment.test.ts",
+    "tests/apache-carregar-aulas.test.ts"
   ],
   "exclude": [
     "node_modules"
