@@ -14,6 +14,30 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #97 — APA-18: aulas base de Contabilidade Avançada
+
+- Ponto de restauração: branch `restore/pre-apa-18-contabilidade-avancada`
+  (commit `8abed42`, main antes do merge).
+- O que muda no site: nada visível ainda — este PR só adiciona os dados; as
+  7 aulas só aparecem depois de o Abner rodar `pnpm run apache:carregar-aulas
+  -- --file data/apache/aulas/contabilidade-avancada.json --target
+  production` (não precisa de "Publicar Atlas": o script grava direto em
+  D1/R2).
+- O que muda fora do site: terceiro lote do APA-18 em
+  `data/apache/aulas/contabilidade-avancada.json` (7 conteúdos: CA-001 a
+  CA-007, `model='claude-manual'`), usando o mesmo mecanismo de carga dos
+  PRs #95/#96 (`scripts/apache-carregar-aulas.mjs`). Primeiro lote com
+  citação de CPC (intangíveis/goodwill/MEP — CPC 04/15/18; consolidação —
+  CPC 36; provisões/contingências/impairment — CPC 25/01; valor justo e
+  AVP — CPC 46/12; subvenções — CPC 07; ajustes de exercícios anteriores —
+  CPC 23; reserva legal — art. 193 da Lei 6.404/76; DOAR extinta pela Lei
+  11.638/2007 e substituída pela DFC; DVA — CPC 09), citado apenas onde
+  havia certeza. `docs/APACHE-18-plano.md` atualizado (lote 3/5 concluído).
+- Se algo der errado: reverter para `restore/pre-apa-18-contabilidade-avancada`
+  volta ao estado anterior; nenhuma aula chega a ser gravada em produção
+  antes de o Abner rodar o comando acima, então reverter sem ter rodado o
+  script não perde nada.
+
 ## PR #96 — APA-18: aulas base de Análise das Demonstrações Financeiras
 
 - Ponto de restauração: branch `restore/pre-apa-18-analise-demonstracoes`
