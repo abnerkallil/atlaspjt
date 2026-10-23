@@ -1,0 +1,812 @@
+[
+  {
+    "contentId": "CG-028",
+    "lesson": {
+      "v": 1,
+      "obj": "Calcular o Custo das Mercadorias Vendidas (CMV) pelos sistemas de inventário periódico e permanente.",
+      "cc": [
+        {
+          "id": "cmv",
+          "nome": "Custo das Mercadorias Vendidas (CMV)",
+          "def": "Valor, pelo custo de aquisição, das mercadorias que efetivamente saíram do estoque por venda no período. É a contrapartida da receita de vendas na apuração do resultado bruto."
+        },
+        {
+          "id": "inventario-periodico",
+          "nome": "Sistema de inventário periódico",
+          "def": "Sistema em que o estoque só é apurado por contagem física ao final do período. O CMV é calculado pela fórmula EI + C − EF (Estoque Inicial mais Compras líquidas menos Estoque Final), sem controle contínuo de saídas."
+        },
+        {
+          "id": "inventario-permanente",
+          "nome": "Sistema de inventário permanente",
+          "def": "Sistema em que cada saída de mercadoria é registrada no momento em que ocorre, mantendo o saldo de estoque sempre atualizado. O CMV é a soma dos custos das saídas já registradas, não uma fórmula aplicada ao final do período."
+        },
+        {
+          "id": "compras-liquidas",
+          "nome": "Compras líquidas",
+          "def": "Total das compras de mercadorias do período, deduzido das devoluções de compras e dos abatimentos obtidos, e acrescido dos gastos necessários para colocar o item em condição de venda (como frete sobre compras)."
+        }
+      ],
+      "rl": [
+        {
+          "de": "cmv",
+          "para": "inventario-periodico",
+          "tipo": "é calculado ao final do período por"
+        },
+        {
+          "de": "cmv",
+          "para": "inventario-permanente",
+          "tipo": "é acumulado continuamente por"
+        },
+        {
+          "de": "compras-liquidas",
+          "para": "inventario-periodico",
+          "tipo": "é um componente da fórmula de"
+        }
+      ],
+      "fm": [
+        {
+          "id": "cmv-periodico",
+          "expr": "CMV = EI + C − EF",
+          "legenda": "No inventário periódico: Estoque Inicial mais Compras líquidas do período menos Estoque Final apurado por contagem."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "inventario-periodico",
+          "texto": "Uma empresa tinha EI de R$ 10.000, comprou R$ 50.000 em mercadorias (líquido de devoluções) e, ao final do período, a contagem física apontou EF de R$ 15.000. CMV = 10.000 + 50.000 − 15.000 = R$ 45.000."
+        },
+        {
+          "conceitoId": "inventario-permanente",
+          "texto": "No inventário permanente, cada venda já debita o CMV e credita o Estoque pelo custo daquela saída específica no momento da venda, dispensando o cálculo por fórmula ao final do período."
+        }
+      ],
+      "pg": [
+        "CMV não é o valor das vendas nem a soma de todas as compras do período: é o custo de aquisição apenas das unidades que saíram por venda.",
+        "No inventário periódico, um erro na contagem física do Estoque Final distorce diretamente o CMV calculado, mesmo que todos os lançamentos de compra estejam corretos.",
+        "Fretes, seguros e outros gastos para colocar a mercadoria em condição de venda entram no custo de aquisição (compõem compras líquidas); fretes sobre vendas, não — são despesa."
+      ],
+      "rs": "O CMV mede o custo das mercadorias que saíram por venda no período. No inventário periódico, ele é obtido indiretamente por EI + C − EF, dependendo de contagem física do estoque final; no inventário permanente, ele é acumulado lançamento a lançamento, à medida que cada venda ocorre, sem depender de contagem para ser conhecido durante o período."
+    }
+  },
+  {
+    "contentId": "CG-029",
+    "lesson": {
+      "v": 1,
+      "obj": "Diferenciar tributos recuperáveis dos tributos incidentes sobre vendas e explicar como cada um aparece nas demonstrações.",
+      "cc": [
+        {
+          "id": "tributo-recuperavel",
+          "nome": "Tributo recuperável (sobre compras)",
+          "def": "Tributo pago na aquisição de mercadorias ou insumos que a empresa tem direito de compensar com tributo devido em operações futuras. Não é custo nem despesa: é registrado como ativo (direito a recuperar) até ser compensado."
+        },
+        {
+          "id": "tributo-sobre-vendas",
+          "nome": "Tributo incidente sobre vendas",
+          "def": "Tributo calculado sobre o preço de venda, destacado e devido ao Fisco pela empresa vendedora, que apenas o repassa. Reduz a receita bruta para chegar à receita líquida, não é despesa operacional."
+        },
+        {
+          "id": "receita-bruta-liquida-tributos",
+          "nome": "Receita bruta e receita líquida (efeito dos tributos sobre vendas)",
+          "def": "Receita bruta é o valor total das vendas pelo preço praticado; receita líquida é a receita bruta deduzida dos tributos sobre vendas e de devoluções/abatimentos. A demonstração de resultado parte da receita líquida para apurar o lucro bruto."
+        }
+      ],
+      "rl": [
+        {
+          "de": "tributo-recuperavel",
+          "para": "tributo-sobre-vendas",
+          "tipo": "tem tratamento contábil oposto a"
+        },
+        {
+          "de": "tributo-sobre-vendas",
+          "para": "receita-bruta-liquida-tributos",
+          "tipo": "reduz a receita bruta em"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "tributo-recuperavel",
+          "texto": "Na compra de mercadorias por R$ 10.000, se R$ 1.800 de tributo sobre a compra forem recuperáveis, o custo de aquisição registrado no estoque é R$ 8.200, e os R$ 1.800 ficam em uma conta de ativo (tributo a recuperar)."
+        },
+        {
+          "conceitoId": "tributo-sobre-vendas",
+          "texto": "Em uma venda de R$ 10.000 com tributo sobre vendas de R$ 1.200, a receita bruta é R$ 10.000 e a receita líquida (já deduzido o tributo) é R$ 8.800 — o tributo não passa pelo resultado como despesa, é dedução de receita."
+        }
+      ],
+      "pg": [
+        "Tributo recuperável sobre compras não é custo da mercadoria: lançá-lo dentro do custo de aquisição superestima o estoque e o CMV.",
+        "Tributo sobre vendas não é despesa operacional: classificá-lo como despesa, em vez de dedução da receita bruta, distorce a receita líquida e os indicadores que partem dela."
+      ],
+      "rs": "Tributos sobre compras que dão direito a compensação são recuperáveis: ficam no ativo, fora do custo da mercadoria. Tributos sobre vendas são apenas repassados ao Fisco e aparecem como dedução da receita bruta, não como despesa. Separar os dois corretamente é o que garante custo de estoque e receita líquida corretos."
+    }
+  },
+  {
+    "contentId": "CG-030",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar os componentes da folha de pagamento e como salário, encargos e provisões são registrados contabilmente.",
+      "cc": [
+        {
+          "id": "salario-bruto",
+          "nome": "Salário bruto",
+          "def": "Remuneração total do empregado antes de qualquer desconto, incluindo salário-base e eventuais adicionais (horas extras, comissões). É a base sobre a qual incidem descontos e, em parte, encargos."
+        },
+        {
+          "id": "descontos-sobre-salario",
+          "nome": "Descontos sobre o salário",
+          "def": "Valores retidos do empregado no próprio pagamento (como contribuição previdenciária do empregado e imposto de renda retido na fonte), que reduzem o salário bruto até chegar ao salário líquido efetivamente pago."
+        },
+        {
+          "id": "encargos-patronais",
+          "nome": "Encargos patronais",
+          "def": "Obrigações que a empresa paga além do salário bruto do empregado (como contribuição previdenciária patronal e FGTS), calculadas sobre a folha, mas que não saem do bolso do empregado."
+        },
+        {
+          "id": "provisao-ferias-13",
+          "nome": "Provisão de férias e 13º salário",
+          "def": "Reconhecimento mensal, por competência, de uma fração do custo de férias e 13º salário que o empregado vai receber no futuro, mesmo antes do pagamento efetivo, para que a despesa seja apropriada ao período em que o direito é gerado."
+        }
+      ],
+      "rl": [
+        {
+          "de": "salario-bruto",
+          "para": "descontos-sobre-salario",
+          "tipo": "é reduzido por"
+        },
+        {
+          "de": "salario-bruto",
+          "para": "encargos-patronais",
+          "tipo": "é base de cálculo de"
+        },
+        {
+          "de": "salario-bruto",
+          "para": "provisao-ferias-13",
+          "tipo": "é base de cálculo de"
+        }
+      ],
+      "fm": [
+        {
+          "id": "salario-liquido",
+          "expr": "Salário líquido = Salário bruto − Descontos sobre o salário",
+          "legenda": "Valor efetivamente pago ao empregado, depois das retenções obrigatórias."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "descontos-sobre-salario",
+          "texto": "Um empregado com salário bruto de R$ 3.000 e descontos de R$ 400 recebe salário líquido de R$ 2.600; a empresa, além disso, reconhece encargos patronais sobre os R$ 3.000, que não saem do salário do empregado."
+        },
+        {
+          "conceitoId": "provisao-ferias-13",
+          "texto": "Mesmo sem pagar férias naquele mês, a empresa reconhece mensalmente uma parcela da despesa de férias futuras do empregado, respeitando o regime de competência."
+        }
+      ],
+      "pg": [
+        "Encargos patronais não reduzem o salário líquido do empregado — são uma despesa adicional da empresa, calculada sobre a folha, e não um desconto do trabalhador.",
+        "Não provisionar férias e 13º mensalmente faz a despesa aparecer concentrada só no mês do pagamento, violando o regime de competência e distorcendo o resultado dos meses anteriores."
+      ],
+      "rs": "A folha de pagamento envolve três grupos: descontos do empregado (reduzem o salário bruto até o líquido pago), encargos patronais (despesa adicional da empresa, não descontada do empregado) e provisões de férias/13º (reconhecimento gradual, por competência, de um custo que será pago no futuro)."
+    }
+  },
+  {
+    "contentId": "CG-031",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o reconhecimento de imobilizado e intangível e como a depreciação/amortização distribui o custo ao longo da vida útil.",
+      "cc": [
+        {
+          "id": "ativo-imobilizado",
+          "nome": "Ativo Imobilizado",
+          "def": "Bem corpóreo (tangível) usado na atividade da empresa, com uso esperado por mais de um período, como máquinas, veículos e edificações. Reconhecido pelo custo de aquisição mais os gastos necessários para pô-lo em condição de uso (CPC 27)."
+        },
+        {
+          "id": "ativo-intangivel",
+          "nome": "Ativo Intangível",
+          "def": "Ativo incorpóreo identificável, sem substância física, controlado pela empresa e capaz de gerar benefícios econômicos futuros, como marcas, patentes e softwares adquiridos (CPC 04)."
+        },
+        {
+          "id": "depreciacao",
+          "nome": "Depreciação",
+          "def": "Distribuição sistemática do custo de um ativo imobilizado ao longo de sua vida útil estimada, refletindo o desgaste, uso ou obsolescência. Reduz o valor contábil do ativo e gera despesa (ou custo) no período."
+        },
+        {
+          "id": "vida-util-valor-residual",
+          "nome": "Vida útil e valor residual",
+          "def": "Vida útil é o período estimado durante o qual o ativo gerará benefícios econômicos; valor residual é o valor estimado que o ativo teria se fosse vendido hoje, ao final dessa vida útil. Ambos são necessários para calcular a depreciação."
+        }
+      ],
+      "rl": [
+        {
+          "de": "ativo-imobilizado",
+          "para": "depreciacao",
+          "tipo": "tem seu custo distribuído por"
+        },
+        {
+          "de": "depreciacao",
+          "para": "vida-util-valor-residual",
+          "tipo": "é calculada em função de"
+        },
+        {
+          "de": "ativo-intangivel",
+          "para": "ativo-imobilizado",
+          "tipo": "segue lógica análoga (amortização) à de"
+        }
+      ],
+      "fm": [
+        {
+          "id": "depreciacao-linear",
+          "expr": "Depreciação anual = (Custo − Valor residual) / Vida útil",
+          "legenda": "Método linear (quotas constantes): divide o valor depreciável igualmente pelos anos de vida útil estimada."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "depreciacao",
+          "texto": "Uma máquina custou R$ 110.000, com valor residual estimado de R$ 10.000 e vida útil de 10 anos. Depreciação anual = (110.000 − 10.000) / 10 = R$ 10.000 por ano, pelo método linear."
+        }
+      ],
+      "pg": [
+        "Terrenos normalmente não são depreciados, por não terem vida útil limitada, ao contrário das edificações sobre eles construídas.",
+        "Um ativo intangível com vida útil indefinida (não a mesma coisa que infinita) não é amortizado de forma sistemática; passa por teste de recuperabilidade periódico, em vez de amortização linear."
+      ],
+      "rs": "Imobilizado (tangível) e Intangível (incorpóreo) são reconhecidos pelo custo necessário para colocá-los em uso. Ao longo da vida útil estimada, esse custo é distribuído como depreciação (imobilizado) ou amortização (intangível), considerando também o valor residual esperado ao final desse período."
+    }
+  },
+  {
+    "contentId": "CG-032",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a estrutura de um empréstimo ou financiamento (principal e encargos) e seu registro contábil ao longo do tempo.",
+      "cc": [
+        {
+          "id": "principal",
+          "nome": "Principal",
+          "def": "Valor originalmente tomado em empréstimo ou financiamento, que constitui a obrigação de capital a ser devolvida ao credor, separada dos juros e demais encargos cobrados sobre ela."
+        },
+        {
+          "id": "encargos-financeiros",
+          "nome": "Encargos financeiros (juros e demais custos)",
+          "def": "Remuneração cobrada pelo credor sobre o principal, incluindo juros e eventuais taxas e comissões associadas à operação, reconhecidos como despesa financeira ao longo do tempo, conforme o regime de competência."
+        },
+        {
+          "id": "juros-passivos-ativos",
+          "nome": "Juros passivos e juros ativos",
+          "def": "Juros passivos são encargos que a empresa paga por tomar recursos de terceiros (despesa financeira); juros ativos são remuneração que a empresa recebe por aplicar recursos ou conceder crédito a terceiros (receita financeira)."
+        },
+        {
+          "id": "classificacao-prazo-emprestimo",
+          "nome": "Classificação por prazo da obrigação",
+          "def": "A parcela do empréstimo ou financiamento com vencimento em até 12 meses após a data do balanço é classificada no passivo circulante; o restante, com vencimento mais distante, no passivo não circulante."
+        }
+      ],
+      "rl": [
+        {
+          "de": "principal",
+          "para": "encargos-financeiros",
+          "tipo": "é a base de cálculo de"
+        },
+        {
+          "de": "encargos-financeiros",
+          "para": "juros-passivos-ativos",
+          "tipo": "inclui, do lado de quem paga,"
+        },
+        {
+          "de": "principal",
+          "para": "classificacao-prazo-emprestimo",
+          "tipo": "é segregado no balanço por"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "classificacao-prazo-emprestimo",
+          "texto": "Um financiamento de R$ 120.000 a pagar em 24 parcelas mensais iguais tem, na data do balanço, 12 parcelas no passivo circulante (vencimento em até 12 meses) e 12 parcelas no passivo não circulante."
+        },
+        {
+          "conceitoId": "juros-passivos-ativos",
+          "texto": "A mesma empresa que paga juros sobre um empréstimo bancário (juros passivos) pode, simultaneamente, receber juros sobre uma aplicação financeira (juros ativos) — são contas e naturezas de resultado diferentes."
+        }
+      ],
+      "pg": [
+        "Juros não são reconhecidos apenas no vencimento do contrato: pelo regime de competência, eles são apropriados período a período, mesmo antes do pagamento.",
+        "Um empréstimo de longo prazo não fica inteiro no passivo não circulante até o fim: a cada balanço, a parcela que passa a vencer em até 12 meses é reclassificada para o circulante."
+      ],
+      "rs": "Um empréstimo ou financiamento separa principal (capital tomado) de encargos financeiros (juros e custos associados), reconhecidos por competência ao longo do contrato. No balanço, a obrigação é dividida entre circulante e não circulante conforme o prazo de vencimento de cada parcela em relação à data do balanço."
+    }
+  },
+  {
+    "contentId": "CG-033",
+    "lesson": {
+      "v": 1,
+      "obj": "Diferenciar provisão de passivo contingente, segundo os critérios de obrigação presente e estimativa confiável de valor.",
+      "cc": [
+        {
+          "id": "obrigacao-presente",
+          "nome": "Obrigação presente",
+          "def": "Dever atual da empresa, decorrente de um evento passado, que provavelmente exigirá saída de recursos para ser liquidado. É um dos requisitos para reconhecer uma provisão (CPC 25)."
+        },
+        {
+          "id": "estimativa-confiavel",
+          "nome": "Estimativa confiável do valor",
+          "def": "Capacidade de mensurar com razoável confiança o valor da obrigação, mesmo que de forma estimada e não exata. Sem estimativa confiável, a obrigação não pode ser reconhecida como provisão."
+        },
+        {
+          "id": "provisao",
+          "nome": "Provisão",
+          "def": "Passivo de valor ou prazo incertos, reconhecido quando há obrigação presente, saída de recursos provável e estimativa confiável do valor. Diferente de uma simples reserva de lucros, é uma obrigação, não parte do patrimônio líquido."
+        },
+        {
+          "id": "passivo-contingente",
+          "nome": "Passivo contingente",
+          "def": "Obrigação possível (não provável) ou obrigação presente cujo valor não pode ser estimado com confiabilidade suficiente. Não é reconhecida no balanço como passivo: apenas divulgada em nota explicativa, quando relevante."
+        }
+      ],
+      "rl": [
+        {
+          "de": "obrigacao-presente",
+          "para": "provisao",
+          "tipo": "é requisito para reconhecer"
+        },
+        {
+          "de": "estimativa-confiavel",
+          "para": "provisao",
+          "tipo": "é requisito para reconhecer"
+        },
+        {
+          "de": "provisao",
+          "para": "passivo-contingente",
+          "tipo": "contrasta com (reconhecida vs. apenas divulgada) em"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "provisao",
+          "texto": "Uma empresa réu em um processo trabalhista, com parecer jurídico de perda provável e valor estimável, reconhece uma provisão para a possível condenação, mesmo antes da decisão final."
+        },
+        {
+          "conceitoId": "passivo-contingente",
+          "texto": "A mesma empresa, em outro processo cujo desfecho os advogados classificam como perda apenas possível (não provável), apenas divulga o caso em nota explicativa, sem registrar passivo no balanço."
+        }
+      ],
+      "pg": [
+        "'Provável' e 'possível' não são sinônimos em contingências: só a perda classificada como provável (e estimável) justifica provisão; perda meramente possível vai para nota explicativa, não para o passivo.",
+        "Falta de estimativa confiável do valor impede o reconhecimento da provisão mesmo quando a obrigação presente é praticamente certa — nesse caso, também se divulga em nota, em vez de reconhecer."
+      ],
+      "rs": "Uma provisão exige três condições simultâneas: obrigação presente, saída de recursos provável e valor estimável com confiabilidade. Faltando qualquer uma delas — especialmente quando a perda é apenas possível, não provável — a obrigação não entra no passivo como provisão: no máximo, é divulgada como passivo contingente em nota explicativa."
+    }
+  },
+  {
+    "contentId": "CG-034",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar as principais operações que afetam o Patrimônio Líquido: integralização de capital, formação de reservas e distribuição de dividendos.",
+      "cc": [
+        {
+          "id": "capital-social-integralizacao",
+          "nome": "Capital social e integralização",
+          "def": "Capital social é o valor que os sócios ou acionistas se comprometem a investir na empresa; integralização é o efetivo aporte desse valor (em dinheiro ou bens), que faz o capital social passar de subscrito para integralizado."
+        },
+        {
+          "id": "reservas-patrimonio-liquido",
+          "nome": "Reservas",
+          "def": "Parcelas do patrimônio líquido destacadas do lucro (reservas de lucros) ou de outras origens (reservas de capital), retidas na empresa por determinação legal, estatutária ou decisão dos sócios, em vez de distribuídas (Lei 6.404/1976, art. 182)."
+        },
+        {
+          "id": "dividendos",
+          "nome": "Dividendos",
+          "def": "Parcela do lucro distribuída aos sócios ou acionistas, reduzindo o patrimônio líquido quando deliberada e, até o pagamento, registrada como uma obrigação (passivo) da empresa."
+        },
+        {
+          "id": "mutacao-patrimonio-liquido",
+          "nome": "Mutação do Patrimônio Líquido",
+          "def": "Conjunto de variações que o patrimônio líquido sofre no período — aumentos (integralização de capital, resultado do período, constituição de reservas por transferência) e reduções (dividendos deliberados, prejuízos)."
+        }
+      ],
+      "rl": [
+        {
+          "de": "capital-social-integralizacao",
+          "para": "mutacao-patrimonio-liquido",
+          "tipo": "é uma origem de aumento em"
+        },
+        {
+          "de": "reservas-patrimonio-liquido",
+          "para": "mutacao-patrimonio-liquido",
+          "tipo": "é formada por transferências dentro de"
+        },
+        {
+          "de": "dividendos",
+          "para": "mutacao-patrimonio-liquido",
+          "tipo": "é uma origem de redução em"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "capital-social-integralizacao",
+          "texto": "Dois sócios subscrevem R$ 100.000 de capital social, mas integralizam apenas R$ 60.000 no início: o capital social é de R$ 100.000, dos quais R$ 40.000 ainda estão a integralizar (uma conta redutora dentro do PL)."
+        },
+        {
+          "conceitoId": "dividendos",
+          "texto": "Deliberado o pagamento de R$ 20.000 de dividendos aos acionistas, o valor sai dos lucros acumulados (reduz o PL) e é reconhecido como obrigação a pagar até a data do efetivo pagamento."
+        }
+      ],
+      "pg": [
+        "Capital subscrito e capital integralizado não são a mesma coisa: o valor ainda não aportado pelos sócios aparece como conta redutora do capital social, não é omitido do PL.",
+        "Dividendos deliberados, mas ainda não pagos, já reduzem o patrimônio líquido no momento da deliberação — não apenas quando o dinheiro efetivamente sai da empresa."
+      ],
+      "rs": "O Patrimônio Líquido aumenta com integralização de capital pelos sócios e com o resultado do período, e se reorganiza internamente com a formação de reservas. Dividendos deliberados reduzem o PL já no momento da decisão, tornando-se uma obrigação até serem pagos."
+    }
+  },
+  {
+    "contentId": "CG-035",
+    "lesson": {
+      "v": 1,
+      "obj": "Descrever a rotina de fechamento contábil: conciliações, ajustes, reclassificações e encerramento das contas de resultado.",
+      "cc": [
+        {
+          "id": "conciliacao-contabil",
+          "nome": "Conciliação contábil",
+          "def": "Confronto entre o saldo de uma conta contábil e um documento ou controle externo (como extrato bancário ou relatório do fornecedor) para confirmar que o saldo registrado está correto ou identificar diferenças a corrigir."
+        },
+        {
+          "id": "ajuste-fechamento",
+          "nome": "Ajuste de fechamento",
+          "def": "Lançamento feito antes de encerrar o período para que as contas reflitam o regime de competência, como apropriação de despesas e receitas ainda não registradas, depreciação do período e provisões."
+        },
+        {
+          "id": "reclassificacao-contabil",
+          "nome": "Reclassificação",
+          "def": "Lançamento que move um saldo de uma conta ou grupo para outro, sem alterar o total do ativo ou passivo, usado por exemplo para mover a parcela de longo prazo de uma dívida para o circulante quando seu vencimento se aproxima."
+        },
+        {
+          "id": "encerramento-contas-resultado",
+          "nome": "Encerramento das contas de resultado",
+          "def": "Lançamento final do período que zera os saldos das contas de receita e despesa, transferindo o resultado apurado (lucro ou prejuízo) para o patrimônio líquido, preparando as contas de resultado para o período seguinte."
+        }
+      ],
+      "rl": [
+        {
+          "de": "conciliacao-contabil",
+          "para": "ajuste-fechamento",
+          "tipo": "frequentemente origina"
+        },
+        {
+          "de": "ajuste-fechamento",
+          "para": "encerramento-contas-resultado",
+          "tipo": "precede"
+        },
+        {
+          "de": "reclassificacao-contabil",
+          "para": "ajuste-fechamento",
+          "tipo": "é um tipo de"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "conciliacao-contabil",
+          "texto": "Ao conciliar a conta Caixa/Bancos com o extrato bancário, a empresa percebe que uma tarifa bancária foi debitada pelo banco mas ainda não lançada na contabilidade, e faz o ajuste correspondente."
+        },
+        {
+          "conceitoId": "encerramento-contas-resultado",
+          "texto": "Ao final do exercício, todas as contas de receita e despesa são zeradas, e o lucro apurado é transferido para a conta de lucros acumulados, no patrimônio líquido, para que o próximo período comece do zero nas contas de resultado."
+        }
+      ],
+      "pg": [
+        "Reclassificar um saldo entre contas ou grupos não altera o total do ativo, do passivo ou do resultado: é reorganização de apresentação, não um fato gerador de receita ou despesa.",
+        "Contas de resultado (receita e despesa) são encerradas a cada período; contas patrimoniais (ativo, passivo, PL) não são zeradas — seus saldos transitam de um período para o outro."
+      ],
+      "rs": "O fechamento contábil combina conciliações (que detectam diferenças a corrigir), ajustes (que garantem o regime de competência) e reclassificações (que reorganizam saldos sem mudar totais), terminando no encerramento das contas de resultado, que zera receitas e despesas e transfere o resultado do período para o patrimônio líquido."
+    }
+  },
+  {
+    "contentId": "CG-036",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a estrutura do Balanço Patrimonial e o critério de ordenação de ativo e passivo por liquidez e exigibilidade.",
+      "cc": [
+        {
+          "id": "balanco-patrimonial",
+          "nome": "Balanço Patrimonial",
+          "def": "Demonstração que mostra, em uma data específica, a posição patrimonial e financeira da empresa: de um lado o ativo (bens e direitos), do outro o passivo (obrigações) e o patrimônio líquido (Lei 6.404/1976, art. 178)."
+        },
+        {
+          "id": "ativo-circulante-nao-circulante",
+          "nome": "Ativo circulante e não circulante",
+          "def": "O ativo é ordenado em ordem decrescente de liquidez: circulante reúne os itens que devem se realizar (converter em caixa ou consumir) em até 12 meses; não circulante, os de realização mais distante."
+        },
+        {
+          "id": "passivo-circulante-nao-circulante",
+          "nome": "Passivo circulante e não circulante",
+          "def": "O passivo é ordenado em ordem decrescente de exigibilidade: circulante reúne as obrigações com vencimento em até 12 meses; não circulante, as de vencimento mais distante."
+        },
+        {
+          "id": "patrimonio-liquido-balanco",
+          "nome": "Patrimônio Líquido no balanço",
+          "def": "Diferença entre o total do ativo e o total do passivo; representa os recursos próprios da empresa (capital social, reservas e lucros/prejuízos acumulados), apresentado como último grupo do balanço."
+        }
+      ],
+      "rl": [
+        {
+          "de": "balanco-patrimonial",
+          "para": "ativo-circulante-nao-circulante",
+          "tipo": "organiza por liquidez"
+        },
+        {
+          "de": "balanco-patrimonial",
+          "para": "passivo-circulante-nao-circulante",
+          "tipo": "organiza por exigibilidade"
+        },
+        {
+          "de": "ativo-circulante-nao-circulante",
+          "para": "patrimonio-liquido-balanco",
+          "tipo": "menos passivo, resulta em"
+        }
+      ],
+      "fm": [
+        {
+          "id": "equacao-patrimonial",
+          "expr": "Ativo = Passivo + Patrimônio Líquido",
+          "legenda": "Equação fundamental do balanço: tudo que a empresa possui foi financiado por capital de terceiros (passivo) ou capital próprio (PL)."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "ativo-circulante-nao-circulante",
+          "texto": "Caixa, estoques e clientes a receber em até 12 meses ficam no ativo circulante; um imóvel usado na operação, sem intenção de venda próxima, fica no ativo não circulante (imobilizado)."
+        }
+      ],
+      "pg": [
+        "O critério de classificação circulante/não circulante é o prazo de realização ou exigibilidade (até ou mais de 12 meses), não o tipo do item nem sua importância para a empresa.",
+        "O Patrimônio Líquido não é 'mais um passivo': é a diferença residual entre ativo e passivo, representando capital próprio, não uma obrigação com terceiros."
+      ],
+      "rs": "O Balanço Patrimonial retrata a posição da empresa em uma data, com ativo e passivo ordenados por liquidez e exigibilidade (circulante até 12 meses, não circulante acima disso), e o Patrimônio Líquido como a diferença entre os dois, respeitando sempre a equação Ativo = Passivo + PL."
+    }
+  },
+  {
+    "contentId": "CG-037",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a estrutura da Demonstração do Resultado do Exercício (DRE), da receita bruta até o resultado líquido.",
+      "cc": [
+        {
+          "id": "dre",
+          "nome": "Demonstração do Resultado do Exercício (DRE)",
+          "def": "Demonstração que apura o resultado (lucro ou prejuízo) de um período, confrontando receitas, custos e despesas em uma sequência padronizada de linhas (Lei 6.404/1976, art. 187)."
+        },
+        {
+          "id": "receita-liquida-dre",
+          "nome": "Receita líquida",
+          "def": "Receita bruta de vendas deduzida de devoluções, abatimentos e tributos sobre vendas. É o ponto de partida da DRE para apuração do resultado."
+        },
+        {
+          "id": "resultado-bruto-dre",
+          "nome": "Resultado bruto (lucro bruto)",
+          "def": "Diferença entre a receita líquida e o custo das mercadorias vendidas, produtos vendidos ou serviços prestados. Mede a margem antes das despesas operacionais."
+        },
+        {
+          "id": "resultado-liquido-dre",
+          "nome": "Resultado líquido do exercício",
+          "def": "Resultado final da DRE, após deduzir do resultado bruto as despesas operacionais, o resultado financeiro e os tributos sobre o lucro. É o valor que, ao final, afeta o patrimônio líquido."
+        }
+      ],
+      "rl": [
+        {
+          "de": "receita-liquida-dre",
+          "para": "resultado-bruto-dre",
+          "tipo": "menos CMV/CPV, resulta em"
+        },
+        {
+          "de": "resultado-bruto-dre",
+          "para": "resultado-liquido-dre",
+          "tipo": "após despesas e tributos, chega a"
+        },
+        {
+          "de": "dre",
+          "para": "resultado-liquido-dre",
+          "tipo": "tem como linha final"
+        }
+      ],
+      "fm": [
+        {
+          "id": "resultado-bruto-formula",
+          "expr": "Resultado bruto = Receita líquida − CMV/CPV/CSP",
+          "legenda": "Margem bruta antes de despesas operacionais, financeiras e tributos sobre o lucro."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "resultado-liquido-dre",
+          "texto": "Com receita líquida de R$ 200.000, CMV de R$ 120.000 (lucro bruto de R$ 80.000), despesas operacionais de R$ 40.000 e tributos sobre o lucro de R$ 8.000, o resultado líquido do exercício é R$ 32.000."
+        }
+      ],
+      "pg": [
+        "Resultado bruto não é o mesmo que resultado líquido: entre eles ainda entram despesas operacionais, resultado financeiro e tributos sobre o lucro.",
+        "A DRE trabalha com receita líquida, não com receita bruta, desde a primeira linha de apuração de margem — a receita bruta aparece apenas como referência, antes das deduções."
+      ],
+      "rs": "A DRE parte da receita líquida, deduz o CMV/CPV para chegar ao resultado bruto, e deste deduz despesas operacionais, resultado financeiro e tributos sobre o lucro até chegar ao resultado líquido do exercício, que é o valor final transferido ao patrimônio líquido."
+    }
+  },
+  {
+    "contentId": "CG-038",
+    "lesson": {
+      "v": 1,
+      "obj": "Apresentar, em nível introdutório, a DLPA, a DMPL e a DFC e o que cada uma evidencia.",
+      "cc": [
+        {
+          "id": "dlpa",
+          "nome": "Demonstração de Lucros ou Prejuízos Acumulados (DLPA)",
+          "def": "Demonstração que mostra a movimentação da conta de lucros ou prejuízos acumulados no período: saldo inicial, resultado do exercício, destinações (reservas, dividendos) e saldo final."
+        },
+        {
+          "id": "dmpl",
+          "nome": "Demonstração das Mutações do Patrimônio Líquido (DMPL)",
+          "def": "Demonstração mais abrangente que a DLPA: mostra a movimentação de todas as contas do patrimônio líquido no período (capital social, reservas e lucros acumulados), não apenas dos lucros acumulados."
+        },
+        {
+          "id": "dfc",
+          "nome": "Demonstração dos Fluxos de Caixa (DFC)",
+          "def": "Demonstração que mostra as entradas e saídas de caixa e equivalentes de caixa no período, segregadas em atividades operacionais, de investimento e de financiamento (CPC 03)."
+        },
+        {
+          "id": "atividades-fluxo-caixa",
+          "nome": "Atividades operacionais, de investimento e de financiamento",
+          "def": "As três categorias em que a DFC classifica os fluxos de caixa: operacionais (ligadas à atividade principal), de investimento (compra/venda de ativos de longo prazo) e de financiamento (captação e pagamento de capital próprio ou de terceiros)."
+        }
+      ],
+      "rl": [
+        {
+          "de": "dlpa",
+          "para": "dmpl",
+          "tipo": "é um caso particular, mais restrito, de"
+        },
+        {
+          "de": "dfc",
+          "para": "atividades-fluxo-caixa",
+          "tipo": "segrega seus valores em"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "dmpl",
+          "texto": "Além do que a DLPA mostraria sobre lucros acumulados, a DMPL evidencia também, no mesmo período, um aumento de capital social por integralização dos sócios e a constituição de uma reserva estatutária."
+        },
+        {
+          "conceitoId": "atividades-fluxo-caixa",
+          "texto": "O recebimento de clientes é fluxo operacional; a compra de uma máquina é fluxo de investimento; a captação de um novo empréstimo bancário é fluxo de financiamento."
+        }
+      ],
+      "pg": [
+        "A DMPL não substitui a DLPA por ser 'parecida': ela é mais completa, abrangendo todas as contas do PL, e por isso a companhia que apresenta DMPL geralmente é dispensada de apresentar a DLPA separadamente.",
+        "Resultado líquido positivo (lucro) na DRE não garante fluxo de caixa operacional positivo na DFC no mesmo período — lucro é apurado por competência, caixa é por efetivo recebimento e pagamento."
+      ],
+      "rs": "DLPA e DMPL mostram a movimentação do patrimônio líquido (a primeira só de lucros acumulados, a segunda de todas as contas do PL). A DFC, por sua vez, mostra a movimentação de caixa, separada em operacional, investimento e financiamento — uma demonstração de natureza diferente, voltada a caixa, não a resultado contábil."
+    }
+  },
+  {
+    "contentId": "CG-039",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a função das notas explicativas e das políticas contábeis como parte das demonstrações financeiras.",
+      "cc": [
+        {
+          "id": "notas-explicativas",
+          "nome": "Notas explicativas",
+          "def": "Parte integrante das demonstrações financeiras que complementa os números do balanço, da DRE e das demais demonstrações com informações qualitativas e quantitativas necessárias para o leitor entender a posição e o desempenho da empresa."
+        },
+        {
+          "id": "politicas-contabeis",
+          "nome": "Políticas contábeis",
+          "def": "Princípios, bases, convenções e práticas específicas que a empresa adota para elaborar e apresentar suas demonstrações, divulgados em nota para que o leitor saiba quais critérios foram usados (por exemplo, método de depreciação adotado)."
+        },
+        {
+          "id": "estimativas-contabeis",
+          "nome": "Estimativas contábeis",
+          "def": "Valores que a empresa precisa calcular com base em julgamento, por não serem conhecidos com exatidão no momento do registro, como vida útil de um ativo ou valor de uma provisão, também divulgados em nota quando relevantes."
+        },
+        {
+          "id": "informacoes-complementares",
+          "nome": "Informações complementares",
+          "def": "Detalhamentos adicionais sobre itens das demonstrações, como composição de saldos, contingências não reconhecidas e eventos relevantes após o encerramento do período, que não caberiam diretamente nas linhas do balanço ou da DRE."
+        }
+      ],
+      "rl": [
+        {
+          "de": "notas-explicativas",
+          "para": "politicas-contabeis",
+          "tipo": "inclui a divulgação de"
+        },
+        {
+          "de": "notas-explicativas",
+          "para": "estimativas-contabeis",
+          "tipo": "inclui a divulgação de"
+        },
+        {
+          "de": "notas-explicativas",
+          "para": "informacoes-complementares",
+          "tipo": "inclui"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "politicas-contabeis",
+          "texto": "Uma nota explicativa informa que a empresa deprecia seus veículos pelo método linear em 5 anos, sem valor residual — informação que não aparece diretamente no balanço, mas é necessária para interpretar o saldo do imobilizado."
+        },
+        {
+          "conceitoId": "informacoes-complementares",
+          "texto": "Uma nota informa, em detalhe, a composição do saldo de 'Clientes a receber' por idade de vencimento (a vencer, vencido até 30 dias, vencido acima de 90 dias), informação ausente no corpo do balanço."
+        }
+      ],
+      "pg": [
+        "Notas explicativas não são um anexo opcional: são parte integrante das demonstrações financeiras, com o mesmo peso dos números do balanço e da DRE para entender a posição da empresa.",
+        "Mudar uma estimativa contábil (como vida útil de um ativo) não é o mesmo que corrigir um erro: é um ajuste baseado em nova informação, tratado de forma diferente e também sujeito a divulgação em nota."
+      ],
+      "rs": "As notas explicativas complementam as demonstrações financeiras com políticas contábeis adotadas, estimativas usadas e detalhamentos de saldos e eventos relevantes, sendo parte integrante — não acessória — do conjunto de demonstrações."
+    }
+  },
+  {
+    "contentId": "CG-040",
+    "lesson": {
+      "v": 1,
+      "obj": "Integrar, de ponta a ponta, as etapas do ciclo contábil: do documento-fonte até as demonstrações financeiras.",
+      "cc": [
+        {
+          "id": "documento-fonte",
+          "nome": "Documento-fonte",
+          "def": "Comprovante original de um fato (nota fiscal, recibo, extrato bancário, contrato) que dá origem a um lançamento contábil. É o ponto de partida do ciclo, garantindo que todo registro tenha suporte documental."
+        },
+        {
+          "id": "lancamento-razao-balancete",
+          "nome": "Lançamento, Razão e Balancete",
+          "def": "O fato é registrado por um lançamento no Diário (débito e crédito), que é refletido no Razão (conta a conta) e resumido no Balancete, que lista os saldos de todas as contas antes dos ajustes de fechamento."
+        },
+        {
+          "id": "ajuste-fechamento-ciclo",
+          "nome": "Ajustes e fechamento",
+          "def": "Etapa em que se fazem os lançamentos de competência (depreciação, provisões, apropriações) e se encerram as contas de resultado, transferindo o resultado do período ao patrimônio líquido, antes de elaborar as demonstrações finais."
+        },
+        {
+          "id": "demonstracoes-finais-ciclo",
+          "nome": "Demonstrações financeiras finais",
+          "def": "Conjunto de saídas do ciclo contábil (Balanço Patrimonial, DRE, DMPL/DLPA, DFC e notas explicativas) que comunicam a posição patrimonial e o desempenho da empresa ao final do processo."
+        }
+      ],
+      "rl": [
+        {
+          "de": "documento-fonte",
+          "para": "lancamento-razao-balancete",
+          "tipo": "origina"
+        },
+        {
+          "de": "lancamento-razao-balancete",
+          "para": "ajuste-fechamento-ciclo",
+          "tipo": "precede"
+        },
+        {
+          "de": "ajuste-fechamento-ciclo",
+          "para": "demonstracoes-finais-ciclo",
+          "tipo": "resulta em"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "lancamento-razao-balancete",
+          "texto": "Uma nota fiscal de venda gera um lançamento no Diário (débito em Clientes, crédito em Receita de Vendas), que atualiza as contas correspondentes no Razão e aparece, ao final do mês, no Balancete de verificação."
+        },
+        {
+          "conceitoId": "ajuste-fechamento-ciclo",
+          "texto": "Antes de fechar o período, a empresa lança a depreciação do mês e a provisão de férias ainda não registradas, só então encerrando as contas de resultado e apurando o lucro do período."
+        }
+      ],
+      "pg": [
+        "Pular a etapa de ajustes de fechamento (depreciação, provisões, apropriações por competência) faz o Balancete parecer 'fechado', mas as demonstrações finais sairão incorretas, por não respeitarem o regime de competência.",
+        "O Balancete antes dos ajustes não é a demonstração final: é um documento de trabalho interno, usado para verificar a igualdade entre débitos e créditos antes de preparar balanço e DRE."
+      ],
+      "rs": "O ciclo contábil completo liga documentos-fonte a lançamentos no Diário, refletidos no Razão e resumidos no Balancete; passa por ajustes de competência e encerramento das contas de resultado; e termina nas demonstrações financeiras finais (Balanço, DRE, DMPL/DLPA, DFC e notas), que comunicam o resultado de todo o processo."
+    }
+  }
+]
