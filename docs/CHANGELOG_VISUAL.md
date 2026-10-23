@@ -14,6 +14,57 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #106 (pendente) — APA-18: aulas base de Contabilidade Tributária (sub-lote 5f)
+
+- Ponto de restauração: branch `restore/pre-apa-18-contabilidade-tributaria-06`
+  (commit `482aee5`, main antes do merge).
+- O que muda no site: nada visível ainda — este PR só adiciona os dados; as
+  10 aulas só aparecem depois de o Abner rodar o comando de carga para esse
+  arquivo (não precisa de "Publicar Atlas": o script grava direto em D1/R2).
+  O carregamento em produção de toda a Contabilidade Tributária será feito
+  num único comando ao final de todos os 15 sub-lotes, a pedido do Abner.
+- O que muda fora do site: sexto sub-lote de Contabilidade Tributária em
+  `data/apache/aulas/contabilidade-tributaria-06.json` (10 dos 124
+  conteúdos: CT-046 a CT-055, unidade "Lucro Real", na ordem do catálogo,
+  `model='claude-manual'`), usando o mesmo mecanismo de carga dos PRs
+  #95-#105 (`scripts/apache-carregar-aulas.mjs`). Conteúdo: obrigatoriedade
+  e modalidades do Lucro Real (Lei nº 9.718/1998, art. 14 — limite de R$
+  78.000.000,00 de receita total anual ou proporcional, instituições
+  financeiras, lucros do exterior, benefícios fiscais, estimativa já paga
+  no ano, factoring/securitização; apuração trimestral x anual com
+  estimativas); a "ponte fiscal" do lucro líquido contábil ao lucro real
+  (adições, exclusões, compensações); critérios de dedutibilidade de
+  despesas (Lei nº 4.506/1964, art. 47) e indedutibilidade de multas
+  punitivas e provisões em geral; e-Lalur/e-Lacs (IN RFB nº 1.422/2013,
+  Parte A/Parte B); compensação de prejuízo fiscal e base negativa de
+  CSLL com a trava dos 30% e sem prazo de prescrição (Lei nº 9.065/1995,
+  arts. 15 e 16); estimativas mensais e balanços de suspensão/redução
+  (Lei nº 8.981/1995, art. 35); crédito fiscal de subvenção para
+  investimento (Lei nº 14.789/2023, vigente desde 2024, substituindo a
+  exclusão direta do art. 30 da Lei nº 12.973/2014) e incentivos
+  regionais SUDAM/SUDENE; juros sobre capital próprio (Lei nº 9.249/1995,
+  art. 9º — limite pela TJLP e pelo dobro do lucro/reservas), preços de
+  transferência (Lei nº 9.430/1996, atualizada pela Lei nº 14.596/2023,
+  padrão OCDE desde 2024) e subcapitalização (Lei nº 12.249/2010, arts.
+  24-25 — limites 2:1 geral e 0,3:1 para jurisdições de tributação
+  favorecida); tributo corrente x diferido e diferenças temporárias (CPC
+  32); ECF e fechamento anual (prazo até o último dia útil de julho do
+  ano seguinte, integração com e-Lalur/e-Lacs e recuperação de dados da
+  ECD). Valores e dispositivos legais (limite de obrigatoriedade, trava
+  dos 30%, limites de JCP, regime atual de subvenção, atualização dos
+  preços de transferência e da subcapitalização, prazo da ECF)
+  verificados contra fontes oficiais/recentes antes de escrever o
+  conteúdo, incluindo a mudança de regime da subvenção para investimento
+  (vigente desde 2024) e o novo marco de preços de transferência (vigente
+  desde 2024); a Reforma Tributária em sentido estrito (IBS/CBS/Seletivo)
+  fica fora do escopo deste sub-lote (tratada nos sub-lotes 5m/5o).
+  `docs/APACHE-18-plano.md` atualizado (sub-lote 5f mesclado; Tributária
+  em 55/124).
+- Se algo der errado: reverter para
+  `restore/pre-apa-18-contabilidade-tributaria-06` volta ao estado
+  anterior; nenhuma aula ainda foi carregada em produção, então reverter
+  sem ter rodado o script de carga não perde nada.
+
 ## PR #105 — APA-18: aulas base de Contabilidade Tributária (sub-lote 5e)
 
 - Ponto de restauração: branch `restore/pre-apa-18-contabilidade-tributaria-05`
