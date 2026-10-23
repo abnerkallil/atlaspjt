@@ -1,0 +1,392 @@
+[
+  {
+    "contentId": "CA-001",
+    "lesson": {
+      "v": 1,
+      "obj": "Reconhecer ativos intangíveis e goodwill em aquisições e aplicar o método de equivalência patrimonial em investimentos relevantes.",
+      "cc": [
+        {
+          "id": "intangivel",
+          "nome": "Ativo intangível",
+          "def": "CPC 04: ativo não monetário identificável, sem substância física (ex.: marcas, patentes, software), reconhecido quando há controle sobre o recurso, benefícios econômicos futuros prováveis e custo mensurável com confiabilidade."
+        },
+        {
+          "id": "goodwill",
+          "nome": "Ágio por expectativa de rentabilidade futura (goodwill)",
+          "def": "Diferença positiva entre o valor pago numa aquisição e o valor justo dos ativos líquidos identificáveis adquiridos (CPC 15). Não é amortizado; fica sujeito a teste anual de impairment (CPC 01)."
+        },
+        {
+          "id": "mep",
+          "nome": "Método de equivalência patrimonial (MEP)",
+          "def": "CPC 18: método de avaliação de investimentos em coligadas, controladas e empreendimentos controlados em conjunto, em que o valor do investimento é ajustado pela participação do investidor no resultado e no PL da investida."
+        },
+        {
+          "id": "influencia-significativa",
+          "nome": "Influência significativa",
+          "def": "Presunção (CPC 18) de participação igual ou superior a 20% e inferior a 50% do capital votante, ou outras evidências (assento no conselho, participação em decisões de política), que determina o uso obrigatório do MEP."
+        },
+        {
+          "id": "controlada",
+          "nome": "Controlada",
+          "def": "Sociedade na qual a investidora detém o controle (poder de dirigir as atividades relevantes), normalmente por deter mais de 50% do capital votante ou controle de fato; o MEP também é obrigatório nas demonstrações individuais da controladora."
+        }
+      ],
+      "rl": [
+        { "de": "mep", "para": "influencia-significativa", "tipo": "aplicado obrigatoriamente quando há" },
+        { "de": "goodwill", "para": "intangivel", "tipo": "tipo específico de (não amortizável)" }
+      ],
+      "fm": [
+        {
+          "id": "mep-ajuste",
+          "expr": "Ajuste MEP = % de participação × Resultado do período da investida",
+          "legenda": "Valor que ajusta o saldo do investimento e é reconhecido no resultado do investidor como resultado de equivalência patrimonial."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "mep",
+          "texto": "Se uma investidora detém 30% de uma coligada que apurou lucro de R$ 200.000 no período, ela reconhece R$ 60.000 como resultado de equivalência patrimonial, aumentando o saldo do investimento."
+        },
+        {
+          "conceitoId": "goodwill",
+          "texto": "Na aquisição de uma empresa por R$ 1.000.000, se o valor justo dos ativos líquidos identificáveis era R$ 800.000, o goodwill reconhecido é de R$ 200.000."
+        }
+      ],
+      "pg": [
+        "Goodwill não é amortizado — fica sujeito apenas a teste de impairment anual (ou mais frequente se houver indício), nunca a amortização linear.",
+        "MEP não é consolidação: no MEP o investimento aparece como uma linha única no ativo (ajustada pelo resultado), sem somar linha a linha os ativos e passivos da investida.",
+        "A presunção de influência significativa (20% a 50%) é relativa — pode ser afastada por evidências contrárias, e uma participação abaixo de 20% também pode configurar influência significativa se houver outras evidências."
+      ],
+      "rs": "Ativos intangíveis são reconhecidos quando identificáveis, controláveis e com benefícios futuros mensuráveis. O goodwill surge como resíduo em aquisições e não é amortizado, apenas testado por impairment. O MEP ajusta o valor do investimento conforme a participação do investidor no resultado da investida, aplicável a coligadas (influência significativa) e controladas."
+    }
+  },
+  {
+    "contentId": "CA-002",
+    "lesson": {
+      "v": 1,
+      "obj": "Elaborar demonstrações consolidadas eliminando saldos e resultados intercompanhias e segregando a participação de não controladores.",
+      "cc": [
+        {
+          "id": "consolidacao",
+          "nome": "Consolidação de demonstrações financeiras",
+          "def": "CPC 36: processo de combinar as demonstrações financeiras da controladora e de suas controladas linha a linha (ativos, passivos, receitas, despesas), como se formassem uma única entidade econômica."
+        },
+        {
+          "id": "eliminacao",
+          "nome": "Eliminação de saldos e transações intercompanhias",
+          "def": "Exclusão de saldos a receber/pagar, receitas e despesas, e lucros não realizados decorrentes de operações entre empresas do mesmo grupo, para que o conjunto consolidado não duplique nem distorça o resultado."
+        },
+        {
+          "id": "participacao-nao-controladores",
+          "nome": "Participação dos acionistas não controladores",
+          "def": "Parcela do patrimônio líquido e do resultado da controlada que pertence a acionistas que não a controladora; apresentada separadamente no PL consolidado e na DRE consolidada, nunca eliminada."
+        },
+        {
+          "id": "perimetro-consolidacao",
+          "nome": "Perímetro de consolidação",
+          "def": "Conjunto de entidades cujas demonstrações entram na consolidação, definido pelo controle (poder de dirigir atividades relevantes e exposição a retornos variáveis), não apenas pelo percentual de participação societária."
+        }
+      ],
+      "rl": [
+        { "de": "eliminacao", "para": "consolidacao", "tipo": "etapa obrigatória de" },
+        { "de": "participacao-nao-controladores", "para": "consolidacao", "tipo": "segregada dentro de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "eliminacao",
+          "texto": "Se a controladora vendeu mercadorias para a controlada por R$ 50.000 e elas continuam em estoque na controlada no fim do período, o lucro dessa venda intercompanhia é eliminado do estoque e do resultado consolidado."
+        },
+        {
+          "conceitoId": "participacao-nao-controladores",
+          "texto": "Se a controladora detém 80% de uma controlada que apurou lucro de R$ 100.000, R$ 20.000 são apresentados como participação dos não controladores, e não eliminados do resultado consolidado."
+        }
+      ],
+      "pg": [
+        "Participação de não controladores não é eliminada — só os saldos e resultados entre empresas do MESMO grupo (intercompanhias) são eliminados; a parcela de terceiros no capital da controlada é apenas segregada.",
+        "O perímetro de consolidação é definido pelo CONTROLE, não só pelo percentual de capital — uma controlada sempre consolida linha a linha, mesmo com participação minoritária em capital total quando há controle por outro meio (ex.: acordo de acionistas).",
+        "Lucro não realizado em estoque, imobilizado ou outros ativos que permaneceram no grupo ao final do período deve ser eliminado proporcionalmente, até que o ativo seja vendido a terceiros ou consumido."
+      ],
+      "rs": "A consolidação soma linha a linha os ativos, passivos, receitas e despesas da controladora e controladas, elimina saldos e resultados entre as empresas do grupo e segrega a participação de não controladores no PL e no resultado. O perímetro é definido pelo controle, conforme o CPC 36."
+    }
+  },
+  {
+    "contentId": "CA-003",
+    "lesson": {
+      "v": 1,
+      "obj": "Diferenciar provisão de passivo contingente e aplicar o teste de redução ao valor recuperável (impairment).",
+      "cc": [
+        {
+          "id": "provisao",
+          "nome": "Provisão",
+          "def": "CPC 25: passivo de valor ou prazo incerto, reconhecido quando há obrigação presente (legal ou não formalizada) resultante de evento passado, é provável a saída de recursos e o valor pode ser estimado com confiabilidade."
+        },
+        {
+          "id": "passivo-contingente",
+          "nome": "Passivo contingente",
+          "def": "Obrigação possível (não provável) ou obrigação presente cujo valor não pode ser mensurado com confiabilidade; não é reconhecido no balanço, apenas divulgado em nota, salvo se a probabilidade de saída de recursos for remota."
+        },
+        {
+          "id": "ativo-contingente",
+          "nome": "Ativo contingente",
+          "def": "Benefício econômico possível decorrente de evento passado, cuja existência será confirmada por eventos futuros incertos; nunca é reconhecido no balanço, apenas divulgado se a entrada de recursos for provável."
+        },
+        {
+          "id": "impairment",
+          "nome": "Teste de redução ao valor recuperável (impairment)",
+          "def": "CPC 01: comparação do valor contábil de um ativo com seu valor recuperável; se o valor contábil exceder o recuperável, reconhece-se perda por impairment no resultado."
+        },
+        {
+          "id": "valor-recuperavel",
+          "nome": "Valor recuperável",
+          "def": "O maior entre o valor justo líquido de despesas de venda e o valor em uso (valor presente dos fluxos de caixa futuros esperados do ativo)."
+        }
+      ],
+      "rl": [
+        { "de": "provisao", "para": "passivo-contingente", "tipo": "distingue-se de pela probabilidade/mensurabilidade" },
+        { "de": "impairment", "para": "valor-recuperavel", "tipo": "compara valor contábil com" }
+      ],
+      "fm": [
+        {
+          "id": "perda-impairment",
+          "expr": "Perda por impairment = Valor contábil − Valor recuperável (quando positivo)",
+          "legenda": "Reconhecida no resultado quando o valor contábil excede o valor recuperável."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "provisao",
+          "texto": "Uma empresa processada por danos, com parecer jurídico de perda provável e valor estimável em R$ 300.000, reconhece uma provisão de R$ 300.000."
+        },
+        {
+          "conceitoId": "impairment",
+          "texto": "Um equipamento com valor contábil de R$ 500.000 tem valor justo líquido de venda de R$ 380.000 e valor em uso de R$ 420.000: o valor recuperável é R$ 420.000 (o maior) e a perda por impairment reconhecida é R$ 80.000."
+        }
+      ],
+      "pg": [
+        "Provisão é reconhecida no balanço; passivo contingente (quando não provável, ou provável mas não mensurável com confiabilidade) é só divulgado em nota — confundir os dois é um dos erros mais comuns.",
+        "Ativo contingente nunca é reconhecido antes da confirmação; só é divulgado se a entrada de recursos for provável.",
+        "O valor recuperável é o MAIOR entre valor justo líquido de venda e valor em uso, não o menor — inverter essa regra é um erro frequente."
+      ],
+      "rs": "Provisões são passivos de valor ou prazo incerto, reconhecidos quando a obrigação é presente, provável e estimável; passivos contingentes (possíveis ou não mensuráveis) são apenas divulgados, e ativos contingentes nunca são reconhecidos antes da confirmação. O teste de impairment compara o valor contábil de um ativo com seu valor recuperável (o maior entre valor justo líquido de venda e valor em uso), reconhecendo perda quando o contábil é maior."
+    }
+  },
+  {
+    "contentId": "CA-004",
+    "lesson": {
+      "v": 1,
+      "obj": "Aplicar a mensuração a valor justo e o ajuste a valor presente e identificar seus efeitos nas demonstrações financeiras.",
+      "cc": [
+        {
+          "id": "valor-justo",
+          "nome": "Valor justo",
+          "def": "CPC 46: preço que seria recebido pela venda de um ativo ou pago pela transferência de um passivo em uma transação não forçada entre participantes do mercado, na data de mensuração — um valor de saída, não de entrada/custo."
+        },
+        {
+          "id": "avp",
+          "nome": "Ajuste a valor presente (AVP)",
+          "def": "CPC 12: trazer a valor presente, por uma taxa de desconto, ativos e passivos de longo prazo (e de curto prazo quando o efeito é relevante) que têm componente de financiamento embutido, refletindo o valor do dinheiro no tempo."
+        },
+        {
+          "id": "hierarquia-valor-justo",
+          "nome": "Hierarquia de valor justo",
+          "def": "O CPC 46 classifica os insumos de mensuração em três níveis: Nível 1 (preços cotados em mercado ativo para itens idênticos), Nível 2 (outros insumos observáveis, direta ou indiretamente) e Nível 3 (insumos não observáveis)."
+        },
+        {
+          "id": "componente-financiamento",
+          "nome": "Componente de financiamento embutido",
+          "def": "Parcela de juros implícita em um valor nominal futuro (ex.: venda a prazo sem juros explícitos), que deve ser segregada via AVP entre receita/custo \"real\" e receita/despesa financeira."
+        }
+      ],
+      "rl": [
+        { "de": "avp", "para": "componente-financiamento", "tipo": "segrega" },
+        { "de": "valor-justo", "para": "hierarquia-valor-justo", "tipo": "mensurado conforme" }
+      ],
+      "fm": [
+        {
+          "id": "vp",
+          "expr": "VP = VF ÷ (1 + i)^n",
+          "legenda": "Valor presente de um valor futuro (VF), descontado pela taxa i ao longo de n períodos."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "avp",
+          "texto": "Uma venda a prazo de R$ 121.000 para recebimento em 1 ano, com taxa de desconto implícita de 10% a.a., tem valor presente de R$ 110.000: R$ 110.000 é a receita de venda e R$ 11.000 é receita financeira a reconhecer ao longo do prazo."
+        },
+        {
+          "conceitoId": "hierarquia-valor-justo",
+          "texto": "O preço de uma ação negociada em bolsa é um insumo de Nível 1; o valor de um imóvel estimado por laudo com dados de mercado comparáveis é tipicamente Nível 2 ou 3, dependendo da observabilidade dos insumos."
+        }
+      ],
+      "pg": [
+        "Valor justo é um valor de SAÍDA (quanto se receberia na venda), não o custo de entrada nem o valor de reposição.",
+        "AVP só é aplicado quando o efeito é relevante e há componente de financiamento embutido — operações de curto prazo sem efeito relevante normalmente não exigem o ajuste.",
+        "Nível 1 da hierarquia exige preço cotado em mercado ATIVO para item IDÊNTICO — preço de item apenas semelhante já cai para Nível 2."
+      ],
+      "rs": "O valor justo mensura o preço de saída de um ativo ou passivo numa transação de mercado, classificado numa hierarquia de três níveis conforme a observabilidade dos insumos. O ajuste a valor presente segrega o componente de financiamento embutido em operações de prazo, reconhecendo separadamente a receita ou despesa financeira ao longo do tempo."
+    }
+  },
+  {
+    "contentId": "CA-005",
+    "lesson": {
+      "v": 1,
+      "obj": "Contabilizar receitas diferidas, subvenções governamentais e a operação de desconto de duplicatas.",
+      "cc": [
+        {
+          "id": "receita-diferida",
+          "nome": "Receita diferida",
+          "def": "Valor recebido ou a receber antecipadamente por bens ou serviços que ainda serão entregues/prestados; reconhecida como passivo (obrigação de entregar) até a entrega/prestação ocorrer, quando é transferida ao resultado."
+        },
+        {
+          "id": "subvencao-governamental",
+          "nome": "Subvenção governamental",
+          "def": "CPC 07: assistência de um governo na forma de transferência de recursos a uma entidade em troca do cumprimento de condições relacionadas às suas atividades operacionais; reconhecida no resultado ao longo dos períodos em que são reconhecidas as despesas que ela pretende compensar."
+        },
+        {
+          "id": "subvencao-investimento",
+          "nome": "Subvenção para investimento",
+          "def": "Subvenção condicionada à aplicação em ativos (ex.: construção de uma planta); reconhecida no resultado ao longo da vida útil do ativo relacionado ou conforme as condições do CPC 07."
+        },
+        {
+          "id": "duplicatas-descontadas",
+          "nome": "Duplicatas descontadas",
+          "def": "Operação em que a empresa transfere a um banco o direito de receber duplicatas de clientes, recebendo antecipadamente o valor líquido (descontado dos juros); como o risco de inadimplência normalmente permanece com a cedente (direito de regresso), o valor recebido é passivo até a liquidação, não baixa a conta de clientes."
+        }
+      ],
+      "rl": [
+        { "de": "subvencao-investimento", "para": "subvencao-governamental", "tipo": "tipo específico de" },
+        { "de": "duplicatas-descontadas", "para": "receita-diferida", "tipo": "não é um tipo de (é passivo financeiro, distinção importante)" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "subvencao-governamental",
+          "texto": "Uma empresa recebe R$ 500.000 de subvenção para pesquisa, condicionada a gastar esse valor em P&D em 5 anos: a subvenção é reconhecida no resultado na mesma proporção em que as despesas de P&D são incorridas, não de uma vez no recebimento."
+        },
+        {
+          "conceitoId": "duplicatas-descontadas",
+          "texto": "Ao descontar R$ 100.000 em duplicatas no banco e receber R$ 95.000 líquidos de juros, a empresa mantém R$ 100.000 em Clientes (ativo) e reconhece R$ 95.000 em caixa mais um passivo de R$ 100.000 (Duplicatas Descontadas), já que o risco de inadimplência do cliente continua com ela."
+        }
+      ],
+      "pg": [
+        "Duplicatas descontadas não baixam a conta Clientes — o direito a receber do cliente continua no ativo, e o valor recebido do banco é passivo, porque a empresa ainda responde pelo risco (regresso) até o cliente pagar.",
+        "Subvenção não é reconhecida de uma vez no recebimento — deve ser confrontada com as despesas/períodos que ela pretende compensar, podendo levar vários períodos.",
+        "Receita diferida é passivo (obrigação de entregar), não receita já realizada — só migra para o resultado quando a entrega/prestação de fato ocorre."
+      ],
+      "rs": "Receita diferida registra como passivo valores recebidos antes da entrega do bem ou serviço. Subvenções governamentais são reconhecidas no resultado ao longo dos períodos relacionados às despesas que compensam. Duplicatas descontadas mantêm o direito a receber no ativo e registram o valor recebido do banco como passivo, pois o risco de inadimplência normalmente permanece com a empresa."
+    }
+  },
+  {
+    "contentId": "CA-006",
+    "lesson": {
+      "v": 1,
+      "obj": "Contabilizar ajustes de exercícios anteriores decorrentes de retificação de erro ou mudança de política contábil e calcular a constituição da reserva legal.",
+      "cc": [
+        {
+          "id": "ajuste-exercicios-anteriores",
+          "nome": "Ajuste de exercícios anteriores",
+          "def": "CPC 23: lançamento direto em lucros acumulados (ou outra conta do PL) decorrente de retificação de erro de período(s) anterior(es) ou de mudança de política contábil, sem transitar pelo resultado do período atual, com reapresentação comparativa quando aplicável."
+        },
+        {
+          "id": "erro-de-periodo-anterior",
+          "nome": "Erro de período anterior",
+          "def": "Omissão ou declaração incorreta nas demonstrações de um ou mais períodos anteriores, decorrente de falha ao usar ou mau uso de informação confiável disponível na época; corrigido retrospectivamente, nunca no resultado do período em que foi descoberto."
+        },
+        {
+          "id": "mudanca-politica-contabil",
+          "nome": "Mudança de política contábil",
+          "def": "Alteração nos princípios, bases, convenções ou práticas contábeis específicas aplicadas; aplicada retrospectivamente, salvo quando for impraticável determinar o efeito."
+        },
+        {
+          "id": "reserva-legal",
+          "nome": "Reserva legal",
+          "def": "Lei 6.404/76, art. 193: parcela obrigatória do lucro líquido do exercício (mínimo 5%) destinada à reserva legal até que ela atinja 20% do capital social, com a finalidade de assegurar a integridade do capital social."
+        }
+      ],
+      "rl": [
+        { "de": "erro-de-periodo-anterior", "para": "ajuste-exercicios-anteriores", "tipo": "corrigido via" },
+        { "de": "mudanca-politica-contabil", "para": "ajuste-exercicios-anteriores", "tipo": "pode gerar" }
+      ],
+      "fm": [
+        {
+          "id": "reserva-legal-calc",
+          "expr": "Reserva legal do período = 5% × Lucro líquido do exercício (até acumular 20% do capital social)",
+          "legenda": "Percentual mínimo legal; a destinação pode ser dispensada no exercício em que o saldo acumulado da reserva legal, somado às reservas de capital, já exceder 30% do capital social (art. 193, §1º)."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "ajuste-exercicios-anteriores",
+          "texto": "Se uma empresa descobre em 2026 que registrou uma despesa indevidamente a menor em 2025, a correção é lançada diretamente em Lucros Acumulados em 2026, com reapresentação do balanço de 2025 para fins comparativos, sem afetar o resultado de 2026."
+        },
+        {
+          "conceitoId": "reserva-legal-calc",
+          "texto": "Uma empresa com lucro líquido de R$ 1.000.000 e capital social de R$ 5.000.000 destina, no mínimo, R$ 50.000 (5%) à reserva legal, até que a reserva acumulada atinja R$ 1.000.000 (20% do capital)."
+        }
+      ],
+      "pg": [
+        "Correção de erro de período anterior não passa pelo resultado do período em que foi descoberta — é lançamento direto no PL (lucros acumulados), com reapresentação comparativa, nunca uma \"despesa\" ou \"receita\" no DRE atual.",
+        "A reserva legal é obrigatória até o limite de 20% do capital social (salvo a dispensa do §1º do art. 193) — não é uma decisão discricionária da administração como as reservas estatutárias.",
+        "Mudança de estimativa contábil (ex.: nova vida útil de um ativo) é tratada PROSPECTIVAMENTE, diferente de erro e de mudança de política contábil, que são retrospectivos — os três conceitos do CPC 23 não se confundem."
+      ],
+      "rs": "Ajustes de exercícios anteriores corrigem erros ou refletem mudanças de política contábil diretamente no patrimônio líquido, sem passar pelo resultado do período atual, exigindo reapresentação comparativa quando aplicável. A reserva legal é a destinação mínima obrigatória de 5% do lucro líquido, prevista no art. 193 da Lei 6.404/76, até atingir 20% do capital social."
+    }
+  },
+  {
+    "contentId": "CA-007",
+    "lesson": {
+      "v": 1,
+      "obj": "Diferenciar a DOAR (extinta) da DVA e elaborar a Demonstração do Valor Adicionado.",
+      "cc": [
+        {
+          "id": "doar",
+          "nome": "DOAR (Demonstração das Origens e Aplicações de Recursos)",
+          "def": "Demonstração que evidenciava as origens (fontes) e aplicações (usos) de recursos de capital circulante líquido; deixou de ser obrigatória no Brasil com a Lei 11.638/2007, substituída pela Demonstração dos Fluxos de Caixa (DFC)."
+        },
+        {
+          "id": "dva",
+          "nome": "Demonstração do Valor Adicionado (DVA)",
+          "def": "CPC 09: demonstração que evidencia a riqueza (valor adicionado) gerada pela entidade e a forma como foi distribuída entre os agentes que contribuíram para sua geração (empregados, governo, financiadores, acionistas, retenção)."
+        },
+        {
+          "id": "valor-adicionado",
+          "nome": "Valor adicionado",
+          "def": "Riqueza criada pela entidade, calculada pela diferença entre a receita (inclusive de outras entidades) e os insumos adquiridos de terceiros (bens e serviços consumidos na produção)."
+        },
+        {
+          "id": "obrigatoriedade-dva",
+          "nome": "Obrigatoriedade da DVA",
+          "def": "Exigida apenas para companhias abertas (Lei 6.404/76, conforme alterada pela Lei 11.638/2007, e CPC 09); não é obrigatória para companhias fechadas, embora possam elaborá-la voluntariamente."
+        }
+      ],
+      "rl": [
+        { "de": "doar", "para": "dva", "tipo": "substituída por DFC; não deve ser confundida com" },
+        { "de": "valor-adicionado", "para": "dva", "tipo": "é o que a DVA demonstra e distribui" }
+      ],
+      "fm": [
+        {
+          "id": "va-basico",
+          "expr": "Valor adicionado = Receitas − Insumos adquiridos de terceiros (com ajustes de depreciação e resultado de equivalência patrimonial conforme CPC 09)",
+          "legenda": "Riqueza gerada pela entidade antes de sua distribuição entre empregados, governo, financiadores e acionistas."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "dva",
+          "texto": "Se o valor adicionado total de uma empresa no período foi R$ 10 milhões, a DVA mostra quanto desse total foi para salários e encargos, quanto para tributos, quanto para juros/aluguéis pagos a terceiros e quanto sobrou como lucro retido ou distribuído aos acionistas."
+        },
+        {
+          "conceitoId": "obrigatoriedade-dva",
+          "texto": "Uma companhia aberta deve apresentar a DVA como parte do conjunto completo de demonstrações financeiras; uma empresa limitada de capital fechado não é obrigada a elaborá-la."
+        }
+      ],
+      "pg": [
+        "A DOAR não existe mais no conjunto obrigatório de demonstrações desde a Lei 11.638/2007 — foi substituída pela Demonstração dos Fluxos de Caixa (DFC); confundir as duas, ou achar que a DOAR ainda é exigida, é erro comum em provas.",
+        "A DVA é obrigatória apenas para companhias ABERTAS, não para todas as sociedades — companhias fechadas podem elaborá-la por livre escolha, mas não são obrigadas.",
+        "Valor adicionado não é lucro — é a riqueza total gerada (antes da distribuição entre empregados, governo, financiadores e acionistas), um conceito mais amplo que o resultado do exercício."
+      ],
+      "rs": "A DOAR foi extinta pela Lei 11.638/2007 e substituída pela Demonstração dos Fluxos de Caixa. A DVA (CPC 09), obrigatória para companhias abertas, evidencia a riqueza gerada pela entidade (valor adicionado) e sua distribuição entre empregados, governo, financiadores de capital de terceiros e acionistas."
+    }
+  }
+]

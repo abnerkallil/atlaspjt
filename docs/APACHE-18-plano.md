@@ -67,6 +67,7 @@ replica exatamente o que `saveLesson` faz.
    baixo, confirma o script com mais um lote pequeno. **PR #96.**
 3. **Contabilidade Avançada (7)** — primeiro contato com CPC (ainda não é
    "legislação" no sentido tributário, mas exige verificar o pronunciamento).
+   **PR aberta nesta thread.**
 4. **Contabilidade Geral (41)** — sub-lotes por unidade (ver
    `docs/APACHE.md`); mistura fundamentos técnicos com alguma legislação
    societária.
@@ -83,7 +84,7 @@ replica exatamente o que `saveLesson` faz.
 - [x] Mecanismo de carga decidido e implementado (`scripts/apache-carregar-aulas.mjs`)
 - [x] Lote 1/5 — Contabilidade de Custos (4/4 conteúdos) — PR #95
 - [x] Lote 2/5 — Análise das Demonstrações Financeiras (6/6 conteúdos) — PR #96
-- [ ] Lote 3/5 — Contabilidade Avançada (0/7)
+- [x] Lote 3/5 — Contabilidade Avançada (7/7 conteúdos)
 - [ ] Lote 4/5 — Contabilidade Geral (0/41, em sub-lotes)
 - [ ] Lote 5/5 — Contabilidade Tributária (0/124, em sub-lotes, pesquisa de legislação)
 - [ ] Todos os 183 conteúdos cobertos (regra final do card)
@@ -93,6 +94,7 @@ replica exatamente o que `saveLesson` faz.
 ```
 pnpm run apache:carregar-aulas -- --file data/apache/aulas/contabilidade-de-custos.json --target production
 pnpm run apache:carregar-aulas -- --file data/apache/aulas/analise-demonstracoes-financeiras.json --target production
+pnpm run apache:carregar-aulas -- --file data/apache/aulas/contabilidade-avancada.json --target production
 ```
 
 Não precisa de "Publicar Atlas" — o script grava direto em produção (D1 +
