@@ -1,0 +1,226 @@
+[
+  {
+    "contentId": "CC-001",
+    "lesson": {
+      "v": 1,
+      "obj": "Classificar custos por comportamento (fixo/variável) e por rastreabilidade (direto/indireto) e calcular o CPV de uma indústria.",
+      "cc": [
+        {
+          "id": "custo-fixo",
+          "nome": "Custo fixo",
+          "def": "Custo que não varia com o volume produzido no curto prazo (ex.: aluguel da fábrica, depreciação linear). O valor total permanece o mesmo, independente de quanto se produz."
+        },
+        {
+          "id": "custo-variavel",
+          "nome": "Custo variável",
+          "def": "Custo que varia proporcionalmente ao volume produzido (ex.: matéria-prima, mão de obra direta por peça). O total aumenta com a produção; por unidade, tende a ser constante."
+        },
+        {
+          "id": "custo-direto",
+          "nome": "Custo direto",
+          "def": "Custo identificado e apropriado diretamente a um produto ou serviço específico, sem necessidade de rateio (ex.: a matéria-prima de um produto)."
+        },
+        {
+          "id": "custo-indireto",
+          "nome": "Custo indireto",
+          "def": "Custo que beneficia mais de um produto ou serviço e só pode ser apropriado por rateio (ex.: energia elétrica da fábrica, supervisão da produção)."
+        },
+        {
+          "id": "cpv-industrial",
+          "nome": "CPV industrial (Custo dos Produtos Vendidos)",
+          "def": "Custo de produção dos produtos efetivamente vendidos no período. Diferente do CMV comercial porque passa pelos estoques de produtos em elaboração e de produtos acabados antes de chegar ao resultado."
+        }
+      ],
+      "rl": [
+        { "de": "custo-direto", "para": "cpv-industrial", "tipo": "compõe" },
+        { "de": "custo-indireto", "para": "cpv-industrial", "tipo": "compõe (via rateio)" },
+        { "de": "custo-fixo", "para": "custo-indireto", "tipo": "frequentemente é" }
+      ],
+      "fm": [
+        {
+          "id": "cpv",
+          "expr": "CPV = EIPA + CPA − EFPA",
+          "legenda": "Estoque inicial de produtos acabados + Custo de produção acabada do período − Estoque final de produtos acabados."
+        },
+        {
+          "id": "cpa",
+          "expr": "CPA = EIPE + CP − EFPE",
+          "legenda": "Estoque inicial de produtos em elaboração + Custos de produção do período (MP + MOD + CIF) − Estoque final de produtos em elaboração."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "custo-fixo",
+          "texto": "Uma fábrica paga R$ 20.000/mês de aluguel, independente de produzir 1.000 ou 5.000 unidades: é custo fixo."
+        },
+        {
+          "conceitoId": "cpv-industrial",
+          "texto": "Se os custos de produção acabada do período foram R$ 100.000, o estoque inicial de produtos acabados era R$ 10.000 e o estoque final ficou em R$ 15.000, o CPV é R$ 95.000."
+        }
+      ],
+      "pg": [
+        "Confundir custo fixo total com custo fixo unitário: o total é constante, mas por unidade ele cai conforme a produção aumenta (diluição do fixo).",
+        "Tratar todo custo indireto como fixo: um custo indireto pode ser variável (ex.: energia elétrica das máquinas, que varia com o volume mas é rateada entre produtos).",
+        "Esquecer que o CPV industrial passa pelos estoques de produtos em elaboração e acabados — não é igual ao total gasto no período."
+      ],
+      "rs": "Custos se classificam por comportamento (fixo ou variável, conforme reagem ao volume) e por rastreabilidade (direto ou indireto, conforme a facilidade de apropriação ao produto). O CPV industrial soma esses custos de produção, ajustado pelas variações de estoque de produtos em elaboração e acabados, chegando ao custo do que foi efetivamente vendido."
+    }
+  },
+  {
+    "contentId": "CC-002",
+    "lesson": {
+      "v": 1,
+      "obj": "Aplicar os métodos PEPS, UEPS e custo médio ponderado para avaliar o estoque e o custo das saídas.",
+      "cc": [
+        {
+          "id": "peps",
+          "nome": "PEPS (FIFO)",
+          "def": "Primeiro que Entra, Primeiro que Sai: as saídas (vendas ou consumo) são custeadas pelo custo das unidades mais antigas em estoque; o estoque final fica avaliado pelos custos mais recentes."
+        },
+        {
+          "id": "ueps",
+          "nome": "UEPS (LIFO)",
+          "def": "Último que Entra, Primeiro que Sai: as saídas são custeadas pelo custo das unidades mais recentes; o estoque final fica avaliado pelos custos mais antigos. Não é aceito pela legislação tributária brasileira nem pelo CPC 16 para fins de demonstrações financeiras."
+        },
+        {
+          "id": "cmp",
+          "nome": "Custo médio ponderado",
+          "def": "As saídas e o estoque final são custeados por uma média, recalculada a cada nova entrada, entre o custo das unidades já em estoque e o custo das unidades recém-compradas."
+        }
+      ],
+      "rl": [
+        { "de": "ueps", "para": "peps", "tipo": "método alternativo não aceito no Brasil, ao contrário de" }
+      ],
+      "fm": [
+        {
+          "id": "cmp",
+          "expr": "CMP = (Valor em estoque + Valor da nova compra) ÷ (Quantidade em estoque + Quantidade comprada)",
+          "legenda": "Custo médio ponderado recalculado a cada entrada."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "cmp",
+          "texto": "10 unidades a R$ 10 em estoque (R$ 100) mais uma compra de 10 unidades a R$ 14 (R$ 140): novo custo médio = (100 + 140) ÷ 20 = R$ 12 por unidade."
+        },
+        {
+          "conceitoId": "peps",
+          "texto": "Se a empresa vende 8 unidades logo após a compra do exemplo anterior, pelo PEPS o custo da saída usa primeiro as 10 unidades que custaram R$ 10."
+        }
+      ],
+      "pg": [
+        "UEPS é vedado para fins fiscais e contábeis no Brasil (CPC 16) — atenção em questões que pedem o método \"permitido\".",
+        "Em mercado de preços subindo, o PEPS gera estoque final mais caro (preços recentes) e lucro contábil maior; o UEPS faria o oposto, mas não pode ser usado no Brasil.",
+        "O custo médio ponderado precisa ser recalculado a cada entrada (médio móvel), não só uma vez no fim do período."
+      ],
+      "rs": "PEPS, UEPS e custo médio ponderado são critérios para decidir qual custo sai do estoque quando há lotes comprados a preços diferentes. No Brasil, apenas PEPS e custo médio ponderado são aceitos; o UEPS é vedado pela legislação e pelo CPC 16."
+    }
+  },
+  {
+    "contentId": "CC-003",
+    "lesson": {
+      "v": 1,
+      "obj": "Calcular o markup divisor e multiplicador para formar o preço de venda a partir do custo e da margem desejada.",
+      "cc": [
+        {
+          "id": "markup",
+          "nome": "Markup",
+          "def": "Índice aplicado sobre o custo de um produto para chegar ao preço de venda, cobrindo despesas variáveis, impostos sobre a venda e a margem de lucro desejada."
+        },
+        {
+          "id": "markup-divisor",
+          "nome": "Markup divisor",
+          "def": "Markup calculado como 1 menos a soma dos percentuais (despesas, impostos, margem) incidentes sobre o preço de venda; o custo é dividido por esse índice para achar o preço."
+        },
+        {
+          "id": "markup-multiplicador",
+          "nome": "Markup multiplicador",
+          "def": "Inverso do markup divisor (1 ÷ markup divisor); o custo é multiplicado por esse índice para achar o preço de venda diretamente."
+        }
+      ],
+      "rl": [
+        { "de": "markup-multiplicador", "para": "markup-divisor", "tipo": "é o inverso de" }
+      ],
+      "fm": [
+        {
+          "id": "md",
+          "expr": "Markup divisor = 1 − (%despesas + %impostos + %margem)",
+          "legenda": "Percentuais expressos sobre o preço de venda, não sobre o custo."
+        },
+        {
+          "id": "pv",
+          "expr": "Preço de venda = Custo ÷ Markup divisor",
+          "legenda": "Equivalente a Custo × Markup multiplicador."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "pv",
+          "texto": "Custo de R$ 60, despesas de 10%, impostos de 15% e margem de 20% sobre o preço: markup divisor = 1 − 0,45 = 0,55. Preço = 60 ÷ 0,55 ≈ R$ 109,09."
+        }
+      ],
+      "pg": [
+        "Os percentuais do markup incidem sobre o PREÇO DE VENDA, não sobre o custo — aplicá-los sobre o custo dá um preço errado.",
+        "Confundir markup divisor (usado dividindo o custo) com markup multiplicador (usado multiplicando) inverte o cálculo."
+      ],
+      "rs": "O markup transforma o custo em preço de venda cobrindo despesas, impostos e a margem desejada, todos calculados como percentual sobre o próprio preço de venda. O markup divisor é usado dividindo o custo; o multiplicador, multiplicando — ambos chegam ao mesmo preço."
+    }
+  },
+  {
+    "contentId": "CC-004",
+    "lesson": {
+      "v": 1,
+      "obj": "Calcular a margem de contribuição e os pontos de equilíbrio contábil, econômico e financeiro.",
+      "cc": [
+        {
+          "id": "mc",
+          "nome": "Margem de contribuição",
+          "def": "Diferença entre o preço de venda (ou receita) e os custos e despesas variáveis; é o valor que cada unidade vendida contribui para cobrir os custos fixos e, depois, gerar lucro."
+        },
+        {
+          "id": "pe-contabil",
+          "nome": "Ponto de equilíbrio contábil",
+          "def": "Quantidade (ou receita) em que a margem de contribuição total iguala exatamente os custos e despesas fixos, resultando em lucro contábil igual a zero."
+        },
+        {
+          "id": "pe-economico",
+          "nome": "Ponto de equilíbrio econômico",
+          "def": "Ponto de equilíbrio contábil somado a um custo de oportunidade (ex.: a remuneração mínima desejada sobre o capital investido), tratado como um custo fixo adicional."
+        },
+        {
+          "id": "pe-financeiro",
+          "nome": "Ponto de equilíbrio financeiro",
+          "def": "Ponto de equilíbrio contábil ajustado para excluir custos fixos que não representam desembolso de caixa no período (ex.: depreciação) e/ou considerar outros compromissos financeiros fixos."
+        }
+      ],
+      "rl": [
+        { "de": "mc", "para": "pe-contabil", "tipo": "usada para calcular" },
+        { "de": "pe-contabil", "para": "pe-economico", "tipo": "base de" },
+        { "de": "pe-contabil", "para": "pe-financeiro", "tipo": "base de" }
+      ],
+      "fm": [
+        {
+          "id": "mcu",
+          "expr": "MC unitária = Preço de venda − Custo e despesa variável unitário",
+          "legenda": "Margem de contribuição por unidade."
+        },
+        {
+          "id": "peq",
+          "expr": "PE contábil (quantidade) = Custos e despesas fixos ÷ MC unitária",
+          "legenda": "Quantidade mínima de vendas para lucro contábil igual a zero."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "peq",
+          "texto": "Custos fixos de R$ 50.000, preço de R$ 100 e custo variável unitário de R$ 60: MC unitária = R$ 40. PE contábil = 50.000 ÷ 40 = 1.250 unidades."
+        }
+      ],
+      "pg": [
+        "O ponto de equilíbrio econômico SOMA o custo de oportunidade aos custos fixos (fica maior que o contábil); o financeiro normalmente SUBTRAI itens sem desembolso, como a depreciação (fica menor que o contábil).",
+        "Margem de contribuição não é lucro: só depois de cobrir todos os custos fixos é que sobra lucro."
+      ],
+      "rs": "A margem de contribuição mede quanto cada unidade vendida sobra depois dos custos variáveis, para cobrir os custos fixos. O ponto de equilíbrio contábil é onde essa margem acumulada se iguala aos custos fixos (lucro zero); os pontos econômico e financeiro ajustam esse cálculo para incluir custo de oportunidade ou excluir itens sem desembolso de caixa, respectivamente."
+    }
+  }
+]
