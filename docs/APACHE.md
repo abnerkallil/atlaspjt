@@ -715,18 +715,22 @@ Cloudflare Queues em vez de `waitUntil`, ver DEC-019):**
     'pendente' }`, e manda a mensagem `{queueId, contentId}` pro binding
     `Queue` (`APACHE_LESSON_QUEUE`, fila `atlas-apache-aulas`) — quem
     processa é sempre o consumer (`worker-entry.ts`), nunca esta rota.
-  - **Em toda chamada** (independente do status da aula, e para `kind='aula'`
-    apenas — nunca `aula_manual`/`enriquecimento`, fora do escopo deste
-    card): também checa se há itens `pendente` na fila com `created_at`
-    anterior ao reset diário mais recente (meia-noite UTC) — se houver,
-    manda a mensagem deles pra fila também, para destravar itens que
-    ficaram parados da meia-noite até agora (opção (b) do Gate APA-01) —
-    inclui tanto um item parado por travamento de infraestrutura quanto um
-    adiado por falta de cota (a cota de ontem não importa mais depois do
-    reset). Um item `pendente` adiado por falta de cota **não** pode ser
-    reprocessado a cada poll de 5s do cliente — só esta varredura pós-reset
-    o retoma, senão cada poll mandaria outra mensagem pra fila (e o
-    consumer chamaria a IA de novo) enquanto a cota não reseta.
+  - **Em toda chamada** (independente do status da aula): também dispara
+    `sweepQueue` (`lib/apache/queue.ts`), que checa itens `pendente` na fila
+    com `created_at` anterior ao reset diário mais recente (meia-noite
+    UTC) — se houver, manda a mensagem deles pra fila também, para destravar
+    itens que ficaram parados da meia-noite até agora (opção (b) do Gate
+    APA-01) — inclui tanto um item parado por travamento de infraestrutura
+    quanto um adiado por falta de cota (a cota de ontem não importa mais
+    depois do reset). `sweepQueue` cobre `kind IN ('aula', 'enriquecimento')`
+    — **nunca** `aula_manual`, que nunca é regenerada automaticamente (ver
+    APA-08) — não é só `kind='aula'`: a varredura disparada por esta rota
+    também destrava itens de enriquecimento presos do APA-12, já que os dois
+    compartilham a mesma fila/consumer (`atlas-apache-aulas`). Um item
+    `pendente` adiado por falta de cota **não** pode ser reprocessado a cada
+    poll de 5s do cliente — só esta varredura pós-reset o retoma, senão cada
+    poll mandaria outra mensagem pra fila (e o consumer chamaria a IA de
+    novo) enquanto a cota não reseta.
   - **Item preso em `'processando'`**: o consumer pode ser interrompido
     antes da geração terminar (Cloudflare Queues já reentrega uma mensagem
     que falhar — isto é só a salvaguarda de último nível, para quando o
@@ -775,6 +779,10 @@ Cloudflare Queues em vez de `waitUntil`, ver DEC-019):**
 - [ ] Corte por `neuronBudgetRemaining` antes de cada item
 - [ ] Restore `restore/pre-apa-07` + `CHANGELOG_VISUAL.md`
 
+> **Atualização (APA-16):** a dedupe de fila descrita acima (consulta antes
+> do insert) tinha uma janela de corrida real sob 2 chamadas simultâneas —
+> ver achado e correção na seção do APA-16.
+
 ---
 
 ## APA-08 — Reportar erro
@@ -783,9 +791,21 @@ Cloudflare Queues em vez de `waitUntil`, ver DEC-019):**
 APA-07. **Gate:** não.
 
 **Escopo:**
-- `POST /api/apache/aulas/[contentId]/reportar/route.ts`: chama
-  `markReported` (APA-05); a aula **continua visível** (não some — alinhado
-  com o estado `'reportada'` do APA-04), só ganha o aviso `.al-flag`.
+- `POST /api/apache/aulas/[contentId]/reportar/route.ts` → `handleReportAula`
+  (`lib/apache/queue.ts`): chama `markReported` (APA-05), que marca a aula
+  `'reportada'` **e** enfileira uma nova geração — `kind='aula'` (regenerada
+  pela IA) para uma aula do Llama, ou `kind='aula_manual'` quando a aula
+  atual foi escrita a mão pelo Claude (`model === 'claude-manual'`). Só para
+  `kind='aula'` a rota manda mesmo a mensagem pro binding `Queue`
+  (`enqueueLessonIfNeeded` de novo, reaproveitando o dedupe do APA-07) — um
+  item `kind='aula_manual'` **nunca** é mandado pra fila nem regenerado
+  automaticamente (nem aqui, nem pela varredura do APA-07): fica só como
+  item de backlog manual, para não perder pesquisa de legislação (APA-18)
+  numa reescrita automática pelo Llama. Idempotente: reportar de novo
+  enquanto já existe um pedido pendente/em andamento não duplica a fila nem
+  manda uma segunda mensagem (`markReported` devolve `queued: false`).
+  A aula **continua visível** (não some — alinhado com o estado
+  `'reportada'` do APA-04), só ganha o aviso `.al-flag`.
 - Botão `<Button variant="outline" className="ss-outline"><Flag size={14}
   /> Reportar erro</Button>` no fim de `.al-body`, com
   `window.confirm('Avisar que esta aula tem um erro? Ela entra na fila de
@@ -794,6 +814,7 @@ APA-07. **Gate:** não.
 **Checklist**
 - [ ] Rota `reportar`
 - [ ] Botão + confirmação; aula permanece visível com `.al-flag`
+- [ ] `kind='aula'` enfileira regeneração; `kind='aula_manual'` nunca entra na fila
 - [ ] Restore `restore/pre-apa-08` + `CHANGELOG_VISUAL.md`
 
 ---
@@ -879,22 +900,11 @@ pra essa faixa evita gastar banda/CPU em resolução que o modelo não usa.)
 
 **Aviso operacional (não é código) — aceite da licença:** a aceitação do
 `@cf/meta/llama-3.2-11b-vision-instruct` é uma chamada de API (não é um
-botão no painel da Cloudflare), feita uma única vez por conta. Depois que a
-Publicar Atlas estiver rodando com o binding `AI` (depende do APA-06, PR
-#88), o Abner roda isto no PowerShell, na pasta do projeto:
-
-```powershell
-# 1) Descobrir o Account ID (se não estiver logado, roda "pnpm wrangler login" antes):
-pnpm wrangler whoami
-# A tabela que aparece tem uma coluna "Account ID" -- copia o valor dali.
-
-# 2) Colar o Account ID copiado no lugar de <ACCOUNT_ID> abaixo e rodar.
-# Token: gerar um em dash.cloudflare.com/profile/api-tokens (permissão
-# "Workers AI: Edit"), colar quando o Read-Host pedir (nunca commitar):
-$env:CLOUDFLARE_ACCOUNT_ID = "<ACCOUNT_ID>"
-$env:CLOUDFLARE_API_TOKEN = Read-Host -AsSecureString "Cole o token" | ConvertFrom-SecureString -AsPlainText
-curl.exe "https://api.cloudflare.com/client/v4/accounts/$env:CLOUDFLARE_ACCOUNT_ID/ai/run/@cf/meta/llama-3.2-11b-vision-instruct" -X POST -H "Authorization: Bearer $env:CLOUDFLARE_API_TOKEN" -d '{ "prompt": "agree" }'
-```
+botão no painel da Cloudflare), feita uma única vez por conta. O comando
+exato (via `pnpm run apache:aceitar-licenca-visao`, reaproveitando o login do
+wrangler — sem token manual) está na seção **"O que o Abner precisa fazer"**
+no final deste documento, item 1 — ainda não rodado por ele (APA-16, PR
+atual).
 
 **Checklist**
 - [ ] `lib/apache/ingest-handwriting.ts`
@@ -942,7 +952,9 @@ escolhido antes de fechar este card). **Gate:** não.
   IA/latência, não por CPU); 2+ chunks sempre vão para `atlas_apache_queue`
   (`kind='enriquecimento'`, `user_id` preenchido, `temp_object_key` apontando
   para o texto gravado em `apache/tmp/<queueId>.txt` em R2) e o mesmo
-  processador do APA-07 os consome.
+  processador do APA-07 os consome. (`enqueueEnrichment`, que grava essa
+  linha: teve o mesmo bug de corrida do `enqueueLessonIfNeeded`, corrigido
+  no APA-16 — ver a seção desse card.)
 - Por chunk: chama Workers AI (modo JSON de `ApacheEnrichment` — a **ficha**,
   ver APA-03 — pedindo só `{ conceitos: ApacheConcept[], irrelevante: boolean
   }`, SEM comparar com a aula aqui) com o delimitador do Gate APA-14 em volta
@@ -1026,26 +1038,79 @@ export async function refundQuota(userId: string, pages: number): Promise<void> 
 
 ---
 
-## APA-16 — Dedupe: documentação e teste (sem código novo isolado)
+## APA-16 — Dedupe: documentação e teste (sem código novo isolado) — CONCLUÍDO
 
 **Prioridade:** P2. **Áreas:** Backend, Qualidade. **Depende de:** APA-07,
-APA-12 (o dedupe em si já é implementado dentro desses dois cards). **Gate:**
+APA-12 (o dedupe em si já era implementado dentro desses dois cards). **Gate:**
 não.
 
-Este card não cria biblioteca nova: o dedupe de fila já está no APA-07
-(índice `idx_atlas_apache_queue_content_kind_status` + checagem antes do
-insert) e o dedupe de arquivo já está no APA-12 (`source_file_hash` +
-`userId`). Este card existe para **testar os dois juntos** depois que ambos
-estiverem prontos e documentar o comportamento em `docs/APACHE.md`.
+Este card não criou biblioteca nova: o dedupe de arquivo do APA-12
+(`source_file_hash` + `userId`, já testado desde o PR #93 em
+`tests/apache-enrichment.test.ts`) continua como estava. O dedupe de **fila**,
+porém, **tinha um bug real** — descoberto escrevendo o teste de concorrência
+pedido por este card, e corrigido em TODO lugar do Apache que faz
+check-then-insert na fila (3 funções, todas já existentes, nenhuma
+biblioteca nova):
 
-**Aceite:** dois acessos simultâneos a um conteúdo sem aula geram uma linha
-só na fila; enviar o mesmo arquivo duas vezes ao mesmo conteúdo não gasta
-neurons na segunda vez.
+> **Achado:** `enqueueLessonIfNeeded` (APA-07), `markReported` (APA-05/08) e
+> `enqueueEnrichment` (APA-12) faziam uma leitura (`SELECT ... WHERE status
+> IN ('pendente', 'processando')`) e, se nada saudável fosse encontrado, um
+> `INSERT` simples depois. O índice `idx_atlas_apache_queue_content_kind_status`
+> do APA-02 **nunca foi `UNIQUE`** — só acelera essa leitura, não impede 2
+> linhas. Entre a leitura e o `INSERT`, 2 chamadas quase simultâneas (2
+> requisições HTTP reais ao mesmo `content_id`, ex.: 2 abas abertas no mesmo
+> conteúdo, ou "reportar erro" clicado junto com o poll de 5s) podiam ambas
+> ler "nada saudável" e cada uma inserir sua própria linha — 2 itens na fila
+> para o mesmo `content_id`+`kind`(+`userId` no caso do enriquecimento), e a
+> aula/enriquecimento seria gerado 2x (neurons desperdiçados; no caso do
+> enriquecimento, também um texto temporário órfão em R2, sem consumer para
+> apagá-lo). Reproduzido com 2 chamadas em `Promise.all` (sem `await` entre
+> elas) contra o SQLite de teste nas 3 funções: sem a correção, resultava em
+> 2 linhas; o teste sequencial que já existia para a fila de aulas (`await`
+> entre as 2 chamadas) nunca exercitava essa janela.
+>
+> **Correção:** o `INSERT` final de cada uma agora é um único `INSERT ...
+> SELECT ... WHERE NOT EXISTS (...)` (mesmo padrão já usado em
+> `lib/agenda.ts`) — SQLite/D1 executa isso como uma instrução atômica só,
+> sem o intervalo check-then-act de antes. Se a chamada perde a corrida
+> (`changes = 0`), ela **nunca tenta "adotar" o item da vencedora** — devolve
+> `null`/`queued: false` e não manda mensagem nenhuma (a vencedora é
+> responsável pelo próprio item, incluindo mandar a mensagem dela; o item da
+> vencedora pode já estar num estado que a perdedora não tem como saber, ex.:
+> adiado por cota). No caso do enriquecimento, a perdedora também apaga o
+> texto temporário que já tinha gravado em R2 antes de perder a corrida, para
+> não deixar o objeto órfão. `markReported` precisou repetir também o
+> mesmo corte de "processando preso há mais de 5 min" (`STALE_PROCESSING_MS`)
+> que o cálculo de `pending` já fazia em memória — sem isso, um item preso
+> bloquearia o `INSERT` pra sempre (achado corrigindo o teste existente
+> *"markReported ignora item processando preso"*, que começou a falhar com a
+> 1ª versão do `WHERE NOT EXISTS`). Ver `lib/apache/queue.ts`
+> (`enqueueLessonIfNeeded`), `lib/apache/lesson-store.ts` (`markReported`) e
+> `lib/apache/enrichment.ts` (`enqueueEnrichment`).
+
+**Aceite (confirmado por teste):** dois acessos simultâneos a um conteúdo sem
+aula geram uma linha só na fila (tanto pelo poll quanto pelo "reportar
+erro"); enviar o mesmo arquivo duas vezes ao mesmo conteúdo não gasta
+neurons na segunda vez, mesmo simultaneamente.
 
 **Checklist**
-- [ ] Teste de concorrência do dedupe de fila (APA-07)
-- [ ] Teste de reenvio do mesmo arquivo (APA-12)
-- [ ] Nenhum código novo fora de teste/documentação
+- [x] Teste de concorrência do dedupe de fila (APA-07) —
+  `tests/apache-queue.test.ts`: *"enqueueLessonIfNeeded sob concorrência real
+  (2 chamadas simultâneas) cria só 1 linha na fila (APA-16)"*
+- [x] Teste de concorrência do "reportar erro" (APA-05/08) —
+  `tests/apache-lesson-store.test.ts`: *"markReported sob concorrência real
+  (2 chamadas simultâneas) cria só 1 linha na fila (APA-16)"*
+- [x] Teste de concorrência do enfileiramento de enriquecimento (APA-12) —
+  `tests/apache-enrichment.test.ts`: *"enqueueEnrichment sob concorrência
+  real (2 chamadas simultâneas) cria só 1 linha na fila, sem texto órfão em
+  R2 (APA-16)"*
+- [x] Teste de reenvio do mesmo arquivo (APA-12) — já cobria o aceite, de
+  `tests/apache-enrichment.test.ts`: *"APA-12: reenvio do mesmo arquivo (hash
+  igual) é reaproveitado, sem gastar neurons/páginas"*
+- [x] Nenhuma biblioteca nova — a única mudança de código é a correção do
+  mesmo bug de concorrência dentro de 3 funções já existentes
+  (`enqueueLessonIfNeeded`, `markReported`, `enqueueEnrichment`), não uma
+  abstração nova
 
 ---
 
@@ -1097,3 +1162,62 @@ pesquisa de legislação por uma reescrita automática.
 - [ ] Revisão humana por amostragem antes de cada merge
 - [ ] Regra de `kind='aula_manual'` nunca regenerada automaticamente, aplicada
 - [ ] Todos os conteúdos do roadmap atual cobertos
+
+---
+
+## Operação — o que o Abner precisa fazer (APA-16)
+
+Três coisas pendentes depois que este PR for mesclado — nenhuma é código,
+são comandos para rodar no `cmd` do Windows, na pasta do projeto
+(`cd /d` porque o caminho muda de drive em alguns PCs — funciona igual
+quando não muda).
+
+**1) Aceitar a licença do modelo de visão (APA-11), ainda não rodado.**
+`@cf/meta/llama-3.2-11b-vision-instruct` (fallback de letra de mão) é um
+modelo "gated": precisa aceitar a licença uma vez por conta antes do binding
+`AI` funcionar com ele. Em vez de gerar um API Token manual no painel da
+Cloudflare, o comando abaixo reaproveita o MESMO login (`wrangler login`)
+que a Publicar Atlas já usa para `wrangler d1 execute --remote` —
+`scripts/apache-accept-vision-license.ts`, mesmo mecanismo (`getPlatformProxy`)
+do bake-off do APA-17:
+
+```
+cd /d C:\Users\abner\OneDrive\Desktop\Projetos\Atlas\atlaspjt-atual && pnpm run apache:aceitar-licenca-visao
+```
+
+Se a saída disser que não está autenticado, roda `pnpm wrangler login`
+(abre o navegador para confirmar) e tenta o comando acima de novo. Rodar 1x
+é suficiente — rodar de novo não tem efeito nem custo (a licença já aceita
+fica aceita). Pode ser feito antes ou depois do passo 2, em qualquer ordem.
+
+**2) Publicar Atlas.** Sem mudança — o mesmo de sempre: dois cliques em
+`Publicar Atlas.cmd` (pasta do projeto); ele pergunta o ambiente de destino
+(digitar `production`) e, depois de mostrar o que vai mudar (Worker, D1, R2,
+migrations), pede uma confirmação separada — digitar `PUBLICAR` (tudo
+maiúsculo) para seguir, ou qualquer outra coisa para cancelar sem alterar
+nada na Cloudflare.
+
+**3) Conferir o CPU por requisição depois de publicar (risco do teto de
+10ms do Workers Free no upload do material, APA-12/APA-14).** O Workers Free
+só tem 10ms de CPU por requisição; só o PROCESSAMENTO (não a espera de
+rede/IA) conta. Depois do passo 2, com o site aberto numa aba:
+
+```
+cd /d C:\Users\abner\OneDrive\Desktop\Projetos\Atlas\atlaspjt-atual && pnpm run apache:tail
+```
+
+(novo `scripts/apache-tail.mjs` — lê o nome real do Worker de
+`deploy.local.json`, o mesmo arquivo que o Publicar Atlas já usa; nenhum
+nome para preencher na mão.) Deixa esse comando rodando no terminal e, numa
+aba do navegador, testa o "Adicionar material"/enriquecimento (APA-12) com
+um arquivo de verdade — principalmente o fallback de letra de mão (APA-11,
+upload de foto) e um PDF grande (perto de 10MB), que são os pontos mais
+pesados de CPU (decodificar a imagem/arquivo antes de mandar pra IA). Cada
+requisição aparece como uma linha no terminal; se algum teto de CPU for
+excedido, a linha mostra **"Exceeded CPU Limit"** no lugar de "Ok" — é só
+isso que precisa observar, não um número exato de milissegundos (`wrangler
+tail` não mostra o valor exato, só se excedeu ou não; o tempo de CPU em ms
+fica no painel Cloudflare, Workers & Pages > o Worker > aba Metrics, se
+precisar do número depois). Se "Exceeded CPU Limit" aparecer, avisa o
+coordenador com a URL/rota da linha antes de usar essa função normalmente.
+`Ctrl+C` para parar de observar.

@@ -6,6 +6,7 @@ import type { AiLike } from '../lib/apache/lesson-writer.js';
 import type { R2Like } from '../lib/apache/lesson-store.js';
 import {
   chunkMaterialText,
+  enqueueEnrichment,
   enrichmentObjectKey,
   enrichmentTempObjectKey,
   mergeChunkResults,
@@ -275,6 +276,37 @@ void test('APA-12: 2+ chunks vão para a fila (texto temporário em R2 + mensage
   assert.equal(row.kind, 'enriquecimento');
   assert.equal(row.user_id, USER_ID);
   assert.equal(row.status, 'pendente');
+});
+
+// APA-16: mesma classe de corrida do enqueueLessonIfNeeded (ver
+// tests/apache-queue.test.ts) e do markReported (tests/apache-lesson-store.test.ts)
+// -- 2 chamadas sem await entre elas simulam 2 requisições quase simultâneas
+// (ex.: reenvio do mesmo material em 2 abas, antes de qualquer uma terminar).
+// Sem o INSERT atômico, isto criava 2 linhas na fila e deixava o texto
+// temporário da perdedora órfão em R2 (nenhum consumer o leria/apagaria).
+void test('enqueueEnrichment sob concorrência real (2 chamadas simultâneas) cria só 1 linha na fila, sem texto órfão em R2 (APA-16)', async () => {
+  const sqlite = migratedDatabase();
+  seedContent(sqlite, 'ct4c');
+  const database = d1(sqlite);
+  const bucket = fakeBucket();
+  const queue = fakeQueue();
+
+  await Promise.all([
+    enqueueEnrichment(database, bucket, queue, 'ct4c', USER_ID, 'texto de teste', now),
+    enqueueEnrichment(database, bucket, queue, 'ct4c', USER_ID, 'texto de teste', now),
+  ]);
+
+  const count = sqlite.prepare('SELECT COUNT(*) AS n FROM atlas_apache_queue').get() as { n: number };
+  assert.equal(count.n, 1, 'concorrência real não deve criar uma segunda linha na fila');
+  assert.equal(queue.sent.length, 1, 'só a chamada que venceu a corrida manda mensagem pra fila');
+  // Nenhum objeto órfão: ou o bucket tem exatamente o temp_object_key da
+  // linha que existe, ou (se a perdedora tiver sido a 2ª a escrever) o dela
+  // já foi apagado.
+  const row = sqlite.prepare('SELECT temp_object_key FROM atlas_apache_queue LIMIT 1').get() as {
+    temp_object_key: string;
+  };
+  assert.equal(bucket.store.size, 1, 'nenhum texto temporário órfão deve sobrar em R2');
+  assert.ok(bucket.store.has(row.temp_object_key));
 });
 
 void test('APA-12: reenvio enquanto um item já está na fila não debita a cota de novo', async () => {

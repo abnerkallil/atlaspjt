@@ -186,35 +186,57 @@ export async function markReported(db: D1Like, contentId: string, now: string): 
         new Date(now).getTime() - new Date(item.started_at).getTime() < STALE_PROCESSING_MS),
   );
 
-  const statements = [
+  const updateReported = db
+    .prepare(
+      `UPDATE atlas_apache_lessons
+       SET status = 'reportada', reported_count = reported_count + 1, updated_at = ?2
+       WHERE content_id = ?1`,
+    )
+    .bind(contentId, now);
+
+  if (pending) {
+    await db.batch([updateReported]);
+    // Já havia um item pendente/em andamento saudável — a mensagem dele já
+    // foi mandada quando ele foi criado; mandar de novo aqui duplicaria o
+    // envio sem nenhum item novo por trás (ex.: reportar duas vezes enquanto
+    // a 1ª geração ainda está na fila, ou enquanto está adiada por cota:
+    // `deferForQuota` mantém `status = 'pendente'`, então entra em `pending`
+    // também, sem precisar checar o sentinela aqui).
+    return { kind, queued: false };
+  }
+
+  // APA-16: insere atomicamente só se ainda não existir item saudável — fecha
+  // a mesma janela de corrida do `enqueueLessonIfNeeded` (APA-07): "reportar
+  // erro" e o poll de 5s do cliente (que também pode enfileirar) quase
+  // simultâneos podiam ambos ler "nada pendente" na checagem acima e cada um
+  // inserir sua própria linha para o mesmo content_id+kind. A condição do
+  // `WHERE NOT EXISTS` replica exatamente o `pending` calculado acima
+  // (`?5` = `staleBefore`, o mesmo corte de `STALE_PROCESSING_MS`) — sem
+  // isso, um `processando` preso (>5min, que `pending` corretamente ignora)
+  // bloquearia o INSERT para sempre.
+  const staleBefore = new Date(new Date(now).getTime() - STALE_PROCESSING_MS).toISOString();
+  const queueId = crypto.randomUUID();
+  const [, insert] = await db.batch([
+    updateReported,
     db
       .prepare(
-        `UPDATE atlas_apache_lessons
-         SET status = 'reportada', reported_count = reported_count + 1, updated_at = ?2
-         WHERE content_id = ?1`,
+        `INSERT INTO atlas_apache_queue (id, content_id, kind, status, attempts, created_at)
+         SELECT ?1, ?2, ?3, 'pendente', 0, ?4
+         WHERE NOT EXISTS (
+           SELECT 1 FROM atlas_apache_queue
+           WHERE content_id = ?2 AND kind = ?3
+             AND (status = 'pendente' OR (status = 'processando' AND started_at >= ?5))
+         )`,
       )
-      .bind(contentId, now),
-  ];
-  if (!pending) {
-    statements.push(
-      db
-        .prepare(
-          `INSERT INTO atlas_apache_queue (id, content_id, kind, status, attempts, created_at)
-           VALUES (?1, ?2, ?3, 'pendente', 0, ?4)`,
-        )
-        .bind(crypto.randomUUID(), contentId, kind, now),
-    );
-  }
-  await db.batch(statements);
-  // `queued` diz pro chamador (handleReportAula, APA-08) se este pedido
-  // precisa mandar uma mensagem nova pra Cloudflare Queues: quando já havia
-  // um item pendente/em andamento saudável (`pending`), a mensagem dele já
-  // foi mandada quando ele foi criado — mandar de novo aqui duplicaria o
-  // envio sem nenhum item novo por trás (ex.: reportar duas vezes enquanto
-  // a 1ª geração ainda está na fila, ou enquanto está adiada por cota:
-  // `deferForQuota` mantém `status = 'pendente'`, então entra em `pending`
-  // também, sem precisar checar o sentinela aqui).
-  return { kind, queued: !pending };
+      .bind(queueId, contentId, kind, now, staleBefore),
+  ]);
+  // Perdeu a corrida: outra chamada concorrente (ex.: o poll de 5s) já criou
+  // o item saudável entre a leitura acima e este INSERT. `queued: false` —
+  // essa chamada concorrente é responsável pelo próprio item, incluindo
+  // mandar a mensagem pra fila; "adotar" o item dela e mandar uma mensagem
+  // por conta própria não é seguro (pode já estar adiado por cota, por
+  // exemplo).
+  return { kind, queued: insert.meta.changes > 0 };
 }
 
 const MAX_ERROR_MESSAGE_CHARS = 200;
