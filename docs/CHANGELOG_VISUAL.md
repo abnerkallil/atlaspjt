@@ -14,6 +14,27 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #99 (pendente) — APA-18: aulas base de Contabilidade Geral (sub-lote 4b)
+
+- Ponto de restauração: branch `restore/pre-apa-18-contabilidade-geral-2`
+  (commit `a27bcaa`, main antes do merge).
+- O que muda no site: nada visível ainda — este PR só adiciona os dados; as
+  14 aulas só aparecem depois de o Abner rodar `pnpm run
+  apache:carregar-aulas -- --file data/apache/aulas/contabilidade-geral-2.json
+  --target production` (não precisa de "Publicar Atlas": o script grava
+  direto em D1/R2).
+- O que muda fora do site: segundo sub-lote de Contabilidade Geral em
+  `data/apache/aulas/contabilidade-geral-2.json` (14 dos 41 conteúdos:
+  CG-014 a CG-027, na ordem do catálogo, `model='claude-manual'`), usando o
+  mesmo mecanismo de carga dos PRs #95-#98
+  (`scripts/apache-carregar-aulas.mjs`). Conteúdo técnico: mecânica contábil
+  (natureza devedora/credora, partidas dobradas, lançamentos, Diário/Razão,
+  balancete, correção de erros), regime de competência e operações usuais
+  (caixa/bancos, clientes, compras/vendas/estoques); cita apenas o regime
+  de competência (Lei nº 6.404/1976, art. 177, e CPC 00) de forma genérica,
+  sem outro dispositivo legal específico. `docs/APACHE-18-plano.md`
+  atualizado (lote 4/5 em andamento: 28/41, restam CG-028 a CG-040).
+
 ## PR #98 — APA-18: aulas base de Contabilidade Geral (sub-lote 4a)
 
 - Ponto de restauração: branch `restore/pre-apa-18-contabilidade-geral-1`

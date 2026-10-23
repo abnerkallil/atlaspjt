@@ -72,7 +72,14 @@ replica exatamente o que `saveLesson` faz.
    `docs/APACHE.md`); mistura fundamentos técnicos com alguma legislação
    societária. Sub-lote 4a (14/41, CG-001 a CG-006, CG-041, CG-007 a
    CG-013, nesta ordem do catálogo) em
-   `data/apache/aulas/contabilidade-geral-1.json`. Restam 27: CG-014 a
+   `data/apache/aulas/contabilidade-geral-1.json`. Sub-lote 4b (14/41,
+   CG-014 a CG-027, nesta ordem do catálogo) em
+   `data/apache/aulas/contabilidade-geral-2.json` — mecânica contábil
+   (débito/crédito, partidas dobradas, lançamentos, Diário/Razão,
+   balancete, correção de erros), regime de competência e operações
+   usuais (caixa/bancos, clientes, compras/vendas/estoques); cita apenas
+   o regime de competência da Lei nº 6.404/1976 art. 177 / CPC 00 de forma
+   genérica, sem outro dispositivo legal específico. Restam 13: CG-028 a
    CG-040 (nesta ordem do catálogo).
 5. **Contabilidade Tributária (124)** — por último e em vários sub-lotes
    pequenos (não a disciplina inteira de uma vez): é onde a pesquisa de
@@ -88,7 +95,7 @@ replica exatamente o que `saveLesson` faz.
 - [x] Lote 1/5 — Contabilidade de Custos (4/4 conteúdos) — PR #95
 - [x] Lote 2/5 — Análise das Demonstrações Financeiras (6/6 conteúdos) — PR #96
 - [x] Lote 3/5 — Contabilidade Avançada (7/7 conteúdos)
-- [ ] Lote 4/5 — Contabilidade Geral (14/41, em sub-lotes; sub-lote 4a nesta PR)
+- [ ] Lote 4/5 — Contabilidade Geral (28/41, em sub-lotes; sub-lote 4b nesta PR)
 - [ ] Lote 5/5 — Contabilidade Tributária (0/124, em sub-lotes, pesquisa de legislação)
 - [ ] Todos os 183 conteúdos cobertos (regra final do card)
 
@@ -99,6 +106,7 @@ pnpm run apache:carregar-aulas -- --file data/apache/aulas/contabilidade-de-cust
 pnpm run apache:carregar-aulas -- --file data/apache/aulas/analise-demonstracoes-financeiras.json --target production
 pnpm run apache:carregar-aulas -- --file data/apache/aulas/contabilidade-avancada.json --target production
 pnpm run apache:carregar-aulas -- --file data/apache/aulas/contabilidade-geral-1.json --target production
+pnpm run apache:carregar-aulas -- --file data/apache/aulas/contabilidade-geral-2.json --target production
 ```
 
 Não precisa de "Publicar Atlas" — o script grava direto em produção (D1 +
