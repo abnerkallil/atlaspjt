@@ -14,6 +14,39 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #104 — APA-18: aulas base de Contabilidade Tributária (sub-lote 5d)
+
+- Ponto de restauração: branch `restore/pre-apa-18-contabilidade-tributaria-04`
+  (commit `3a47b85`, main antes do merge).
+- O que muda no site: nada visível ainda — este PR só adiciona os dados; as
+  10 aulas só aparecem depois de o Abner rodar o comando de carga para esse
+  arquivo (não precisa de "Publicar Atlas": o script grava direto em D1/R2).
+  O carregamento em produção de toda a Contabilidade Tributária será feito
+  num único comando ao final de todos os 15 sub-lotes, a pedido do Abner.
+- O que muda fora do site: quarto sub-lote de Contabilidade Tributária em
+  `data/apache/aulas/contabilidade-tributaria-04.json` (10 dos 124
+  conteúdos: CT-030 a CT-039, unidade "Simples Nacional", na ordem do
+  catálogo, `model='claude-manual'`), usando o mesmo mecanismo de carga dos
+  PRs #95-#103 (`scripts/apache-carregar-aulas.mjs`). Conteúdo: estrutura,
+  opção e vedações do Simples Nacional (LC 123/2006, limite de R$
+  4.800.000,00 e sublimite de R$ 3.600.000,00 para ICMS/ISS); MEI e SIMEI
+  (DAS-MEI, limite do MEI, DASN-SIMEI); receita bruta, regime de
+  competência/caixa e RBT12; Anexos I a V, faixas e alíquota efetiva;
+  Fator R (28%) e migração entre Anexos III e V; segregação de receitas no
+  PGDAS-D (substituição tributária, monofásico, exportação); PGDAS-D, DAS
+  e retificação; DEFIS e obrigações complementares; restituição,
+  compensação, parcelamento e regularização; caso completo integrando
+  todo o fluxo. Valores e mecanismos (limites, sublimite, Fator R 28%,
+  prazos de DEFIS/DASN-SIMEI) verificados contra fontes oficiais/recentes
+  antes de escrever o conteúdo; a interação da Reforma Tributária com o
+  Simples Nacional fica fora do escopo deste sub-lote (tratada nos
+  sub-lotes 5m/5o). `docs/APACHE-18-plano.md` atualizado (sub-lote 5d
+  mesclado; Tributária em 39/124).
+- Se algo der errado: reverter para
+  `restore/pre-apa-18-contabilidade-tributaria-04` volta ao estado anterior;
+  nenhuma aula ainda foi carregada em produção, então reverter sem ter
+  rodado o script de carga não perde nada.
+
 ## PR #103 — APA-18: aulas base de Contabilidade Tributária (sub-lote 5c)
 
 - Ponto de restauração: branch `restore/pre-apa-18-contabilidade-tributaria-03`
