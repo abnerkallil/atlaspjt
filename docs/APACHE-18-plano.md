@@ -37,7 +37,7 @@ já usado por `scripts/backup.mjs`, `scripts/deploy.mjs` e
 `scripts/apolo-aplicar-curadoria.mjs`** (login do `wrangler`, nunca token
 manual; nomes de D1/bucket lidos de `deploy.local.json`, nunca placeholder):
 
-- **`scripts/apache-carregar-aulas.mjs`** (novo, nesta PR):
+- **`scripts/apache-carregar-aulas.mjs`** (novo na PR #95):
   `pnpm run apache:carregar-aulas -- --file <arquivo.json> --target local|production`.
   Lê um array `{ contentId, lesson }[]`, valida cada `lesson` contra o mesmo
   schema de `lib/apache/schema.ts#validateLesson` (duplicado aqui porque o
@@ -60,11 +60,11 @@ replica exatamente o que `saveLesson` faz.
 
 ## Ordem recomendada entre disciplinas
 
-1. **Contabilidade de Custos (4)** — piloto desta PR. Conteúdo técnico/de
+1. **Contabilidade de Custos (4)** — piloto, PR #95. Conteúdo técnico/de
    cálculo, sem citação de lei: valida o script e o formato com o menor
    risco possível.
 2. **Análise das Demonstrações Financeiras (6)** — mesmo perfil de risco
-   baixo, confirma o script com mais um lote pequeno.
+   baixo, confirma o script com mais um lote pequeno. **PR #96.**
 3. **Contabilidade Avançada (7)** — primeiro contato com CPC (ainda não é
    "legislação" no sentido tributário, mas exige verificar o pronunciamento).
 4. **Contabilidade Geral (41)** — sub-lotes por unidade (ver
@@ -81,8 +81,8 @@ replica exatamente o que `saveLesson` faz.
 - [x] Confirmação explícita do Abner para começar
 - [x] Inventário de disciplinas/conteúdos
 - [x] Mecanismo de carga decidido e implementado (`scripts/apache-carregar-aulas.mjs`)
-- [x] Lote 1/5 — Contabilidade de Custos (4/4 conteúdos) — **esta PR**
-- [ ] Lote 2/5 — Análise das Demonstrações Financeiras (0/6)
+- [x] Lote 1/5 — Contabilidade de Custos (4/4 conteúdos) — PR #95
+- [x] Lote 2/5 — Análise das Demonstrações Financeiras (6/6 conteúdos) — PR #96
 - [ ] Lote 3/5 — Contabilidade Avançada (0/7)
 - [ ] Lote 4/5 — Contabilidade Geral (0/41, em sub-lotes)
 - [ ] Lote 5/5 — Contabilidade Tributária (0/124, em sub-lotes, pesquisa de legislação)
@@ -92,6 +92,7 @@ replica exatamente o que `saveLesson` faz.
 
 ```
 pnpm run apache:carregar-aulas -- --file data/apache/aulas/contabilidade-de-custos.json --target production
+pnpm run apache:carregar-aulas -- --file data/apache/aulas/analise-demonstracoes-financeiras.json --target production
 ```
 
 Não precisa de "Publicar Atlas" — o script grava direto em produção (D1 +
