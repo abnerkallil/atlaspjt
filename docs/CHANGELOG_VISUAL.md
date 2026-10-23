@@ -14,7 +14,7 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
-## PR (pendente) — APA-18: aulas base de Contabilidade Tributária (sub-lote 5b)
+## PR #102 — APA-18: aulas base de Contabilidade Tributária (sub-lote 5b)
 
 - Ponto de restauração: branch `restore/pre-apa-18-contabilidade-tributaria-02`
   (commit `5cd425e`, main antes do merge).
