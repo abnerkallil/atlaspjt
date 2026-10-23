@@ -106,7 +106,7 @@ replica exatamente o que `saveLesson` faz.
    | Sub-lote | Unidade                                   | Conteúdos | Qtde |
    |----------|--------------------------------------------|-----------|------|
    | 5a       | Fundamentos — **MESCLADO** (`contabilidade-tributaria-01.json`) | CT-001–012 | 12   |
-   | 5b       | Contabilização                             | CT-013–019 | 7    |
+   | 5b       | Contabilização — **MESCLADO** (`contabilidade-tributaria-02.json`) | CT-013–019 | 7    |
    | 5c       | Cadastros e documentos                     | CT-020–029 | 10   |
    | 5d       | Simples Nacional                           | CT-030–039 | 10   |
    | 5e       | Lucro Presumido                            | CT-040–045 | 6    |
@@ -140,7 +140,7 @@ replica exatamente o que `saveLesson` faz.
 - [x] Lote 2/5 — Análise das Demonstrações Financeiras (6/6 conteúdos) — PR #96
 - [x] Lote 3/5 — Contabilidade Avançada (7/7 conteúdos)
 - [x] Lote 4/5 — Contabilidade Geral (41/41, em sub-lotes; sub-lote 4c nesta PR — disciplina completa)
-- [ ] Lote 5/5 — Contabilidade Tributária (12/124, em 15 sub-lotes propostos acima, pesquisa de legislação; sub-lote 5a Fundamentos mesclado)
+- [ ] Lote 5/5 — Contabilidade Tributária (19/124, em 15 sub-lotes propostos acima, pesquisa de legislação; sub-lotes 5a Fundamentos e 5b Contabilização mesclados)
 - [ ] Todos os 183 conteúdos cobertos (regra final do card)
 
 ## Como aplicar (Abner, depois do merge)
