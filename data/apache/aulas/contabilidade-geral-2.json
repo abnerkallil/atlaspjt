@@ -1,0 +1,770 @@
+[
+  {
+    "contentId": "CG-014",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o que significa débito e crédito em cada grupo de contas e como eles aumentam ou diminuem o saldo.",
+      "cc": [
+        {
+          "id": "debito-credito",
+          "nome": "Débito e crédito",
+          "def": "Débito é o lançamento no lado esquerdo de uma conta; crédito é o lançamento no lado direito. Isoladamente, nenhum dos dois significa \"aumento\" ou \"diminuição\" — o efeito depende do grupo a que a conta pertence."
+        },
+        {
+          "id": "natureza-devedora",
+          "nome": "Contas de natureza devedora",
+          "def": "Contas que aumentam por débito e diminuem por crédito. São as contas de Ativo e de Despesa, cujo saldo normal é devedor (saldo no lado do débito)."
+        },
+        {
+          "id": "natureza-credora",
+          "nome": "Contas de natureza credora",
+          "def": "Contas que aumentam por crédito e diminuem por débito. São as contas de Passivo, Patrimônio Líquido e Receita, cujo saldo normal é credor (saldo no lado do crédito)."
+        },
+        {
+          "id": "saldo-conta",
+          "nome": "Saldo de uma conta",
+          "def": "Diferença entre o total debitado e o total creditado em uma conta. Quando a soma dos débitos é maior, o saldo é devedor; quando a soma dos créditos é maior, o saldo é credor."
+        }
+      ],
+      "rl": [
+        {
+          "de": "debito-credito",
+          "para": "natureza-devedora",
+          "tipo": "define o efeito de aumento/diminuição em"
+        },
+        {
+          "de": "debito-credito",
+          "para": "natureza-credora",
+          "tipo": "define o efeito de aumento/diminuição em"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "natureza-devedora",
+          "texto": "A conta Caixa (Ativo) aumenta quando é debitada (entrada de dinheiro) e diminui quando é creditada (saída de dinheiro) — por isso seu saldo normal é devedor."
+        },
+        {
+          "conceitoId": "natureza-credora",
+          "texto": "A conta Fornecedores (Passivo) aumenta quando é creditada (nova dívida assumida) e diminui quando é debitada (pagamento da dívida) — por isso seu saldo normal é credor."
+        }
+      ],
+      "pg": [
+        "Débito não significa \"saída de dinheiro\" nem crédito significa \"entrada de dinheiro\" de forma universal — esse efeito só vale para contas de natureza devedora; em contas de natureza credora é o contrário.",
+        "Uma conta pode apresentar saldo \"invertido\" em relação à sua natureza normal (ex.: Caixa com saldo credor por erro de registro) — isso é sinal de inconsistência, não a regra geral."
+      ],
+      "rs": "Débito e crédito são apenas os dois lados de uma conta. O efeito de cada um depende do grupo: contas de Ativo e Despesa (natureza devedora) aumentam por débito e diminuem por crédito; contas de Passivo, Patrimônio Líquido e Receita (natureza credora) aumentam por crédito e diminuem por débito. O saldo é a diferença entre os totais debitado e creditado."
+    }
+  },
+  {
+    "contentId": "CG-015",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o princípio das partidas dobradas e por que todo lançamento contábil mantém a igualdade entre débitos e créditos.",
+      "cc": [
+        {
+          "id": "partidas-dobradas",
+          "nome": "Método das partidas dobradas",
+          "def": "Princípio segundo o qual todo fato contábil é registrado em pelo menos duas contas, debitando uma (ou mais) e creditando outra (ou outras), sempre pelo mesmo valor total."
+        },
+        {
+          "id": "origem-aplicacao",
+          "nome": "Origem e aplicação de recursos",
+          "def": "Em toda transação, uma conta representa a origem dos recursos (de onde vieram) e outra representa a aplicação (para onde foram) — o lançamento a débito mostra a aplicação e o lançamento a crédito mostra a origem."
+        },
+        {
+          "id": "igualdade-debito-credito",
+          "nome": "Igualdade entre débitos e créditos",
+          "def": "Consequência direta das partidas dobradas: a soma de todos os débitos de um lançamento (e, ao final, de todos os lançamentos de um período) deve ser sempre igual à soma de todos os créditos."
+        }
+      ],
+      "rl": [
+        {
+          "de": "partidas-dobradas",
+          "para": "igualdade-debito-credito",
+          "tipo": "garante"
+        },
+        {
+          "de": "origem-aplicacao",
+          "para": "partidas-dobradas",
+          "tipo": "é a lógica econômica por trás de"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "origem-aplicacao",
+          "texto": "Compra de um veículo à vista: a origem do recurso é o Caixa (crédito, recurso saiu) e a aplicação é o Veículo (débito, recurso aplicado em um novo bem)."
+        },
+        {
+          "conceitoId": "igualdade-debito-credito",
+          "texto": "Se um lançamento debita Caixa em R$ 1.000 e credita Capital Social em apenas R$ 900, há um erro: a soma dos débitos precisa ser idêntica à soma dos créditos nesse lançamento."
+        }
+      ],
+      "pg": [
+        "As partidas dobradas não exigem exatamente duas contas — um lançamento pode envolver várias contas a débito e várias a crédito, desde que a soma total dos débitos seja igual à soma total dos créditos.",
+        "A igualdade entre débitos e créditos garante que o Balancete \"bata\", mas não garante que o lançamento esteja correto quanto às contas escolhidas — um erro de classificação pode manter a igualdade e ainda assim estar errado."
+      ],
+      "rs": "O método das partidas dobradas é a base da escrituração contábil moderna: cada fato é registrado simultaneamente como débito em uma ou mais contas e crédito em uma ou mais contas, representando a aplicação e a origem dos recursos. Isso garante que a soma dos débitos seja sempre igual à soma dos créditos em cada lançamento."
+    }
+  },
+  {
+    "contentId": "CG-016",
+    "lesson": {
+      "v": 1,
+      "obj": "Identificar os elementos obrigatórios de um lançamento contábil e as fórmulas usadas para representá-lo.",
+      "cc": [
+        {
+          "id": "lancamento-contabil",
+          "nome": "Lançamento contábil",
+          "def": "Registro formal de um fato administrativo na escrituração, contendo data, contas debitadas e creditadas, valor e histórico explicativo."
+        },
+        {
+          "id": "historico-lancamento",
+          "nome": "Histórico do lançamento",
+          "def": "Texto que descreve, de forma objetiva, a natureza da operação registrada — documento que a originou, partes envolvidas e demais dados relevantes para identificar o fato."
+        },
+        {
+          "id": "analise-fato-contabil",
+          "nome": "Análise do fato contábil",
+          "def": "Etapa que antecede o lançamento: identificar quais contas são afetadas, se cada uma aumenta ou diminui, e em que lado (débito ou crédito) cada efeito deve ser registrado."
+        },
+        {
+          "id": "formulas-lancamento",
+          "nome": "Fórmulas de lançamento",
+          "def": "Classificação dos lançamentos pelo número de contas envolvidas: 1ª fórmula (uma conta debitada e uma creditada), 2ª fórmula (uma debitada e várias creditadas, ou vice-versa) e 3ª fórmula (várias contas debitadas e várias creditadas)."
+        }
+      ],
+      "rl": [
+        {
+          "de": "analise-fato-contabil",
+          "para": "lancamento-contabil",
+          "tipo": "precede"
+        },
+        {
+          "de": "formulas-lancamento",
+          "para": "lancamento-contabil",
+          "tipo": "classifica"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "formulas-lancamento",
+          "texto": "Pagamento de uma duplicata parte em dinheiro e parte com desconto obtido usa a 2ª fórmula: debita-se Fornecedores (uma conta) e credita-se Caixa e Descontos Obtidos (duas contas)."
+        },
+        {
+          "conceitoId": "historico-lancamento",
+          "texto": "Um histórico como \"Pagamento da NF 1234 ao fornecedor XYZ, referente à compra de mercadorias\" identifica a operação sem exigir consulta a outro documento."
+        }
+      ],
+      "pg": [
+        "A 3ª fórmula (vários debitados e vários creditados) é menos comum em exercícios, mas continua exigindo que a soma dos débitos seja igual à soma dos créditos, mesmo com múltiplas contas de cada lado.",
+        "O histórico não é um campo decorativo: sua ausência ou insuficiência compromete a comprovação e a auditabilidade do lançamento, mesmo que os valores estejam corretos."
+      ],
+      "rs": "Um lançamento contábil precisa de data, contas debitadas e creditadas, valor e histórico. A análise do fato identifica o efeito em cada conta antes do registro, e a fórmula do lançamento (1ª, 2ª ou 3ª) descreve quantas contas são debitadas e quantas são creditadas em cada caso."
+    }
+  },
+  {
+    "contentId": "CG-017",
+    "lesson": {
+      "v": 1,
+      "obj": "Diferenciar a escrituração cronológica do Livro Diário da escrituração sistemática do Livro Razão.",
+      "cc": [
+        {
+          "id": "livro-diario",
+          "nome": "Livro Diário",
+          "def": "Livro obrigatório onde os fatos contábeis são registrados em ordem cronológica (ordem de ocorrência), contendo todos os lançamentos com data, contas, valores e histórico."
+        },
+        {
+          "id": "livro-razao",
+          "nome": "Livro Razão",
+          "def": "Livro onde os lançamentos do Diário são reagrupados por conta, permitindo visualizar, para cada conta individualmente, todos os débitos, créditos e o saldo acumulado — escrituração sistemática (por conta), não cronológica."
+        },
+        {
+          "id": "razonete",
+          "nome": "Razonete",
+          "def": "Representação gráfica simplificada em forma de \"T\", usada para demonstrar os débitos e créditos de uma conta e calcular seu saldo, sem a formalidade do Livro Razão oficial."
+        }
+      ],
+      "rl": [
+        {
+          "de": "livro-diario",
+          "para": "livro-razao",
+          "tipo": "alimenta"
+        },
+        {
+          "de": "razonete",
+          "para": "livro-razao",
+          "tipo": "representa de forma simplificada"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "livro-razao",
+          "texto": "Para saber o saldo atual da conta Caixa, consulta-se o Razão da conta Caixa, que reúne todos os débitos e créditos lançados nela ao longo do Diário, não apenas o último lançamento."
+        },
+        {
+          "conceitoId": "razonete",
+          "texto": "Em exercícios e provas, o razonete (forma de \"T\") é usado para apurar rapidamente o saldo de uma conta sem precisar montar o Livro Razão completo."
+        }
+      ],
+      "pg": [
+        "O Diário registra os fatos na ordem em que ocorrem (cronológica); o Razão reorganiza essa mesma informação por conta (sistemática) — são a mesma informação vista de dois ângulos diferentes, não bases de dados independentes.",
+        "O razonete é uma ferramenta de estudo e cálculo, não um livro contábil formal exigido por lei — não confundir razonete com Livro Razão oficial."
+      ],
+      "rs": "O Livro Diário registra os fatos contábeis cronologicamente, na ordem em que ocorrem. O Livro Razão reorganiza essas mesmas informações por conta, mostrando o histórico de débitos, créditos e o saldo de cada conta. O razonete é uma representação simplificada em \"T\" usada para calcular saldos de forma rápida."
+    }
+  },
+  {
+    "contentId": "CG-018",
+    "lesson": {
+      "v": 1,
+      "obj": "Descrever as formalidades, a documentação de suporte e o encadeamento lógico da escrituração contábil.",
+      "cc": [
+        {
+          "id": "escrituracao-contabil",
+          "nome": "Escrituração contábil",
+          "def": "Conjunto de técnicas e procedimentos usados para registrar, de forma sistemática, os fatos que afetam o patrimônio da entidade, obedecendo princípios e normas contábeis."
+        },
+        {
+          "id": "documentacao-suporte",
+          "nome": "Documentação de suporte",
+          "def": "Conjunto de documentos (notas fiscais, contratos, recibos, extratos) que comprovam a ocorrência e os valores dos fatos registrados na escrituração, servindo de base e evidência para cada lançamento."
+        },
+        {
+          "id": "formalidades-escrituracao",
+          "nome": "Formalidades da escrituração",
+          "def": "Regras que a escrituração deve seguir: idioma e moeda nacional, ordem cronológica, ausência de espaços em branco, borrões ou entrelinhas, e uso dos livros exigidos pela legislação."
+        },
+        {
+          "id": "encadeamento-escritural",
+          "nome": "Encadeamento da escrituração",
+          "def": "Sequência lógica que liga o documento de origem ao lançamento no Diário, deste ao Razão, do Razão ao Balancete e, por fim, às demonstrações contábeis — cada etapa depende da anterior."
+        }
+      ],
+      "rl": [
+        {
+          "de": "documentacao-suporte",
+          "para": "escrituracao-contabil",
+          "tipo": "fundamenta"
+        },
+        {
+          "de": "encadeamento-escritural",
+          "para": "escrituracao-contabil",
+          "tipo": "organiza o fluxo de"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "documentacao-suporte",
+          "texto": "Um lançamento de venda só pode ser considerado bem suportado se existir a nota fiscal correspondente arquivada, mesmo que o valor lançado esteja matematicamente correto."
+        },
+        {
+          "conceitoId": "encadeamento-escritural",
+          "texto": "Um erro na nota fiscal de origem se propaga: se o Diário registrar o valor errado, o Razão, o Balancete e a demonstração final também sairão errados, porque cada etapa depende da anterior."
+        }
+      ],
+      "pg": [
+        "A escrituração contábil correta exige tanto a forma (cronologia, ausência de rasuras) quanto o conteúdo (documento de suporte válido) — atender só uma das duas não é suficiente.",
+        "O encadeamento documento → Diário → Razão → Balancete → demonstrações significa que um erro identificado numa demonstração final deve ser investigado \"de trás para frente\", voltando etapa por etapa até a origem."
+      ],
+      "rs": "A escrituração contábil é o conjunto de técnicas para registrar os fatos patrimoniais de forma sistemática, apoiada em documentação de suporte e seguindo formalidades legais (cronologia, idioma, ausência de rasuras). Existe um encadeamento claro entre o documento de origem, o Diário, o Razão, o Balancete e as demonstrações finais, em que cada etapa depende da correção da anterior."
+    }
+  },
+  {
+    "contentId": "CG-019",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a finalidade do balancete de verificação e suas limitações como instrumento de conferência.",
+      "cc": [
+        {
+          "id": "balancete-verificacao",
+          "nome": "Balancete de verificação",
+          "def": "Relatório que lista todas as contas utilizadas na escrituração com seus respectivos saldos (ou débitos e créditos totais), usado para verificar se a soma dos débitos é igual à soma dos créditos antes de elaborar as demonstrações finais."
+        },
+        {
+          "id": "saldo-movimentacao",
+          "nome": "Saldo e movimentação",
+          "def": "O balancete pode apresentar apenas os saldos finais de cada conta, ou o detalhamento da movimentação (total debitado e total creditado no período), conforme o modelo adotado."
+        },
+        {
+          "id": "limitacoes-balancete",
+          "nome": "Limitações do balancete",
+          "def": "O balancete confirma apenas a igualdade matemática entre débitos e créditos; não garante que as contas certas foram usadas, nem detecta lançamentos omitidos ou classificados incorretamente de forma consistente."
+        }
+      ],
+      "rl": [
+        {
+          "de": "balancete-verificacao",
+          "para": "limitacoes-balancete",
+          "tipo": "está sujeito a"
+        },
+        {
+          "de": "saldo-movimentacao",
+          "para": "balancete-verificacao",
+          "tipo": "é o conteúdo apresentado em"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "limitacoes-balancete",
+          "texto": "Se um lançamento de R$ 500 for debitado em Despesas de Aluguel e creditado corretamente em Caixa, mas devesse ter sido debitado em Despesas de Energia, o balancete continua \"batendo\" (débitos = créditos) mesmo com o erro de classificação."
+        },
+        {
+          "conceitoId": "balancete-verificacao",
+          "texto": "Antes de montar o Balanço Patrimonial e a DRE, a entidade extrai o balancete para confirmar que não há erro aritmético acumulado na escrituração do período."
+        }
+      ],
+      "pg": [
+        "Balancete \"batido\" (débitos = créditos) não é prova de que a escrituração está correta — apenas de que não há erro de soma; erros de classificação de conta passam despercebidos.",
+        "Um lançamento completamente omitido (nunca registrado) também não aparece como divergência no balancete, porque não afeta a igualdade entre débitos e créditos."
+      ],
+      "rs": "O balancete de verificação lista as contas e seus saldos (ou movimentações) para confirmar que a soma dos débitos é igual à soma dos créditos antes de elaborar as demonstrações finais. Sua principal limitação é detectar apenas erros aritméticos: lançamentos com classificação errada de conta ou lançamentos omitidos não são identificados por ele."
+    }
+  },
+  {
+    "contentId": "CG-020",
+    "lesson": {
+      "v": 1,
+      "obj": "Identificar as técnicas usadas para corrigir erros de escrituração sem violar as formalidades contábeis.",
+      "cc": [
+        {
+          "id": "estorno",
+          "nome": "Estorno",
+          "def": "Técnica de correção que anula um lançamento errado por meio de um novo lançamento com as mesmas contas e valor, mas em sentido invertido (débito e crédito trocados), seguido do lançamento correto."
+        },
+        {
+          "id": "transferencia",
+          "nome": "Transferência",
+          "def": "Correção usada quando um valor foi lançado na conta errada: debita-se (ou credita-se) a conta errada no sentido inverso ao do erro e lança-se o valor corretamente na conta certa."
+        },
+        {
+          "id": "complementacao",
+          "nome": "Complementação",
+          "def": "Correção aplicada quando o valor lançado foi menor que o correto: lança-se apenas a diferença, nas mesmas contas e no mesmo sentido do lançamento original."
+        },
+        {
+          "id": "ressalva",
+          "nome": "Ressalva",
+          "def": "Observação registrada no próprio histórico do lançamento, explicando e documentando a correção realizada, para manter a rastreabilidade do erro e da forma como foi corrigido."
+        }
+      ],
+      "rl": [
+        {
+          "de": "estorno",
+          "para": "ressalva",
+          "tipo": "deve ser documentado por"
+        },
+        {
+          "de": "transferencia",
+          "para": "complementacao",
+          "tipo": "é alternativa a, dependendo do tipo de erro"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "estorno",
+          "texto": "Um lançamento que debitou Caixa e creditou Receita por engano (quando deveria ser o contrário) é corrigido por estorno: credita-se Caixa e debita-se Receita no mesmo valor, anulando o erro, e depois lança-se o fato corretamente."
+        },
+        {
+          "conceitoId": "complementacao",
+          "texto": "Se uma venda de R$ 1.000 foi lançada como R$ 900 por erro de digitação, a correção por complementação lança apenas a diferença de R$ 100, nas mesmas contas e sentido do lançamento original."
+        }
+      ],
+      "pg": [
+        "Jamais se corrige um erro de escrituração apagando, rasurando ou reescrevendo o lançamento original — a correção é sempre feita por um NOVO lançamento (estorno, transferência ou complementação), preservando o histórico.",
+        "Estorno é usado quando a conta ou o sentido (débito/crédito) está errado; complementação é usada quando apenas o valor está errado, mas a conta e o sentido estão certos — escolher a técnica errada não corrige o problema."
+      ],
+      "rs": "Erros de escrituração nunca são corrigidos apagando o lançamento original: usa-se estorno (quando conta ou sentido estão errados), transferência (quando a conta usada foi errada) ou complementação (quando só o valor está errado, por falta), sempre documentando a correção por meio de ressalva no histórico."
+    }
+  },
+  {
+    "contentId": "CG-021",
+    "lesson": {
+      "v": 1,
+      "obj": "Diferenciar o regime de caixa do regime de competência na apropriação de receitas e despesas.",
+      "cc": [
+        {
+          "id": "regime-caixa",
+          "nome": "Regime de caixa",
+          "def": "Critério de reconhecimento em que receitas e despesas são registradas apenas quando há efetivo recebimento ou pagamento em dinheiro, independentemente de quando o fato gerador ocorreu."
+        },
+        {
+          "id": "regime-competencia",
+          "nome": "Regime de competência",
+          "def": "Critério de reconhecimento em que receitas e despesas são registradas no período em que o fato gerador ocorre (quando são ganhas ou incorridas), independentemente do momento do recebimento ou pagamento. É o regime exigido pela Contabilidade societária."
+        },
+        {
+          "id": "fato-gerador",
+          "nome": "Fato gerador",
+          "def": "Evento que origina o direito a uma receita ou a obrigação de uma despesa — por exemplo, a entrega de uma mercadoria ou a prestação de um serviço, independentemente de quando o valor é efetivamente recebido ou pago."
+        }
+      ],
+      "rl": [
+        {
+          "de": "fato-gerador",
+          "para": "regime-competencia",
+          "tipo": "determina o momento do reconhecimento em"
+        },
+        {
+          "de": "regime-caixa",
+          "para": "regime-competencia",
+          "tipo": "contrasta com"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "regime-competencia",
+          "texto": "Uma venda a prazo realizada em dezembro, com recebimento em janeiro, é reconhecida como receita em dezembro pelo regime de competência (mês da entrega da mercadoria), mesmo sem entrada de caixa nesse mês."
+        },
+        {
+          "conceitoId": "regime-caixa",
+          "texto": "No regime de caixa, essa mesma venda só seria reconhecida como receita em janeiro, quando o dinheiro efetivamente entrasse, independentemente de quando a mercadoria foi entregue."
+        }
+      ],
+      "pg": [
+        "A Contabilidade societária brasileira (Lei nº 6.404/1976, art. 177, e CPC 00) exige o regime de competência, não o de caixa — o regime de caixa é usado em contextos específicos (ex.: alguns regimes tributários simplificados), não na contabilidade geral das empresas.",
+        "Competência não significa \"lançar quando o documento chega\" — significa lançar no período em que o fato gerador (entrega, prestação do serviço, consumo) efetivamente ocorreu."
+      ],
+      "rs": "No regime de caixa, receitas e despesas só são reconhecidas quando há recebimento ou pagamento efetivo. No regime de competência — exigido pela legislação societária e pelas normas contábeis — elas são reconhecidas no período em que o fato gerador ocorre, independentemente do momento do fluxo de caixa."
+    }
+  },
+  {
+    "contentId": "CG-022",
+    "lesson": {
+      "v": 1,
+      "obj": "Classificar receitas, custos e despesas e explicar seu impacto no resultado do período.",
+      "cc": [
+        {
+          "id": "receita",
+          "nome": "Receita",
+          "def": "Aumento de benefícios econômicos durante o período, sob a forma de entrada de recursos ou aumento de ativos, ou diminuição de passivos, que resulta em aumento do patrimônio líquido, exceto os provenientes de aportes dos sócios."
+        },
+        {
+          "id": "custo",
+          "nome": "Custo",
+          "def": "Gasto relacionado diretamente à produção de bens ou à prestação de serviços; é incorporado ao valor do produto/serviço e só afeta o resultado quando esse produto/serviço é vendido ou consumido (via Custo das Mercadorias/Produtos/Serviços Vendidos)."
+        },
+        {
+          "id": "despesa",
+          "nome": "Despesa",
+          "def": "Diminuição de benefícios econômicos durante o período, sob a forma de saída de recursos ou redução de ativos, ou aumento de passivos, que resulta em diminuição do patrimônio líquido, exceto as distribuições aos sócios. Diferente do custo, afeta o resultado no período em que é incorrida."
+        }
+      ],
+      "rl": [
+        {
+          "de": "custo",
+          "para": "despesa",
+          "tipo": "difere de"
+        },
+        {
+          "de": "receita",
+          "para": "despesa",
+          "tipo": "é confrontada com, para apurar o resultado"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "custo",
+          "texto": "A matéria-prima usada na fabricação de um produto é custo enquanto o produto está em estoque; só afeta o resultado quando o produto é vendido, por meio do Custo dos Produtos Vendidos."
+        },
+        {
+          "conceitoId": "despesa",
+          "texto": "O salário do pessoal administrativo (não ligado à produção) é despesa e afeta o resultado do mês em que é incorrido, independentemente de haver venda ou não nesse mês."
+        }
+      ],
+      "pg": [
+        "Custo e despesa não são sinônimos: custo se refere a gastos ligados à produção/prestação de serviço e só impacta o resultado quando há venda; despesa impacta o resultado no período em que ocorre, esteja ou não ligada a uma venda.",
+        "Nem todo desembolso em dinheiro é imediatamente uma despesa (pode ser um custo ainda em estoque, ou mesmo um investimento/ativo) — é preciso analisar a natureza do gasto, não apenas a saída de caixa."
+      ],
+      "rs": "Receita é o aumento de benefícios econômicos que eleva o patrimônio líquido no período. Custo é o gasto ligado à produção/prestação de serviço, que só afeta o resultado quando o bem ou serviço é vendido. Despesa é a diminuição de benefícios econômicos que afeta o resultado no próprio período em que ocorre, independentemente de venda."
+    }
+  },
+  {
+    "contentId": "CG-023",
+    "lesson": {
+      "v": 1,
+      "obj": "Descrever o processo de encerramento das contas de resultado e a transferência do resultado apurado para o Patrimônio Líquido.",
+      "cc": [
+        {
+          "id": "conta-are",
+          "nome": "Apuração do Resultado do Exercício (ARE)",
+          "def": "Conta transitória de resultado usada para reunir os saldos de todas as contas de receita, custo e despesa no encerramento do período, antes de apurar o lucro ou prejuízo líquido."
+        },
+        {
+          "id": "encerramento-contas-resultado",
+          "nome": "Encerramento das contas de resultado",
+          "def": "Processo pelo qual as contas de receita (saldo credor) são debitadas e as contas de despesa/custo (saldo devedor) são creditadas, cada uma em contrapartida da conta de Apuração do Resultado do Exercício, zerando seus saldos para o próximo período."
+        },
+        {
+          "id": "transferencia-resultado-pl",
+          "nome": "Transferência do resultado ao Patrimônio Líquido",
+          "def": "Etapa final da apuração: o saldo da conta de Apuração do Resultado do Exercício (lucro, se credor, ou prejuízo, se devedor) é transferido para uma conta do Patrimônio Líquido, geralmente Lucros ou Prejuízos Acumulados."
+        }
+      ],
+      "rl": [
+        {
+          "de": "encerramento-contas-resultado",
+          "para": "conta-are",
+          "tipo": "concentra os saldos em"
+        },
+        {
+          "de": "conta-are",
+          "para": "transferencia-resultado-pl",
+          "tipo": "tem seu saldo final movido por"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "encerramento-contas-resultado",
+          "texto": "No encerramento, a conta Receita de Vendas (saldo credor de R$ 50.000) é debitada em R$ 50.000 com crédito na conta de Apuração do Resultado do Exercício, zerando a Receita de Vendas para o próximo período."
+        },
+        {
+          "conceitoId": "transferencia-resultado-pl",
+          "texto": "Se, após reunir todas as receitas e despesas, a conta de Apuração do Resultado do Exercício apresentar saldo credor de R$ 8.000, esse valor (lucro líquido) é transferido a Lucros Acumulados, no Patrimônio Líquido."
+        }
+      ],
+      "pg": [
+        "As contas de resultado (receita, custo, despesa) existem apenas para acumular valores durante o exercício — ao final, são sempre zeradas (encerradas); só as contas patrimoniais (Ativo, Passivo, PL) carregam saldo para o período seguinte.",
+        "Se a soma das despesas/custos superar a soma das receitas, a conta de Apuração do Resultado do Exercício fica com saldo devedor (prejuízo), e não credor (lucro) — o sentido do saldo indica se houve lucro ou prejuízo."
+      ],
+      "rs": "No encerramento do exercício, todas as contas de receita, custo e despesa são zeradas em contrapartida da conta de Apuração do Resultado do Exercício, que concentra o resultado do período. O saldo final dessa conta — lucro (credor) ou prejuízo (devedor) — é então transferido para uma conta do Patrimônio Líquido, normalmente Lucros ou Prejuízos Acumulados."
+    }
+  },
+  {
+    "contentId": "CG-024",
+    "lesson": {
+      "v": 1,
+      "obj": "Identificar os principais ajustes necessários para adequar a escrituração ao regime de competência antes do encerramento do período.",
+      "cc": [
+        {
+          "id": "despesa-antecipada",
+          "nome": "Despesa antecipada (antecipação)",
+          "def": "Valor já pago, mas que se refere a benefício ainda não consumido no período atual (ex.: seguro ou aluguel pago antecipadamente); é registrado como Ativo e apropriado ao resultado conforme o benefício é consumido."
+        },
+        {
+          "id": "receita-antecipada",
+          "nome": "Receita antecipada (recebida por antecipação)",
+          "def": "Valor já recebido, mas referente a serviço ou produto ainda não entregue/prestado; é registrado como Passivo e reconhecido como receita conforme a obrigação é cumprida."
+        },
+        {
+          "id": "despesa-apropriar",
+          "nome": "Despesa a apropriar (provisão/incorrida a pagar)",
+          "def": "Despesa já incorrida (o fato gerador já ocorreu) mas ainda não paga nem documentada por fatura; é reconhecida no período por estimativa, com contrapartida em um passivo (ex.: provisão)."
+        },
+        {
+          "id": "receita-apropriar",
+          "nome": "Receita a apropriar (ganha a receber)",
+          "def": "Receita já ganha (o fato gerador já ocorreu) mas ainda não recebida nem faturada; é reconhecida no período por estimativa, com contrapartida em um ativo a receber."
+        }
+      ],
+      "rl": [
+        {
+          "de": "despesa-antecipada",
+          "para": "receita-antecipada",
+          "tipo": "é o espelho patrimonial inverso de"
+        },
+        {
+          "de": "despesa-apropriar",
+          "para": "receita-apropriar",
+          "tipo": "é o espelho patrimonial inverso de"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "despesa-antecipada",
+          "texto": "Um seguro anual pago em janeiro é registrado todo como Ativo (Seguros a Vencer) e apropriado ao resultado em 1/12 por mês, conforme a cobertura é consumida."
+        },
+        {
+          "conceitoId": "despesa-apropriar",
+          "texto": "Juros sobre um empréstimo que vencem apenas no mês seguinte, mas que já se acumularam ao longo do mês atual, são reconhecidos como despesa no mês atual, com contrapartida em um passivo de juros a pagar."
+        }
+      ],
+      "pg": [
+        "Despesa antecipada e receita antecipada envolvem caixa já movimentado (pago ou recebido), mas o fato gerador ainda não ocorreu totalmente — por isso geram Ativo ou Passivo, não resultado imediato.",
+        "Despesa a apropriar e receita a apropriar são o contrário: o fato gerador já ocorreu, mas o caixa ainda não se movimentou — por isso afetam o resultado do período mesmo sem pagamento ou recebimento."
+      ],
+      "rs": "Os ajustes por competência tratam de descasamentos entre o momento do caixa e o momento do fato gerador: despesas e receitas antecipadas (caixa já movimentado, fato gerador pendente, geram Ativo/Passivo) e despesas e receitas a apropriar (fato gerador já ocorrido, caixa pendente, afetam o resultado do período por estimativa)."
+    }
+  },
+  {
+    "contentId": "CG-025",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o controle das disponibilidades em caixa e bancos e o processo de conciliação bancária.",
+      "cc": [
+        {
+          "id": "disponibilidades",
+          "nome": "Disponibilidades",
+          "def": "Grupo do Ativo Circulante que reúne os recursos de liquidez imediata da entidade: dinheiro em caixa, depósitos bancários à vista e aplicações financeiras de liquidez imediata."
+        },
+        {
+          "id": "conta-movimento",
+          "nome": "Conta Movimento (Bancos conta corrente)",
+          "def": "Conta contábil que registra as entradas (depósitos, transferências recebidas) e saídas (pagamentos, transferências emitidas) de recursos mantidos em conta bancária."
+        },
+        {
+          "id": "conciliacao-bancaria",
+          "nome": "Conciliação bancária",
+          "def": "Procedimento de comparar o saldo contábil da conta Bancos com o saldo do extrato bancário, identificando e explicando as divergências (ex.: cheques emitidos e não compensados, tarifas ainda não lançadas)."
+        },
+        {
+          "id": "divergencias-conciliacao",
+          "nome": "Divergências de conciliação",
+          "def": "Diferenças entre o saldo contábil e o saldo bancário causadas por lançamentos registrados em um lado e ainda não no outro — por exemplo, tarifas debitadas pelo banco mas não lançadas na contabilidade, ou cheques emitidos mas não compensados."
+        }
+      ],
+      "rl": [
+        {
+          "de": "conta-movimento",
+          "para": "conciliacao-bancaria",
+          "tipo": "é comparada com o extrato em"
+        },
+        {
+          "de": "conciliacao-bancaria",
+          "para": "divergencias-conciliacao",
+          "tipo": "identifica e explica"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "divergencias-conciliacao",
+          "texto": "O banco debitou uma tarifa de manutenção de conta que ainda não foi lançada na contabilidade da empresa — até esse lançamento ser feito, o saldo contábil fica maior que o saldo do extrato bancário."
+        },
+        {
+          "conceitoId": "conciliacao-bancaria",
+          "texto": "Um cheque emitido pela empresa e já lançado na contabilidade (saída de Caixa/Bancos) pode ainda não ter sido apresentado ao banco pelo beneficiário — nesse caso, o saldo do extrato bancário fica temporariamente maior que o saldo contábil."
+        }
+      ],
+      "pg": [
+        "Divergência na conciliação não significa necessariamente erro: muitas vezes é apenas uma diferença de tempo (cheque não compensado, tarifa ainda não lançada) que se resolve nos dias seguintes.",
+        "A conciliação bancária deve ser feita periodicamente (mensalmente, no mínimo) justamente para identificar lançamentos esquecidos (como tarifas e juros) antes que se acumulem e distorçam o saldo contábil de Caixa/Bancos."
+      ],
+      "rs": "As disponibilidades reúnem o caixa e os saldos bancários de liquidez imediata da entidade. A conciliação bancária compara o saldo contábil da conta Bancos com o saldo do extrato, identificando divergências como tarifas não lançadas ou cheques ainda não compensados, e serve para manter o controle correto das disponibilidades."
+    }
+  },
+  {
+    "contentId": "CG-026",
+    "lesson": {
+      "v": 1,
+      "obj": "Descrever o registro de vendas a prazo, recebimentos, descontos e perdas na conta Clientes.",
+      "cc": [
+        {
+          "id": "conta-clientes",
+          "nome": "Conta Clientes (Duplicatas/Contas a Receber)",
+          "def": "Conta do Ativo Circulante que registra os direitos da entidade decorrentes de vendas de mercadorias ou prestação de serviços a prazo, ainda não recebidos."
+        },
+        {
+          "id": "desconto-financeiro",
+          "nome": "Desconto financeiro (desconto por antecipação)",
+          "def": "Redução concedida ao cliente que paga antes do vencimento, como incentivo à liquidação antecipada; é registrado como despesa financeira (Descontos Concedidos) no momento do recebimento."
+        },
+        {
+          "id": "perdas-estimadas-credito",
+          "nome": "Perdas estimadas em créditos de liquidação dúvidosa (PECLD)",
+          "def": "Estimativa de valores de Clientes que provavelmente não serão recebidos, registrada como despesa e como conta redutora do Ativo (retificadora de Clientes), em obediência ao princípio da prudência/conservadorismo."
+        }
+      ],
+      "rl": [
+        {
+          "de": "conta-clientes",
+          "para": "perdas-estimadas-credito",
+          "tipo": "é reduzida, para efeito de apresentação, por"
+        },
+        {
+          "de": "desconto-financeiro",
+          "para": "conta-clientes",
+          "tipo": "reduz o valor líquido recebido de"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "desconto-financeiro",
+          "texto": "Uma duplicata de R$ 1.000 com vencimento em 30 dias é paga com 10 dias de antecedência; a empresa concede 2% de desconto, recebendo R$ 980 em Caixa e registrando R$ 20 como Descontos Concedidos (despesa financeira)."
+        },
+        {
+          "conceitoId": "perdas-estimadas-credito",
+          "texto": "Com base no histórico de inadimplência, a empresa estima que 3% do saldo de Clientes não será recebido e registra essa estimativa como despesa e como redução do saldo de Clientes apresentado no Balanço."
+        }
+      ],
+      "pg": [
+        "O desconto financeiro concedido no recebimento antecipado é despesa financeira, não uma redução de receita de vendas — a receita já foi reconhecida pelo valor total no momento da venda.",
+        "A PECLD é uma estimativa (baseada em histórico ou análise de risco), registrada por prudência, mesmo antes de qualquer cliente específico ter deixado de pagar — não se confunde com a baixa definitiva de um crédito já comprovadamente incobrável."
+      ],
+      "rs": "A conta Clientes registra os direitos de vendas a prazo ainda não recebidos. Descontos financeiros concedidos por pagamento antecipado são despesas financeiras lançadas no recebimento. Perdas estimadas em créditos de liquidação dúvidosa (PECLD) reduzem o valor de Clientes apresentado no Balanço, por prudência, antes mesmo de qualquer inadimplência confirmada."
+    }
+  },
+  {
+    "contentId": "CG-027",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o registro contábil de compras e vendas de mercadorias, incluindo devoluções e abatimentos, e seu efeito sobre os estoques.",
+      "cc": [
+        {
+          "id": "conta-estoques",
+          "nome": "Estoques (Mercadorias)",
+          "def": "Conta do Ativo Circulante que representa os bens destinados à venda (ou matérias-primas/produtos em elaboração), avaliados pelo custo de aquisição ou produção, até serem vendidos ou consumidos."
+        },
+        {
+          "id": "devolucao-compra",
+          "nome": "Devolução de compra",
+          "def": "Retorno de mercadoria ao fornecedor por motivos como defeito ou divergência com o pedido; reduz o valor da compra e, consequentemente, do estoque (ou do custo, se a mercadoria já tiver sido baixada)."
+        },
+        {
+          "id": "devolucao-venda",
+          "nome": "Devolução de venda",
+          "def": "Retorno de mercadoria pelo cliente; reduz a receita de vendas (como conta retificadora) e provoca o retorno do bem ao estoque pelo custo em que havia sido baixado."
+        },
+        {
+          "id": "abatimento",
+          "nome": "Abatimento",
+          "def": "Redução concedida sobre o preço de compra ou venda, sem devolução física da mercadoria, geralmente por defeito, atraso na entrega ou outra divergência comercial — reduz o valor da operação, mas a mercadoria permanece com o comprador."
+        }
+      ],
+      "rl": [
+        {
+          "de": "devolucao-compra",
+          "para": "conta-estoques",
+          "tipo": "reduz"
+        },
+        {
+          "de": "devolucao-venda",
+          "para": "conta-estoques",
+          "tipo": "repõe"
+        },
+        {
+          "de": "abatimento",
+          "para": "devolucao-compra",
+          "tipo": "difere de, por não envolver retorno físico da mercadoria em"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "devolucao-venda",
+          "texto": "Um cliente devolve uma mercadoria por defeito: a receita de vendas é reduzida (Devoluções de Vendas, conta retificadora) e a mercadoria retorna ao estoque pelo mesmo custo em que havia sido baixada na venda."
+        },
+        {
+          "conceitoId": "abatimento",
+          "texto": "Um cliente recebe uma mercadoria com pequena avaria, mas aceita ficar com ela mediante um desconto de 5% sobre o preço — isso é um abatimento, sem devolução física do produto."
+        }
+      ],
+      "pg": [
+        "Devolução envolve retorno físico da mercadoria; abatimento não — o abatimento é apenas uma redução de preço sobre uma mercadoria que o comprador decide manter.",
+        "Na devolução de venda, dois efeitos ocorrem juntos: a redução da receita (pelo preço de venda) e a reposição do estoque (pelo custo) — tratar apenas um dos dois efeitos deixa a escrituração incompleta."
+      ],
+      "rs": "Estoques representam os bens destinados à venda, avaliados ao custo. Devoluções de compra reduzem o valor adquirido e o estoque; devoluções de venda reduzem a receita e repõem o estoque pelo custo; abatimentos reduzem o valor da operação sem envolver retorno físico da mercadoria."
+    }
+  }
+]
