@@ -14,6 +14,22 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #94 — Testes finais e docs do Apache (APA-16)
+
+- Ponto de restauração: branch `restore/pre-apa-16` (main antes do merge).
+- O que muda no site: nada visível diretamente — este PR não é uma
+  funcionalidade nova, é a correção de um bug real achado escrevendo os
+  testes finais do Apache. Reportar uma aula com erro bem na hora de um
+  poll automático, ou enviar/reenviar material em 2 abas quase ao mesmo
+  tempo, podia fazer o Apache gerar a aula ou processar o enriquecimento
+  **duas vezes** por engano (gastando neurons em dobro à toa) — corrigido.
+  Comportamento visível ao aluno não muda; o impacto é só em custo de
+  neurons evitado nesses casos raros.
+- Sem migration nova.
+- Se algo der errado: reverter para `restore/pre-apa-16` volta ao
+  comportamento anterior (sem a correção da corrida); nenhuma aula ou nota
+  existente é afetada.
+
 ## PR #93 — Upload do material do aluno (APA-12)
 
 - Ponto de restauração: branch `restore/pre-apa-12` (main antes do merge).
