@@ -14,6 +14,45 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #105 — APA-18: aulas base de Contabilidade Tributária (sub-lote 5e)
+
+- Ponto de restauração: branch `restore/pre-apa-18-contabilidade-tributaria-05`
+  (commit `5660c40`, main antes do merge).
+- O que muda no site: nada visível ainda — este PR só adiciona os dados; as
+  6 aulas só aparecem depois de o Abner rodar o comando de carga para esse
+  arquivo (não precisa de "Publicar Atlas": o script grava direto em D1/R2).
+  O carregamento em produção de toda a Contabilidade Tributária será feito
+  num único comando ao final de todos os 15 sub-lotes, a pedido do Abner.
+- O que muda fora do site: quinto sub-lote de Contabilidade Tributária em
+  `data/apache/aulas/contabilidade-tributaria-05.json` (6 dos 124 conteúdos:
+  CT-040 a CT-045, unidade "Lucro Presumido", na ordem do catálogo,
+  `model='claude-manual'`), usando o mesmo mecanismo de carga dos PRs
+  #95-#104 (`scripts/apache-carregar-aulas.mjs`). Conteúdo: elegibilidade,
+  opção e vedações do Lucro Presumido (Lei nº 9.718/1998, art. 13 — limite
+  de R$ 78.000.000,00 de receita bruta anual, ou proporcional por R$
+  6.500.000,00/mês; art. 14 — vedações a instituições financeiras,
+  factoring, benefícios fiscais e lucros no exterior) e apuração
+  trimestral; receita bruta e percentuais de presunção do IRPJ e da CSLL
+  por atividade (Lei nº 9.249/1995, arts. 15 e 20 — 8%/12% comércio, 16%
+  (receita baixa)/32% serviços no IRPJ, sempre 32% na CSLL para serviços,
+  1,6% combustíveis, exceção das profissões regulamentadas); ganhos de
+  capital e receitas financeiras tributados integralmente, sem presunção;
+  IRPJ (alíquota de 15% mais adicional de 10% sobre o que exceder R$
+  60.000,00 por trimestre) e CSLL (alíquota única de 9%, sem adicional),
+  com retenções e formas de pagamento; PIS e Cofins no regime cumulativo
+  (0,65% e 3% mensais sobre a receita bruta, sem crédito) e a conciliação
+  trimestral entre as apurações mensais de PIS/Cofins e a apuração
+  trimestral de IRPJ/CSLL. Valores e mecanismos (limite de receita,
+  percentuais de presunção, adicional de IRPJ, alíquotas de PIS/Cofins
+  cumulativos) verificados contra fontes oficiais/recentes antes de
+  escrever o conteúdo; a Reforma Tributária fica fora do escopo deste
+  sub-lote (tratada nos sub-lotes 5m/5o). `docs/APACHE-18-plano.md`
+  atualizado (sub-lote 5e mesclado; Tributária em 45/124).
+- Se algo der errado: reverter para
+  `restore/pre-apa-18-contabilidade-tributaria-05` volta ao estado anterior;
+  nenhuma aula ainda foi carregada em produção, então reverter sem ter
+  rodado o script de carga não perde nada.
+
 ## PR #104 — APA-18: aulas base de Contabilidade Tributária (sub-lote 5d)
 
 - Ponto de restauração: branch `restore/pre-apa-18-contabilidade-tributaria-04`

@@ -1,0 +1,343 @@
+[
+  {
+    "contentId": "CT-040",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar quem pode optar pelo Lucro Presumido, os limites de receita bruta que condicionam a opção e as vedações legais, além da forma de apuração trimestral do regime.",
+      "cc": [
+        {
+          "id": "lucro-presumido-conceito",
+          "nome": "Lucro Presumido",
+          "def": "Regime de tributação do IRPJ e da CSLL em que a base de cálculo é presumida a partir de percentuais legais aplicados sobre a receita bruta, dispensando a apuração do lucro real contábil para fins tributários; é opção facultativa para quem não está obrigado ao Lucro Real."
+        },
+        {
+          "id": "limite-receita-lucro-presumido",
+          "nome": "Limite de receita bruta para opção",
+          "def": "Teto de receita bruta total no ano-calendário anterior (R$ 78.000.000,00, ou R$ 6.500.000,00 multiplicado pelo número de meses de atividade no ano anterior, se inferior a 12 meses) para poder optar pelo Lucro Presumido no ano-calendário seguinte, conforme a Lei nº 9.718/1998, art. 13."
+        },
+        {
+          "id": "vedacoes-lucro-presumido",
+          "nome": "Vedações à opção",
+          "def": "Situações que impedem a opção pelo Lucro Presumido independentemente da receita, como instituições financeiras e equiparadas, empresas que usufruem de benefícios fiscais de isenção/redução do IRPJ, empresas com lucros/rendimentos/ganhos de capital no exterior, e empresas que explorem factoring (Lei nº 9.718/1998, art. 14)."
+        },
+        {
+          "id": "opcao-regime-presumido",
+          "nome": "Momento e forma da opção",
+          "def": "A opção é manifestada com o pagamento da primeira quota (ou quota única) do IRPJ relativo ao primeiro período de apuração de cada ano-calendário, sendo irretratável para todo o ano-calendário."
+        },
+        {
+          "id": "apuracao-trimestral-presumido",
+          "nome": "Apuração trimestral",
+          "def": "O IRPJ e a CSLL no Lucro Presumido são apurados por períodos trimestrais fechados em 31 de março, 30 de junho, 30 de setembro e 31 de dezembro, cada trimestre tratado de forma definitiva e independente dos demais."
+        }
+      ],
+      "rl": [
+        { "de": "limite-receita-lucro-presumido", "para": "lucro-presumido-conceito", "tipo": "condiciona a opção por" },
+        { "de": "vedacoes-lucro-presumido", "para": "lucro-presumido-conceito", "tipo": "impede a opção por" },
+        { "de": "opcao-regime-presumido", "para": "apuracao-trimestral-presumido", "tipo": "define o início de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "vedacoes-lucro-presumido",
+          "texto": "Uma empresa com receita bruta anual de apenas R$ 2.000.000,00, abaixo do limite de R$ 78.000.000,00, ainda assim não pode optar pelo Lucro Presumido se for uma sociedade de factoring, pois a vedação do art. 14 da Lei nº 9.718/1998 independe do valor da receita."
+        },
+        {
+          "conceitoId": "apuracao-trimestral-presumido",
+          "texto": "Uma empresa no Lucro Presumido que tem prejuízo contábil no 2º trimestre ainda recolhe IRPJ e CSLL sobre a receita presumida desse trimestre, porque a base de cálculo não depende do resultado contábil, apenas da receita bruta e das demais receitas tributáveis do período."
+        }
+      ],
+      "pg": [
+        "O limite de R$ 78.000.000,00 é sobre a receita bruta do ano-calendário ANTERIOR ao da opção, não do próprio ano em que a empresa está apurando.",
+        "Ultrapassar o limite de receita durante o próprio ano-calendário não obriga a mudar de regime no meio do ano; a consequência (impossibilidade de optar) vale para o ano seguinte.",
+        "A opção pelo Lucro Presumido é irretratável para todo o ano-calendário: não é possível migrar para o Lucro Real no meio do ano só porque passou a ser mais vantajoso."
+      ],
+      "rs": "O Lucro Presumido é regime opcional de apuração de IRPJ e CSLL com base presumida sobre a receita bruta, disponível a quem teve receita bruta total no ano anterior até R$ 78.000.000,00 (ou proporcional, se o período de atividade foi menor que 12 meses) e não incorre em vedação legal (instituições financeiras, factoring, benefícios fiscais de isenção/redução, lucros no exterior). A opção é manifestada no pagamento da primeira quota do IRPJ do ano, é irretratável para o ano-calendário inteiro, e a apuração é trimestral e definitiva."
+    }
+  },
+  {
+    "contentId": "CT-041",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar como a receita bruta é definida para fins de presunção e os percentuais legais de presunção do IRPJ e da CSLL aplicáveis a cada tipo de atividade.",
+      "cc": [
+        {
+          "id": "receita-bruta-presumido",
+          "nome": "Receita bruta para a base de cálculo",
+          "def": "Receita bruta de venda de bens e serviços, deduzida das vendas canceladas, dos descontos incondicionais concedidos e dos impostos não cumulativos cobrados do comprador como mero depositário (como o ICMS cobrado por substituição tributária), conforme Lei nº 9.718/1998, art. 12."
+        },
+        {
+          "id": "percentual-presuncao-irpj",
+          "nome": "Percentual de presunção do IRPJ",
+          "def": "Percentual legal (Lei nº 9.249/1995, art. 15) aplicado sobre a receita bruta de cada atividade para formar a base de cálculo do IRPJ: 8% para venda de mercadorias/produtos e serviços hospitalares/transporte de carga; 16% para prestação de serviços em geral com receita bruta anual até R$ 120.000,00 (exceto profissões regulamentadas e os já citados em 8%); 32% para serviços em geral (regra padrão, inclusive sempre para profissões legalmente regulamentadas); 1,6% para revenda de combustíveis."
+        },
+        {
+          "id": "percentual-presuncao-csll",
+          "nome": "Percentual de presunção da CSLL",
+          "def": "Percentual legal (Lei nº 9.249/1995, art. 20) aplicado sobre a receita bruta para formar a base de cálculo da CSLL: 12% para venda de mercadorias/produtos e demais atividades não listadas como serviço; 32% para prestação de serviços em geral (sem a redução para 16% que existe no IRPJ para pequena receita de serviços)."
+        },
+        {
+          "id": "atividades-mistas-presuncao",
+          "nome": "Empresas com atividades mistas",
+          "def": "Quando a empresa exerce mais de uma atividade (por exemplo, comércio e prestação de serviços), aplica-se o percentual de presunção correspondente à receita bruta de cada atividade separadamente, somando-se as bases de cálculo resultantes."
+        },
+        {
+          "id": "devolucoes-descontos-base",
+          "nome": "Devoluções e descontos incondicionais",
+          "def": "Valores de vendas canceladas (devoluções) e de descontos incondicionais (concedidos no próprio documento fiscal, sem depender de evento futuro) reduzem a receita bruta antes da aplicação do percentual de presunção; descontos condicionais (financeiros) não reduzem a receita bruta."
+        }
+      ],
+      "rl": [
+        { "de": "receita-bruta-presumido", "para": "percentual-presuncao-irpj", "tipo": "é a base de aplicação de" },
+        { "de": "receita-bruta-presumido", "para": "percentual-presuncao-csll", "tipo": "é a base de aplicação de" },
+        { "de": "atividades-mistas-presuncao", "para": "percentual-presuncao-irpj", "tipo": "segmenta a aplicação de" },
+        { "de": "devolucoes-descontos-base", "para": "receita-bruta-presumido", "tipo": "reduz" }
+      ],
+      "fm": [
+        {
+          "id": "base-irpj-presumido",
+          "expr": "Base de cálculo do IRPJ (por atividade) = Receita bruta da atividade × Percentual de presunção do IRPJ",
+          "legenda": "Calculado separadamente para cada atividade quando a empresa exerce mais de uma, somando-se os resultados."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "atividades-mistas-presuncao",
+          "texto": "Uma empresa que revende mercadorias (receita de R$ 500.000,00) e também presta serviços de consultoria (receita de R$ 100.000,00) aplica 8% sobre os R$ 500.000,00 e 32% sobre os R$ 100.000,00, somando as duas bases para chegar à base de cálculo total do IRPJ do trimestre."
+        },
+        {
+          "conceitoId": "percentual-presuncao-irpj",
+          "texto": "Um escritório de advocacia (profissão legalmente regulamentada) aplica 32% de presunção sobre sua receita de serviços mesmo que a receita bruta anual seja de apenas R$ 90.000,00, porque a redução para 16% não se aplica a profissões regulamentadas."
+        }
+      ],
+      "pg": [
+        "O percentual de presunção da CSLL para serviços é sempre 32%, mesmo quando a receita bruta anual é baixa; a redução para 16% existe apenas no IRPJ, e mesmo assim não vale para profissões regulamentadas.",
+        "Descontos incondicionais reduzem a receita bruta; descontos condicionais (concedidos sob condição futura, como pagamento antecipado) não reduzem.",
+        "Em empresas com atividades mistas, não se aplica um único percentual sobre a receita total: cada atividade usa seu próprio percentual, e as bases são somadas depois."
+      ],
+      "rs": "A receita bruta que serve de base à presunção é a receita de vendas e serviços líquida de devoluções, descontos incondicionais e de tributos cobrados como mero depositário. Sobre ela aplicam-se percentuais de presunção distintos para IRPJ (8% comércio/hospitalar/transporte de carga, 16% serviços em geral com receita baixa, 32% serviços em geral e sempre para profissões regulamentadas, 1,6% combustíveis) e para CSLL (12% comércio, 32% serviços sempre). Empresas com mais de uma atividade aplicam o percentual de cada uma sobre sua respectiva receita, somando as bases resultantes."
+    }
+  },
+  {
+    "contentId": "CT-042",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar quais receitas e ganhos, além da receita bruta presumida, compõem integralmente a base de cálculo do IRPJ e da CSLL no Lucro Presumido.",
+      "cc": [
+        {
+          "id": "demais-receitas-presumido",
+          "nome": "Demais receitas e ganhos de capital",
+          "def": "Ganhos de capital, rendimentos de aplicações financeiras, variações monetárias ativas e demais receitas não decorrentes da atividade objeto da empresa somam-se integralmente (sem aplicação de percentual de presunção) à base de cálculo do IRPJ e da CSLL do trimestre."
+        },
+        {
+          "id": "ganho-capital-presumido",
+          "nome": "Ganho de capital na alienação de ativos",
+          "def": "Diferença positiva entre o valor de alienação de um bem do ativo não circulante e seu valor contábil (custo de aquisição menos depreciação/amortização acumulada), tributada integralmente, sem percentual de presunção, no trimestre da alienação."
+        },
+        {
+          "id": "receitas-financeiras-presumido",
+          "nome": "Receitas financeiras",
+          "def": "Juros ativos, descontos obtidos, rendimentos de aplicações financeiras de renda fixa ou variável e demais receitas de natureza financeira, que entram na base de cálculo pelo valor integral apurado no período, não pelo percentual de presunção da atividade."
+        },
+        {
+          "id": "variacao-monetaria-presumido",
+          "nome": "Variações monetárias ativas",
+          "def": "Ganhos decorrentes da atualização de direitos ou obrigações em moeda estrangeira ou indexados, reconhecidos como receita financeira e tributados integralmente, da mesma forma que as demais receitas financeiras."
+        }
+      ],
+      "rl": [
+        { "de": "ganho-capital-presumido", "para": "demais-receitas-presumido", "tipo": "é um exemplo de" },
+        { "de": "receitas-financeiras-presumido", "para": "demais-receitas-presumido", "tipo": "é um exemplo de" },
+        { "de": "variacao-monetaria-presumido", "para": "receitas-financeiras-presumido", "tipo": "é tratada como" }
+      ],
+      "fm": [
+        {
+          "id": "ganho-capital-formula",
+          "expr": "Ganho de capital = Valor de alienação − Valor contábil líquido do bem",
+          "legenda": "Valor contábil líquido = custo de aquisição menos depreciação/amortização acumulada até a data da alienação."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "ganho-capital-presumido",
+          "texto": "Uma empresa vende um veículo do imobilizado por R$ 40.000,00, com valor contábil líquido de R$ 25.000,00; o ganho de capital de R$ 15.000,00 soma-se integralmente à base de cálculo do trimestre, sem redução por nenhum percentual de presunção."
+        },
+        {
+          "conceitoId": "receitas-financeiras-presumido",
+          "texto": "Os juros recebidos de uma aplicação em CDB somam-se integralmente à base de cálculo do IRPJ e da CSLL do trimestre em que foram apurados, ao lado da base presumida sobre a receita de vendas."
+        }
+      ],
+      "pg": [
+        "Ganhos de capital e receitas financeiras não recebem percentual de presunção: entram pelo valor integral, diferente da receita de vendas e serviços da atividade.",
+        "A tributação integral dessas receitas vale tanto para o IRPJ quanto para a CSLL, formando duas bases paralelas (uma presumida pela atividade, outra integral pelas demais receitas) que depois são somadas."
+      ],
+      "rs": "Além da base presumida sobre a receita da atividade, o Lucro Presumido soma integralmente, sem qualquer percentual de presunção, os ganhos de capital na alienação de bens do ativo não circulante, as receitas financeiras (juros, descontos obtidos, rendimentos de aplicações) e as variações monetárias ativas. Essas parcelas compõem, junto com a base presumida, a base de cálculo total do IRPJ e da CSLL do trimestre."
+    }
+  },
+  {
+    "contentId": "CT-043",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o cálculo do IRPJ no Lucro Presumido, incluindo a alíquota básica, o adicional sobre o excedente trimestral, as deduções admitidas e as formas de pagamento.",
+      "cc": [
+        {
+          "id": "aliquota-basica-irpj",
+          "nome": "Alíquota básica do IRPJ",
+          "def": "Percentual de 15% aplicado sobre a base de cálculo total do trimestre (soma da base presumida da atividade com as demais receitas integrais), formando o IRPJ devido antes do adicional."
+        },
+        {
+          "id": "adicional-irpj",
+          "nome": "Adicional de IRPJ",
+          "def": "10% adicional incidente sobre a parcela da base de cálculo trimestral que exceder R$ 60.000,00 (equivalente a R$ 20.000,00 por mês do período de apuração), sem qualquer deteção de limite superior."
+        },
+        {
+          "id": "retencoes-fonte-irpj",
+          "nome": "Retenções e antecipações",
+          "def": "Valores de IRPJ retidos na fonte sobre receitas da empresa (por exemplo, em prestação de serviços a pessoas jurídicas) podem ser deduzidos do IRPJ devido no trimestre, reduzindo o valor a pagar."
+        },
+        {
+          "id": "pagamento-irpj-presumido",
+          "nome": "Forma e prazo de pagamento",
+          "def": "O IRPJ trimestral pode ser pago em quota única até o último dia útil do mês seguinte ao do encerramento do trimestre, ou parcelado em até 3 quotas mensais, iguais e sucessivas, com acréscimo de juros Selic a partir da segunda quota, desde que cada quota não seja inferior a R$ 1.000,00."
+        }
+      ],
+      "rl": [
+        { "de": "aliquota-basica-irpj", "para": "adicional-irpj", "tipo": "é complementada por" },
+        { "de": "retencoes-fonte-irpj", "para": "pagamento-irpj-presumido", "tipo": "reduz o valor devido em" }
+      ],
+      "fm": [
+        {
+          "id": "irpj-devido-formula",
+          "expr": "IRPJ devido = (Base de cálculo trimestral × 15%) + [(Base de cálculo trimestral − R$ 60.000,00) × 10%, se positivo] − Retenções/antecipações",
+          "legenda": "O adicional de 10% só incide sobre o que exceder R$ 60.000,00 no trimestre; se a base for menor ou igual a esse valor, não há adicional."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "adicional-irpj",
+          "texto": "Uma empresa com base de cálculo trimestral de R$ 100.000,00 paga 15% sobre os R$ 100.000,00 (R$ 15.000,00) mais 10% sobre o excedente de R$ 40.000,00 que superou o limite de R$ 60.000,00 (R$ 4.000,00 de adicional), totalizando R$ 19.000,00 de IRPJ antes de deduções."
+        }
+      ],
+      "pg": [
+        "O limite do adicional é por trimestre (R$ 60.000,00), não por mês isolado nem por ano; empresas com período de apuração diferente de 3 meses completos (início/encerramento de atividade) usam o limite proporcional de R$ 20.000,00 por mês do período.",
+        "O adicional de 10% não tem alíquota reduzida nem teto: incide sobre todo o excedente, sem limite superior de valor.",
+        "A opção pelo pagamento em quotas (até 3) exige juros Selic a partir da segunda quota e quota mínima de R$ 1.000,00; se o IRPJ total do trimestre for menor que R$ 2.000,00, só é possível quota única."
+      ],
+      "rs": "O IRPJ do Lucro Presumido aplica 15% sobre toda a base de cálculo trimestral (presumida mais receitas integrais) e mais 10% de adicional sobre a parcela que exceder R$ 60.000,00 no trimestre. Do valor apurado, deduzem-se retenções e antecipações já recolhidas. O pagamento é feito em quota única no mês seguinte ao trimestre, ou em até 3 quotas mensais com juros Selic a partir da segunda, respeitando o valor mínimo de quota."
+    }
+  },
+  {
+    "contentId": "CT-044",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a apuração da CSLL no Lucro Presumido: percentuais de presunção específicos, alíquota, retenções e forma de pagamento.",
+      "cc": [
+        {
+          "id": "csll-base-presumido",
+          "nome": "Base de cálculo da CSLL",
+          "def": "Soma da receita bruta de cada atividade multiplicada pelo respectivo percentual de presunção da CSLL (12% comércio/indústria, 32% serviços) com as demais receitas e ganhos tributados integralmente (ganhos de capital, receitas financeiras), da mesma forma que no IRPJ, mas com percentuais próprios da CSLL."
+        },
+        {
+          "id": "aliquota-csll-geral",
+          "nome": "Alíquota geral da CSLL",
+          "def": "9% aplicada sobre a base de cálculo da CSLL para a generalidade das pessoas jurídicas no Lucro Presumido; instituições financeiras e equiparadas (quando, excepcionalmente, não vedadas ao regime) sujeitam-se a alíquotas majoradas específicas."
+        },
+        {
+          "id": "csll-sem-adicional",
+          "nome": "Ausência de adicional na CSLL",
+          "def": "Diferentemente do IRPJ, a CSLL não tem adicional sobre faixa de base de cálculo excedente: aplica-se a alíquota única de 9% sobre toda a base apurada no trimestre, qualquer que seja o valor."
+        },
+        {
+          "id": "retencoes-csll",
+          "nome": "Retenções e antecipações de CSLL",
+          "def": "Valores de CSLL retidos na fonte (por exemplo, em pagamentos recebidos de órgãos públicos ou de outras pessoas jurídicas em determinadas prestações de serviço) podem ser deduzidos da CSLL devida no trimestre."
+        }
+      ],
+      "rl": [
+        { "de": "csll-base-presumido", "para": "aliquota-csll-geral", "tipo": "é a base de aplicação de" },
+        { "de": "csll-sem-adicional", "para": "aliquota-csll-geral", "tipo": "contrasta com o IRPJ ao usar apenas" },
+        { "de": "retencoes-csll", "para": "csll-base-presumido", "tipo": "não altera, apenas deduz do valor apurado sobre" }
+      ],
+      "fm": [
+        {
+          "id": "csll-devida-formula",
+          "expr": "CSLL devida = (Base de cálculo da CSLL × 9%) − Retenções/antecipações",
+          "legenda": "Sem adicional por faixa; alíquota única de 9% sobre toda a base, para a generalidade das empresas."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "csll-base-presumido",
+          "texto": "Uma empresa de serviços com receita bruta trimestral de R$ 90.000,00 tem base de CSLL de R$ 28.800,00 (32% × R$ 90.000,00); já a base de IRPJ dessa mesma receita seria diferente, pois o IRPJ pode usar 16% se a receita bruta anual total não superar R$ 120.000,00 e a atividade não for de profissão regulamentada."
+        }
+      ],
+      "pg": [
+        "Os percentuais de presunção do IRPJ e da CSLL são diferentes para comércio/indústria (8% vs. 12%) e podem diferir para serviços (16%/32% no IRPJ conforme a receita e a atividade, sempre 32% na CSLL): não é possível aplicar o mesmo percentual às duas bases.",
+        "A CSLL, ao contrário do IRPJ, não tem adicional: a alíquota de 9% é fixa sobre toda a base, não importa o valor apurado no trimestre."
+      ],
+      "rs": "A CSLL no Lucro Presumido usa base de cálculo formada pela receita bruta de cada atividade multiplicada por seu percentual de presunção específico (12% comércio/indústria, 32% serviços, diferente dos percentuais do IRPJ), somada às demais receitas e ganhos tributados integralmente. Sobre essa base aplica-se alíquota única de 9%, sem adicional por faixa, deduzidas eventuais retenções e antecipações já recolhidas."
+    }
+  },
+  {
+    "contentId": "CT-045",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a apuração do PIS e da Cofins no regime cumulativo das empresas do Lucro Presumido e como o fechamento trimestral concilia IRPJ, CSLL, PIS e Cofins.",
+      "cc": [
+        {
+          "id": "pis-cofins-cumulativo",
+          "nome": "Regime cumulativo de PIS/Cofins",
+          "def": "Regime aplicável, por regra, às empresas no Lucro Presumido (Lei nº 9.718/1998), em que o PIS e a Cofins incidem sobre a receita bruta mensal sem direito a créditos sobre insumos, aquisições ou despesas, diferente do regime não cumulativo do Lucro Real."
+        },
+        {
+          "id": "aliquotas-pis-cofins-cumulativo",
+          "nome": "Alíquotas do regime cumulativo",
+          "def": "0,65% de PIS e 3% de Cofins sobre a receita bruta mensal, aplicadas separadamente (não somadas em uma única guia), com apuração e recolhimento mensais, diferentemente do IRPJ e da CSLL que são trimestrais."
+        },
+        {
+          "id": "exclusoes-base-pis-cofins",
+          "nome": "Exclusões da base de cálculo",
+          "def": "Vendas canceladas, descontos incondicionais concedidos, IPI quando destacado em nota fiscal, ICMS cobrado pelo vendedor na condição de substituto tributário, e receitas de exportação (imunes) são excluídos da base mensal de PIS e Cofins."
+        },
+        {
+          "id": "periodicidade-pis-cofins",
+          "nome": "Periodicidade mensal x apuração trimestral do IRPJ/CSLL",
+          "def": "PIS e Cofins são apurados e recolhidos mensalmente, enquanto IRPJ e CSLL no Lucro Presumido são apurados trimestralmente; por isso o fechamento de um trimestre reúne três apurações mensais de PIS/Cofins e uma única apuração de IRPJ/CSLL referente ao período."
+        },
+        {
+          "id": "conciliacao-trimestral-presumido",
+          "nome": "Conciliação trimestral do Lucro Presumido",
+          "def": "Ao fim de cada trimestre, a empresa reúne a receita bruta e demais receitas do período para apurar de forma consistente a base presumida de IRPJ e CSLL, enquanto confirma que as três guias mensais de PIS e de Cofins do trimestre já recolhidas refletem a mesma receita bruta total declarada."
+        }
+      ],
+      "rl": [
+        { "de": "pis-cofins-cumulativo", "para": "aliquotas-pis-cofins-cumulativo", "tipo": "define as alíquotas de" },
+        { "de": "exclusoes-base-pis-cofins", "para": "pis-cofins-cumulativo", "tipo": "reduz a base de" },
+        { "de": "periodicidade-pis-cofins", "para": "conciliacao-trimestral-presumido", "tipo": "é reconciliada em" }
+      ],
+      "fm": [
+        {
+          "id": "pis-cofins-mensal-formula",
+          "expr": "PIS devido (mês) = Receita bruta líquida de exclusões × 0,65%; Cofins devido (mês) = Receita bruta líquida de exclusões × 3%",
+          "legenda": "Apurados separadamente, mês a mês, sobre a mesma base de receita bruta usada para excluir vendas canceladas, descontos incondicionais e tributos não cumulativos cobrados do comprador."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "aliquotas-pis-cofins-cumulativo",
+          "texto": "Uma empresa comercial com receita bruta mensal de R$ 200.000,00, sem exclusões relevantes, recolhe R$ 1.300,00 de PIS (0,65%) e R$ 6.000,00 de Cofins (3%) referentes a esse mês, no regime cumulativo."
+        },
+        {
+          "conceitoId": "conciliacao-trimestral-presumido",
+          "texto": "No fechamento do 3º trimestre, a empresa soma a receita bruta de julho, agosto e setembro para apurar a base presumida de IRPJ e CSLL do trimestre, e confere se essa mesma receita bruta total já foi corretamente distribuída nas três guias mensais de PIS e de Cofins recolhidas em cada um dos três meses."
+        }
+      ],
+      "pg": [
+        "O regime cumulativo não dá direito a créditos: mesmo que a empresa compre insumos ou mercadorias com PIS/Cofins destacado, não há abatimento, diferente do que ocorre no regime não cumulativo do Lucro Real.",
+        "PIS e Cofins são mensais; IRPJ e CSLL no Lucro Presumido são trimestrais. Um erro comum é tentar apurá-los na mesma periodicidade.",
+        "Receitas de exportação são imunes a PIS/Cofins, mas ainda compõem a receita bruta para fins de limite de opção pelo Lucro Presumido e, quando aplicável, para a base presumida de IRPJ/CSLL."
+      ],
+      "rs": "No Lucro Presumido, PIS e Cofins seguem, por regra, o regime cumulativo: 0,65% e 3%, respectivamente, sobre a receita bruta mensal, sem direito a créditos, excluindo-se vendas canceladas, descontos incondicionais, tributos cobrados como substituto tributário e receitas de exportação. Como a apuração de PIS/Cofins é mensal e a de IRPJ/CSLL é trimestral, o fechamento de cada trimestre do Lucro Presumido concilia as três guias mensais de PIS e Cofins com a receita bruta total usada para a base presumida de IRPJ e CSLL do período."
+    }
+  }
+]
