@@ -16,7 +16,7 @@ function loadLotes(): { file: string; entries: { contentId: string; lesson: unkn
     .map((file) => ({ file, entries: JSON.parse(readFileSync(join(LOTES_DIR, file), 'utf8')) }));
 }
 
-test('todo lote de aulas manuais é uma lista não vazia de {contentId, lesson}', () => {
+void test('todo lote de aulas manuais é uma lista não vazia de {contentId, lesson}', () => {
   const lotes = loadLotes();
   assert.ok(lotes.length > 0, 'nenhum lote encontrado em data/apache/aulas/');
   for (const { file, entries } of lotes) {
@@ -28,7 +28,7 @@ test('todo lote de aulas manuais é uma lista não vazia de {contentId, lesson}'
   }
 });
 
-test('toda aula manual passa pela validação real de lib/apache/schema.ts', () => {
+void test('toda aula manual passa pela validação real de lib/apache/schema.ts', () => {
   const lotes = loadLotes();
   for (const { file, entries } of lotes) {
     for (const entry of entries) {
@@ -41,7 +41,7 @@ test('toda aula manual passa pela validação real de lib/apache/schema.ts', () 
   }
 });
 
-test('contentIds de cada lote são únicos dentro do lote', () => {
+void test('contentIds de cada lote são únicos dentro do lote', () => {
   const lotes = loadLotes();
   for (const { file, entries } of lotes) {
     const ids = entries.map((entry) => entry.contentId);
