@@ -1,0 +1,523 @@
+[
+  {
+    "contentId": "CT-030",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar quem pode optar pelo Simples Nacional segundo a LC 123/2006, os limites de receita bruta envolvidos e as principais vedações que impedem a opção ou geram exclusão.",
+      "cc": [
+        {
+          "id": "me-epp-conceito",
+          "nome": "Microempresa (ME) e Empresa de Pequeno Porte (EPP)",
+          "def": "Categorias definidas pela LC 123/2006 (Estatuto Nacional da Microempresa e Empresa de Pequeno Porte) com base na receita bruta anual auferida; são o público-alvo do Simples Nacional, mas a condição de ME/EPP não garante por si só a opção pelo regime, pois ainda é preciso não se enquadrar em nenhuma vedação legal."
+        },
+        {
+          "id": "limite-receita-bruta-simples",
+          "nome": "Limite de receita bruta para opção",
+          "def": "Teto de receita bruta acumulada no ano-calendário (R$ 4.800.000,00) acima do qual a empresa não pode optar pelo Simples Nacional nem nele permanecer; é o limite federal, válido para todos os tributos abrangidos pelo regime."
+        },
+        {
+          "id": "sublimite-icms-iss",
+          "nome": "Sublimite estadual/distrital (ICMS e ISS)",
+          "def": "Limite de receita bruta (R$ 3.600.000,00) que, quando ultrapassado, faz a empresa continuar no Simples Nacional para os tributos federais, mas passar a recolher ICMS e ISS fora da partilha unificada, diretamente aos entes estadual/municipal, conforme o estado tenha ou não adotado o teto cheio de R$ 4,8 milhões para esses tributos."
+        },
+        {
+          "id": "vedacoes-opcao",
+          "nome": "Vedações à opção",
+          "def": "Situações listadas na LC 123/2006 que impedem a opção pelo Simples Nacional independentemente da receita bruta, como participação de sócio pessoa jurídica, capital estrangeiro, ou exercício de atividades legalmente excluídas do regime; a presença de qualquer vedação bloqueia a opção mesmo que os limites de receita sejam respeitados."
+        },
+        {
+          "id": "exclusao-regime",
+          "nome": "Exclusão do regime",
+          "def": "Saída compulsória (quando a empresa incorre em vedação ou excede limites) ou por comunicação da própria empresa, com efeitos que podem ser imediatos ou a partir do ano-calendário seguinte, dependendo do motivo e do grau de excesso de receita."
+        }
+      ],
+      "rl": [
+        { "de": "me-epp-conceito", "para": "limite-receita-bruta-simples", "tipo": "é classificado conforme" },
+        { "de": "limite-receita-bruta-simples", "para": "sublimite-icms-iss", "tipo": "coexiste com" },
+        { "de": "vedacoes-opcao", "para": "exclusao-regime", "tipo": "pode causar" },
+        { "de": "limite-receita-bruta-simples", "para": "exclusao-regime", "tipo": "seu excesso pode causar" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "sublimite-icms-iss",
+          "texto": "Uma empresa de serviços que fatura R$ 4.000.000,00 no ano, em estado que não adotou o teto de R$ 4,8 milhões, continua no Simples Nacional para IRPJ, CSLL, PIS, Cofins e INSS, mas passa a apurar e pagar ISS diretamente ao município pelas regras normais, fora do DAS único."
+        },
+        {
+          "conceitoId": "vedacoes-opcao",
+          "texto": "Uma EPP que passa a ter como sócia outra pessoa jurídica deixa de poder optar pelo Simples Nacional a partir desse fato, mesmo que sua receita bruta esteja bem abaixo do limite de R$ 4,8 milhões."
+        }
+      ],
+      "pg": [
+        "Ultrapassar o sublimite de R$ 3,6 milhões não tira a empresa do Simples Nacional: só retira ICMS/ISS da partilha unificada, mantendo os demais tributos no regime.",
+        "Vedação e excesso de limite são causas distintas de impedimento/exclusão; uma vedação (como sócio pessoa jurídica) bloqueia a opção mesmo com receita baixíssima.",
+        "O limite de R$ 4.800.000,00 é o teto federal; o sublimite de R$ 3.600.000,00 só afeta ICMS e ISS, e depende de o estado ter ou não adotado o teto cheio."
+      ],
+      "rs": "A LC 123/2006 define ME e EPP por receita bruta anual e estabelece o limite federal de R$ 4,8 milhões para opção/permanência no Simples Nacional, com sublimite de R$ 3,6 milhões que, se excedido, retira apenas ICMS e ISS da partilha. Vedações legais (como sócio pessoa jurídica ou capital estrangeiro) impedem a opção independentemente da receita, e tanto vedação quanto excesso de limite podem levar à exclusão do regime."
+    }
+  },
+  {
+    "contentId": "CT-031",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o funcionamento do MEI e do SIMEI, incluindo limites de receita, contratação de empregado, valor fixo do DAS-MEI e a declaração anual.",
+      "cc": [
+        {
+          "id": "mei-conceito",
+          "nome": "Microempreendedor Individual (MEI)",
+          "def": "Pessoa que exerce atividade econômica por conta própria, formalizada como empresário individual, enquadrada em ocupações permitidas pela regulamentação do Simples Nacional e sujeita a um limite de receita bruta anual próprio, bem menor que o das demais ME/EPP."
+        },
+        {
+          "id": "simei",
+          "nome": "SIMEI",
+          "def": "Sistema de Recolhimento em Valores Fixos Mensais dos Tributos abrangidos pelo Simples Nacional devidos pelo MEI; substitui o cálculo percentual sobre receita por um valor fixo mensal, simplificando a apuração para quem está dentro dos limites do MEI."
+        },
+        {
+          "id": "das-mei",
+          "nome": "DAS-MEI",
+          "def": "Documento de Arrecadação do Simples Nacional específico do MEI, com valor fixo mensal composto por contribuição previdenciária (INSS) e, conforme a atividade, valor fixo de ICMS e/ou ISS, atualizado periodicamente pelo Comitê Gestor do Simples Nacional (CGSN)."
+        },
+        {
+          "id": "mei-empregado",
+          "nome": "MEI com empregado",
+          "def": "Possibilidade do MEI contratar, no máximo, um único empregado, com obrigações trabalhistas e previdenciárias próprias (como recolhimento de FGTS e informações em folha), sem perder o enquadramento no SIMEI enquanto respeitar esse limite e os demais requisitos."
+        },
+        {
+          "id": "dasn-simei",
+          "nome": "DASN-SIMEI",
+          "def": "Declaração Anual do Simples Nacional do MEI, entregue até 31 de maio do ano seguinte, informando a receita bruta auferida no ano-calendário anterior e se houve empregado; é a prestação de contas anual obrigatória do MEI, distinta da DEFIS usada pelas demais ME/EPP."
+        }
+      ],
+      "rl": [
+        { "de": "mei-conceito", "para": "simei", "tipo": "é tributado por meio de" },
+        { "de": "simei", "para": "das-mei", "tipo": "se materializa em" },
+        { "de": "mei-conceito", "para": "mei-empregado", "tipo": "pode ter" },
+        { "de": "mei-conceito", "para": "dasn-simei", "tipo": "declara receita anual via" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "das-mei",
+          "texto": "Um MEI que presta serviços de manutenção (sujeito a ISS fixo) paga mensalmente, via DAS-MEI, um valor fixo de INSS somado ao valor fixo de ISS, independentemente de ter faturado mais ou menos naquele mês específico."
+        },
+        {
+          "conceitoId": "dasn-simei",
+          "texto": "Mesmo um MEI que não teve nenhum empregado e faturou pouco no ano ainda é obrigado a entregar a DASN-SIMEI até 31 de maio, informando a receita bruta total auferida, sob pena de multa e irregularidade cadastral."
+        }
+      ],
+      "pg": [
+        "O DAS-MEI é valor fixo mensal, não um percentual sobre a receita do mês — isso o diferencia do DAS das demais ME/EPP, calculado por alíquota efetiva sobre RBT12.",
+        "O MEI pode ter no máximo um empregado; contratar um segundo descumpre a regra do SIMEI e pode levar ao desenquadramento.",
+        "DASN-SIMEI (MEI, até 31 de maio) e DEFIS (demais ME/EPP, até 31 de março) são declarações anuais distintas, com prazos e públicos diferentes — não confundir uma com a outra."
+      ],
+      "rs": "O MEI é tributado pelo SIMEI, com valor fixo mensal pago via DAS-MEI (INSS e, conforme a atividade, ICMS e/ou ISS fixos), dentro de um limite de receita bruta anual próprio e bem menor que o das demais ME/EPP. Pode ter no máximo um empregado e deve entregar anualmente a DASN-SIMEI até 31 de maio, informando a receita bruta auferida no ano anterior."
+    }
+  },
+  {
+    "contentId": "CT-032",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o conceito de receita bruta para fins do Simples Nacional, o regime de competência/caixa na apuração e o cálculo da RBT12.",
+      "cc": [
+        {
+          "id": "receita-bruta-simples",
+          "nome": "Receita bruta (Simples Nacional)",
+          "def": "Produto da venda de bens e serviços nas operações de conta própria, o preço dos serviços prestados e o resultado nas operações em conta de terceiros, excluídas as vendas canceladas e os descontos incondicionais concedidos; é a base para apuração do Simples Nacional."
+        },
+        {
+          "id": "regime-competencia-caixa-opcao",
+          "nome": "Opção entre competência e caixa",
+          "def": "Possibilidade de a empresa optante pelo Simples Nacional escolher, para fins de determinação da base de cálculo mensal, apurar a receita bruta pelo regime de competência (quando a venda/serviço ocorre) ou pelo regime de caixa (quando o valor é efetivamente recebido), mantendo o mesmo critério durante o ano-calendário."
+        },
+        {
+          "id": "rbt12",
+          "nome": "RBT12",
+          "def": "Receita bruta acumulada nos 12 meses anteriores ao período de apuração (mês a mês, em janela móvel); é o valor usado para localizar a faixa do anexo aplicável e calcular a alíquota efetiva do mês, substituindo o antigo sistema de receita acumulada no próprio ano-calendário."
+        },
+        {
+          "id": "receitas-excluidas-base",
+          "nome": "Receitas e exclusões da base",
+          "def": "Itens que não compõem a receita bruta tributável pelo Simples Nacional, como vendas canceladas, descontos incondicionais e, em certos casos, valores já tributados em etapa anterior (substituição tributária, monofásico), tratados separadamente na segregação de receitas."
+        }
+      ],
+      "rl": [
+        { "de": "receita-bruta-simples", "para": "rbt12", "tipo": "é acumulada para formar" },
+        { "de": "regime-competencia-caixa-opcao", "para": "receita-bruta-simples", "tipo": "define o momento de reconhecimento de" },
+        { "de": "receitas-excluidas-base", "para": "receita-bruta-simples", "tipo": "é deduzida de" }
+      ],
+      "fm": [
+        {
+          "id": "formula-rbt12",
+          "expr": "RBT12(mês) = soma da receita bruta dos 12 meses anteriores ao período de apuração",
+          "legenda": "janela móvel de 12 meses, recalculada a cada mês, usada para localizar a faixa e calcular a alíquota efetiva"
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "rbt12",
+          "texto": "Para apurar o DAS de outubro, a empresa soma a receita bruta de outubro do ano anterior até setembro do ano corrente (12 meses imediatamente anteriores), e não a receita acumulada apenas desde janeiro do ano-calendário em curso."
+        },
+        {
+          "conceitoId": "regime-competencia-caixa-opcao",
+          "texto": "Uma empresa que vende a prazo e opta pelo regime de caixa reconhece a receita, para fins do Simples Nacional, apenas quando recebe o valor do cliente, mesmo que a venda (nota fiscal) tenha ocorrido em mês anterior."
+        }
+      ],
+      "pg": [
+        "RBT12 é uma janela móvel dos últimos 12 meses, não a receita acumulada desde janeiro do ano-calendário — empresas que confundem os dois conceitos calculam a faixa errada.",
+        "A opção entre competência e caixa afeta apenas o momento de reconhecimento da receita para apuração do Simples; não muda o conceito de receita bruta nem as exclusões legais.",
+        "Vendas canceladas e descontos incondicionais reduzem a receita bruta tributável; não são a mesma coisa que receitas sujeitas a tributação monofásica ou com substituição tributária, que têm tratamento próprio na segregação."
+      ],
+      "rs": "A receita bruta do Simples Nacional é o valor das vendas e serviços, líquido de vendas canceladas e descontos incondicionais, reconhecida por competência ou caixa conforme opção da empresa. A RBT12 soma essa receita nos 12 meses imediatamente anteriores ao mês de apuração (janela móvel) e é a base para localizar a faixa do anexo e calcular a alíquota efetiva mensal."
+    }
+  },
+  {
+    "contentId": "CT-033",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a estrutura dos Anexos I a V do Simples Nacional, as faixas de receita e o cálculo da alíquota efetiva a partir da alíquota nominal e da parcela a deduzir.",
+      "cc": [
+        {
+          "id": "anexos-simples",
+          "nome": "Anexos I a V",
+          "def": "Tabelas da LC 123/2006 que separam as atividades por natureza (Anexo I comércio, Anexo II indústria, Anexo III serviços em geral, Anexo IV serviços cujo ISS e contribuição previdenciária patronal ficam fora da partilha e são recolhidos separadamente, Anexo V serviços profissionais/intelectuais específicos), cada uma com suas próprias faixas e alíquotas."
+        },
+        {
+          "id": "faixa-rbt12",
+          "nome": "Faixa de RBT12",
+          "def": "Intervalo de receita bruta acumulada em 12 meses (RBT12) dentro de um anexo, ao qual correspondem uma alíquota nominal e uma parcela a deduzir específicas; a empresa é localizada numa única faixa por mês, conforme seu RBT12 atual."
+        },
+        {
+          "id": "aliquota-nominal",
+          "nome": "Alíquota nominal",
+          "def": "Percentual tabelado para a faixa de RBT12 em que a empresa se encontra, usado apenas como ponto de partida do cálculo; não é a alíquota efetivamente aplicada sobre a receita do mês."
+        },
+        {
+          "id": "aliquota-efetiva",
+          "nome": "Alíquota efetiva",
+          "def": "Percentual realmente aplicado sobre a receita bruta do mês para calcular o valor do DAS, obtido pela fórmula que usa a alíquota nominal, a parcela a deduzir e o RBT12 da faixa, suavizando a progressividade entre faixas."
+        }
+      ],
+      "rl": [
+        { "de": "anexos-simples", "para": "faixa-rbt12", "tipo": "organiza" },
+        { "de": "faixa-rbt12", "para": "aliquota-nominal", "tipo": "determina" },
+        { "de": "aliquota-nominal", "para": "aliquota-efetiva", "tipo": "é ponto de partida para calcular" }
+      ],
+      "fm": [
+        {
+          "id": "formula-aliquota-efetiva",
+          "expr": "Alíquota efetiva = [(RBT12 × Alíquota nominal) − Parcela a deduzir] / RBT12",
+          "legenda": "resultado aplicado sobre a receita bruta do mês (ou do período de apuração) para obter o valor do DAS"
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "aliquota-efetiva",
+          "texto": "Duas empresas do mesmo Anexo I, com RBT12 em faixas vizinhas, têm alíquotas efetivas diferentes mesmo com alíquota nominal parecida, porque a parcela a deduzir e o RBT12 exato de cada uma alteram o resultado da fórmula."
+        },
+        {
+          "conceitoId": "anexos-simples",
+          "texto": "Uma clínica médica, cujo serviço é listado entre as atividades do Anexo V (ou migra para o Anexo III conforme o Fator R), paga Simples Nacional por tabela diferente da de uma loja de roupas, enquadrada no Anexo I."
+        }
+      ],
+      "pg": [
+        "A alíquota nominal da tabela nunca é aplicada diretamente sobre a receita do mês; é só um insumo da fórmula da alíquota efetiva.",
+        "Cada anexo tem sua própria tabela de faixas, alíquotas nominais e parcelas a deduzir — misturar valores de anexos diferentes produz resultado incorreto.",
+        "A faixa é determinada pelo RBT12 (janela de 12 meses), não pela receita bruta do mês isolado em que se está apurando."
+      ],
+      "rs": "Os Anexos I a V do Simples Nacional separam as atividades (comércio, indústria, serviços em geral, serviços com ISS fora da partilha e serviços profissionais específicos) em tabelas próprias de faixas de RBT12, cada uma com alíquota nominal e parcela a deduzir. A alíquota efetiva, calculada pela fórmula que combina esses elementos com o RBT12, é a que realmente se aplica sobre a receita do mês para definir o valor do DAS."
+    }
+  },
+  {
+    "contentId": "CT-034",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o que é o Fator R, como ele é calculado e seu efeito de migração entre os Anexos III e V para atividades elegíveis.",
+      "cc": [
+        {
+          "id": "fator-r",
+          "nome": "Fator R",
+          "def": "Razão entre a folha de salários (incluindo encargos) dos últimos 12 meses e a receita bruta dos últimos 12 meses (RBT12), usada para determinar, para certas atividades de serviço elegíveis, se a tributação ocorre pelo Anexo III (quando Fator R ≥ 28%) ou pelo Anexo V (quando Fator R < 28%)."
+        },
+        {
+          "id": "folha-encargos-12m",
+          "nome": "Folha de salários e encargos (12 meses)",
+          "def": "Soma, nos 12 meses anteriores ao período de apuração, das remunerações pagas ou creditadas a titulares, sócios e empregados, incluindo pró-labore e os respectivos encargos, usada como numerador no cálculo do Fator R."
+        },
+        {
+          "id": "migracao-anexo-iii-v",
+          "nome": "Migração entre Anexo III e Anexo V",
+          "def": "Efeito prático do Fator R sobre atividades que, por definição legal, poderiam estar no Anexo V: atingindo 28% ou mais, a tributação passa a seguir a tabela do Anexo III (geralmente mais favorável); abaixo de 28%, permanece no Anexo V."
+        },
+        {
+          "id": "inicio-atividade-fator-r",
+          "nome": "Fator R em início de atividade",
+          "def": "Situação em que a empresa ainda não completou 12 meses de operação; nesse caso, usa-se a folha e a receita proporcionais ao período efetivamente em atividade (multiplicando por 12 e dividindo pelo número de meses de funcionamento) para simular a métrica anualizada."
+        }
+      ],
+      "rl": [
+        { "de": "folha-encargos-12m", "para": "fator-r", "tipo": "é numerador de" },
+        { "de": "fator-r", "para": "migracao-anexo-iii-v", "tipo": "determina" },
+        { "de": "inicio-atividade-fator-r", "para": "fator-r", "tipo": "ajusta o cálculo de" }
+      ],
+      "fm": [
+        {
+          "id": "formula-fator-r",
+          "expr": "Fator R = Folha de salários e encargos (12 meses) / Receita bruta (RBT12)",
+          "legenda": "resultado expresso em percentual; ≥ 28% migra atividade elegível do Anexo V para o Anexo III"
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "migracao-anexo-iii-v",
+          "texto": "Uma empresa de serviços de engenharia com folha de 12 meses equivalente a 30% de sua receita bruta de 12 meses é tributada pelo Anexo III; se, em outro período, a folha cair para 20% da receita, a mesma atividade passa a ser tributada pelo Anexo V."
+        },
+        {
+          "conceitoId": "inicio-atividade-fator-r",
+          "texto": "Uma empresa com apenas 4 meses de funcionamento anualiza sua folha e sua receita desses 4 meses (multiplicando por 12 e dividindo por 4) para calcular um Fator R comparável ao de empresas já consolidadas há 12 meses."
+        }
+      ],
+      "pg": [
+        "O Fator R só se aplica a atividades que a lei já define como potencialmente sujeitas ao Anexo III ou V; não é um mecanismo geral de redução de alíquota para qualquer atividade.",
+        "O percentual de corte é 28% ou mais para migrar para o Anexo III — exatamente 28% já se qualifica, não é preciso superar o percentual.",
+        "O Fator R usa folha e receita de 12 meses (RBT12 e folha acumulada), não os valores do mês isolado da apuração."
+      ],
+      "rs": "O Fator R é a razão entre a folha de salários e encargos dos últimos 12 meses e o RBT12; atividades elegíveis migram do Anexo V para o Anexo III quando esse percentual atinge 28% ou mais. Empresas com menos de 12 meses de atividade anualizam folha e receita proporcionalmente ao tempo de funcionamento para aplicar o mesmo cálculo."
+    }
+  },
+  {
+    "contentId": "CT-035",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar por que e como a receita bruta é segregada por tipo de atividade e de tributação específica no preenchimento do PGDAS-D.",
+      "cc": [
+        {
+          "id": "segregacao-receitas",
+          "nome": "Segregação de receitas",
+          "def": "Separação, dentro do PGDAS-D, da receita bruta total por tipo de atividade (comércio, indústria, serviços) e por regra de tributação específica (mercado interno, exportação, sujeita a substituição tributária, tributação monofásica, retenção na fonte), porque cada segmento pode ter cálculo de alíquota ou dispensa de tributo diferente."
+        },
+        {
+          "id": "substituicao-tributaria-st",
+          "nome": "Substituição tributária (ST) na segregação",
+          "def": "Receita de mercadorias cujo ICMS já foi recolhido por outro contribuinte em etapa anterior da cadeia; no PGDAS-D essa parcela é segregada e tratada sem a parcela de ICMS do Simples Nacional, para evitar cobrança em duplicidade."
+        },
+        {
+          "id": "tributacao-monofasica",
+          "nome": "Tributação monofásica",
+          "def": "Regime em que PIS/Cofins (e, em certos casos, outros tributos) incidem uma única vez na cadeia, geralmente na indústria/importador, sobre produtos específicos (como combustíveis e alguns itens de higiene/farmacêuticos); receitas de revenda desses produtos são segregadas no PGDAS-D sem a parcela desses tributos."
+        },
+        {
+          "id": "exportacao-receita-segregada",
+          "nome": "Receita de exportação",
+          "def": "Receita decorrente de exportação de mercadorias ou serviços, segregada no PGDAS-D por ter tratamento tributário diferenciado (geralmente sem a incidência de alguns tributos sobre essa parcela), em linha com a política de desoneração de exportações."
+        }
+      ],
+      "rl": [
+        { "de": "segregacao-receitas", "para": "substituicao-tributaria-st", "tipo": "inclui" },
+        { "de": "segregacao-receitas", "para": "tributacao-monofasica", "tipo": "inclui" },
+        { "de": "segregacao-receitas", "para": "exportacao-receita-segregada", "tipo": "inclui" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "substituicao-tributaria-st",
+          "texto": "Um comércio que revende produtos com ICMS já retido pelo fabricante segrega essa receita no PGDAS-D como sujeita a substituição tributária, para que o programa não calcule novamente a parcela de ICMS sobre esse valor."
+        },
+        {
+          "conceitoId": "exportacao-receita-segregada",
+          "texto": "Uma indústria que vende parte de sua produção para o exterior segrega a receita de exportação separadamente da receita de mercado interno, pois o tratamento tributário da parcela exportada é diferente."
+        }
+      ],
+      "pg": [
+        "Não segregar corretamente a receita (tratando tudo como mercado interno comum) faz o PGDAS-D calcular tributos sobre parcelas que já foram tributados em etapa anterior ou que têm regra própria, gerando pagamento indevido.",
+        "Substituição tributária e tributação monofásica são mecanismos diferentes (ICMS de um lado, PIS/Cofins do outro), mas ambos resultam em segregação para excluir parte da carga tributária normal do Simples.",
+        "A segregação é feita por tipo de receita dentro do mesmo período de apuração; não substitui a RBT12, que continua sendo a soma da receita bruta total (segregada ou não)."
+      ],
+      "rs": "A segregação de receitas no PGDAS-D separa a receita bruta por atividade e por regra tributária específica (substituição tributária, tributação monofásica, exportação, entre outras), evitando cobrança em duplicidade ou incidência indevida de tributos já recolhidos em outra etapa ou dispensados por política fiscal. O cálculo final do DAS depende de essa segregação estar correta, ainda que a RBT12 considere a receita bruta total."
+    }
+  },
+  {
+    "contentId": "CT-036",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o ciclo mensal de apuração no PGDAS-D, a geração do DAS e as regras para retificação da declaração.",
+      "cc": [
+        {
+          "id": "pgdas-d",
+          "nome": "PGDAS-D",
+          "def": "Programa Gerador do Documento de Arrecadação do Simples Nacional - Declaratório, sistema em que a empresa informa mensalmente a receita bruta segregada, calcula os tributos devidos e gera a declaração que serve de base para a emissão do DAS daquele período."
+        },
+        {
+          "id": "das-geracao",
+          "nome": "Geração do DAS",
+          "def": "Emissão do Documento de Arrecadação do Simples Nacional a partir dos dados informados no PGDAS-D, consolidando em guia única os tributos abrangidos pelo regime devidos naquele período de apuração, com vencimento padronizado."
+        },
+        {
+          "id": "retificacao-pgdas-d",
+          "nome": "Retificação do PGDAS-D",
+          "def": "Correção de uma declaração já transmitida, substituindo integralmente as informações anteriores daquele período; pode gerar diferença a pagar (com acréscimos legais) ou a restituir/compensar, e tem prazo e condições específicas conforme o tempo transcorrido e se o período já está sob fiscalização."
+        }
+      ],
+      "rl": [
+        { "de": "pgdas-d", "para": "das-geracao", "tipo": "alimenta" },
+        { "de": "pgdas-d", "para": "retificacao-pgdas-d", "tipo": "pode ser alvo de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "das-geracao",
+          "texto": "Depois de informar a receita segregada de setembro no PGDAS-D, a empresa gera o DAS correspondente, que reúne em uma única guia os tributos federais, mais ICMS/ISS quando aplicável, com vencimento no mês seguinte."
+        },
+        {
+          "conceitoId": "retificacao-pgdas-d",
+          "texto": "Ao perceber que lançou receita de exportação como receita de mercado interno em um PGDAS-D já transmitido, a empresa retifica a declaração daquele período, o que recalcula o tributo devido e pode gerar diferença a pagar com os acréscimos legais."
+        }
+      ],
+      "pg": [
+        "Retificar o PGDAS-D substitui a declaração anterior inteira daquele período, não apenas o campo alterado — qualquer outro dado informado antes precisa ser reconferido na retificação.",
+        "A geração do DAS depende da declaração no PGDAS-D estar completa e correta para aquele período; dados incompletos ou incorretos geram DAS com valor incorreto.",
+        "Retificação que reduz tributo já pago pode gerar crédito a restituir ou compensar, mas isso segue regras próprias, diferentes do simples ajuste do valor do próximo DAS."
+      ],
+      "rs": "O PGDAS-D é onde a empresa informa mensalmente a receita segregada e calcula os tributos do Simples Nacional, servindo de base para a geração do DAS daquele período. A retificação substitui integralmente a declaração de um período já transmitido e pode gerar diferença a pagar ou a restituir/compensar, dentro de prazos e condições específicas."
+    }
+  },
+  {
+    "contentId": "CT-037",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a função da DEFIS e das obrigações complementares anuais das ME/EPP optantes pelo Simples Nacional, distinguindo-as da apuração mensal do PGDAS-D.",
+      "cc": [
+        {
+          "id": "defis",
+          "nome": "DEFIS",
+          "def": "Declaração de Informações Socioeconômicas e Fiscais, entregue anualmente (até 31 de março do ano-calendário subsequente) pelas ME/EPP optantes pelo Simples Nacional (exceto MEI, que usa a DASN-SIMEI), consolidando informações econômicas e fiscais do ano anterior."
+        },
+        {
+          "id": "defis-conteudo",
+          "nome": "Conteúdo típico da DEFIS",
+          "def": "Informações como receita bruta total do ano, composição societária, existência e identificação de empregados, valores de ganhos de capital e outras informações econômico-fiscais exigidas pelo Comitê Gestor do Simples Nacional, usadas para cruzamento de dados pelo Fisco."
+        },
+        {
+          "id": "retificacao-defis",
+          "nome": "Retificação da DEFIS",
+          "def": "Possibilidade de corrigir uma DEFIS já entregue, substituindo as informações anteriores daquele ano-calendário, em geral sem o mesmo efeito de recálculo de tributo que ocorre na retificação do PGDAS-D, pois a DEFIS é majoritariamente declaratória/informativa."
+        }
+      ],
+      "rl": [
+        { "de": "defis", "para": "defis-conteudo", "tipo": "é composta por" },
+        { "de": "defis", "para": "retificacao-defis", "tipo": "pode ser alvo de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "defis",
+          "texto": "Mesmo entregando corretamente todos os PGDAS-D mensais do ano, a empresa ainda precisa transmitir a DEFIS até 31 de março do ano seguinte, consolidando informações econômicas e fiscais daquele ano-calendário."
+        },
+        {
+          "conceitoId": "defis-conteudo",
+          "texto": "Uma empresa que teve um sócio ingressando ou saindo durante o ano informa essa alteração societária na DEFIS, além dos dados de receita bruta anual já refletidos nas apurações mensais."
+        }
+      ],
+      "pg": [
+        "A DEFIS não substitui o PGDAS-D mensal: um é apuração/cálculo de tributo por período, o outro é consolidação anual de informações econômico-fiscais.",
+        "A DEFIS é obrigação das ME/EPP em geral, não do MEI, que usa a DASN-SIMEI; confundir os dois públicos é erro comum.",
+        "Não entregar a DEFIS gera irregularidade cadastral e pode impedir a emissão de certidões, mesmo que todos os tributos tenham sido pagos corretamente ao longo do ano."
+      ],
+      "rs": "A DEFIS é a declaração anual (até 31 de março do ano seguinte) das ME/EPP optantes pelo Simples Nacional, exceto MEI, consolidando receita bruta anual, composição societária, empregados e outras informações econômico-fiscais. Ela complementa, mas não substitui, a apuração mensal feita no PGDAS-D, e pode ser retificada quando necessário."
+    }
+  },
+  {
+    "contentId": "CT-038",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar os mecanismos de restituição, compensação, parcelamento e regularização de débitos do Simples Nacional, e sua relação com a exclusão do regime.",
+      "cc": [
+        {
+          "id": "restituicao-simples",
+          "nome": "Restituição",
+          "def": "Devolução de valores pagos indevidamente ou a maior no DAS, solicitada pela empresa quando identifica erro na apuração (como receita segregada incorretamente) que resultou em pagamento acima do devido."
+        },
+        {
+          "id": "compensacao-simples",
+          "nome": "Compensação",
+          "def": "Uso de crédito decorrente de pagamento indevido ou a maior para abater débito de período posterior do próprio Simples Nacional, em vez de solicitar a devolução em dinheiro; sujeita a regras e sistema próprios de controle."
+        },
+        {
+          "id": "parcelamento-simples",
+          "nome": "Parcelamento de débitos",
+          "def": "Possibilidade de dividir em parcelas mensais débitos do Simples Nacional já vencidos e não pagos, dentro de regras específicas (número de parcelas, valor mínimo, condições de adesão) definidas pelo Comitê Gestor, evitando cobrança integral imediata."
+        },
+        {
+          "id": "regularizacao-exclusao",
+          "nome": "Regularização para evitar exclusão",
+          "def": "Quitação ou parcelamento de débitos pendentes dentro de prazo determinado (geralmente após notificação) para impedir a exclusão do Simples Nacional por inadimplência, já que débitos tributários não regularizados são causa de exclusão compulsória do regime."
+        }
+      ],
+      "rl": [
+        { "de": "restituicao-simples", "para": "compensacao-simples", "tipo": "é alternativa a" },
+        { "de": "parcelamento-simples", "para": "regularizacao-exclusao", "tipo": "é instrumento de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "compensacao-simples",
+          "texto": "Uma empresa que pagou DAS a maior em um mês, por erro na segregação de receita, usa esse crédito para compensar parte do DAS devido em um mês seguinte, em vez de pedir a restituição em dinheiro."
+        },
+        {
+          "conceitoId": "regularizacao-exclusao",
+          "texto": "Ao ser notificada de débitos de Simples Nacional em aberto, a empresa parcela o valor dentro do prazo indicado para evitar ser excluída do regime por inadimplência, o que a obrigaria a migrar para o regime normal de tributação."
+        }
+      ],
+      "pg": [
+        "Débito de Simples Nacional não regularizado não gera só cobrança: pode levar à exclusão compulsória do regime, com efeitos tributários mais amplos que apenas o valor em aberto.",
+        "Restituição (devolução em dinheiro) e compensação (abatimento em débito futuro) tratam do mesmo tipo de crédito, mas seguem procedimentos e sistemas distintos.",
+        "Parcelar um débito evita a exclusão por inadimplência, mas não dispensa a empresa de manter os pagamentos correntes (DAS dos meses seguintes) em dia."
+      ],
+      "rs": "Pagamentos indevidos ou a maior no Simples Nacional podem ser restituídos em dinheiro ou compensados com débitos futuros, enquanto débitos vencidos podem ser parcelados conforme regras do Comitê Gestor. A regularização (quitação ou parcelamento) dentro do prazo evita a exclusão compulsória do regime por inadimplência, que teria efeitos tributários mais amplos do que apenas o débito em aberto."
+    }
+  },
+  {
+    "contentId": "CT-039",
+    "lesson": {
+      "v": 1,
+      "obj": "Integrar, em um caso completo, o cadastro, a segregação de receitas, o Fator R, o PGDAS-D, o DAS, a contabilização e a DEFIS de uma empresa optante pelo Simples Nacional.",
+      "cc": [
+        {
+          "id": "caso-integrado-simples",
+          "nome": "Ciclo integrado do Simples Nacional",
+          "def": "Sequência prática que liga o cadastro da empresa (CNPJ, CNAE, natureza jurídica), a apuração mensal da receita segregada e do Fator R (quando aplicável), a geração do DAS via PGDAS-D, a contabilização dos tributos e, ao final do ano, a DEFIS, mostrando como cada etapa do conteúdo da unidade se conecta na rotina real da empresa."
+        },
+        {
+          "id": "contabilizacao-das",
+          "nome": "Contabilização do DAS",
+          "def": "Registro contábil do valor do DAS como despesa/custo tributário do período de competência a que se refere a apuração, mesmo que o pagamento efetivo ocorra em data de vencimento no mês seguinte, respeitando o regime de competência contábil independentemente da opção de caixa/competência feita para fins tributários no PGDAS-D."
+        },
+        {
+          "id": "consistencia-anual-defis",
+          "nome": "Consistência entre apurações mensais e DEFIS",
+          "def": "Necessidade de a receita bruta anual informada na DEFIS ser compatível com a soma das receitas apuradas mês a mês no PGDAS-D ao longo do ano, já que divergências entre esses valores são um dos principais pontos de cruzamento de dados pela fiscalização."
+        }
+      ],
+      "rl": [
+        { "de": "caso-integrado-simples", "para": "contabilizacao-das", "tipo": "inclui" },
+        { "de": "caso-integrado-simples", "para": "consistencia-anual-defis", "tipo": "exige" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "caso-integrado-simples",
+          "texto": "Uma empresa de serviços de consultoria, enquadrada potencialmente no Anexo V, calcula seu Fator R mensal; como está acima de 28%, apura pelo Anexo III no PGDAS-D daquele mês, gera o DAS, contabiliza o tributo como despesa do período e, no ano seguinte, confirma que a receita bruta total da DEFIS corresponde à soma das receitas informadas mês a mês."
+        },
+        {
+          "conceitoId": "contabilizacao-das",
+          "texto": "O DAS referente à competência de novembro, mesmo vencendo em dezembro, é registrado como despesa tributária de novembro na contabilidade da empresa, seguindo o regime de competência contábil."
+        }
+      ],
+      "pg": [
+        "O regime de competência/caixa escolhido para fins do PGDAS-D (reconhecimento da receita tributável) não precisa coincidir automaticamente com o regime de competência usado na contabilização formal da despesa do DAS.",
+        "Divergência entre a receita bruta anual da DEFIS e a soma das apurações mensais do PGDAS-D é sinal de erro em algum dos lançamentos e tende a chamar atenção da fiscalização.",
+        "O Fator R e a segregação de receitas afetam o cálculo do DAS mês a mês; um erro em qualquer uma dessas etapas se propaga para a contabilização e para a consistência anual com a DEFIS."
+      ],
+      "rs": "O ciclo do Simples Nacional integra cadastro, apuração mensal (receita segregada, Fator R quando aplicável), geração do DAS pelo PGDAS-D, contabilização do tributo pelo regime de competência contábil e, ao final do ano, a DEFIS, cuja receita bruta total deve ser consistente com a soma das apurações mensais. Erros em qualquer etapa anterior se propagam até a declaração anual e podem gerar inconsistências fiscalizáveis."
+    }
+  }
+]
