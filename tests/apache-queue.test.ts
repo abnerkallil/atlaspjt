@@ -161,8 +161,10 @@ void test('enqueueLessonIfNeeded sob concorrência real (2 chamadas simultâneas
     enqueueLessonIfNeeded(db, 'X-001', 'aula', now),
     enqueueLessonIfNeeded(db, 'X-001', 'aula', now),
   ]);
-  assert.ok(a);
-  assert.equal(a, b, 'as duas chamadas concorrentes devem apontar para o mesmo item da fila');
+  // Exatamente 1 das 2 chamadas cria o item (a outra perde a corrida e
+  // devolve null -- nunca "adota" o item da vencedora, ver enqueueLessonIfNeeded).
+  const ids = [a, b].filter((id): id is string => id !== null);
+  assert.equal(ids.length, 1, 'só uma das 2 chamadas concorrentes deve criar/devolver um id');
   const count = sqlite.prepare('SELECT COUNT(*) AS n FROM atlas_apache_queue').get() as { n: number };
   assert.equal(count.n, 1, 'concorrência real não deve criar uma segunda linha para o mesmo content_id+kind');
 });

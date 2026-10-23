@@ -200,6 +200,32 @@ void test('markReported não duplica a fila se já existe um pedido pendente do 
   assert.equal(lessonRow.reported_count, 2, 'o contador soma mesmo sem duplicar a fila');
 });
 
+// APA-16: mesma classe de corrida do enqueueLessonIfNeeded (ver
+// tests/apache-queue.test.ts) -- 2 chamadas sem await entre elas simulam 2
+// requisições quase simultâneas ("reportar erro" clicado 2x, ou um report
+// junto com o poll de 5s que também enfileira). Sem o INSERT atômico, isto
+// criava 2 linhas na fila para o mesmo conteúdo.
+void test('markReported sob concorrência real (2 chamadas simultâneas) cria só 1 linha na fila (APA-16)', async () => {
+  const sqlite = migratedDatabase();
+  seedContent(sqlite, 'X-001');
+  const db = d1(sqlite);
+  const bucket = fakeBucket();
+  await saveLesson(db, bucket, 'X-001', sampleLesson(), 'claude-manual', now);
+
+  const [a, b] = await Promise.all([
+    markReported(db, 'X-001', now),
+    markReported(db, 'X-001', now),
+  ]);
+  const queued = [a, b].filter((result) => result.queued);
+  assert.equal(queued.length, 1, 'só uma das 2 chamadas concorrentes deve considerar que enfileirou algo novo');
+  const count = sqlite.prepare('SELECT COUNT(*) AS n FROM atlas_apache_queue').get() as { n: number };
+  assert.equal(count.n, 1, 'concorrência real não deve criar uma segunda linha na fila');
+  const lessonRow = sqlite
+    .prepare('SELECT reported_count FROM atlas_apache_lessons WHERE content_id = ?')
+    .get('X-001') as Record<string, unknown>;
+  assert.equal(lessonRow.reported_count, 2, 'as 2 chamadas ainda somam o contador, só a fila não duplica');
+});
+
 void test('markReported em conteúdo sem aula lança ApacheError 404', async () => {
   const sqlite = migratedDatabase();
   seedContent(sqlite, 'X-001');

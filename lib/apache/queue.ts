@@ -244,16 +244,14 @@ export async function enqueueLessonIfNeeded(
   if (insert.meta.changes > 0) return id;
 
   // Perdeu a corrida: outra chamada concorrente já criou o item saudável
-  // entre a leitura acima e este INSERT. Devolve o id dela em vez de criar
-  // uma segunda linha.
-  const winner = await db
-    .prepare(
-      `SELECT id FROM atlas_apache_queue WHERE content_id = ?1 AND kind = ?2 AND status IN ('pendente', 'processando')
-       ORDER BY created_at LIMIT 1`,
-    )
-    .bind(contentId, kind)
-    .first<{ id: string }>();
-  return winner?.id ?? null;
+  // entre a leitura acima e este INSERT. Devolve null em vez do id dela —
+  // essa chamada concorrente é responsável pelo próprio item (incluindo
+  // mandar a mensagem pra fila), e esta chamada não sabe se o item dela
+  // ainda está mesmo saudável agora (ex.: pode já ter sido adiado por cota
+  // entre o INSERT dela e esta leitura) — tratar como se nada precisasse
+  // ser feito por esta chamada é sempre seguro; "adotar" o item da outra e
+  // mandar uma mensagem por conta própria não é.
+  return null;
 }
 
 function mostRecentUtcMidnight(now: string): string {

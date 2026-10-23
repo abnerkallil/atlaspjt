@@ -501,7 +501,7 @@ export type EnrichmentQueueLike = {
 // aceito pelo produtor de aulas (handleGetAula) quando `queue` é null. O
 // texto temporário é apagado quando o item termina, sucesso ou erro
 // (responsabilidade do consumer).
-async function enqueueEnrichment(
+export async function enqueueEnrichment(
   db: D1Like,
   bucket: R2Like,
   queue: EnrichmentQueueLike | null,
@@ -518,14 +518,33 @@ async function enqueueEnrichment(
   await bucket.put(tempKey, new TextEncoder().encode(text), {
     httpMetadata: { contentType: 'text/plain; charset=utf-8' },
   });
-  await db.batch([
+  // APA-16: INSERT atômico (`WHERE NOT EXISTS`), mesmo motivo de
+  // `enqueueLessonIfNeeded` (APA-07) e `markReported` — fecha a janela entre
+  // a leitura de `findPendingEnrichmentQueueItem` acima e este INSERT, onde 2
+  // chamadas quase simultâneas (ex.: reenvio do mesmo material em 2 abas)
+  // podiam ambas ler "nada pendente" e cada uma criar sua própria linha.
+  const [insert] = await db.batch([
     db
       .prepare(
         `INSERT INTO atlas_apache_queue (id, content_id, kind, user_id, status, attempts, temp_object_key, created_at)
-         VALUES (?1, ?2, 'enriquecimento', ?3, 'pendente', 0, ?4, ?5)`,
+         SELECT ?1, ?2, 'enriquecimento', ?3, 'pendente', 0, ?4, ?5
+         WHERE NOT EXISTS (
+           SELECT 1 FROM atlas_apache_queue
+           WHERE content_id = ?2 AND user_id = ?3 AND kind = 'enriquecimento' AND status IN ('pendente', 'processando')
+         )`,
       )
       .bind(queueId, contentId, userId, tempKey, now),
   ]);
+  if (insert.meta.changes === 0) {
+    // Perdeu a corrida: outra chamada concorrente já criou o item saudável
+    // entre a leitura acima e este INSERT. O texto temporário que acabamos
+    // de gravar em R2 para ESTE queueId nunca vai ter uma linha de fila
+    // associada (nenhum consumer vai lê-lo nem apagá-lo) -- apaga aqui
+    // mesmo, para não deixar um objeto órfão. Não manda mensagem: a chamada
+    // concorrente que venceu é responsável pelo próprio item.
+    await deleteTempTextSafely(bucket, tempKey);
+    return;
+  }
   if (queue) await queue.send({ queueId, contentId });
 }
 
