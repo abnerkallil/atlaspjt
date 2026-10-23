@@ -1,0 +1,730 @@
+[
+  {
+    "contentId": "CG-001",
+    "lesson": {
+      "v": 1,
+      "obj": "Identificar o objeto, a finalidade, o campo de aplicação e os usuários da informação contábil.",
+      "cc": [
+        {
+          "id": "objeto-contabilidade",
+          "nome": "Objeto da Contabilidade",
+          "def": "O patrimônio das entidades, observado em seus aspectos quantitativo (valor monetário) e qualitativo (composição e natureza dos bens, direitos e obrigações)."
+        },
+        {
+          "id": "finalidade-contabilidade",
+          "nome": "Finalidade da Contabilidade",
+          "def": "Observar, registrar e relatar os fatos que afetam o patrimônio, produzindo informação útil sobre a posição patrimonial, financeira e o desempenho da entidade para apoiar a tomada de decisão."
+        },
+        {
+          "id": "campo-aplicacao",
+          "nome": "Campo de aplicação da Contabilidade",
+          "def": "Toda entidade, com ou sem finalidade de lucro, que possua patrimônio administrável de forma autônoma — empresas, entidades sem fins lucrativos, órgãos públicos, entre outras."
+        },
+        {
+          "id": "usuarios-informacao-contabil",
+          "nome": "Usuários da informação contábil",
+          "def": "Usuários internos (administradores e sócios, com acesso a informações gerenciais mais detalhadas) e externos (investidores, credores, fisco, fornecedores, clientes e sociedade), cada um com necessidades de informação distintas."
+        },
+        {
+          "id": "entidade-contabil",
+          "nome": "Princípio da Entidade",
+          "def": "O patrimônio da entidade é registrado como autônomo e distinto do patrimônio de seus sócios, proprietários ou de outras entidades, ainda que a entidade não possua personalidade jurídica própria."
+        }
+      ],
+      "rl": [
+        { "de": "finalidade-contabilidade", "para": "usuarios-informacao-contabil", "tipo": "produz informação para atender às necessidades de" },
+        { "de": "objeto-contabilidade", "para": "entidade-contabil", "tipo": "é delimitado pelo patrimônio de cada" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "usuarios-informacao-contabil",
+          "texto": "Um banco que avalia um pedido de empréstimo é usuário externo da informação contábil; o diretor financeiro que decide investir em nova máquina usa a mesma base de dados, mas como usuário interno, com relatórios gerenciais mais detalhados."
+        },
+        {
+          "conceitoId": "entidade-contabil",
+          "texto": "Mesmo numa empresa individual (EIRELI/empresário individual), os bens particulares do titular não entram no patrimônio registrado pela contabilidade da empresa — o princípio da entidade separa os dois patrimônios."
+        }
+      ],
+      "pg": [
+        "O objeto da contabilidade é o patrimônio, não \"o dinheiro\" ou \"os lucros\" isoladamente — abrange todos os bens, direitos e obrigações, inclusive os que não envolvem caixa diretamente.",
+        "Usuário interno e usuário externo podem usar a MESMA informação contábil de base, mas o nível de detalhe e a forma de apresentação (relatório gerencial vs. demonstração publicada) costumam ser diferentes.",
+        "O campo de aplicação não se limita a empresas com fins lucrativos — entidades sem fins lucrativos e órgãos públicos também têm patrimônio e, portanto, contabilidade."
+      ],
+      "rs": "A Contabilidade tem como objeto o patrimônio das entidades e como finalidade gerar informação útil para a tomada de decisão de usuários internos e externos. Seu campo de aplicação abrange qualquer entidade com patrimônio próprio, delimitado pelo princípio da entidade, que separa o patrimônio da entidade do patrimônio de seus sócios ou de terceiros."
+    }
+  },
+  {
+    "contentId": "CG-002",
+    "lesson": {
+      "v": 1,
+      "obj": "Reconhecer os componentes do patrimônio — bens, direitos e obrigações — e sua representação contábil.",
+      "cc": [
+        {
+          "id": "patrimonio",
+          "nome": "Patrimônio",
+          "def": "Conjunto de bens, direitos e obrigações de uma entidade, avaliável em moeda, em determinado momento."
+        },
+        {
+          "id": "bens",
+          "nome": "Bens",
+          "def": "Elementos patrimoniais tangíveis ou intangíveis com valor econômico e utilidade para a entidade (ex.: dinheiro, estoques, máquinas, marcas)."
+        },
+        {
+          "id": "direitos",
+          "nome": "Direitos",
+          "def": "Valores a receber de terceiros, decorrentes de relações jurídicas ou comerciais (ex.: duplicatas a receber, aplicações financeiras, empréstimos concedidos)."
+        },
+        {
+          "id": "obrigacoes",
+          "nome": "Obrigações",
+          "def": "Valores a pagar a terceiros, representando dívidas ou compromissos assumidos pela entidade (ex.: fornecedores, empréstimos obtidos, salários a pagar)."
+        },
+        {
+          "id": "ativo-passivo-conceito",
+          "nome": "Ativo e Passivo (visão introdutória)",
+          "def": "Bens e direitos são agrupados no Ativo; obrigações com terceiros são agrupadas no Passivo (exigível), formando as duas metades da representação patrimonial."
+        }
+      ],
+      "rl": [
+        { "de": "bens", "para": "ativo-passivo-conceito", "tipo": "compõe, junto com direitos, o" },
+        { "de": "obrigacoes", "para": "ativo-passivo-conceito", "tipo": "compõe o" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "direitos",
+          "texto": "Uma venda a prazo gera um direito (duplicata a receber do cliente); o recebimento futuro converte esse direito em outro bem (caixa ou banco)."
+        },
+        {
+          "conceitoId": "obrigacoes",
+          "texto": "A compra de mercadorias a prazo gera uma obrigação (fornecedores a pagar); o pagamento futuro reduz essa obrigação e o saldo de caixa/banco."
+        }
+      ],
+      "pg": [
+        "Direitos e bens não são a mesma coisa: bens são elementos já incorporados fisicamente ou de uso direto da entidade; direitos são valores que a entidade ainda vai receber de terceiros.",
+        "Nem toda obrigação é \"dívida bancária\" — salários a pagar, tributos a recolher e fornecedores também são obrigações, mesmo sem envolver empréstimo.",
+        "O patrimônio é avaliável em moeda num MOMENTO específico — ele muda a cada fato administrativo, por isso toda demonstração patrimonial tem uma data de referência."
+      ],
+      "rs": "O patrimônio de uma entidade é formado por bens, direitos e obrigações, todos avaliáveis em moeda. Bens e direitos compõem o Ativo; as obrigações com terceiros compõem o Passivo. Essa separação é a base para a representação patrimonial que será formalizada na equação patrimonial."
+    }
+  },
+  {
+    "contentId": "CG-003",
+    "lesson": {
+      "v": 1,
+      "obj": "Compreender o Patrimônio Líquido e aplicar a equação patrimonial Ativo = Passivo + Patrimônio Líquido.",
+      "cc": [
+        {
+          "id": "patrimonio-liquido",
+          "nome": "Patrimônio Líquido (PL)",
+          "def": "Diferença entre o total do Ativo e o total do Passivo (exigível); representa os recursos próprios da entidade — capital investido pelos sócios mais os resultados acumulados."
+        },
+        {
+          "id": "capital-social",
+          "nome": "Capital social",
+          "def": "Valor dos recursos investidos pelos sócios ou acionistas na constituição ou em aumentos de capital da entidade."
+        },
+        {
+          "id": "reservas",
+          "nome": "Reservas (visão introdutória)",
+          "def": "Parcelas do Patrimônio Líquido destinadas por lei ou por decisão societária, segregadas do capital social e dos lucros ainda não destinados (ex.: reserva legal, reservas de lucros)."
+        },
+        {
+          "id": "resultados-acumulados",
+          "nome": "Lucros ou prejuízos acumulados",
+          "def": "Resultado de exercícios anteriores ainda não distribuído nem destinado a reservas, que integra o Patrimônio Líquido."
+        },
+        {
+          "id": "equacao-patrimonial",
+          "nome": "Equação patrimonial fundamental",
+          "def": "Ativo = Passivo + Patrimônio Líquido — toda a riqueza da entidade (Ativo) é financiada por capital de terceiros (Passivo) ou por capital próprio (Patrimônio Líquido)."
+        }
+      ],
+      "rl": [
+        { "de": "patrimonio-liquido", "para": "equacao-patrimonial", "tipo": "é o termo residual da" },
+        { "de": "capital-social", "para": "patrimonio-liquido", "tipo": "é um componente do" },
+        { "de": "resultados-acumulados", "para": "patrimonio-liquido", "tipo": "é um componente do" }
+      ],
+      "fm": [
+        {
+          "id": "equacao-fundamental",
+          "expr": "Ativo = Passivo + Patrimônio Líquido",
+          "legenda": "Igualdade sempre verdadeira: todo recurso controlado pela entidade (Ativo) tem uma origem, de terceiros (Passivo) ou dos próprios sócios (Patrimônio Líquido)."
+        },
+        {
+          "id": "pl-residual",
+          "expr": "Patrimônio Líquido = Ativo − Passivo",
+          "legenda": "Forma de calcular o PL quando se conhece o total do Ativo e do Passivo."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "equacao-fundamental",
+          "texto": "Uma empresa com Ativo de R$ 500.000 e Passivo de R$ 300.000 tem Patrimônio Líquido de R$ 200.000 — os R$ 500.000 de recursos são financiados por R$ 300.000 de terceiros e R$ 200.000 de capital próprio."
+        },
+        {
+          "conceitoId": "resultados-acumulados",
+          "texto": "Se uma empresa apura lucro de R$ 50.000 no período e não distribui nem destina a reservas, esse valor fica temporariamente em Lucros Acumulados, aumentando o Patrimônio Líquido."
+        }
+      ],
+      "pg": [
+        "O Patrimônio Líquido não é \"o dinheiro em caixa\" da empresa — é um valor residual (Ativo menos Passivo), que pode inclusive ser negativo.",
+        "Capital social é apenas uma parte do Patrimônio Líquido, não o PL inteiro — reservas e resultados acumulados também compõem o PL.",
+        "A equação patrimonial é sempre uma igualdade: qualquer fato que aumente o Ativo sem contrapartida em Passivo ou PL está registrado de forma incompleta ou incorreta."
+      ],
+      "rs": "O Patrimônio Líquido é a diferença entre Ativo e Passivo, representando os recursos próprios da entidade (capital social, reservas e resultados acumulados). A equação patrimonial Ativo = Passivo + Patrimônio Líquido expressa que todo recurso controlado pela entidade tem origem em capital de terceiros ou em capital próprio, e essa igualdade nunca se rompe."
+    }
+  },
+  {
+    "contentId": "CG-004",
+    "lesson": {
+      "v": 1,
+      "obj": "Classificar as situações patrimoniais de uma entidade a partir da relação entre Ativo, Passivo e Patrimônio Líquido.",
+      "cc": [
+        {
+          "id": "situacao-liquida-positiva",
+          "nome": "Situação líquida positiva (ativa, superavitária)",
+          "def": "Ocorre quando o Ativo é maior que o Passivo, resultando em Patrimônio Líquido positivo — a entidade tem mais recursos do que obrigações."
+        },
+        {
+          "id": "situacao-liquida-nula",
+          "nome": "Situação líquida nula",
+          "def": "Ocorre quando o Ativo é exatamente igual ao Passivo, resultando em Patrimônio Líquido igual a zero."
+        },
+        {
+          "id": "situacao-liquida-negativa",
+          "nome": "Situação líquida negativa (deficitária)",
+          "def": "Ocorre quando o Passivo é maior que o Ativo, resultando em Patrimônio Líquido negativo."
+        },
+        {
+          "id": "passivo-a-descoberto",
+          "nome": "Passivo a descoberto",
+          "def": "Nome dado à situação líquida negativa quando apresentada no Balanço Patrimonial: as obrigações com terceiros excedem o total de bens e direitos, e o PL negativo aparece subtraindo o total do Passivo no lado do financiamento."
+        }
+      ],
+      "rl": [
+        { "de": "passivo-a-descoberto", "para": "situacao-liquida-negativa", "tipo": "é a apresentação no balanço da" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "situacao-liquida-negativa",
+          "texto": "Uma empresa com Ativo de R$ 100.000 e Passivo de R$ 150.000 está em situação líquida negativa, com Patrimônio Líquido de −R$ 50.000 (passivo a descoberto)."
+        },
+        {
+          "conceitoId": "situacao-liquida-nula",
+          "texto": "Uma empresa recém-constituída, antes de qualquer integralização de capital ou operação, pode apresentar Ativo igual a zero e Passivo igual a zero, configurando situação líquida nula."
+        }
+      ],
+      "pg": [
+        "Passivo a descoberto não significa que a empresa não tem nenhum ativo — significa que o total de obrigações é maior que o total de bens e direitos, não que o Ativo é zero.",
+        "Situação líquida negativa não é, por si só, insolvência jurídica ou falência — é uma classificação contábil do PL, que pode ou não coincidir com a situação de liquidez de caixa no curto prazo.",
+        "Situação líquida nula é diferente de \"empresa sem patrimônio\" — ela tem Ativo e Passivo, só que de valores iguais, zerando o PL."
+      ],
+      "rs": "A situação patrimonial de uma entidade é classificada pela relação entre Ativo e Passivo: positiva quando o Ativo supera o Passivo (PL positivo), nula quando são iguais (PL zero) e negativa quando o Passivo supera o Ativo (PL negativo, apresentado no balanço como passivo a descoberto)."
+    }
+  },
+  {
+    "contentId": "CG-005",
+    "lesson": {
+      "v": 1,
+      "obj": "Diferenciar atos administrativos de fatos administrativos e classificar os fatos em permutativos, modificativos e mistos.",
+      "cc": [
+        {
+          "id": "ato-administrativo",
+          "nome": "Ato administrativo",
+          "def": "Evento que não altera o patrimônio de imediato, mas pode gerar obrigação futura ou compromisso (ex.: assinatura de contrato, admissão de empregado, emissão de pedido de compra) — não é registrado como lançamento contábil."
+        },
+        {
+          "id": "fato-administrativo",
+          "nome": "Fato administrativo (fato contábil)",
+          "def": "Evento que efetivamente altera a composição ou o valor do patrimônio, sendo objeto de registro contábil."
+        },
+        {
+          "id": "fato-permutativo",
+          "nome": "Fato permutativo",
+          "def": "Fato que altera a composição qualitativa do patrimônio (troca de elementos), sem alterar o valor do Patrimônio Líquido — exemplos: compra de bem à vista, recebimento de duplicata."
+        },
+        {
+          "id": "fato-modificativo",
+          "nome": "Fato modificativo",
+          "def": "Fato que altera o valor do Patrimônio Líquido, aumentando-o (modificativo aumentativo, decorrente de receita) ou diminuindo-o (modificativo diminutivo, decorrente de despesa), sem necessariamente alterar a composição de outros elementos na mesma proporção."
+        },
+        {
+          "id": "fato-misto",
+          "nome": "Fato misto (composto)",
+          "def": "Fato que combina, num único evento, um efeito permutativo e um efeito modificativo — por exemplo, uma venda com lucro, em que há troca de estoque por caixa/direito (permutativo) e, ao mesmo tempo, reconhecimento de resultado (modificativo)."
+        }
+      ],
+      "rl": [
+        { "de": "ato-administrativo", "para": "fato-administrativo", "tipo": "distingue-se de por não alterar o patrimônio" },
+        { "de": "fato-misto", "para": "fato-permutativo", "tipo": "combina elementos de, junto com o modificativo" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "fato-permutativo",
+          "texto": "O pagamento de uma duplicata a fornecedores com dinheiro do caixa é permutativo: diminui Caixa e diminui Fornecedores, sem alterar o Patrimônio Líquido."
+        },
+        {
+          "conceitoId": "fato-misto",
+          "texto": "A venda de uma mercadoria que custou R$ 70 por R$ 100 à vista é um fato misto: há a troca de estoque por caixa (permutativo) e, simultaneamente, o reconhecimento de R$ 30 de lucro (modificativo aumentativo)."
+        }
+      ],
+      "pg": [
+        "A assinatura de um contrato de aluguel ainda não registra nenhum lançamento contábil — é ato administrativo; o lançamento só ocorre quando o aluguel é efetivamente incorrido ou pago (fato administrativo).",
+        "Fato permutativo não significa \"sem efeito nenhum\" — ele altera a composição do Ativo ou do Passivo, só não altera o Patrimônio Líquido total.",
+        "Quase toda venda com lucro ou prejuízo é, na prática, um fato misto — raramente uma operação de venda é puramente permutativa, a não ser que seja feita exatamente pelo custo, sem lucro nem prejuízo."
+      ],
+      "rs": "Atos administrativos não afetam o patrimônio e não geram lançamento contábil; fatos administrativos afetam o patrimônio e são classificados em permutativos (alteram composição, não o PL), modificativos (alteram o PL, aumentativos ou diminutivos) e mistos (combinam os dois efeitos num só evento, como uma venda com lucro)."
+    }
+  },
+  {
+    "contentId": "CG-006",
+    "lesson": {
+      "v": 1,
+      "obj": "Diferenciar variações patrimoniais qualitativas e quantitativas e relacioná-las ao resultado do período.",
+      "cc": [
+        {
+          "id": "variacao-qualitativa",
+          "nome": "Variação patrimonial qualitativa",
+          "def": "Alteração na composição dos elementos do patrimônio (troca de um bem/direito por outro, ou de uma obrigação por outra), sem alteração do valor total do Patrimônio Líquido — corresponde ao efeito dos fatos permutativos."
+        },
+        {
+          "id": "variacao-quantitativa",
+          "nome": "Variação patrimonial quantitativa",
+          "def": "Alteração no valor total do Patrimônio Líquido, para mais (receitas) ou para menos (despesas) — corresponde ao efeito dos fatos modificativos."
+        },
+        {
+          "id": "resultado-do-periodo",
+          "nome": "Resultado do período",
+          "def": "Soma algébrica das variações quantitativas (receitas menos despesas) ocorridas num intervalo de tempo, apurada como lucro (variação líquida positiva) ou prejuízo (variação líquida negativa)."
+        }
+      ],
+      "rl": [
+        { "de": "variacao-quantitativa", "para": "resultado-do-periodo", "tipo": "é acumulada para formar o" },
+        { "de": "variacao-qualitativa", "para": "resultado-do-periodo", "tipo": "não afeta diretamente o" }
+      ],
+      "fm": [
+        {
+          "id": "resultado-periodo-calc",
+          "expr": "Resultado do período = Σ Receitas − Σ Despesas",
+          "legenda": "Lucro quando positivo, prejuízo quando negativo; soma de todas as variações quantitativas do intervalo analisado."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "variacao-qualitativa",
+          "texto": "A transformação de um direito (duplicata a receber) em bem (caixa), pelo recebimento de um cliente, é variação qualitativa: muda a composição do Ativo, mas não altera o Patrimônio Líquido."
+        },
+        {
+          "conceitoId": "resultado-periodo-calc",
+          "texto": "Se uma empresa reconhece R$ 80.000 de receitas e R$ 55.000 de despesas no período, o resultado é um lucro de R$ 25.000, que passa a integrar o Patrimônio Líquido."
+        }
+      ],
+      "pg": [
+        "Variação qualitativa não é sinônimo de \"sem importância\" — ela pode envolver valores altos, só não altera o total do Patrimônio Líquido.",
+        "Só as variações quantitativas (receitas e despesas) entram no cálculo do resultado do período — variações qualitativas não aparecem na Demonstração do Resultado.",
+        "Resultado do período é um conceito de intervalo de tempo (fluxo), diferente do Patrimônio Líquido, que é um valor em um momento específico (estoque)."
+      ],
+      "rs": "Variações patrimoniais qualitativas alteram a composição do patrimônio sem mudar o Patrimônio Líquido; variações quantitativas alteram o valor do Patrimônio Líquido, por meio de receitas e despesas. A soma das variações quantitativas de um período forma o resultado do exercício — lucro ou prejuízo."
+    }
+  },
+  {
+    "contentId": "CG-041",
+    "lesson": {
+      "v": 1,
+      "obj": "Reconhecer os princípios contábeis fundamentais que orientam o registro e a apresentação da informação contábil.",
+      "cc": [
+        {
+          "id": "principio-entidade",
+          "nome": "Princípio da Entidade",
+          "def": "O patrimônio objeto da contabilidade é sempre o da entidade, autônomo e distinto do patrimônio de seus sócios, acionistas ou de outras entidades."
+        },
+        {
+          "id": "principio-continuidade",
+          "nome": "Princípio da Continuidade",
+          "def": "A entidade é avaliada partindo-se do pressuposto de que continuará em operação por tempo indeterminado, salvo evidência em contrário — o que afeta critérios de avaliação de ativos e passivos."
+        },
+        {
+          "id": "principio-oportunidade",
+          "nome": "Princípio da Oportunidade",
+          "def": "Os fatos que alteram o patrimônio devem ser registrados de forma íntegra e tempestiva, independentemente da causa que os originou, respeitando o período em que ocorreram."
+        },
+        {
+          "id": "principio-custo-historico",
+          "nome": "Princípio (base de mensuração) do Custo Histórico",
+          "def": "Os elementos do patrimônio são inicialmente registrados pelos valores de entrada (valor efetivamente pago ou a pagar na aquisição), podendo ser posteriormente ajustados por outras bases de mensuração previstas na Estrutura Conceitual (CPC 00) e em pronunciamentos específicos."
+        },
+        {
+          "id": "principio-prudencia-conservadorismo",
+          "nome": "Prudência (conservadorismo)",
+          "def": "Diante de incerteza, adota-se cautela na mensuração de ativos e receitas, de modo a não os superestimar, e na mensuração de passivos e despesas, de modo a não os subestimar — sem, contudo, criar reservas ocultas ou provisões excessivas."
+        },
+        {
+          "id": "regime-competencia",
+          "nome": "Regime de competência (em relação aos princípios)",
+          "def": "Receitas e despesas são reconhecidas no período em que ocorrem, independentemente do recebimento ou pagamento em dinheiro — decorrência direta do princípio da oportunidade."
+        }
+      ],
+      "rl": [
+        { "de": "regime-competencia", "para": "principio-oportunidade", "tipo": "é a aplicação prática do" },
+        { "de": "principio-continuidade", "para": "principio-custo-historico", "tipo": "justifica, em condições normais, o uso do" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "principio-continuidade",
+          "texto": "Uma empresa em funcionamento normal avalia seu imobilizado pelo custo menos depreciação, pressupondo uso contínuo; se estivesse em processo de liquidação, a avaliação mudaria para valor de realização, pois a continuidade deixaria de se sustentar."
+        },
+        {
+          "conceitoId": "principio-prudencia-conservadorismo",
+          "texto": "Ao identificar que um cliente provavelmente não pagará uma dívida, a empresa reconhece uma perda estimada (prudência), mas não reconhece de antemão um ganho apenas possível com a venda futura de um imóvel."
+        }
+      ],
+      "pg": [
+        "Prudência não é o mesmo que subavaliar sistematicamente o patrimônio (criar \"reservas ocultas\") — o princípio pede cautela na incerteza, não pessimismo deliberado além do razoável.",
+        "O princípio da entidade não exige que a entidade tenha personalidade jurídica própria — mesmo um empresário individual tem patrimônio contábil separado do seu patrimônio pessoal, para fins de registro.",
+        "Custo histórico é a base de mensuração de ENTRADA; vários elementos patrimoniais são posteriormente ajustados por outras bases (valor justo, valor recuperável, valor presente), conforme pronunciamentos específicos — custo histórico não é a única base usada na contabilidade atual."
+      ],
+      "rs": "Os princípios contábeis fundamentais — entidade, continuidade, oportunidade, custo histórico (como base de mensuração inicial) e prudência — orientam o registro e a apresentação do patrimônio. Juntos, sustentam o regime de competência e asseguram que a informação contábil seja íntegra, tempestiva e cautelosa diante de incertezas, sem distorcer a realidade patrimonial para mais ou para menos."
+    }
+  },
+  {
+    "contentId": "CG-007",
+    "lesson": {
+      "v": 1,
+      "obj": "Compreender o conceito, a função e a estrutura das contas contábeis.",
+      "cc": [
+        {
+          "id": "conta-contabil",
+          "nome": "Conta",
+          "def": "Instrumento de registro contábil usado para acumular, de forma organizada, os aumentos e diminuições de um elemento patrimonial ou de resultado."
+        },
+        {
+          "id": "titulo-da-conta",
+          "nome": "Título da conta",
+          "def": "Nome que identifica a conta e indica o elemento patrimonial ou de resultado que ela representa (ex.: Caixa, Fornecedores, Receita de Vendas)."
+        },
+        {
+          "id": "debito-credito",
+          "nome": "Débito e crédito",
+          "def": "Lados esquerdo (débito) e direito (crédito) de uma conta, usados para registrar lançamentos; o efeito de aumento ou diminuição depende da natureza da conta (patrimonial ou de resultado)."
+        },
+        {
+          "id": "saldo-da-conta",
+          "nome": "Saldo da conta",
+          "def": "Diferença entre o total debitado e o total creditado numa conta em determinado momento; pode ser devedor (débitos maiores) ou credor (créditos maiores)."
+        },
+        {
+          "id": "funcao-da-conta",
+          "nome": "Função da conta",
+          "def": "Finalidade específica de cada conta dentro do conjunto patrimonial — identificar que tipo de aumento ou diminuição ela registra (ex.: a função de uma conta de Caixa é controlar entradas e saídas de dinheiro)."
+        }
+      ],
+      "rl": [
+        { "de": "debito-credito", "para": "saldo-da-conta", "tipo": "determina, pela diferença entre os totais, o" },
+        { "de": "titulo-da-conta", "para": "funcao-da-conta", "tipo": "identifica o elemento associado à" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "saldo-da-conta",
+          "texto": "Se a conta Caixa recebeu R$ 10.000 em débitos e R$ 6.000 em créditos, seu saldo é devedor de R$ 4.000, representando o dinheiro disponível."
+        },
+        {
+          "conceitoId": "debito-credito",
+          "texto": "Em uma conta de Fornecedores (passivo), um crédito aumenta a obrigação (nova compra a prazo) e um débito a diminui (pagamento ao fornecedor) — o efeito é o oposto do que ocorre nas contas do Ativo."
+        }
+      ],
+      "pg": [
+        "Débito não significa \"aumento\" e crédito não significa \"diminuição\" de forma universal — o efeito depende do grupo da conta (Ativo, Passivo/PL ou Resultado), e inverter essa lógica é um dos erros mais comuns de quem está começando.",
+        "Saldo devedor e saldo credor não são \"bom\" ou \"mau\" resultado — são apenas a indicação de qual lado (débito ou crédito) acumulou o maior valor na conta.",
+        "O título da conta deve refletir a natureza do elemento que ela representa — usar o mesmo título para elementos patrimoniais diferentes compromete a análise posterior dos saldos."
+      ],
+      "rs": "A conta é o instrumento usado para registrar, de forma organizada, os aumentos e diminuições de cada elemento patrimonial ou de resultado, por meio de lançamentos a débito e a crédito. Seu saldo (devedor ou credor) resulta da diferença entre os totais debitados e creditados, e sua função identifica o papel específico de cada conta dentro do conjunto patrimonial."
+    }
+  },
+  {
+    "contentId": "CG-008",
+    "lesson": {
+      "v": 1,
+      "obj": "Classificar as contas patrimoniais e identificar a natureza devedora ou credora de seus saldos.",
+      "cc": [
+        {
+          "id": "contas-ativo",
+          "nome": "Contas do Ativo",
+          "def": "Representam bens e direitos controlados pela entidade; aumentam por débitos e diminuem por créditos, apresentando normalmente saldo devedor."
+        },
+        {
+          "id": "contas-passivo",
+          "nome": "Contas do Passivo",
+          "def": "Representam obrigações exigíveis da entidade perante terceiros; aumentam por créditos e diminuem por débitos, apresentando normalmente saldo credor."
+        },
+        {
+          "id": "contas-pl",
+          "nome": "Contas do Patrimônio Líquido",
+          "def": "Representam o capital próprio da entidade (capital social, reservas, resultados acumulados); seguem a mesma lógica do Passivo — aumentam por créditos e diminuem por débitos, com saldo normalmente credor."
+        }
+      ],
+      "rl": [
+        { "de": "contas-pl", "para": "contas-passivo", "tipo": "segue a mesma lógica de débito/crédito que" },
+        { "de": "contas-ativo", "para": "contas-passivo", "tipo": "tem lógica de débito/crédito oposta à de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "contas-ativo",
+          "texto": "A conta Estoques (Ativo) aumenta com um débito, quando a empresa compra mercadorias, e diminui com um crédito, quando vende ou dá baixa nas mercadorias."
+        },
+        {
+          "conceitoId": "contas-passivo",
+          "texto": "A conta Empréstimos a Pagar (Passivo) aumenta com um crédito, na contratação do empréstimo, e diminui com um débito, no pagamento das parcelas."
+        }
+      ],
+      "pg": [
+        "Contas do Patrimônio Líquido seguem a MESMA lógica das contas do Passivo (aumentam por crédito), não a lógica das contas do Ativo — confundir essa regra é um erro recorrente.",
+        "Ter saldo devedor numa conta do Passivo (exceção à regra geral) pode ocorrer em situações específicas (ex.: pagamento antecipado maior que o saldo devido), mas isso não muda a lógica normal de débito/crédito do grupo.",
+        "Classificar uma conta como Ativo, Passivo ou Patrimônio Líquido depende da natureza econômica do elemento que ela representa, não do nome que aparece no plano de contas — títulos mal escolhidos podem induzir a erro."
+      ],
+      "rs": "As contas patrimoniais dividem-se em Ativo (bens e direitos, que aumentam por débito), Passivo (obrigações com terceiros, que aumentam por crédito) e Patrimônio Líquido (capital próprio, que segue a mesma lógica do Passivo). Essa classificação define o comportamento normal de débitos, créditos e saldos de cada conta."
+    }
+  },
+  {
+    "contentId": "CG-009",
+    "lesson": {
+      "v": 1,
+      "obj": "Classificar as contas de resultado e descrever como seus saldos são encerrados ao final do período.",
+      "cc": [
+        {
+          "id": "contas-receita",
+          "nome": "Contas de Receita",
+          "def": "Representam o aumento do Patrimônio Líquido decorrente das atividades da entidade (ex.: Receita de Vendas, Receita de Serviços); aumentam por créditos e, por isso, apresentam normalmente saldo credor durante o período."
+        },
+        {
+          "id": "contas-custo-despesa",
+          "nome": "Contas de Custo e Despesa",
+          "def": "Representam a diminuição do Patrimônio Líquido decorrente do consumo de recursos para gerar receita ou manter a operação (ex.: Custo das Mercadorias Vendidas, Despesas Administrativas); aumentam por débitos e apresentam normalmente saldo devedor durante o período."
+        },
+        {
+          "id": "encerramento-contas-resultado",
+          "nome": "Encerramento das contas de resultado",
+          "def": "Processo pelo qual, ao final do período, os saldos de todas as contas de receita, custo e despesa são zerados e transferidos (diretamente ou via Apuração do Resultado do Exercício) para o Patrimônio Líquido."
+        }
+      ],
+      "rl": [
+        { "de": "contas-receita", "para": "encerramento-contas-resultado", "tipo": "tem seu saldo zerado e transferido no" },
+        { "de": "contas-custo-despesa", "para": "encerramento-contas-resultado", "tipo": "tem seu saldo zerado e transferido no" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "contas-receita",
+          "texto": "A cada venda realizada, a conta Receita de Vendas recebe um crédito; ao final do período, ela acumula o total de vendas, até ser zerada no encerramento."
+        },
+        {
+          "conceitoId": "encerramento-contas-resultado",
+          "texto": "Se Receita de Vendas acumulou R$ 200.000 (crédito) e Despesas diversas acumularam R$ 150.000 (débito) no período, o encerramento zera as duas contas e transfere o lucro de R$ 50.000 para o Patrimônio Líquido."
+        }
+      ],
+      "pg": [
+        "Contas de resultado (receita, custo e despesa) não carregam saldo de um período para o outro como as contas patrimoniais — elas são zeradas no encerramento, começando o novo período do zero.",
+        "Receita aumenta por crédito e despesa aumenta por débito — é o oposto do que ocorre nas contas do Ativo para débito, o que costuma confundir quem só memoriza \"débito aumenta\".",
+        "O encerramento das contas de resultado não altera o Ativo ou o Passivo diretamente — ele apenas move o resultado líquido já apurado para dentro do Patrimônio Líquido."
+      ],
+      "rs": "Contas de receita aumentam por crédito e contas de custo/despesa aumentam por débito, ao contrário da lógica das contas do Ativo. Ao final do período, todas as contas de resultado são encerradas: seus saldos são zerados e o resultado líquido (lucro ou prejuízo) é transferido para o Patrimônio Líquido."
+    }
+  },
+  {
+    "contentId": "CG-010",
+    "lesson": {
+      "v": 1,
+      "obj": "Descrever a Teoria Personalista e sua classificação das contas em agentes consignatários, correspondentes e proprietários.",
+      "cc": [
+        {
+          "id": "teoria-personalista",
+          "nome": "Teoria Personalista (Cerboni)",
+          "def": "Doutrina contábil clássica que explica o funcionamento das contas atribuindo-lhes uma personificação: cada conta representa uma \"pessoa\" com quem a entidade mantém relação de débito ou crédito."
+        },
+        {
+          "id": "contas-agentes-consignatarios",
+          "nome": "Contas de agentes consignatários (ou gestores)",
+          "def": "Na Teoria Personalista, representam pessoas que recebem bens ou valores para guardar, administrar ou movimentar em nome da entidade — fundamento histórico de contas como Caixa e Estoques."
+        },
+        {
+          "id": "contas-correspondentes",
+          "nome": "Contas de correspondentes",
+          "def": "Na Teoria Personalista, representam pessoas físicas ou jurídicas com quem a entidade mantém relações de crédito ou débito externas — fundamento histórico de contas como Clientes e Fornecedores."
+        },
+        {
+          "id": "contas-proprietario",
+          "nome": "Contas de proprietário",
+          "def": "Na Teoria Personalista, representam o(s) próprio(s) dono(s) da entidade, cuja conta é creditada pelo capital investido e pelos lucros, e debitada pelas retiradas e prejuízos — fundamento histórico das contas de Patrimônio Líquido."
+        }
+      ],
+      "rl": [
+        { "de": "contas-agentes-consignatarios", "para": "teoria-personalista", "tipo": "é uma das três categorias de contas da" },
+        { "de": "contas-correspondentes", "para": "teoria-personalista", "tipo": "é uma das três categorias de contas da" },
+        { "de": "contas-proprietario", "para": "teoria-personalista", "tipo": "é uma das três categorias de contas da" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "contas-agentes-consignatarios",
+          "texto": "Na lógica personalista, a conta Caixa representa o \"caixeiro\" (agente consignatário) responsável por guardar o dinheiro da entidade; ele é debitado quando recebe valores e creditado quando os entrega."
+        },
+        {
+          "conceitoId": "contas-correspondentes",
+          "texto": "A conta Clientes representa, na visão personalista, pessoas (correspondentes) que devem valores à entidade; a conta Fornecedores representa pessoas a quem a entidade deve valores."
+        }
+      ],
+      "pg": [
+        "A Teoria Personalista é uma doutrina histórica usada para EXPLICAR a lógica de débito e crédito atribuindo personificação às contas — não é um método de escrituração diferente das partidas dobradas, que continuam sendo a técnica usada.",
+        "Agentes consignatários (gestores de bens/valores) e correspondentes (terceiros com quem a entidade tem relação de crédito/débito) são categorias diferentes: o primeiro grupo \"guarda\" recursos da própria entidade, o segundo mantém relação externa de dívida.",
+        "A conta de proprietário, na teoria personalista, não é \"uma despesa\" da entidade — ela corresponde ao que hoje chamamos de Patrimônio Líquido, e é creditada (não debitada) pelo capital investido."
+      ],
+      "rs": "A Teoria Personalista explica a lógica das contas atribuindo-lhes personificação, classificando-as em três categorias: agentes consignatários (que guardam/gerem bens e valores da entidade), correspondentes (terceiros com relação de crédito/débito externa) e proprietário (o(s) dono(s) da entidade). É uma das doutrinas históricas que fundamentam a compreensão do débito e do crédito."
+    }
+  },
+  {
+    "contentId": "CG-011",
+    "lesson": {
+      "v": 1,
+      "obj": "Descrever a Teoria Materialista e sua distinção entre contas integrais e contas diferenciais.",
+      "cc": [
+        {
+          "id": "teoria-materialista",
+          "nome": "Teoria Materialista",
+          "def": "Doutrina contábil clássica que explica a lógica das contas sem recorrer à personificação, classificando-as segundo a natureza material do que representam: valores absolutos de bens ou diferenças/resultados."
+        },
+        {
+          "id": "contas-integrais",
+          "nome": "Contas integrais",
+          "def": "Na Teoria Materialista, representam valores absolutos e completos de elementos patrimoniais, como bens e direitos (ex.: Caixa, Estoques, Imóveis), refletindo o valor total existente desses elementos."
+        },
+        {
+          "id": "contas-diferenciais",
+          "nome": "Contas diferenciais",
+          "def": "Na Teoria Materialista, representam diferenças ou resultados entre grandezas, não valores absolutos de bens — fundamento histórico das contas de resultado (receitas e despesas), que no fim expressam a diferença que compõe o lucro ou prejuízo."
+        }
+      ],
+      "rl": [
+        { "de": "contas-integrais", "para": "teoria-materialista", "tipo": "é uma das duas categorias de contas da" },
+        { "de": "contas-diferenciais", "para": "teoria-materialista", "tipo": "é uma das duas categorias de contas da" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "contas-integrais",
+          "texto": "A conta Estoques, na visão materialista, é integral porque seu saldo representa o valor absoluto das mercadorias efetivamente existentes, sem ser uma diferença entre outras grandezas."
+        },
+        {
+          "conceitoId": "contas-diferenciais",
+          "texto": "A conta Receita de Vendas, na visão materialista, é diferencial: seu papel é compor, junto com as despesas, a diferença que resulta no lucro ou prejuízo do período, e não representar um bem existente."
+        }
+      ],
+      "pg": [
+        "A Teoria Materialista não nega a existência de débito e crédito — ela apenas explica a classificação das contas pela natureza do que registram (valor absoluto vs. diferença), sem recorrer à ideia de \"pessoas\" como na Teoria Personalista.",
+        "Contas integrais não são só as de maior valor — a classificação depende da natureza do que a conta representa (um valor absoluto de bem/direito), não da magnitude do saldo.",
+        "Confundir \"contas diferenciais\" com \"contas de diferença de inventário\" é um erro comum — na Teoria Materialista, diferencial se refere à natureza das contas de resultado, não a ajustes de estoque."
+      ],
+      "rs": "A Teoria Materialista classifica as contas pela natureza material do que representam, sem recorrer à personificação usada na Teoria Personalista: contas integrais expressam valores absolutos de bens e direitos, enquanto contas diferenciais expressam diferenças ou resultados, fundamentando historicamente a lógica das contas de receita e despesa."
+    }
+  },
+  {
+    "contentId": "CG-012",
+    "lesson": {
+      "v": 1,
+      "obj": "Descrever a Teoria Patrimonialista e explicar por que é a doutrina adotada pela contabilidade moderna.",
+      "cc": [
+        {
+          "id": "teoria-patrimonialista",
+          "nome": "Teoria Patrimonialista (Fábio Besta)",
+          "def": "Doutrina contábil que explica a lógica das contas a partir do patrimônio em si, sem personificação (Personalista) nem foco em valores absolutos/diferenciais isolados (Materialista): as contas existem para representar o patrimônio e suas variações."
+        },
+        {
+          "id": "contas-patrimoniais-teoria",
+          "nome": "Contas patrimoniais (na Teoria Patrimonialista)",
+          "def": "Representam os elementos que compõem o patrimônio em um momento — Ativo, Passivo e Patrimônio Líquido — cujos saldos transitam de um período para outro."
+        },
+        {
+          "id": "contas-de-resultado-teoria",
+          "nome": "Contas de resultado (na Teoria Patrimonialista)",
+          "def": "Representam as variações quantitativas do patrimônio ao longo de um período — receitas e despesas —, encerradas periodicamente e cujo saldo líquido é absorvido pelo Patrimônio Líquido."
+        }
+      ],
+      "rl": [
+        { "de": "contas-patrimoniais-teoria", "para": "teoria-patrimonialista", "tipo": "é uma das duas categorias de contas da" },
+        { "de": "contas-de-resultado-teoria", "para": "teoria-patrimonialista", "tipo": "é uma das duas categorias de contas da" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "teoria-patrimonialista",
+          "texto": "A classificação usada no Balanço Patrimonial (Ativo, Passivo, Patrimônio Líquido) e na Demonstração do Resultado (receitas e despesas) segue diretamente a lógica da Teoria Patrimonialista, hoje adotada pela contabilidade brasileira e internacional."
+        },
+        {
+          "conceitoId": "contas-de-resultado-teoria",
+          "texto": "Ao final do exercício, as contas de resultado (receitas e despesas) são encerradas e seu saldo líquido (lucro ou prejuízo) é incorporado ao Patrimônio Líquido, demonstrando a ligação entre as duas categorias da Teoria Patrimonialista."
+        }
+      ],
+      "pg": [
+        "A Teoria Patrimonialista é a doutrina efetivamente adotada pela contabilidade atual — Personalista e Materialista são estudadas por seu valor histórico/didático, mas não fundamentam a prática contábil contemporânea.",
+        "A divisão em apenas duas categorias (contas patrimoniais e contas de resultado) é a característica central da Teoria Patrimonialista, diferente das três categorias da Personalista e das duas categorias (de outra natureza) da Materialista.",
+        "Mesmo adotando a Teoria Patrimonialista, o débito e o crédito continuam sendo a técnica de registro (partidas dobradas) — a teoria explica POR QUE e COMO as contas se comportam, não substitui a mecânica de escrituração."
+      ],
+      "rs": "A Teoria Patrimonialista, de Fábio Besta, explica a lógica das contas a partir do patrimônio, dividindo-as em contas patrimoniais (Ativo, Passivo, Patrimônio Líquido, com saldos que transitam entre períodos) e contas de resultado (receitas e despesas, encerradas periodicamente). É a doutrina efetivamente adotada pela contabilidade moderna, inclusive a brasileira."
+    }
+  },
+  {
+    "contentId": "CG-013",
+    "lesson": {
+      "v": 1,
+      "obj": "Compreender a estrutura, a codificação e os níveis de um plano de contas, e sua adaptação ao negócio da entidade.",
+      "cc": [
+        {
+          "id": "plano-de-contas",
+          "nome": "Plano de contas",
+          "def": "Relação ordenada e codificada de todas as contas que uma entidade utiliza para registrar seu patrimônio e suas operações, organizada de forma a permitir a elaboração das demonstrações contábeis."
+        },
+        {
+          "id": "manual-de-contas",
+          "nome": "Manual de contas",
+          "def": "Documento complementar ao plano de contas que descreve a função, o conteúdo, os critérios de débito e crédito e exemplos de uso de cada conta, orientando a padronização dos lançamentos."
+        },
+        {
+          "id": "codificacao-hierarquica",
+          "nome": "Codificação hierárquica do plano de contas",
+          "def": "Sistema de numeração em níveis (grupo, subgrupo, conta, subconta) que organiza as contas de forma lógica, permitindo agregação e detalhamento progressivo das informações (ex.: 1 = Ativo, 1.1 = Ativo Circulante, 1.1.1 = Caixa e Equivalentes)."
+        },
+        {
+          "id": "adaptacao-plano-ao-negocio",
+          "nome": "Adaptação do plano de contas ao negócio",
+          "def": "Necessidade de o plano de contas refletir as particularidades operacionais e o ramo de atividade da entidade (comércio, indústria, serviços), mantendo compatibilidade com a estrutura exigida para as demonstrações contábeis obrigatórias."
+        }
+      ],
+      "rl": [
+        { "de": "manual-de-contas", "para": "plano-de-contas", "tipo": "complementa, descrevendo a função de cada conta do" },
+        { "de": "codificacao-hierarquica", "para": "plano-de-contas", "tipo": "organiza estruturalmente o" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "codificacao-hierarquica",
+          "texto": "No código 1.1.2.01, o primeiro nível (1) indica Ativo, o segundo (1) indica Ativo Circulante, o terceiro (2) pode indicar o subgrupo de Clientes, e o último nível (01) identifica uma conta analítica específica dentro desse subgrupo."
+        },
+        {
+          "conceitoId": "adaptacao-plano-ao-negocio",
+          "texto": "Uma indústria precisa de contas detalhadas de estoques (matéria-prima, produtos em elaboração, produtos acabados), enquanto uma empresa de serviços pode dispensar esse detalhamento e focar em contas de pessoal e de prestação de serviços."
+        }
+      ],
+      "pg": [
+        "Plano de contas e manual de contas não são a mesma coisa — o plano lista e codifica as contas; o manual descreve como e quando usar cada uma.",
+        "A codificação hierárquica não é arbitrária: alterar a lógica dos níveis sem critério compromete a comparabilidade e a extração automática de relatórios e demonstrações.",
+        "Adaptar o plano de contas ao negócio não significa abandonar a estrutura mínima exigida para as demonstrações contábeis obrigatórias — a adaptação ocorre no detalhamento (contas analíticas), não na estrutura sintética básica (Ativo, Passivo, PL, Resultado)."
+      ],
+      "rs": "O plano de contas organiza, de forma codificada e hierárquica, todas as contas usadas pela entidade para registrar seu patrimônio e suas operações, enquanto o manual de contas descreve a função e os critérios de uso de cada uma. Sua estrutura deve ser adaptada às particularidades do negócio, sem perder a compatibilidade com a estrutura exigida para as demonstrações contábeis."
+    }
+  }
+]

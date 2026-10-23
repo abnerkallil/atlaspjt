@@ -70,7 +70,10 @@ replica exatamente o que `saveLesson` faz.
    **PR aberta nesta thread.**
 4. **Contabilidade Geral (41)** — sub-lotes por unidade (ver
    `docs/APACHE.md`); mistura fundamentos técnicos com alguma legislação
-   societária.
+   societária. Sub-lote 4a (14/41, CG-001 a CG-006, CG-041, CG-007 a
+   CG-013, nesta ordem do catálogo) em
+   `data/apache/aulas/contabilidade-geral-1.json`. Restam 27: CG-014 a
+   CG-040 (nesta ordem do catálogo).
 5. **Contabilidade Tributária (124)** — por último e em vários sub-lotes
    pequenos (não a disciplina inteira de uma vez): é onde a pesquisa de
    legislação (tributos, SPED, reforma tributária) é mais pesada e onde um
@@ -85,7 +88,7 @@ replica exatamente o que `saveLesson` faz.
 - [x] Lote 1/5 — Contabilidade de Custos (4/4 conteúdos) — PR #95
 - [x] Lote 2/5 — Análise das Demonstrações Financeiras (6/6 conteúdos) — PR #96
 - [x] Lote 3/5 — Contabilidade Avançada (7/7 conteúdos)
-- [ ] Lote 4/5 — Contabilidade Geral (0/41, em sub-lotes)
+- [ ] Lote 4/5 — Contabilidade Geral (14/41, em sub-lotes; sub-lote 4a nesta PR)
 - [ ] Lote 5/5 — Contabilidade Tributária (0/124, em sub-lotes, pesquisa de legislação)
 - [ ] Todos os 183 conteúdos cobertos (regra final do card)
 
@@ -95,6 +98,7 @@ replica exatamente o que `saveLesson` faz.
 pnpm run apache:carregar-aulas -- --file data/apache/aulas/contabilidade-de-custos.json --target production
 pnpm run apache:carregar-aulas -- --file data/apache/aulas/analise-demonstracoes-financeiras.json --target production
 pnpm run apache:carregar-aulas -- --file data/apache/aulas/contabilidade-avancada.json --target production
+pnpm run apache:carregar-aulas -- --file data/apache/aulas/contabilidade-geral-1.json --target production
 ```
 
 Não precisa de "Publicar Atlas" — o script grava direto em produção (D1 +
