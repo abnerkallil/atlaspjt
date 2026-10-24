@@ -1,0 +1,232 @@
+[
+  {
+    "contentId": "CT-078",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a base constitucional e legal do ISS, a função da lista de serviços anexa à LC 116/2003 e os principais conflitos de competência com o ICMS.",
+      "cc": [
+        {
+          "id": "competencia-municipal-iss",
+          "nome": "Competência municipal do ISS",
+          "def": "O ISS é imposto de competência dos Municípios e do Distrito Federal sobre serviços de qualquer natureza, não compreendidos na competência estadual (art. 156, III, da Constituição Federal); o art. 156, §3º, exige lei complementar federal para fixar alíquotas máxima e mínima, excluir da incidência as exportações de serviços e regular a forma de concessão de benefícios fiscais — papel cumprido pela Lei Complementar nº 116/2003."
+        },
+        {
+          "id": "lista-servicos-anexa",
+          "nome": "Lista de serviços anexa à LC 116/2003",
+          "def": "Relação de itens e subitens de serviços tributáveis, periodicamente ampliada por leis complementares posteriores (destacam-se a LC nº 157/2016, que incluiu entre outros streaming e franquia, e a LC nº 175/2020, que tratou do local de recolhimento de alguns subitens); o STF, no RE 784.439 (Tema 296, 2020, repercussão geral), fixou que a lista é taxativa, mas admite leitura extensiva para alcançar atividades inerentes aos serviços elencados em cada item, sem permitir analogia entre itens distintos."
+        },
+        {
+          "id": "regra-tributacao-exclusiva",
+          "nome": "Tributação exclusiva pelo ISS mesmo com fornecimento de mercadoria",
+          "def": "Pelo art. 1º, §2º, da LC 116/2003, os serviços constantes da lista anexa ficam sujeitos apenas ao ISS, ainda que a prestação envolva fornecimento de mercadorias, ressalvadas as exceções expressamente indicadas na própria lista (por exemplo, o fornecimento de mercadorias nos serviços de bares, restaurantes e similares, que a lista ressalva para incidência de ICMS)."
+        },
+        {
+          "id": "conflito-locacao-bens-moveis",
+          "nome": "Conflito clássico: locação de bens móveis",
+          "def": "A locação de bens móveis não configura prestação de serviço para fins de ISS, por não envolver esforço humano dirigido a um resultado, mas simples disponibilização de um bem; o entendimento está consolidado na Súmula Vinculante nº 31 do STF, que veda a incidência do ISS sobre operações de locação de bens móveis, ainda que o item correspondente tenha constado de listas anteriores à LC 116/2003."
+        }
+      ],
+      "rl": [
+        { "de": "lista-servicos-anexa", "para": "competencia-municipal-iss", "tipo": "operacionaliza o fato gerador de" },
+        { "de": "conflito-locacao-bens-moveis", "para": "regra-tributacao-exclusiva", "tipo": "é exceção jurisprudencial a" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "regra-tributacao-exclusiva",
+          "texto": "Uma empresa de informática presta serviço de desenvolvimento de software personalizado e, no mesmo contrato, fornece a mídia física em que o programa é gravado. Por constar da lista anexa à LC 116/2003 sem ressalva expressa de ICMS, a operação é tributada integralmente pelo ISS, incluindo o valor da mídia fornecida."
+        }
+      ],
+      "pg": [
+        "A lista de serviços é taxativa (não comporta analogia entre itens diferentes), mas o STF admite leitura extensiva dentro do mesmo item para alcançar atividades inerentes ao serviço descrito — confundir \"taxativa\" com \"literal e fechada\" é erro comum.",
+        "Locação de bens móveis não é serviço para fins de ISS (Súmula Vinculante 31 do STF); tratar aluguel de máquinas ou veículos como fato gerador do imposto é erro clássico.",
+        "O fornecimento de mercadoria junto com o serviço da lista anexa não desloca a tributação para o ICMS, salvo ressalva expressa na própria lista — a regra geral é a tributação exclusiva pelo ISS."
+      ],
+      "rs": "O ISS é imposto municipal sobre serviços de qualquer natureza (CF, art. 156, III), disciplinado nacionalmente pela LC 116/2003, que fixa a lista anexa de serviços tributáveis — taxativa, mas de leitura extensiva dentro de cada item (Tema 296/STF). Serviços da lista são tributados exclusivamente pelo ISS mesmo com fornecimento de mercadoria, salvo ressalva expressa; a locação de bens móveis, por não ser serviço, está fora do campo de incidência do ISS por força da Súmula Vinculante 31 do STF."
+    }
+  },
+  {
+    "contentId": "CT-079",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a regra geral de local de incidência do ISS, suas exceções legais e o tratamento da exportação de serviços.",
+      "cc": [
+        {
+          "id": "regra-geral-local-estabelecimento",
+          "nome": "Regra geral: local do estabelecimento prestador",
+          "def": "Pelo art. 3º, caput, da LC 116/2003, o ISS é devido, em regra, no município em que está localizado o estabelecimento prestador do serviço ou, na falta de estabelecimento, no município do domicílio do prestador; estabelecimento prestador é definido pelo art. 4º como o local onde o contribuinte desenvolve a atividade de prestar serviços, de modo permanente ou temporário, independentemente da denominação dada (sede, filial, escritório, depósito)."
+        },
+        {
+          "id": "excecoes-local-execucao",
+          "nome": "Exceções: local da execução do serviço",
+          "def": "O próprio art. 3º, em cerca de vinte e cinco incisos, desloca o local de incidência para o município onde o serviço é efetivamente executado em hipóteses específicas — entre as mais relevantes, construção civil, obras de engenharia, demolição, decoração e jardinagem, controle de poluição, limpeza, vigilância/segurança e estacionamento de veículos; para esses subitens, o estabelecimento prestador é irrelevante para fins de definir o município competente."
+        },
+        {
+          "id": "imunidade-exportacao-servicos",
+          "nome": "Não incidência na exportação de serviços",
+          "def": "O art. 2º, I, da LC 116/2003 afasta a incidência do ISS sobre as exportações de serviços para o exterior do país; o parágrafo único do mesmo artigo ressalva que o benefício não se aplica aos serviços desenvolvidos no Brasil cujo resultado aqui se verifique, ainda que o pagamento seja feito por residente no exterior — a exportação exige que o resultado útil do serviço se produza fora do território nacional, não bastando a origem estrangeira do pagamento."
+        },
+        {
+          "id": "guerra-fiscal-local",
+          "nome": "Risco de dupla cobrança (guerra fiscal de local)",
+          "def": "Divergências entre municípios sobre qual deles é o competente — por exemplo, quando o tomador recolhe o ISS retido considerando o município da execução e o prestador também recolhe considerando o município de seu estabelecimento — geram bitributação de fato; a LC nº 175/2020 buscou reduzir esse risco para subitens específicos (como planos de saúde e administração de cartões), centralizando parte da partilha em comitê gestor, mas a regra geral de local continua sendo a do art. 3º da LC 116/2003 para os demais serviços."
+        }
+      ],
+      "rl": [
+        { "de": "excecoes-local-execucao", "para": "regra-geral-local-estabelecimento", "tipo": "desloca, para subitens específicos" },
+        { "de": "guerra-fiscal-local", "para": "excecoes-local-execucao", "tipo": "decorre de divergência de interpretação sobre" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "excecoes-local-execucao",
+          "texto": "Uma empresa de engenharia com sede no município A é contratada para construir uma obra no município B. Mesmo com estabelecimento apenas no município A, o ISS sobre o serviço de construção civil é devido ao município B, onde a obra é efetivamente executada, por força da exceção do art. 3º da LC 116/2003."
+        }
+      ],
+      "pg": [
+        "A regra geral do local do estabelecimento prestador vale só quando o serviço não está entre as exceções do art. 3º da LC 116/2003; para construção civil e outros subitens listados, o local de execução prevalece sobre o local do estabelecimento.",
+        "Exportação de serviço exige que o resultado se verifique no exterior; receber pagamento em moeda estrangeira ou de cliente estrangeiro, isoladamente, não garante a não incidência se o resultado do serviço se produzir no Brasil.",
+        "A existência de exceções de local no art. 3º pode gerar cobrança simultânea por dois municípios quando prestador e tomador aplicam critérios diferentes — a situação não se resolve automaticamente, exige análise do subitem específico envolvido."
+      ],
+      "rs": "O ISS é devido, em regra, no município do estabelecimento prestador (ou domicílio do prestador, na ausência de estabelecimento), mas o art. 3º da LC 116/2003 desloca essa competência para o município de execução em cerca de vinte e cinco hipóteses específicas, como construção civil e serviços de limpeza. A exportação de serviços é imune ao ISS, salvo quando o resultado do serviço se verifica no território nacional, ainda que pago por residente no exterior. Divergências de interpretação sobre local de incidência são fonte recorrente de bitributação municipal de fato."
+    }
+  },
+  {
+    "contentId": "CT-080",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a base de cálculo do ISS, os limites de alíquota mínima e máxima fixados pela LC 116/2003 e as regras de dedução admitidas.",
+      "cc": [
+        {
+          "id": "base-calculo-preco-servico",
+          "nome": "Base de cálculo: preço do serviço",
+          "def": "A base de cálculo do ISS é o preço do serviço, nos termos do art. 7º da LC 116/2003; na prestação sob regime de empreitada, o valor da base pode admitir dedução de materiais e subempreitadas já tributadas pelo imposto, nas hipóteses expressamente previstas (notadamente itens 7.02 e 7.05 da lista anexa — obras de construção civil e reparação/conservação de edifícios), mas, fora dessas exceções específicas, a regra geral veda deduções sobre o preço cobrado."
+        },
+        {
+          "id": "aliquota-maxima",
+          "nome": "Alíquota máxima",
+          "def": "O art. 8º, II, da LC 116/2003 fixa a alíquota máxima do ISS em 5%, aplicável à generalidade dos serviços; cada município define, em sua própria lei, as alíquotas efetivas para cada subitem da lista, respeitando esse teto nacional."
+        },
+        {
+          "id": "aliquota-minima",
+          "nome": "Alíquota mínima",
+          "def": "A alíquota mínima do ISS é de 2%, prevista desde a Emenda Constitucional nº 37/2002 (art. 88 do ADCT) e reafirmada no art. 8-A da LC 116/2003 (incluído pela LC nº 157/2016); o §1º do art. 8-A ressalva da aplicação desse piso os serviços dos subitens 7.02, 7.05 e 16.01 (obras de construção civil, reparação/conservação de edifícios e serviços de transporte de natureza municipal), para os quais podem ser concedidas isenções, incentivos ou benefícios que resultem em carga tributária menor que 2%, sob condições específicas."
+        },
+        {
+          "id": "sociedades-uniprofissionais",
+          "nome": "Tributação fixa das sociedades uniprofissionais",
+          "def": "Diversos municípios mantêm, para sociedades formadas por profissionais de mesma habilitação que prestam serviço em nome próprio (como consultórios médicos e escritórios de advocacia organizados como sociedade simples), um regime de tributação fixa por profissional habilitado, em vez do percentual sobre o preço do serviço; esse regime tem origem no art. 9º, §§1º e 3º, do Decreto-Lei nº 406/1968, cuja subsistência após a LC 116/2003 é reconhecida pela jurisprudência do STJ, mas está sujeito a requisitos rígidos definidos em cada legislação municipal (forma de constituição, natureza da atividade e ausência de caráter empresarial), devendo a aplicação concreta ser sempre confirmada na lei do município específico."
+        }
+      ],
+      "rl": [
+        { "de": "aliquota-minima", "para": "aliquota-maxima", "tipo": "delimita, com, o intervalo de variação de" },
+        { "de": "sociedades-uniprofissionais", "para": "base-calculo-preco-servico", "tipo": "substitui, em regime especial, a apuração sobre" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "aliquota-minima",
+          "texto": "Um município tenta reduzir a alíquota do ISS para 1% sobre serviços de consultoria para atrair empresas. A medida é inconstitucional/ilegal, pois viola o piso de 2% do art. 8-A da LC 116/2003, já que serviços de consultoria não estão entre as exceções dos subitens 7.02, 7.05 e 16.01."
+        }
+      ],
+      "pg": [
+        "O intervalo de alíquotas do ISS é de 2% a 5% para a generalidade dos serviços; achar que existe isenção ampla ou alíquota zero fora das exceções legais específicas é erro comum em prova.",
+        "Dedução de materiais e subempreitadas da base de cálculo só é admitida nas hipóteses expressamente previstas (itens 7.02 e 7.05); generalizar essa dedução para qualquer prestação de serviço é incorreto.",
+        "O regime de tributação fixa das sociedades uniprofissionais depende de requisitos específicos da lei de cada município (natureza não empresarial, habilitação uniforme dos sócios); não é um direito automático de toda sociedade de profissionais."
+      ],
+      "rs": "A base de cálculo do ISS é o preço do serviço (art. 7º da LC 116/2003), com deduções admitidas apenas em hipóteses específicas, como materiais e subempreitadas em itens de construção civil. As alíquotas variam entre o piso de 2% (art. 8-A, com exceções nos subitens 7.02, 7.05 e 16.01) e o teto de 5% (art. 8º, II), cabendo a cada município fixar os percentuais efetivos dentro desse intervalo. Sociedades uniprofissionais podem, sob requisitos da legislação municipal, apurar o imposto por valor fixo por profissional, em vez de percentual sobre o preço do serviço."
+    }
+  },
+  {
+    "contentId": "CT-081",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar os regimes de retenção e responsabilidade tributária do ISS, incluindo as regras específicas para optantes do Simples Nacional.",
+      "cc": [
+        {
+          "id": "responsabilidade-terceiro-art6",
+          "nome": "Atribuição de responsabilidade por lei municipal",
+          "def": "O art. 6º, caput, da LC 116/2003 autoriza cada município a atribuir, por lei própria, a responsabilidade pelo crédito tributário do ISS a terceira pessoa vinculada ao fato gerador, inclusive mediante retenção na fonte pelo tomador do serviço; é a base legal para os regimes municipais de substituição tributária do ISS, cujas regras concretas (quais serviços, quais tomadores, prazos) variam conforme a legislação de cada município."
+        },
+        {
+          "id": "responsabilidade-obrigatoria-art6-par2",
+          "nome": "Responsabilidade obrigatória nacional",
+          "def": "O art. 6º, §2º, da LC 116/2003 impõe, independentemente de lei municipal específica, a responsabilidade do tomador (ou intermediário) pelo ISS em duas hipóteses: serviços provenientes do exterior do país ou cuja prestação se tenha iniciado no exterior, e serviços de alguns subitens específicos (como cessão de andaimes, vigilância, limpeza e fornecimento de mão de obra) quando o prestador não está estabelecido no município competente para a cobrança."
+        },
+        {
+          "id": "retencao-simples-nacional",
+          "nome": "Retenção do ISS para optantes do Simples Nacional",
+          "def": "Quando o serviço prestado por empresa optante do Simples Nacional está sujeito à retenção na fonte do ISS, a alíquota a ser retida não é a alíquota efetiva calculada no Anexo correspondente sobre toda a receita bruta, mas o percentual do ISS previsto na faixa de receita bruta em que a empresa se encontra nos doze meses anteriores, conforme a LC nº 123/2006, art. 18, §4º-A; quando sujeita à retenção, essa parcela de ISS é excluída do valor apurado no PGDAS-D e recolhida diretamente pelo tomador, para evitar duplicidade de cobrança."
+        },
+        {
+          "id": "obrigacoes-retentor",
+          "nome": "Obrigações do tomador retentor",
+          "def": "O tomador que retém o ISS assume obrigações próprias de responsável tributário: destacar o valor retido no documento de pagamento ou controle interno, recolher o imposto no prazo da legislação municipal aplicável e fornecer comprovante de retenção ao prestador, que utiliza esse comprovante para demonstrar que o valor já foi recolhido e evitar cobrança em duplicidade pelo município; o descumprimento dessas obrigações pelo tomador não libera automaticamente o prestador, cuja situação depende da legislação municipal específica sobre responsabilidade subsidiária."
+        }
+      ],
+      "rl": [
+        { "de": "responsabilidade-obrigatoria-art6-par2", "para": "responsabilidade-terceiro-art6", "tipo": "é hipótese legal específica dentro de" },
+        { "de": "retencao-simples-nacional", "para": "obrigacoes-retentor", "tipo": "segue, com alíquota própria, as mesmas" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "retencao-simples-nacional",
+          "texto": "Uma empresa optante do Simples Nacional, no Anexo III, presta serviço sujeito a retenção para um tomador que está obrigado a reter o ISS. O tomador não aplica a alíquota efetiva total do Anexo III sobre o valor do serviço; retém apenas o percentual do ISS correspondente à faixa de receita bruta acumulada da prestadora nos últimos doze meses, e esse valor é excluído do cálculo do DAS daquele mês."
+        }
+      ],
+      "pg": [
+        "A responsabilidade do tomador por retenção do ISS pode decorrer de lei municipal (regra geral do art. 6º, caput) ou ser obrigatória por força direta da LC 116/2003 (art. 6º, §2º), independentemente de lei municipal — confundir as duas hipóteses é erro comum.",
+        "Na retenção de prestador optante do Simples Nacional, usa-se apenas o percentual de ISS da faixa de receita bruta, nunca a alíquota efetiva total do Simples sobre o valor do serviço.",
+        "A retenção do ISS pelo tomador não dispensa automaticamente o prestador de responsabilidade caso o tomador não recolha o valor retido; o efeito depende da legislação municipal sobre responsabilidade subsidiária."
+      ],
+      "rs": "Municípios podem, por lei própria, atribuir a terceiros a responsabilidade pelo ISS, inclusive via retenção na fonte (art. 6º, caput, LC 116/2003); em duas hipóteses — serviço do exterior e certos subitens quando o prestador não está estabelecido no município — a responsabilidade do tomador é obrigatória por força direta da lei complementar (art. 6º, §2º). Para prestadores optantes do Simples Nacional sujeitos a retenção, aplica-se apenas o percentual de ISS da faixa de receita bruta (LC 123/2006, art. 18, §4º-A), excluído do cálculo do DAS. O tomador retentor deve destacar, recolher e comprovar a retenção ao prestador."
+    }
+  },
+  {
+    "contentId": "CT-082",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o funcionamento da NFS-e no padrão nacional e as rotinas de fechamento municipal do ISS.",
+      "cc": [
+        {
+          "id": "nfse-padrao-nacional",
+          "nome": "NFS-e padrão nacional",
+          "def": "Modelo nacional de nota fiscal de serviços eletrônica, instituído pelo Convênio NFS-e (ABRASF, CONFAZ, Receita Federal e municípios), que busca padronizar leiaute e tramitação da nota fiscal de serviço em todo o país, antes fragmentada em sistemas próprios de cada município; a adesão ao padrão nacional é gradual, com municípios migrando em diferentes datas ao longo de 2024–2026 e além, de modo que, na prática, convivem municípios já no padrão nacional e municípios ainda em sistema próprio — convém sempre confirmar a situação do município específico antes de aplicar o detalhe de layout."
+        },
+        {
+          "id": "dps-emissor-nacional",
+          "nome": "DPS e Emissor Nacional",
+          "def": "No padrão nacional, o contribuinte gera a Declaração de Prestação de Serviços (DPS), documento de origem com os dados da operação, que é transmitida ao Ambiente de Dados Nacional (ADN) e convertida em NFS-e pelo Emissor Nacional; o número e a chave de acesso da NFS-e seguem um padrão único nacional, mas a alíquota aplicada, o código de serviço e a legislação de fundo continuam sendo os do município competente para a cobrança do ISS."
+        },
+        {
+          "id": "declaracoes-guias-municipais",
+          "nome": "Declarações e guias de recolhimento municipais",
+          "def": "Mesmo com a NFS-e padronizada nacionalmente, cada município mantém sua própria legislação sobre periodicidade de apuração, declarações acessórias (serviços tomados e prestados) e emissão da guia de recolhimento do ISS; a padronização do documento fiscal não substitui a obrigação de observar o calendário e os formulários específicos de cada prefeitura."
+        },
+        {
+          "id": "conciliacao-fechamento-municipal",
+          "nome": "Conciliação e fechamento do ISS municipal",
+          "def": "No fechamento mensal, o contribuinte confronta o total de serviços prestados e tomados registrados nas NFS-e emitidas e recebidas com os valores escriturados na contabilidade e com o montante informado na declaração municipal e na guia de recolhimento, identificando cancelamentos, substituições e eventos de correção que ainda não tenham sido refletidos nos registros fiscais, de forma análoga à conciliação feita para ICMS e PIS/Cofins em suas respectivas escriturações."
+        }
+      ],
+      "rl": [
+        { "de": "dps-emissor-nacional", "para": "nfse-padrao-nacional", "tipo": "é o mecanismo de emissão de" },
+        { "de": "conciliacao-fechamento-municipal", "para": "declaracoes-guias-municipais", "tipo": "confronta os registros fiscais com" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "dps-emissor-nacional",
+          "texto": "Uma empresa de consultoria emite uma NFS-e pelo padrão nacional para um cliente em outro estado. O sistema da empresa gera a DPS, que é transmitida ao ADN e convertida em NFS-e com numeração nacional; a alíquota do ISS aplicada, porém, continua sendo a do município onde o serviço é tributado segundo as regras de local de incidência da LC 116/2003, não uma alíquota nacional única."
+        }
+      ],
+      "pg": [
+        "A padronização nacional da NFS-e uniformiza o layout e a infraestrutura de emissão, mas não cria uma alíquota nacional de ISS: a alíquota e o município competente continuam definidos pelas regras de local de incidência e pela lei de cada município.",
+        "Nem todo município já adotou o padrão nacional de NFS-e; a migração é gradual, e assumir que todos operam da mesma forma em 2026 é um erro — é preciso confirmar a situação do município envolvido.",
+        "A emissão correta da NFS-e não dispensa a entrega das declarações acessórias e guias de recolhimento específicas de cada município; são obrigações complementares, não substitutivas uma da outra."
+      ],
+      "rs": "A NFS-e padrão nacional padroniza o leiaute e a tramitação da nota fiscal de serviço por meio da DPS, convertida em NFS-e pelo Emissor Nacional dentro do Ambiente de Dados Nacional, com adesão gradual dos municípios ao longo de 2024–2026 e além. A alíquota aplicada e o município competente seguem as regras de local de incidência da LC 116/2003, e cada município mantém suas próprias declarações acessórias e guias de recolhimento. O fechamento mensal exige conciliar as NFS-e emitidas e recebidas com a escrituração contábil e com a declaração e guia municipais."
+    }
+  }
+]

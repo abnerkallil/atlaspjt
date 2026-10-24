@@ -14,6 +14,40 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #110 — APA-18: aulas base de Contabilidade Tributária (sub-lote 5j)
+
+- Ponto de restauração: branch `restore/pre-apache-18-5j-iss` (main antes do
+  merge).
+- O que muda no site: nada visível ainda — este PR só adiciona os dados; as
+  5 aulas só aparecem depois de o Abner rodar o comando de carga para esse
+  arquivo (não precisa de "Publicar Atlas": o script grava direto em D1/R2).
+  O carregamento em produção de toda a Contabilidade Tributária será feito
+  num único comando ao final de todos os 15 sub-lotes, a pedido do Abner.
+- O que muda fora do site: décimo sub-lote de Contabilidade Tributária em
+  `data/apache/aulas/contabilidade-tributaria-10.json` (5 dos 124
+  conteúdos: CT-078 a CT-082, unidade "ISS", na ordem do catálogo,
+  `model='claude-manual'`), usando o mesmo mecanismo de carga dos PRs
+  #95-#109 (`scripts/apache-carregar-aulas.mjs`). Conteúdo: competência
+  municipal e lista de serviços da LC 116/2003, incluindo a taxatividade
+  de leitura extensiva (RE 784.439/STF, Tema 296) e o conflito com
+  locação de bens móveis (Súmula Vinculante 31 do STF) (CT-078); regra
+  geral de local de incidência pelo estabelecimento prestador (art. 3º,
+  caput) com as exceções de local de execução e a não incidência na
+  exportação de serviços (art. 2º, I e parágrafo único) (CT-079); base de
+  cálculo pelo preço do serviço e o intervalo de alíquotas entre 2% (art.
+  8-A, incluído pela LC 157/2016, com exceção dos subitens 7.02, 7.05 e
+  16.01) e 5% (art. 8º, II), além do regime de tributação fixa das
+  sociedades uniprofissionais (CT-080); responsabilidade e retenção na
+  fonte, de lei municipal (art. 6º, caput) ou obrigatória por força da
+  própria LC 116/2003 (art. 6º, §2º), com a regra específica de retenção
+  para optantes do Simples Nacional pelo percentual de ISS da faixa de
+  receita bruta (LC 123/2006, art. 18, §4º-A) (CT-081); e NFS-e no padrão
+  nacional (DPS, Emissor Nacional, Ambiente de Dados Nacional), com
+  adesão municipal gradual confirmada por pesquisa web, e a conciliação
+  de fechamento com as declarações e guias próprias de cada município
+  (CT-082). `docs/APACHE-18-plano.md` atualizado (sub-lote 5j mesclado;
+  Tributária em 82/124).
+
 ## PR #109 — APA-18: aulas base de Contabilidade Tributária (sub-lote 5i)
 
 - Ponto de restauração: branch `restore/pre-apache-18-5i-ipi` (commit
