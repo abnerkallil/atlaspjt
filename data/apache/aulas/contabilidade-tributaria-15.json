@@ -1,0 +1,493 @@
+[
+  {
+    "contentId": "CT-118",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar como o documento fiscal eletrônico (NF-e/NFC-e) passa a carregar o cálculo do IBS e da CBS item a item, através do CST de três dígitos, do código cClassTrib de seis dígitos e dos indicadores que ligam esses dois campos aos regimes diferenciados previstos na LC 214/2025.",
+      "cc": [
+        {
+          "id": "cst-ibscbs",
+          "nome": "CST do IBS/CBS",
+          "def": "Código de três dígitos, informado por item do documento fiscal, que classifica o tratamento tributário daquela operação perante IBS e CBS (por exemplo: tributação integral, diferimento, suspensão, redução de alíquota, isenção, não incidência ou tributação monofásica). É o primeiro filtro: define qual família de regra se aplica antes de olhar o código mais granular."
+        },
+        {
+          "id": "cclasstrib",
+          "nome": "cClassTrib (classificação tributária)",
+          "def": "Código de seis dígitos, mais granular que o CST, em que cada combinação de números corresponde a um dispositivo específico da LC 214/2025 (um artigo, inciso ou situação prevista em lei). O documento fiscal precisa informar um CST compatível com o cClassTrib escolhido — um código cClassTrib incompatível com o CST do mesmo item é rejeitado pelo ambiente nacional."
+        },
+        {
+          "id": "regimes-recorrentes",
+          "nome": "Regimes diferenciados recorrentes",
+          "def": "Conjunto de tratamentos que a tabela cClassTrib precisa cobrir em praticamente toda operação: redução de alíquota (percentual de redução e alíquota efetiva resultante), diferimento (postergação do pagamento para etapa posterior da cadeia) e tributação monofásica (concentração da cobrança em um elo específico, com os demais dispensados)."
+        },
+        {
+          "id": "zfm-cclasstrib",
+          "nome": "Zona Franca de Manaus e Áreas de Livre Comércio no documento",
+          "def": "Tratamento diferenciado da ZFM/ALC aparece no documento fiscal de duas formas: alíquota zero de CBS para operações dentro da área incentivada, e crédito presumido de IBS calculado sobre a operação, com percentual que varia conforme o tipo de bem ou serviço (há faixas distintas previstas em lei, não um percentual único)."
+        },
+        {
+          "id": "ccredpres",
+          "nome": "cCredPres (código de crédito presumido)",
+          "def": "Código que identifica qual crédito presumido de IBS/CBS está sendo aproveitado numa operação (por exemplo, o da ZFM, ou outro previsto em lei), informado junto com o CST/cClassTrib daquele item quando a operação gera direito a esse crédito."
+        },
+        {
+          "id": "imposto-seletivo-doc",
+          "nome": "Imposto Seletivo no documento fiscal",
+          "def": "O Imposto Seletivo (IS), tributo novo e distinto do IBS/CBS, tem seu próprio bloco no documento fiscal: CST e cClassTrib específicos do IS (não reaproveitam os códigos do IBS/CBS), base de cálculo, alíquota (ou valor específico por unidade, conforme o produto) e valor apurado, somados em totalizador próprio."
+        }
+      ],
+      "rl": [
+        {
+          "de": "cclasstrib",
+          "para": "cst-ibscbs",
+          "tipo": "precisa ser compatível com o CST informado no mesmo item, senão o"
+        },
+        {
+          "de": "regimes-recorrentes",
+          "para": "cclasstrib",
+          "tipo": "é o conjunto de situações mais comuns cobertas pelos códigos do"
+        },
+        {
+          "de": "zfm-cclasstrib",
+          "para": "ccredpres",
+          "tipo": "quando dá direito a crédito presumido de IBS, é identificada pelo código"
+        },
+        {
+          "de": "imposto-seletivo-doc",
+          "para": "cst-ibscbs",
+          "tipo": "usa um CST próprio, separado do"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "cclasstrib",
+          "texto": "Uma venda com redução de 60% na alíquota do IBS tem um cClassTrib específico para 'redução de alíquota'; se o emissor usar nesse item um CST de 'tributação integral', o documento é rejeitado por incompatibilidade entre os dois campos."
+        },
+        {
+          "conceitoId": "zfm-cclasstrib",
+          "texto": "Uma indústria dentro da ZFM vende um produto incentivado: a CBS sai com alíquota zero (um dos efeitos da área) e, dependendo do bem, a empresa ainda apura um crédito presumido de IBS sobre a mesma operação, identificado pelo cCredPres correspondente."
+        }
+      ],
+      "pg": [
+        "CST e cClassTrib não são a mesma informação em granularidades diferentes por acaso: o documento fiscal precisa que os dois sejam compatíveis entre si, e a tabela de compatibilidade entre eles é oficial — escolher um cClassTrib 'parecido' sem checar o CST permitido para ele gera rejeição.",
+        "Nem toda redução de alíquota na ZFM dispensa documentação: o crédito presumido de IBS e a alíquota zero de CBS são efeitos diferentes, cada um com sua própria condição legal, podem ocorrer juntos ou separados na mesma operação.",
+        "O Imposto Seletivo não é 'mais um adicional dentro do CST do IBS/CBS': ele tem campos próprios no documento, e confundir os dois blocos é um erro comum de quem só conhece o IBS/CBS."
+      ],
+      "rs": "O documento fiscal eletrônico passa a carregar, item a item, o CST (três dígitos, a classificação ampla) e o cClassTrib (seis dígitos, o dispositivo legal específico) do IBS/CBS, que precisam ser compatíveis entre si segundo tabela oficial. Esses códigos cobrem os regimes recorrentes (redução, diferimento, monofasia) e casos especiais como ZFM/ALC (alíquota zero de CBS e crédito presumido de IBS, identificado pelo cCredPres). O Imposto Seletivo tem bloco e códigos próprios, separados do IBS/CBS, no mesmo documento."
+    }
+  },
+  {
+    "contentId": "CT-119",
+    "lesson": {
+      "v": 1,
+      "obj": "Descrever como o XML da NF-e e da NFC-e foi estruturado para carregar o cálculo do IBS, da CBS e do Imposto Seletivo, incluindo os totais por ente federado, e quais vedações e situações de rejeição são específicas da reforma tributária.",
+      "cc": [
+        {
+          "id": "gibscbs",
+          "nome": "Grupo gIBSCBS",
+          "def": "Bloco do XML, dentro das informações de imposto de cada item, que concentra o cálculo do IBS e da CBS daquela operação: parte de uma base de cálculo única (vBC) e se desdobra em subgrupos para a parcela estadual, a parcela municipal e a parcela federal (CBS), cada uma com sua própria alíquota e eventuais ajustes."
+        },
+        {
+          "id": "base-unica",
+          "nome": "Base de cálculo única (vBC)",
+          "def": "Diferente do ICMS/ISS/PIS/Cofins atuais, que podem ter bases diferentes entre si na mesma operação, o IBS e a CBS compartilham uma única base de cálculo por item, informada uma vez no gIBSCBS e usada para calcular as três parcelas (UF, município e CBS)."
+        },
+        {
+          "id": "parcelas-uf-municipio",
+          "nome": "Parcelas por UF e por município",
+          "def": "O IBS tem uma parcela estadual e uma parcela municipal, cada uma com sua própria alíquota, estrutura de diferimento e eventual redução, informadas em subgrupos distintos do XML; o valor total do IBS do item é a soma dessas duas parcelas."
+        },
+        {
+          "id": "subgrupos-condicionais",
+          "nome": "Subgrupos condicionais pela classificação tributária",
+          "def": "Vários subgrupos do documento só aparecem quando o cClassTrib daquele item exige: por exemplo, o subgrupo de tributação regular, o de compras governamentais, o de monofasia, o de transferência ou estorno de crédito e o de ajuste de competência — cada um ligado a indicadores próprios que 'acionam' sua presença no XML."
+        },
+        {
+          "id": "totais-ibscbs-is",
+          "nome": "Totalizadores do documento",
+          "def": "Além do total geral da nota, o documento passa a ter um totalizador próprio da soma de IBS/CBS de todos os itens e outro totalizador próprio da soma do Imposto Seletivo — valores que precisam ser reconciliáveis com a soma dos itens, sob pena de rejeição por inconsistência."
+        },
+        {
+          "id": "vedacoes-nfce",
+          "nome": "Vedações específicas da NFC-e",
+          "def": "Como a NFC-e é um documento simplificado de varejo, alguns campos/indicadores do bloco de IBS/CBS que fazem sentido na NF-e (por exemplo, certos tipos de crédito presumido na ZFM) são expressamente vedados nela — usá-los numa NFC-e gera rejeição específica, diferente da rejeição por incompatibilidade de código."
+        }
+      ],
+      "rl": [
+        {
+          "de": "base-unica",
+          "para": "gibscbs",
+          "tipo": "é informada uma única vez dentro do"
+        },
+        {
+          "de": "parcelas-uf-municipio",
+          "para": "base-unica",
+          "tipo": "aplicam alíquotas diferentes sobre a mesma"
+        },
+        {
+          "de": "subgrupos-condicionais",
+          "para": "cclasstrib",
+          "tipo": "só aparecem no XML quando o código de"
+        },
+        {
+          "de": "totais-ibscbs-is",
+          "para": "gibscbs",
+          "tipo": "precisa reconciliar com a soma de todos os itens que usaram o"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "base-unica",
+          "texto": "Num item de R$ 1.000, a base de cálculo do IBS/CBS é informada uma única vez (R$ 1.000, salvo redução), e sobre ela incidem a alíquota estadual, a municipal e a da CBS — diferente do ICMS atual, que pode ter base reduzida só para esse tributo."
+        },
+        {
+          "conceitoId": "vedacoes-nfce",
+          "texto": "Uma loja de varejo que opera com crédito presumido de IBS da ZFM não pode usar esse indicador numa NFC-e emitida no balcão: para esse tipo de operação, o emissor precisa optar por NF-e, porque o campo é vedado no modelo simplificado."
+        }
+      ],
+      "pg": [
+        "A base de cálculo única do IBS/CBS não significa alíquota única: UF, município e CBS têm alíquotas próprias aplicadas sobre a mesma base — o que muda é a base, não o valor final de cada parcela.",
+        "Rejeição por 'código inexistente', por 'CST incompatível' e por 'código vedado ao modelo' são três situações diferentes: a primeira é erro de digitação/tabela, a segunda é inconsistência entre CST e cClassTrib, a terceira é usar um campo permitido num modelo de documento onde ele não é permitido (como a vedação de certos indicadores na NFC-e).",
+        "Os totalizadores de IBS/CBS e de Imposto Seletivo não substituem o total geral da nota: são somatórios auxiliares que precisam bater com a soma dos itens, e divergência entre eles é motivo de rejeição por inconsistência de totais."
+      ],
+      "rs": "O XML passa a ter o grupo gIBSCBS por item, com uma base de cálculo única (vBC) desdobrada em parcela estadual, municipal (IBS) e federal (CBS), cada uma com alíquota própria. Subgrupos condicionais (regular, compras governamentais, monofasia, transferência/estorno de crédito, ajuste de competência) só aparecem conforme o cClassTrib do item. O documento soma tudo em totalizadores próprios de IBS/CBS e de Imposto Seletivo, que precisam reconciliar com os itens; a NFC-e tem vedações específicas para campos que só fazem sentido na NF-e."
+    }
+  },
+  {
+    "contentId": "CT-120",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o papel da DPS e do Emissor Nacional na emissão da NFS-e dentro da reforma tributária, incluindo o cronograma de obrigatoriedade por tipo de contribuinte e o tratamento dado ao Simples Nacional durante a transição.",
+      "cc": [
+        {
+          "id": "dps",
+          "nome": "DPS (Declaração de Prestação de Serviços)",
+          "def": "Documento de entrada que o prestador de serviço envia ao sistema nacional de NFS-e, descrevendo a operação (serviço prestado, tomador, valores, classificação tributária); a partir da DPS, o Ambiente de Dados Nacional (ADN) gera e autoriza a NFS-e propriamente dita, que é o documento fiscal final entregue ao tomador."
+        },
+        {
+          "id": "emissor-nacional",
+          "nome": "Emissor Nacional",
+          "def": "Plataforma padronizada, disponibilizada pelo poder público, para emitir a NFS-e através da DPS, substituindo a dependência de cada município ter seu próprio sistema de emissão; passa a ser obrigatória para optantes do Simples Nacional a partir de uma data específica do cronograma da reforma."
+        },
+        {
+          "id": "adn",
+          "nome": "ADN (Ambiente de Dados Nacional)",
+          "def": "Infraestrutura nacional que recebe os XMLs de DPS/NFS-e de todos os municípios participantes, padroniza e sincroniza esses dados; durante o período de transição, o ADN não rejeita de forma impeditiva a ausência ou o erro no cálculo de IBS/CBS, mas registra o documento como desconforme, sujeito a sanções previstas em ato conjunto da Receita Federal com o Comitê Gestor do IBS."
+        },
+        {
+          "id": "cronograma-nfse",
+          "nome": "Cronograma de destaque de IBS/CBS na NFS-e",
+          "def": "O destaque de IBS/CBS na NFS-e entra em vigor em datas diferentes por grupo de contribuinte durante 2026: comércio e indústria primeiro, depois serviços em dois grupos (regime normal e, separadamente, plataformas digitais/TI/streaming/locação/condomínios), com a obrigatoriedade de uso do Emissor Nacional pelo Simples Nacional entrando em vigor numa data própria desse calendário."
+        },
+        {
+          "id": "simples-nfse",
+          "nome": "Simples Nacional na NFS-e durante a transição",
+          "def": "Durante o período de transição, o optante do Simples Nacional comum continua recolhendo pelo DAS e fica dispensado de destacar IBS/CBS na NFS-e, mas passa a ser obrigado a emitir pelo Emissor Nacional; quem adere ao chamado 'Simples Híbrido' passa a destacar IBS/CBS a partir de uma data posterior, permitindo que o tomador do Lucro Real/Presumido aproveite crédito — o que o Simples comum, recolhendo tudo pelo DAS, não permite."
+        }
+      ],
+      "rl": [
+        {
+          "de": "dps",
+          "para": "adn",
+          "tipo": "é enviada pelo prestador e processada pelo"
+        },
+        {
+          "de": "emissor-nacional",
+          "para": "dps",
+          "tipo": "é a plataforma pela qual o prestador registra a"
+        },
+        {
+          "de": "simples-nfse",
+          "para": "emissor-nacional",
+          "tipo": "precisa usar o, mesmo quando ainda está dispensado de destacar IBS/CBS, segundo o"
+        },
+        {
+          "de": "cronograma-nfse",
+          "para": "simples-nfse",
+          "tipo": "define a partir de quando passa a valer a obrigatoriedade descrita no"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "simples-nfse",
+          "texto": "Um prestador optante do Simples Nacional comum, em 2026, continua recolhendo tudo pelo DAS e não destaca IBS/CBS na nota — mas já precisa emitir essa NFS-e pelo Emissor Nacional, não pelo sistema próprio do município, a partir da data em que essa obrigação de emissão entra em vigor para o Simples."
+        },
+        {
+          "conceitoId": "adn",
+          "texto": "Uma empresa do Lucro Real emite, em 2026, uma NFS-e sem o cálculo de IBS/CBS corretamente preenchido: o ADN não rejeita o documento de forma impeditiva nesse período, mas ele fica registrado como desconforme, o que pode gerar sanção administrativa mesmo sem bloquear a emissão."
+        }
+      ],
+      "pg": [
+        "DPS e NFS-e não são sinônimos: a DPS é o que o prestador envia (a declaração de entrada), a NFS-e é o documento final que o ADN gera e autoriza a partir dela.",
+        "'Dispensado de destacar IBS/CBS' não é a mesma coisa que 'dispensado de usar o Emissor Nacional': o Simples Nacional comum, durante a transição, pode estar dispensado da primeira obrigação e já estar sujeito à segunda, em datas diferentes do cronograma.",
+        "O ADN não rejeitar de forma impeditiva um erro de cálculo de IBS/CBS em 2026 não significa que o erro é inofensivo: o documento fica desconforme e sujeito a sanção prevista em ato conjunto, mesmo sendo aceito tecnicamente pelo sistema."
+      ],
+      "rs": "A NFS-e nacional passa a nascer de uma DPS enviada pelo prestador ao Ambiente de Dados Nacional (ADN), preferencialmente pelo Emissor Nacional padronizado. O cronograma de destaque de IBS/CBS entra em vigor em datas diferentes por grupo de contribuinte durante 2026, e o Simples Nacional tem tratamento específico: dispensado de destacar os novos tributos enquanta recolhe pelo DAS, mas já obrigado a usar o Emissor Nacional a partir de certa data, com o 'Simples Híbrido' permitindo repasse de crédito a partir de 2027."
+    }
+  },
+  {
+    "contentId": "CT-121",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar como correções, ajustes e eventos fiscais pós-emissão (nota de débito/crédito, carta de correção, ajuste de competência) são tratados no novo modelo de documento fiscal eletrônico com IBS/CBS.",
+      "cc": [
+        {
+          "id": "nota-debito-credito",
+          "nome": "Nota de débito e nota de crédito",
+          "def": "Documentos usados para corrigir, respectivamente, uma cobrança a mais ou uma cobrança a menos identificada depois da emissão original, quando a diferença de IBS/CBS precisa ser regularizada sem anular o documento inteiro — diferente do cancelamento, que desfaz a operação como um todo."
+        },
+        {
+          "id": "carta-correcao",
+          "nome": "Carta de Correção Eletrônica",
+          "def": "Instrumento para corrigir dados que não alteram o valor do tributo nem os dados essenciais da operação (por exemplo, dados cadastrais ou descritivos); continua existindo no novo modelo, mas tem limites claros do que pode e do que não pode ser corrigido por ela, especialmente quando a divergência envolve o cálculo de IBS/CBS."
+        },
+        {
+          "id": "ajuste-competencia",
+          "nome": "Ajuste de competência (gAjusteCompet)",
+          "def": "Subgrupo do documento fiscal usado quando a correção de uma operação precisa ser refletida num período de apuração diferente do original — por exemplo, um erro identificado meses depois da emissão, cujo efeito tributário precisa ser alocado na competência correta, não na competência do documento de correção."
+        },
+        {
+          "id": "estorno-credito",
+          "nome": "Estorno de crédito",
+          "def": "Subgrupo que registra a reversão de um crédito de IBS/CBS já apropriado anteriormente — necessário quando se descobre que a operação original não gerava direito ao crédito que havia sido tomado, ou quando o bem/serviço mudou de destinação."
+        },
+        {
+          "id": "cst-ajuste",
+          "nome": "CST e cClassTrib de ajuste/evento",
+          "def": "Eventos fiscais pós-emissão (correção, ajuste, estorno) têm seus próprios códigos de CST e cClassTrib, diferentes dos usados na operação original — usar o código da operação normal num documento de ajuste é uma causa comum de rejeição nesse tipo de evento."
+        }
+      ],
+      "rl": [
+        {
+          "de": "ajuste-competencia",
+          "para": "nota-debito-credito",
+          "tipo": "pode acompanhar uma"
+        },
+        {
+          "de": "estorno-credito",
+          "para": "ajuste-competencia",
+          "tipo": "também pode precisar de um"
+        },
+        {
+          "de": "cst-ajuste",
+          "para": "carta-correcao",
+          "tipo": "não é usado numa, que não tem bloco de tributo, mas sim num evento fiscal que o substitui quando há valor envolvido"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "ajuste-competencia",
+          "texto": "Uma empresa percebe, três meses depois, que subdimensionou a alíquota de IBS de uma venda: a correção é feita por nota de débito, e o efeito tributário dessa diferença é alocado na competência original da venda através do gAjusteCompet, não na competência do mês em que o erro foi descoberto."
+        },
+        {
+          "conceitoId": "carta-correcao",
+          "texto": "Um erro no nome do transportador descrito na nota pode ser corrigido por Carta de Correção; já um erro no valor do IBS destacado não pode — esse exige nota de débito ou crédito, porque altera o tributo apurado."
+        }
+      ],
+      "pg": [
+        "Carta de Correção não serve para qualquer erro: ela corrige o que não muda o cálculo do tributo nem os dados essenciais da operação — um erro no valor de IBS/CBS exige nota de débito/crédito, não carta de correção.",
+        "Ajuste de competência não é 'lançar na competência que for mais conveniente': a regra é alocar o efeito tributário na competência em que a operação original ocorreu, mesmo que a correção seja feita meses depois.",
+        "Estornar um crédito não é o mesmo que não ter tido direito a ele desde o início: o estorno pressupõe que o crédito foi apropriado, e depois se identificou que a situação que o justificava deixou de existir ou nunca existiu."
+      ],
+      "rs": "Correções pós-emissão com efeito tributário (nota de débito/crédito) usam CST e cClassTrib próprios, diferentes da operação original, e podem precisar de ajuste de competência (gAjusteCompet) para alocar o efeito no período correto, ou de estorno de crédito quando um crédito já apropriado deixa de ser devido. A Carta de Correção continua existindo, mas só serve para o que não altera o cálculo do tributo nem os dados essenciais da operação."
+    }
+  },
+  {
+    "contentId": "CT-122",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a lógica da apuração assistida de IBS/CBS pelo fisco a partir dos documentos fiscais eletrônicos, incluindo a conta-corrente por operação, o demonstrativo de apuração e os eventos de crédito presumido.",
+      "cc": [
+        {
+          "id": "apuracao-assistida",
+          "nome": "Apuração assistida",
+          "def": "Modelo em que o fisco (administração do IBS/CBS) calcula previamente o débito, o crédito e o saldo do contribuinte a partir dos próprios documentos fiscais eletrônicos emitidos e recebidos, disponibilizando um demonstrativo para o contribuinte confirmar, ajustar ou contestar — inverte a lógica atual, em que o contribuinte apura primeiro e informa depois."
+        },
+        {
+          "id": "conta-corrente-operacao",
+          "nome": "Conta-corrente por operação",
+          "def": "Registro individualizado, por operação, do débito gerado (IBS/CBS devido na saída) e do crédito correspondente (IBS/CBS pago na entrada), em vez de um saldo único e agregado do período — permite rastrear cada operação até o documento fiscal que a originou."
+        },
+        {
+          "id": "demonstrativo-apuracao",
+          "nome": "Demonstrativo de apuração",
+          "def": "Documento gerado pela administração tributária a partir da conta-corrente por operação, consolidando débitos, créditos (inclusive presumidos) e saldo do período, que o contribuinte confirma ou contesta dentro de prazo — a apuração 'assistida' pelo fisco, não mais só uma declaração unilateral do contribuinte."
+        },
+        {
+          "id": "credito-extincao",
+          "nome": "Débito, extinção e crédito",
+          "def": "Sequência lógica da apuração assistida: o débito nasce na operação de saída, é extinto (compensado) com créditos disponíveis na conta-corrente, e o saldo remanescente — devedor ou credor — transita para o período seguinte ou é objeto de ressarcimento/recolhimento."
+        },
+        {
+          "id": "eventos-credito",
+          "nome": "Eventos de crédito (inclusive presumido)",
+          "def": "Lançamentos que alimentam a conta-corrente de crédito do contribuinte além do crédito comum de aquisição: inclui o crédito presumido (como o da ZFM, já visto no documento fiscal) e outros eventos específicos previstos em lei, cada um identificado por código próprio na apuração."
+        }
+      ],
+      "rl": [
+        {
+          "de": "conta-corrente-operacao",
+          "para": "demonstrativo-apuracao",
+          "tipo": "alimenta, operação por operação, o"
+        },
+        {
+          "de": "credito-extincao",
+          "para": "conta-corrente-operacao",
+          "tipo": "descreve o fluxo de débito e crédito dentro da"
+        },
+        {
+          "de": "eventos-credito",
+          "para": "conta-corrente-operacao",
+          "tipo": "entram como lançamentos adicionais na"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "apuracao-assistida",
+          "texto": "No modelo atual, a empresa apura o ICMS do mês e informa o resultado ao fisco; na apuração assistida do IBS/CBS, o fisco já monta o demonstrativo com débitos e créditos a partir dos documentos eletrônicos emitidos e recebidos, e a empresa confirma (ou contesta, se identificar divergência)."
+        },
+        {
+          "conceitoId": "eventos-credito",
+          "texto": "Uma empresa com operação na ZFM tem, na mesma apuração, o crédito comum de suas aquisições e o crédito presumido de ZFM lançado como evento separado na conta-corrente, cada um identificável individualmente no demonstrativo."
+        }
+      ],
+      "pg": [
+        "Apuração assistida não elimina a responsabilidade do contribuinte: ele ainda precisa revisar o demonstrativo e contestar divergências dentro do prazo — não é uma apuração automática que dispensa conferência.",
+        "A conta-corrente por operação não é um saldo único do período: cada operação tem seu próprio rastro de débito/crédito, o que facilita auditoria, mas também significa que um erro isolado afeta uma operação específica, não o saldo inteiro de forma indistinta.",
+        "Crédito presumido não se confunde com crédito comum: aparecem como eventos distintos na conta-corrente, com origem e fundamento legal diferentes, mesmo compondo o mesmo saldo final."
+      ],
+      "rs": "A apuração do IBS/CBS passa a ser assistida pelo fisco, a partir de uma conta-corrente que registra débito e crédito por operação (não só um saldo agregado do período). Esses lançamentos alimentam um demonstrativo de apuração que o contribuinte confirma ou contesta; o saldo resulta da extinção dos débitos pelos créditos disponíveis, incluindo eventos de crédito presumido lançados separadamente do crédito comum de aquisição."
+    }
+  },
+  {
+    "contentId": "CT-123",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar os pontos de atenção na parametrização do ERP e na adequação de controles internos (inclusive EFD e cruzamentos eletrônicos) durante a transição para o IBS/CBS nos documentos fiscais.",
+      "cc": [
+        {
+          "id": "parametrizacao-erp",
+          "nome": "Parametrização do ERP",
+          "def": "Ajuste dos cadastros de produto, cliente, operação fiscal e regras de cálculo dentro do sistema de gestão da empresa para que ele gere, item a item, o CST e o cClassTrib corretos de IBS/CBS/IS — sem essa parametrização, o sistema pode continuar emitindo documentos tecnicamente aceitos pelo layout, mas com classificação tributária errada."
+        },
+        {
+          "id": "homologacao-producao",
+          "nome": "Homologação x produção",
+          "def": "Separação entre o ambiente de teste do documento fiscal (onde erros não geram efeito tributário real) e o ambiente de produção (onde o documento vale como declaração ao fisco); a transição da reforma aumenta o risco de confundir os dois, já que o layout muda com frequência e times costumam testar direto em produção por pressa."
+        },
+        {
+          "id": "efd-icms-ipi",
+          "nome": "EFD ICMS/IPI durante a coexistência",
+          "def": "Enquanto ICMS/IPI/PIS/Cofins/ISS coexistem com IBS/CBS no período de transição, a empresa precisa manter a escrituração dos tributos antigos (como a EFD ICMS/IPI) paralelamente à nova apuração assistida de IBS/CBS — um não substitui o outro enquanto a transição não termina."
+        },
+        {
+          "id": "cruzamentos-eletronicos",
+          "nome": "Cruzamentos eletrônicos",
+          "def": "Verificações automáticas que o fisco faz batendo o documento fiscal eletrônico contra a escrituração declarada (EFD, apuração assistida, outras obrigações acessórias); divergência entre o que o documento informa e o que a escrituração relata é hoje — e continuará sendo, de forma ainda mais automatizada com IBS/CBS — fonte comum de autuação."
+        },
+        {
+          "id": "checklist-implantacao",
+          "nome": "Riscos e checklist de implantação",
+          "def": "Lista de pontos recorrentes de falha na adequação ao novo modelo: cadastro de produto sem CST/cClassTrib definido, ambiente de homologação usado por engano em produção, equipe fiscal sem acesso ao demonstrativo de apuração assistida, e falta de reconciliação periódica entre documentos emitidos e EFD/apuração."
+        }
+      ],
+      "rl": [
+        {
+          "de": "parametrizacao-erp",
+          "para": "cst-ibscbs",
+          "tipo": "precisa gerar automaticamente o código correto de"
+        },
+        {
+          "de": "cruzamentos-eletronicos",
+          "para": "efd-icms-ipi",
+          "tipo": "comparam o documento fiscal com o que foi escriturado na"
+        },
+        {
+          "de": "checklist-implantacao",
+          "para": "homologacao-producao",
+          "tipo": "inclui evitar a confusão entre"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "parametrizacao-erp",
+          "texto": "Um ERP não atualizado continua emitindo notas que passam pela validação de layout (campos presentes, formato correto), mas com CST de 'tributação integral' numa operação que, na verdade, tem direito a redução — o documento é aceito tecnicamente e ainda assim está errado do ponto de vista tributário."
+        },
+        {
+          "conceitoId": "cruzamentos-eletronicos",
+          "texto": "Se a empresa declara um crédito de ICMS na EFD ICMS/IPI que não aparece respaldado em nenhum documento fiscal de entrada reconhecido pelo fisco, esse cruzamento aponta divergência — o mesmo tipo de lógica se estende à apuração assistida de IBS/CBS."
+        }
+      ],
+      "pg": [
+        "Documento aceito pelo validador de layout não é sinônimo de documento tributariamente correto: o layout confere formato e compatibilidade de códigos, não se a classificação escolhida reflete a operação real.",
+        "Durante a transição, EFD ICMS/IPI e apuração assistida de IBS/CBS não são alternativas uma à outra: coexistem, e a empresa precisa manter as duas rotinas até o fim do período de coexistência.",
+        "Usar o ambiente de homologação por engano em produção (ou vice-versa) parece erro operacional simples, mas pode gerar documento fiscal inválido ou, no sentido contrário, deixar de cumprir uma obrigação real pensando que era só teste."
+      ],
+      "rs": "A adequação ao IBS/CBS exige parametrizar o ERP para gerar CST/cClassTrib corretos por item (não só passar a validação de layout), manter a separação clara entre homologação e produção, e conviver — durante a transição — com a escrituração dos tributos antigos (como a EFD ICMS/IPI) ao lado da nova apuração assistida. Cruzamentos eletrônicos do fisco comparam documento fiscal e escrituração, e um checklist de implantação ajuda a cobrir os pontos recorrentes de falha nessa adequação."
+    }
+  },
+  {
+    "contentId": "CT-124",
+    "lesson": {
+      "v": 1,
+      "obj": "Consolidar, num caso integrado, como uma empresa real percorre a implantação da reforma tributária nos documentos fiscais: do cadastro no ERP até a apuração assistida, segundo seu perfil (porte, regime e tipo de operação).",
+      "cc": [
+        {
+          "id": "calendario-por-perfil",
+          "nome": "Calendário de adequação por perfil de cliente/empresa",
+          "def": "A ordem e a urgência das adequações variam por perfil: uma indústria/comércio de Lucro Real sente o destaque de IBS/CBS primeiro (cronograma de bens); uma prestadora de serviço sente em etapa posterior, dividida por grupo de serviço; e o Simples Nacional, mesmo dispensado de destacar os novos tributos por mais tempo, já precisa se adequar ao Emissor Nacional antes disso."
+        },
+        {
+          "id": "sintese-controle",
+          "nome": "Síntese de controle",
+          "def": "Conjunto mínimo de verificações recorrentes que uma empresa precisa manter ao longo de toda a transição: cadastro de produto/operação com CST/cClassTrib correto, reconciliação entre documento fiscal e escrituração (EFD e demonstrativo de apuração assistida), separação de ambientes de teste e produção, e acompanhamento do calendário próprio do seu perfil."
+        },
+        {
+          "id": "caso-integrado-docs",
+          "nome": "Caso integrado ponta a ponta",
+          "def": "Percurso completo de uma operação: cadastro correto no ERP → emissão do documento fiscal com CST/cClassTrib compatíveis → eventual evento pós-emissão (correção, ajuste, estorno) com código próprio → lançamento na conta-corrente por operação → conferência (ou contestação) do demonstrativo de apuração assistida — cada etapa dependendo da anterior ter sido feita corretamente."
+        }
+      ],
+      "rl": [
+        {
+          "de": "calendario-por-perfil",
+          "para": "cronograma-nfse",
+          "tipo": "combina, no caso de prestadores de serviço, com o"
+        },
+        {
+          "de": "sintese-controle",
+          "para": "checklist-implantacao",
+          "tipo": "reúne, de forma consolidada para qualquer perfil, os pontos já listados no"
+        },
+        {
+          "de": "caso-integrado-docs",
+          "para": "apuracao-assistida",
+          "tipo": "termina, depois de emissão e eventuais ajustes, na conferência da"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "caso-integrado-docs",
+          "texto": "Uma indústria do Lucro Real cadastra corretamente um produto incentivado da ZFM no ERP, emite a NF-e com o CST/cClassTrib de crédito presumido, meses depois identifica um erro de alíquota e corrige por nota de débito com ajuste de competência, e por fim confere esse lançamento no demonstrativo de apuração assistida do período correspondente — cada etapa só funciona se a anterior estiver certa."
+        },
+        {
+          "conceitoId": "calendario-por-perfil",
+          "texto": "Um escritório de contabilidade que atende ao mesmo tempo uma indústria do Lucro Real, uma prestadora de serviço de TI e um comércio do Simples Nacional precisa acompanhar três calendários de adequação diferentes para esses três clientes, não um único prazo igual para todos."
+        }
+      ],
+      "pg": [
+        "Não existe uma data única de 'virada' da reforma nos documentos fiscais: o calendário varia por tipo de operação (bens x serviços) e por grupo dentro de serviços, além do tratamento específico do Simples Nacional — tratar como data única é o erro mais comum de quem generaliza o cronograma.",
+        "O caso integrado mostra que um erro numa etapa anterior (cadastro errado no ERP, por exemplo) se propaga: aparece primeiro no documento fiscal, depois na conta-corrente, e por fim no demonstrativo de apuração assistida, onde já é mais caro corrigir do que teria sido na origem.",
+        "Síntese de controle não é uma checklist que se cumpre uma vez na implantação e se esquece: o calendário por perfil e os cruzamentos eletrônicos exigem acompanhamento contínuo durante toda a transição, não um evento único de 'virar a chave'."
+      ],
+      "rs": "A implantação da reforma nos documentos fiscais segue um calendário diferente por perfil de empresa (bens, serviços por grupo, Simples Nacional), e um caso integrado mostra como cadastro correto no ERP, emissão com CST/cClassTrib compatíveis, eventual correção com código próprio e conferência do demonstrativo de apuração assistida formam uma cadeia em que erro numa etapa se propaga para as seguintes. Uma síntese de controle (cadastro, reconciliação EFD/apuração, separação homologação/produção, acompanhamento de calendário) resume o que precisa ser mantido durante toda a transição, não só na implantação inicial."
+    }
+  }
+]
