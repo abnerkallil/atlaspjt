@@ -14,7 +14,43 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
-## PR #108 (pendente) — APA-18: aulas base de Contabilidade Tributária (sub-lote 5h)
+## PR #109 — APA-18: aulas base de Contabilidade Tributária (sub-lote 5i)
+
+- Ponto de restauração: branch `restore/pre-apache-18-5i-ipi` (commit
+  `e6237bc`, main antes do merge).
+- O que muda no site: nada visível ainda — este PR só adiciona os dados; as
+  5 aulas só aparecem depois de o Abner rodar o comando de carga para esse
+  arquivo (não precisa de "Publicar Atlas": o script grava direto em D1/R2).
+  O carregamento em produção de toda a Contabilidade Tributária será feito
+  num único comando ao final de todos os 15 sub-lotes, a pedido do Abner.
+- O que muda fora do site: nono sub-lote de Contabilidade Tributária em
+  `data/apache/aulas/contabilidade-tributaria-09.json` (5 dos 124
+  conteúdos: CT-073 a CT-077, unidade "IPI", na ordem do catálogo,
+  `model='claude-manual'`), usando o mesmo mecanismo de carga dos PRs
+  #95-#108 (`scripts/apache-carregar-aulas.mjs`). Conteúdo: fato gerador,
+  conceito de industrialização (RIPI, Decreto nº 7.212/2010, art. 4º/5º) e
+  contribuinte/equiparados, incluindo a dupla incidência sobre o importador
+  (art. 51 CTN; art. 9º RIPI; art. 4º Lei 4.502/1964); TIPI (Decreto nº
+  11.158/2022) e NCM, com a seletividade obrigatória do IPI (art. 153,
+  §3º, I, CF, diferente da facultativa do ICMS); base de cálculo na saída
+  e na importação (valor aduaneiro + II + encargos cambiais, art. 47 CTN),
+  não cumulatividade e apuração mensal (decendial só para cigarros, Lei
+  8.850/1994) e crédito físico sobre insumos; suspensão na industrialização
+  por encomenda, imunidade de exportação (art. 153, §3º, III, CF), isenção
+  da Zona Franca de Manaus (Decreto-Lei nº 288/1967) e drawback; e a
+  escrituração do IPI na EFD ICMS/IPI (registros E500/E510/E520 do Bloco
+  E). Pesquisa web confirmou que a reforma tributária (EC 132/2023, LC
+  214/2025) não extingue o IPI: zera a alíquota da generalidade dos
+  produtos a partir de 2027, mas mantém o imposto sobre itens incentivados
+  na ZFM com alíquota atual acima de 6,5% — lista definitiva ainda não
+  publicada, sinalizado como alerta na própria aula (CT-076), sem afirmar
+  como fato definitivo. `docs/APACHE-18-plano.md` atualizado (sub-lote 5i
+  mesclado; Tributária em 77/124).
+- Se algo der errado: reverter para `restore/pre-apache-18-5i-ipi` volta ao
+  estado anterior; nenhuma aula ainda foi carregada em produção, então
+  reverter sem ter rodado o script de carga não perde nada.
+
+## PR #108 — APA-18: aulas base de Contabilidade Tributária (sub-lote 5h)
 
 - Ponto de restauração: branch `restore/pre-apa-18-contabilidade-tributaria-08`
   (commit `eab072e`, main antes do merge).
