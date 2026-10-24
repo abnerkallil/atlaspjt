@@ -1,0 +1,370 @@
+[
+  {
+    "contentId": "CT-091",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a obrigatoriedade, a estrutura e o ciclo de validação, assinatura e substituição da Escrituração Contábil Digital (ECD).",
+      "cc": [
+        {
+          "id": "ecd-obrigatoriedade",
+          "nome": "Obrigatoriedade da ECD",
+          "def": "Instituída pela IN RFB nº 2.003/2021 (que consolidou as normas do SPED), a ECD é obrigatória para todas as pessoas jurídicas tributadas pelo Lucro Real e, em regra, para as do Lucro Presumido que distribuam lucros ou dividendos sem retenção de IRRF em valor superior ao limite de presunção do lucro; empresas inativas, imunes/isentas sem determinadas condições e optantes pelo Simples Nacional (fora da hipótese de distribuição de lucros acima do limite) estão, em regra, dispensadas, sempre conforme as hipóteses específicas da própria instrução normativa vigente."
+        },
+        {
+          "id": "ecd-livros-digitais",
+          "nome": "Livros digitais substituídos pela ECD",
+          "def": "A ECD substitui a escrituração em papel dos livros Diário, Razão, livro de Balanços e demais livros contábeis auxiliares exigidos por lei, consolidando-os em um arquivo digital único transmitido anualmente; o conteúdo contábil é o mesmo da escrituração societária, apenas em formato eletrônico estruturado para transmissão ao Sped."
+        },
+        {
+          "id": "ecd-plano-referencial",
+          "nome": "Plano referencial",
+          "def": "Mapeamento obrigatório de cada conta do plano de contas próprio da empresa para um código padronizado da tabela de plano referencial da Receita Federal, usado exclusivamente para permitir o cruzamento e a comparação de informações entre empresas distintas; o mapeamento não altera nem substitui o plano de contas societário da empresa, servindo apenas como camada adicional de leitura para fins fiscais."
+        },
+        {
+          "id": "ecd-validacao-assinatura-substituicao",
+          "nome": "Validação, assinatura e substituição",
+          "def": "Antes da transmissão, o arquivo da ECD é processado pelo Programa Validador e Assinador (PVA) do Sped, que verifica a consistência da escrituração e exige assinatura digital com certificado ICP-Brasil do representante legal da empresa e do contabilista responsável; uma ECD retificadora, quando necessária, substitui integralmente a escrituração anteriormente transmitida para aquele ano-calendário, e não apenas os pontos corrigidos."
+        }
+      ],
+      "rl": [
+        { "de": "ecd-plano-referencial", "para": "ecd-livros-digitais", "tipo": "é camada de leitura fiscal adicional sobre" },
+        { "de": "ecd-validacao-assinatura-substituicao", "para": "ecd-obrigatoriedade", "tipo": "é etapa final do cumprimento de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "ecd-plano-referencial",
+          "texto": "Duas empresas do mesmo setor usam planos de contas próprios diferentes para registrar 'Caixa e equivalentes'. Ao mapear cada conta para o mesmo código do plano referencial da Receita Federal, torna-se possível comparar os saldos das duas empresas de forma padronizada na ECD, sem que nenhuma delas precise alterar sua própria contabilidade societária."
+        }
+      ],
+      "pg": [
+        "O plano referencial não substitui nem altera o plano de contas da empresa; é apenas um mapeamento paralelo para fins de cruzamento pela Receita Federal.",
+        "Nem toda pessoa jurídica do Lucro Presumido é dispensada da ECD: a distribuição de lucros sem retenção de IRRF acima do limite de presunção pode gerar a obrigatoriedade mesmo fora do Lucro Real.",
+        "Uma ECD retificadora substitui a escrituração inteira do ano-calendário, não apenas o trecho que motivou a correção — tratar a retificação como um 'ajuste pontual' é erro."
+      ],
+      "rs": "A ECD (IN RFB 2.003/2021) substitui digitalmente os livros Diário, Razão e de Balanços, sendo obrigatória para empresas do Lucro Real e, em certas condições, do Lucro Presumido que distribuam lucros acima do limite de presunção sem retenção de IRRF. Cada conta do plano de contas próprio é mapeada para o plano referencial da Receita Federal, sem alterar a contabilidade societária. O arquivo é validado e assinado digitalmente pelo PVA antes da transmissão, e uma retificação substitui integralmente a escrituração do ano-calendário."
+    }
+  },
+  {
+    "contentId": "CT-092",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a obrigatoriedade, os blocos principais e a relação de dependência entre a ECF e a ECD na apuração anual de IRPJ e CSLL.",
+      "cc": [
+        {
+          "id": "ecf-obrigatoriedade",
+          "nome": "Obrigatoriedade da ECF",
+          "def": "A Escrituração Contábil Fiscal é obrigatória para todas as pessoas jurídicas tributadas pelo Lucro Real, Lucro Presumido ou Lucro Arbitrado, inclusive as imunes e isentas, com exceção dos órgãos públicos, autarquias, fundações públicas e optantes pelo Simples Nacional; empresas inativas durante todo o ano-calendário entregam uma versão simplificada da ECF, sem os blocos de apuração de tributos."
+        },
+        {
+          "id": "ecf-recuperacao-ecd",
+          "nome": "Recuperação de dados da ECD",
+          "def": "A ECF não é preenchida digitando novamente os saldos contábeis: ela importa e recupera automaticamente os saldos finais já transmitidos na ECD do mesmo ano-calendário, de modo que qualquer inconsistência contábil deve ser corrigida por retificação da ECD antes da transmissão da ECF, e não diretamente dentro desta."
+        },
+        {
+          "id": "ecf-bloco-m-lalur-lacs",
+          "nome": "Bloco M — e-Lalur e e-Lacs",
+          "def": "Bloco da ECF em que são lançadas as adições, exclusões e compensações que ajustam o lucro líquido contábil até chegar à base de cálculo do IRPJ (e-Lalur) e da CSLL (e-Lacs), cada um dividido em Parte A (ajustes do próprio período) e Parte B (controle de saldos que ainda vão impactar períodos futuros, como prejuízo fiscal e base negativa)."
+        },
+        {
+          "id": "ecf-blocos-n-p-apuracao",
+          "nome": "Blocos N e P — apuração do imposto",
+          "def": "O Bloco N consolida a apuração do IRPJ e da CSLL das empresas no Lucro Real (incluindo o cálculo trimestral ou anual, com as estimativas mensais compensadas), enquanto o Bloco P é destinado à apuração dessas mesmas contribuições nas empresas do Lucro Presumido, aplicando os percentuais de presunção sobre a receita bruta e demais receitas tributáveis."
+        }
+      ],
+      "rl": [
+        { "de": "ecf-recuperacao-ecd", "para": "ecf-obrigatoriedade", "tipo": "é pré-requisito técnico para cumprir" },
+        { "de": "ecf-bloco-m-lalur-lacs", "para": "ecf-blocos-n-p-apuracao", "tipo": "fornece a base ajustada para" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "ecf-recuperacao-ecd",
+          "texto": "Uma empresa percebe, já no preenchimento da ECF, que um lançamento contábil de depreciação estava incorreto na ECD transmitida meses antes. Em vez de corrigir o valor diretamente na ECF, ela precisa retificar a ECD primeiro, para que a ECF recupere o saldo já corrigido."
+        }
+      ],
+      "pg": [
+        "A ECF não aceita digitação manual dos saldos contábeis: eles vêm da ECD já transmitida, e corrigir um erro contábil exige retificar a ECD, não a ECF.",
+        "Empresas do Simples Nacional não entregam ECF, mas empresas imunes e isentas, mesmo sem apurar IRPJ a pagar, em regra entregam — dispensa não é sinônimo de isenção do tributo.",
+        "O e-Lalur (IRPJ) e o e-Lacs (CSLL) são controles paralelos e não idênticos: adições e exclusões podem ter tratamento diferente entre os dois tributos dentro do mesmo Bloco M."
+      ],
+      "rs": "A ECF é obrigatória para empresas do Lucro Real, Presumido e Arbitrado (exceto Simples Nacional e entes públicos), recuperando automaticamente os saldos já transmitidos na ECD — erros contábeis exigem retificar a ECD antes. O Bloco M (e-Lalur e e-Lacs, cada um com Parte A e Parte B) ajusta o lucro líquido contábil até a base de IRPJ e CSLL, que é apurada nos Blocos N (Lucro Real) e P (Lucro Presumido)."
+    }
+  },
+  {
+    "contentId": "CT-093",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a obrigatoriedade, a periodicidade e os principais blocos da EFD-Contribuições na apuração de PIS e Cofins.",
+      "cc": [
+        {
+          "id": "efd-contribuicoes-obrigatoriedade",
+          "nome": "Obrigatoriedade da EFD-Contribuições",
+          "def": "Instituída pela IN RFB nº 1.252/2012, é obrigatória para pessoas jurídicas tributadas pelo Lucro Real (regime não cumulativo de PIS/Cofins) e, de forma mais restrita, para as do Lucro Presumido e Arbitrado que apurem contribuições em regime cumulativo com determinadas receitas ou que realizem retenções sujeitas a declaração; empresas do Simples Nacional não entregam a EFD-Contribuições, pois PIS e Cofins estão unificados no DAS."
+        },
+        {
+          "id": "efd-contribuicoes-periodicidade",
+          "nome": "Periodicidade e prazo de entrega",
+          "def": "A escrituração é mensal, por estabelecimento consolidado em um único arquivo da matriz, com prazo de entrega até o 10º (décimo) dia útil do segundo mês subsequente ao período de apuração, salvo prorrogação específica publicada pela Receita Federal."
+        },
+        {
+          "id": "efd-contribuicoes-blocos-documentos",
+          "nome": "Blocos de documentos (A, C, D, F)",
+          "def": "O Bloco A registra documentos fiscais de serviços, o Bloco C registra as notas fiscais de entrada e saída de mercadorias (com detalhamento de CFOP e CST de PIS/Cofins por item), o Bloco D registra documentos de prestação de serviços de transporte e comunicação, e o Bloco F consolida receitas e despesas que não têm documento fiscal eletrônico correspondente, como receitas financeiras e aluguéis."
+        },
+        {
+          "id": "efd-contribuicoes-bloco-m-creditos",
+          "nome": "Bloco M — apuração de créditos e contribuições",
+          "def": "Consolida, a partir dos documentos escriturados nos blocos anteriores, o cálculo dos créditos permitidos no regime não cumulativo (como insumos, energia elétrica, aluguéis e depreciação de bens do ativo imobilizado) e o valor devido de PIS e Cofins no período, após as deduções e compensações aplicáveis."
+        }
+      ],
+      "rl": [
+        { "de": "efd-contribuicoes-blocos-documentos", "para": "efd-contribuicoes-bloco-m-creditos", "tipo": "fornece a base documental para" },
+        { "de": "efd-contribuicoes-obrigatoriedade", "para": "efd-contribuicoes-periodicidade", "tipo": "define para quem se aplica" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "efd-contribuicoes-blocos-documentos",
+          "texto": "Uma indústria registra suas vendas de produtos no Bloco C (com CST de PIS/Cofins por item) e sua receita de aluguel de um galpão não operacional no Bloco F, pois essa segunda receita não está vinculada a um documento fiscal eletrônico de venda ou serviço."
+        }
+      ],
+      "pg": [
+        "Empresas do Simples Nacional não entregam EFD-Contribuições, mesmo tendo CNPJ ativo e faturamento relevante, porque PIS/Cofins já estão unificados no DAS.",
+        "Receitas sem documento fiscal eletrônico (como aluguéis e receitas financeiras) vão para o Bloco F, não para os blocos de documentos (A, C ou D) — tratá-las como se exigissem nota fiscal é erro.",
+        "O Bloco M depende dos blocos de documentos anteriores: um erro de CST de PIS/Cofins lançado no Bloco C se propaga diretamente para o cálculo de créditos e débitos no Bloco M."
+      ],
+      "rs": "A EFD-Contribuições (IN RFB 1.252/2012) é obrigatória principalmente para empresas do Lucro Real, com entrega mensal até o 10º dia útil do segundo mês subsequente. Os documentos são escriturados por tipo nos Blocos A (serviços), C (mercadorias), D (transporte/comunicação) e F (receitas e despesas sem documento fiscal eletrônico), e o Bloco M consolida, a partir deles, os créditos do regime não cumulativo e o valor de PIS e Cofins devido no período."
+    }
+  },
+  {
+    "contentId": "CT-094",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a obrigatoriedade, os blocos principais e o controle de crédito do ativo permanente na EFD ICMS/IPI.",
+      "cc": [
+        {
+          "id": "efd-icms-ipi-obrigatoriedade",
+          "nome": "Obrigatoriedade e substituição de livros fiscais",
+          "def": "Instituída pelo Convênio ICMS 143/2006 e regulamentada por cada legislação estadual, a EFD ICMS/IPI é obrigatória para a generalidade dos contribuintes do ICMS e/ou do IPI, substituindo a escrituração em papel dos livros Registro de Entradas, Registro de Saídas, Registro de Inventário e Registro de Apuração do ICMS e do IPI; o prazo de entrega é fixado por cada unidade federada, não havendo data única nacional."
+        },
+        {
+          "id": "efd-icms-ipi-bloco-c-e",
+          "nome": "Blocos C e E — documentos e apuração",
+          "def": "O Bloco C registra os documentos fiscais de entrada e saída de mercadorias (principalmente NF-e), item a item, com CFOP, CST e valores de ICMS e IPI, enquanto o Bloco E consolida a apuração do ICMS (inclusive por operação, quando exigido pelo estado) e do IPI do período, apurando o saldo devedor ou credor a transportar para o período seguinte."
+        },
+        {
+          "id": "efd-icms-ipi-bloco-h-inventario",
+          "nome": "Bloco H — inventário",
+          "def": "Registra o inventário físico de mercadorias, matérias-primas, produtos em elaboração e produtos acabados existentes no estoque em determinada data, normalmente ao final do ano-calendário ou em outra data exigida pela legislação estadual, servindo de base para a conferência do CMV e para eventuais ajustes de crédito ou débito de ICMS sobre estoque."
+        },
+        {
+          "id": "efd-icms-ipi-bloco-g-ciap",
+          "nome": "Bloco G — CIAP",
+          "def": "O Controle de Crédito de ICMS do Ativo Permanente (CIAP) registra o crédito de ICMS sobre a aquisição de bens do ativo imobilizado, apropriado em parcelas mensais (tipicamente 1/48 ao mês) ao longo da vida útil estimada do bem, e não integralmente no mês da entrada, como ocorre com o crédito sobre mercadorias para revenda ou insumos de uso corrente."
+        }
+      ],
+      "rl": [
+        { "de": "efd-icms-ipi-bloco-c-e", "para": "efd-icms-ipi-obrigatoriedade", "tipo": "concretiza mensalmente" },
+        { "de": "efd-icms-ipi-bloco-g-ciap", "para": "efd-icms-ipi-bloco-c-e", "tipo": "alimenta parcela mensal do crédito apurado em" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "efd-icms-ipi-bloco-g-ciap",
+          "texto": "Uma empresa adquire uma máquina industrial com ICMS destacado de R$ 48.000 na nota fiscal. Em vez de se apropriar do valor inteiro no mês da compra, ela lança o bem no Bloco G (CIAP) e credita R$ 1.000 por mês (1/48) durante 48 meses, desde que o bem permaneça no ativo imobilizado e vinculado a operações tributadas."
+        }
+      ],
+      "pg": [
+        "Não existe prazo nacional único para a EFD ICMS/IPI: cada estado define sua própria data de entrega mensal, e confundir o prazo de um estado com o de outro é erro comum em empresas com múltiplos estabelecimentos.",
+        "O crédito de ICMS sobre ativo imobilizado (CIAP) não é apropriado de uma vez no mês da entrada; ele é parcelado, tipicamente em 48 parcelas mensais, proporcional ao uso em operações tributadas.",
+        "O Bloco H (inventário) não é apenas uma formalidade: divergências entre o estoque físico informado e os saldos apurados nos Blocos C e E podem gerar exigência de justificativa ou ajuste de crédito/débito pelo fisco estadual."
+      ],
+      "rs": "A EFD ICMS/IPI (Convênio ICMS 143/2006) substitui os antigos livros fiscais estaduais de entradas, saídas, inventário e apuração, com prazo definido por cada unidade federada. O Bloco C registra os documentos fiscais e o Bloco E apura o ICMS e o IPI do período; o Bloco H registra o inventário físico de mercadorias e o Bloco G (CIAP) controla o crédito de ICMS sobre bens do ativo imobilizado, apropriado em parcelas mensais ao longo de sua vida útil, e não de uma só vez."
+    }
+  },
+  {
+    "contentId": "CT-095",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a sequência de fechamento integrado entre eSocial, EFD-Reinf e DCTFWeb e as consequências de uma retificação fora de ordem.",
+      "cc": [
+        {
+          "id": "sequencia-fechamento-integrado",
+          "nome": "Sequência de fechamento integrado",
+          "def": "O fechamento mensal segue uma ordem obrigatória: primeiro o eSocial, com o evento S-1299, consolida as bases de folha de pagamento; em seguida a EFD-Reinf, com os eventos R-2099 e R-4099, consolida as demais retenções e contribuições não tratadas pelo eSocial; só depois de ambas fechadas a DCTFWeb pode gerar a declaração consolidadora com o valor total a confessar e a guia de recolhimento (DARF) daquele período de apuração."
+        },
+        {
+          "id": "dctfweb-geracao-automatica",
+          "nome": "Geração automática da DCTFWeb",
+          "def": "A DCTFWeb não permite digitação livre dos débitos: ela importa os valores já consolidados pelos totalizadores do eSocial e pelo fechamento da EFD-Reinf, cabendo ao contribuinte apenas confirmar, informar eventuais créditos a compensar e transmitir a declaração dentro do prazo fixado pela Receita Federal, que varia conforme o porte da empresa."
+        },
+        {
+          "id": "retificacao-fora-de-ordem",
+          "nome": "Retificação fora de ordem",
+          "def": "Corrigir um evento do eSocial ou da EFD-Reinf depois que a DCTFWeb daquela competência já foi transmitida exige reabrir a escrituração de origem (retransmitir o evento corrigido, reabrir e fechar novamente a escrituração), para só então gerar uma DCTFWeb retificadora; alterar diretamente a DCTFWeb sem corrigir a escrituração de origem gera divergência que tende a ser identificada em cruzamento posterior pela Receita Federal."
+        },
+        {
+          "id": "debitos-creditos-dctfweb",
+          "nome": "Débitos e créditos na DCTFWeb",
+          "def": "Além de confessar os débitos vindos do eSocial e da EFD-Reinf, a DCTFWeb permite vincular créditos disponíveis (como saldo de retenções sofridas ou compensações já deferidas) para reduzir o valor do DARF a pagar; quando o crédito informado não é suficiente ou não é reconhecido, a diferença de débito não compensado gera cobrança administrativa, podendo ser inscrita em dívida ativa se não regularizada."
+        }
+      ],
+      "rl": [
+        { "de": "sequencia-fechamento-integrado", "para": "dctfweb-geracao-automatica", "tipo": "é pré-requisito de" },
+        { "de": "retificacao-fora-de-ordem", "para": "sequencia-fechamento-integrado", "tipo": "exige refazer, na mesma ordem," }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "retificacao-fora-de-ordem",
+          "texto": "Após a DCTFWeb de abril já ter sido transmitida, uma empresa percebe um erro em um evento R-4000 da EFD-Reinf daquele mês. Ela precisa retransmitir o evento corrigido, fechar novamente a EFD-Reinf (R-4099) daquela competência e só então gerar uma DCTFWeb retificadora — não pode simplesmente editar o valor já declarado sem passar por essa sequência."
+        }
+      ],
+      "pg": [
+        "A ordem de fechamento é fixa: eSocial antes da EFD-Reinf, e as duas antes da DCTFWeb; fechar a EFD-Reinf sem antes ter fechado o eSocial da mesma competência não consolida os totalizadores corretamente.",
+        "A DCTFWeb não aceita digitação livre dos débitos de folha e retenções: eles vêm das escriturações de origem, e qualquer correção exige retificar essas escriturações antes, não a DCTFWeb isoladamente.",
+        "Crédito informado na DCTFWeb que não é suficiente ou reconhecido não zera a cobrança: a diferença de débito não compensado continua sujeita a cobrança administrativa e, se não regularizada, a inscrição em dívida ativa."
+      ],
+      "rs": "O fechamento mensal integrado segue ordem obrigatória: eSocial (S-1299) primeiro, depois EFD-Reinf (R-2099/R-4099), e só então a DCTFWeb, que importa os totalizadores dessas duas escriturações para gerar a declaração consolidadora e o DARF. Correções após a DCTFWeb já transmitida exigem retificar a escrituração de origem e refazer o fechamento na mesma ordem, gerando DCTFWeb retificadora; créditos vinculados que não cobrem o débito total deixam saldo sujeito a cobrança administrativa."
+    }
+  },
+  {
+    "contentId": "CT-096",
+    "lesson": {
+      "v": 1,
+      "obj": "Distinguir restituição, compensação, ressarcimento e reembolso no PER/DCOMP Web e explicar seu acompanhamento.",
+      "cc": [
+        {
+          "id": "restituicao-per-dcomp",
+          "nome": "Restituição",
+          "def": "Devolução em espécie, pela Receita Federal ao próprio contribuinte, de valor pago indevidamente ou a maior que o devido (como um DARF recolhido em duplicidade ou com erro de cálculo), apurado e requerido por meio do PER/DCOMP Web, nos termos da IN RFB nº 2.055/2021."
+        },
+        {
+          "id": "compensacao-per-dcomp",
+          "nome": "Compensação",
+          "def": "Utilização de um crédito próprio do contribuinte (como saldo negativo de IRPJ/CSLL ou retenções sofridas) para extinguir, total ou parcialmente, um débito próprio de tributo federal administrado pela Receita Federal; a compensação é declarada no PER/DCOMP Web e produz efeito de extinção do débito sob condição resolutória de ulterior homologação pela Receita Federal."
+        },
+        {
+          "id": "ressarcimento-per-dcomp",
+          "nome": "Ressarcimento",
+          "def": "Devolução em espécie (ou disponibilização para compensação) de créditos de tributos não cumulativos acumulados que não puderam ser integralmente aproveitados na própria apuração, como créditos de IPI decorrentes de exportação ou saldo credor acumulado de PIS/Cofins não cumulativo vinculado a receitas de exportação, distinguindo-se da restituição por não decorrer de pagamento indevido, mas de crédito legítimo não absorvido pelos débitos do período."
+        },
+        {
+          "id": "reembolso-acompanhamento",
+          "nome": "Reembolso e acompanhamento via e-CAC",
+          "def": "O reembolso ocorre quando a empresa paga, por conta e ordem da Previdência Social, benefícios que são encargo do INSS (como salário-família e salário-maternidade) e depois recupera esse valor junto à Receita Federal; tanto o reembolso quanto as demais modalidades são acompanhados no e-CAC, onde o contribuinte verifica o status (em análise, deferido, indeferido ou em exigência) de cada pedido transmitido pelo PER/DCOMP Web."
+        }
+      ],
+      "rl": [
+        { "de": "ressarcimento-per-dcomp", "para": "compensacao-per-dcomp", "tipo": "pode ser convertido, por opção do contribuinte, em" },
+        { "de": "reembolso-acompanhamento", "para": "restituicao-per-dcomp", "tipo": "é modalidade distinta de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "ressarcimento-per-dcomp",
+          "texto": "Uma indústria exportadora acumula créditos de PIS/Cofins não cumulativo que não consegue compensar integralmente com débitos próprios, por vender a maior parte de sua produção ao exterior. Esse saldo credor vinculado à exportação é pedido como ressarcimento no PER/DCOMP Web, e não como restituição, pois não decorre de pagamento indevido."
+        }
+      ],
+      "pg": [
+        "Restituição pressupõe pagamento indevido ou a maior; ressarcimento pressupõe crédito legítimo não absorvido na apuração (como crédito de exportação) — tratar as duas modalidades como sinônimas é erro comum.",
+        "A compensação declarada no PER/DCOMP Web extingue o débito sob condição resolutória: a Receita Federal ainda pode homologar ou não homologar o pedido depois, cobrando o débito com acréscimos se a compensação for rejeitada.",
+        "O reembolso só existe para valores que são encargo do INSS pagos pela empresa por conta e ordem da Previdência (como salário-família e salário-maternidade); não deve ser confundido com restituição de tributo pago a maior pela própria empresa."
+      ],
+      "rs": "O PER/DCOMP Web (IN RFB 2.055/2021) processa quatro modalidades distintas: restituição (devolução de pagamento indevido ou a maior), compensação (uso de crédito próprio para extinguir débito próprio, sob condição resolutória de homologação), ressarcimento (devolução de crédito não cumulativo acumulado e não absorvido na apuração, como em exportações) e reembolso (recuperação de valores de encargo do INSS pagos pela empresa, como salário-família e salário-maternidade). Todos os pedidos são acompanhados pelo contribuinte no e-CAC."
+    }
+  },
+  {
+    "contentId": "CT-097",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar por que as obrigações acessórias estaduais e municipais não seguem regra nacional única e como identificar as particularidades locais aplicáveis.",
+      "cc": [
+        {
+          "id": "gia-declaracoes-estaduais-complementares",
+          "nome": "GIA e declarações estaduais complementares",
+          "def": "A Guia de Informação e Apuração do ICMS (GIA) e declarações equivalentes foram, em muitos estados, dispensadas para contribuintes que já entregam a EFD ICMS/IPI, mas diversas unidades federadas ainda exigem declarações acessórias próprias (resumos de apuração, declarações de substituição tributária interestadual ou guias específicas de determinados regimes), de modo que a dispensa da GIA em um estado não significa dispensa de toda obrigação acessória estadual complementar naquele ou em outro estado."
+        },
+        {
+          "id": "declaracoes-municipais-servicos",
+          "nome": "Declarações municipais de serviços",
+          "def": "Grande parte dos municípios exige declaração própria de serviços tomados e/ou prestados (frequentemente chamada de DES ou DMS, com nome e periodicidade variando por município), além do cadastro mobiliário e, em alguns casos, de alvará específico para a atividade, sendo cada uma dessas obrigações definida pela legislação do município competente, sem padronização nacional equivalente à do Sped federal."
+        },
+        {
+          "id": "gnre-operacoes-interestaduais",
+          "nome": "GNRE em operações interestaduais",
+          "def": "A Guia Nacional de Recolhimento de Tributos Estaduais (GNRE) é usada para recolher ICMS devido a um estado diferente do estado de origem da empresa, como no ICMS-ST de operações interestaduais ou no DIFAL de consumidor final, permitindo o pagamento unificado em qualquer banco conveniado mesmo quando o destino do recurso é outra unidade federada."
+        },
+        {
+          "id": "ausencia-padrao-nacional-local",
+          "nome": "Ausência de padrão nacional e verificação caso a caso",
+          "def": "Diferente das obrigações federais (centralizadas no Sped e na Receita Federal), cada estado e cada município define suas próprias obrigações acessórias, prazos, formulários e dispensas, exigindo que a empresa verifique a legislação específica de cada unidade federada e de cada município onde mantém estabelecimento ou presta serviço, em vez de assumir que uma regra válida para um local se aplica automaticamente a outro."
+        }
+      ],
+      "rl": [
+        { "de": "gia-declaracoes-estaduais-complementares", "para": "ausencia-padrao-nacional-local", "tipo": "é exemplo da variação tratada por" },
+        { "de": "declaracoes-municipais-servicos", "para": "ausencia-padrao-nacional-local", "tipo": "é exemplo da variação tratada por" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "ausencia-padrao-nacional-local",
+          "texto": "Uma empresa com filiais em dois estados diferentes entrega a EFD ICMS/IPI das duas filiais, mas descobre que um dos estados ainda exige uma declaração complementar própria de substituição tributária interestadual, enquanto o outro não exige nada além da EFD — a dispensa de uma obrigação em um estado não garante a dispensa da mesma obrigação no outro."
+        }
+      ],
+      "pg": [
+        "A dispensa da GIA em determinado estado para quem entrega a EFD ICMS/IPI não significa que toda obrigação acessória estadual complementar também foi dispensada naquele estado, nem em qualquer outro.",
+        "Não existe uma 'declaração de serviços municipal' única e padronizada: nome, periodicidade e regras variam por município, e aplicar o procedimento de um município a outro sem verificar a legislação local é erro comum.",
+        "A GNRE serve para recolher tributo estadual devido a unidade federada diferente da sede da empresa (como ICMS-ST interestadual ou DIFAL); não deve ser confundida com guias de recolhimento do próprio estado de origem."
+      ],
+      "rs": "Diferente das obrigações federais centralizadas no Sped, as obrigações acessórias estaduais e municipais variam por unidade federada e por município: alguns estados ainda exigem GIA ou declarações complementares mesmo após a EFD ICMS/IPI, municípios exigem declarações próprias de serviços (DES/DMS) e cadastro mobiliário com nomes e regras distintas, e a GNRE serve especificamente para recolher tributo estadual devido a unidade federada diferente da sede da empresa. A conformidade exige verificar a legislação específica de cada local, nunca assumir que uma regra se repete entre jurisdições."
+    }
+  },
+  {
+    "contentId": "CT-098",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar como a Receita Federal cruza diferentes fontes de dados para formar a malha fiscal e como a empresa se antecipa a essas divergências.",
+      "cc": [
+        {
+          "id": "fontes-cruzamento-malha-fiscal",
+          "nome": "Fontes do cruzamento de dados",
+          "def": "A Receita Federal e os fiscos estaduais/municipais cruzam, de forma automatizada, informações provenientes de documentos fiscais eletrônicos (NF-e, NFS-e, CT-e), das escriturações do Sped (ECD, ECF, EFD-Contribuições, EFD ICMS/IPI), de declarações (DCTFWeb, DIRPF dos sócios) e da movimentação financeira informada por instituições financeiras através da e-Financeira, comparando valores que deveriam coincidir entre essas fontes independentes."
+        },
+        {
+          "id": "malha-fina-pj",
+          "nome": "Malha fina da pessoa jurídica",
+          "def": "Quando o cruzamento identifica divergência relevante entre as fontes — como receita informada em notas fiscais superior à receita declarada na EFD-Contribuições, ou movimentação bancária muito superior ao faturamento declarado — a pessoa jurídica é selecionada para a chamada malha fina, podendo receber intimação eletrônica para prestar esclarecimentos antes de qualquer autuação formal."
+        },
+        {
+          "id": "dte-intimacao-eletronica",
+          "nome": "DTE e intimação eletrônica",
+          "def": "O Domicílio Tributário Eletrônico (DTE), vinculado ao e-CAC, é o canal pelo qual a Receita Federal intima eletronicamente o contribuinte sobre divergências identificadas; o prazo para resposta começa a contar da ciência da intimação no próprio portal (ou de prazo presumido de leitura, conforme a norma vigente), e não da data em que a empresa efetivamente abriu o aviso, o que exige monitoramento ativo do DTE."
+        },
+        {
+          "id": "conciliacao-preventiva",
+          "nome": "Conciliação contábil-fiscal preventiva",
+          "def": "Prática de comparar periodicamente os valores lançados na contabilidade, nas escriturações fiscais (Sped) e nos documentos fiscais emitidos/recebidos antes da transmissão das obrigações, de modo a identificar e corrigir divergências pela própria empresa antes que o cruzamento automatizado da Receita Federal as identifique e gere intimação ou autuação."
+        }
+      ],
+      "rl": [
+        { "de": "fontes-cruzamento-malha-fiscal", "para": "malha-fina-pj", "tipo": "alimenta a seleção para" },
+        { "de": "conciliacao-preventiva", "para": "malha-fina-pj", "tipo": "reduz o risco de seleção para" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "malha-fina-pj",
+          "texto": "Uma empresa tem movimentação bancária total de R$ 2 milhões no ano, mas declara receita de apenas R$ 800 mil na EFD-Contribuições. Esse descasamento entre a e-Financeira e a escrituração fiscal é um padrão típico de seleção para malha fina, mesmo que a diferença tenha explicação legítima (como empréstimos ou transferências entre contas da própria empresa) que precisará ser demonstrada na resposta à intimação."
+        }
+      ],
+      "pg": [
+        "O cruzamento compara fontes independentes entre si (notas fiscais, Sped, declarações, movimentação bancária); um valor 'bater' dentro de uma única escrituração não impede divergência frente às demais fontes.",
+        "O prazo de resposta a uma intimação pelo DTE conta a partir da ciência no portal, não da data em que a empresa efetivamente leu o aviso — deixar de monitorar o DTE regularmente pode significar perder o prazo sem perceber.",
+        "Divergência identificada na malha fina não é, por si só, autuação: é oportunidade de prestar esclarecimentos; mas divergências recorrentes e não explicadas tendem a evoluir para procedimento fiscal mais formal."
+      ],
+      "rs": "A malha fiscal cruza automaticamente documentos fiscais eletrônicos, escriturações do Sped, declarações federais e a movimentação bancária informada pela e-Financeira, comparando valores que deveriam ser consistentes entre essas fontes independentes. Divergências relevantes selecionam a empresa para a malha fina, com intimação eletrônica pelo DTE cujo prazo conta da ciência no portal. A conciliação contábil-fiscal preventiva, feita pela própria empresa antes de transmitir as obrigações, é a forma de reduzir o risco de ser selecionada e de já ter a explicação pronta se a intimação chegar."
+    }
+  }
+]
