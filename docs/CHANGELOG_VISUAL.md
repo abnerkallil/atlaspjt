@@ -14,7 +14,46 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
-## PR #106 (pendente) — APA-18: aulas base de Contabilidade Tributária (sub-lote 5f)
+## PR #107 (pendente) — APA-18: aulas base de Contabilidade Tributária (sub-lote 5g)
+
+- Ponto de restauração: branch `restore/pre-apa-18-contabilidade-tributaria-07`
+  (commit `82fb570`, main antes do merge).
+- O que muda no site: nada visível ainda — este PR só adiciona os dados; as
+  7 aulas só aparecem depois de o Abner rodar o comando de carga para esse
+  arquivo (não precisa de "Publicar Atlas": o script grava direto em D1/R2).
+  O carregamento em produção de toda a Contabilidade Tributária será feito
+  num único comando ao final de todos os 15 sub-lotes, a pedido do Abner.
+- O que muda fora do site: sétimo sub-lote de Contabilidade Tributária em
+  `data/apache/aulas/contabilidade-tributaria-07.json` (7 dos 124
+  conteúdos: CT-056 a CT-062, unidade "PIS e Cofins", na ordem do catálogo,
+  `model='claude-manual'`), usando o mesmo mecanismo de carga dos PRs
+  #95-#106 (`scripts/apache-carregar-aulas.mjs`). Conteúdo: incidência,
+  contribuintes e base de cálculo (art. 195, I, "b", da Constituição;
+  exclusão do ICMS pelo RE 574.706/2017 do STF; ICMS-ST, IPI destacado,
+  vendas canceladas e descontos incondicionais como exclusões da Lei nº
+  9.718/1998); regime cumulativo (Lei nº 9.718/1998 — 0,65%/3%, Lucro
+  Presumido/Arbitrado, sem crédito); regime não cumulativo (Leis nº
+  10.637/2002 e 10.833/2003 — 1,65%/7,6%, créditos listados em lei, e o
+  conceito de insumo pós-REsp nº 1.221.170/PR do STJ consolidado na IN RFB
+  nº 2.121/2022 — essencialidade/relevância — com rateio e estorno de
+  créditos); monofasia, substituição tributária, alíquota zero, isenção e
+  suspensão (combustíveis, farmacêuticos, perfumaria, autopeças,
+  cigarros); PIS/Cofins-Importação (Lei nº 10.865/2004) e imunidade de
+  exportação (art. 149, §2º, I, da Constituição) com manutenção de
+  créditos; EFD-Contribuições (blocos 0/A/C/D/F/M/9, CST, retificação); e
+  um caso completo integrando classificação, apuração e contabilização.
+  Alíquotas confirmadas vigentes em 2026 (pesquisa web: fase de teste da
+  CBS em 2026 roda em paralelo, com alíquota simbólica própria, sem
+  reduzir PIS/Cofins — a Reforma Tributária em sentido estrito continua
+  fora do escopo deste sub-lote, tratada nos sub-lotes 5m/5o).
+  `docs/APACHE-18-plano.md` atualizado (sub-lote 5g mesclado; Tributária
+  em 62/124).
+- Se algo der errado: reverter para
+  `restore/pre-apa-18-contabilidade-tributaria-07` volta ao estado
+  anterior; nenhuma aula ainda foi carregada em produção, então reverter
+  sem ter rodado o script de carga não perde nada.
+
+## PR #106 — APA-18: aulas base de Contabilidade Tributária (sub-lote 5f)
 
 - Ponto de restauração: branch `restore/pre-apa-18-contabilidade-tributaria-06`
   (commit `482aee5`, main antes do merge).

@@ -1,0 +1,358 @@
+[
+  {
+    "contentId": "CT-056",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar quem são os contribuintes de PIS e Cofins, o fato gerador e a base de cálculo, e por que a legislação está dividida em dois regimes de apuração distintos.",
+      "cc": [
+        {
+          "id": "pis-cofins-conceito",
+          "nome": "PIS e Cofins",
+          "def": "Contribuições sociais federais de competência da União, incidentes sobre a receita ou o faturamento das pessoas jurídicas (art. 195, I, \"b\", da Constituição Federal); financiam, respectivamente, o Programa de Integração Social e a Seguridade Social. Via de regra são apuradas juntas, com a mesma base de cálculo e regras de incidência, mas alíquotas e destinações distintas."
+        },
+        {
+          "id": "contribuintes-pis-cofins",
+          "nome": "Contribuintes",
+          "def": "São contribuintes as pessoas jurídicas de direito privado em geral, inclusive as equiparadas pela legislação do IRPJ, que auferem receita. Pessoas jurídicas imunes a impostos (templos, partidos políticos, entidades sindicais de trabalhadores) não têm imunidade automática a PIS/Cofins, que são contribuições, não impostos; entidades sem fins lucrativos e cooperativas têm regras específicas de incidência sobre a folha (PIS) ou isenção parcial, fora do escopo desta aula."
+        },
+        {
+          "id": "fato-gerador-base-calculo",
+          "nome": "Fato gerador e base de cálculo",
+          "def": "O fato gerador é o auferimento de receita. A base de cálculo é o total das receitas auferidas no período (regime cumulativo, Lei nº 9.718/1998) ou o total das receitas, com as exclusões e os créditos próprios do regime não cumulativo (Leis nº 10.637/2002 e 10.833/2003); desde o julgamento do RE 574.706/2017 pelo STF, o ICMS destacado na nota não compõe a base de cálculo de PIS/Cofins, tese consolidada e aplicada em ambos os regimes."
+        },
+        {
+          "id": "exclusoes-base-calculo",
+          "nome": "Exclusões comuns da base de cálculo",
+          "def": "Podem ser excluídas da base, em ambos os regimes: o IPI cobrado destacadamente pelo vendedor (quando o comprador é contribuinte do IPI), o ICMS cobrado pelo vendedor na condição de substituto tributário (ICMS-ST), as vendas canceladas e os descontos incondicionais concedidos, as reversões de provisões e recuperações de créditos baixados como perda que não representem ingresso de novas receitas, os resultados positivos de equivalência patrimonial e os dividendos recebidos de participações societárias, e as receitas de exportação (imunes, art. 149, §2º, I, da Constituição)."
+        }
+      ],
+      "rl": [
+        { "de": "contribuintes-pis-cofins", "para": "fato-gerador-base-calculo", "tipo": "está sujeito a" },
+        { "de": "exclusoes-base-calculo", "para": "fato-gerador-base-calculo", "tipo": "reduz" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "exclusoes-base-calculo",
+          "texto": "Uma indústria vende mercadoria por R$ 100.000,00 com ICMS-ST de R$ 12.000,00 destacado na nota como substituta tributária; na apuração de PIS/Cofins, a base de cálculo considera a receita de R$ 100.000,00 sem a necessidade de excluir o ICMS-ST do próprio vendedor, pois esse valor já não integra a receita bruta da empresa, apenas repassa o imposto retido de terceiros."
+        },
+        {
+          "conceitoId": "fato-gerador-base-calculo",
+          "texto": "Uma empresa vende mercadoria por R$ 100.000,00 com ICMS de R$ 18.000,00 destacado na nota; pela tese do RE 574.706/2017, a base de cálculo de PIS/Cofins exclui esse valor de ICMS, ainda que a receita contábil registrada seja de R$ 100.000,00."
+        }
+      ],
+      "pg": [
+        "Entidade imune a impostos (templo, partido político) NÃO é automaticamente imune a PIS/Cofins: imunidade do art. 150, VI, da Constituição é só para impostos, e PIS/Cofins são contribuições.",
+        "A exclusão do ICMS da base de PIS/Cofins vem de decisão do STF (RE 574.706/2017), não de uma lei que tenha alterado a base de cálculo original das Leis nº 9.718/1998, 10.637/2002 e 10.833/2003 — é uma interpretação sobre o conceito de receita/faturamento.",
+        "ICMS-ST cobrado pelo vendedor na condição de substituto tributário nunca foi receita própria dele, então não é \"exclusão\" no sentido de retirar algo que entrou na base — simplesmente nunca compôs a receita bruta da empresa substituta."
+      ],
+      "rs": "PIS e Cofins são contribuições sociais federais sobre a receita/faturamento das pessoas jurídicas em geral, com fato gerador no auferimento de receita. A base de cálculo é o total das receitas, excluídos o IPI destacado, o ICMS-ST do substituto, vendas canceladas e descontos incondicionais, reversões de provisão, equivalência patrimonial, dividendos e receitas de exportação; desde o RE 574.706/2017, o ICMS próprio também é excluído. Entidades imunes a impostos não são automaticamente imunes a essas contribuições."
+    }
+  },
+  {
+    "contentId": "CT-057",
+    "lesson": {
+      "v": 1,
+      "obj": "Descrever as alíquotas, a base de cálculo e quem está sujeito ao regime cumulativo de PIS/Cofins, e por que esse regime não admite créditos.",
+      "cc": [
+        {
+          "id": "regime-cumulativo-conceito",
+          "nome": "Regime cumulativo",
+          "def": "Regime de apuração de PIS/Cofins disciplinado pela Lei nº 9.718/1998, em que as contribuições incidem sobre o total das receitas com alíquotas de 0,65% (PIS) e 3% (Cofins), somando 3,65%, SEM direito a qualquer crédito sobre custos, despesas ou insumos — por isso \"cumulativo\": a carga tributária se acumula a cada etapa da cadeia, sem compensação do que foi pago na etapa anterior."
+        },
+        {
+          "id": "sujeitos-regime-cumulativo",
+          "nome": "Quem está sujeito ao regime cumulativo",
+          "def": "Estão obrigadas ao regime cumulativo as pessoas jurídicas tributadas pelo IRPJ com base no Lucro Presumido ou no Lucro Arbitrado (art. 8º, I, da Lei nº 10.637/2002 e art. 10, I, da Lei nº 10.833/2003), além de receitas específicas listadas em lei (ainda que a empresa seja, em geral, do regime não cumulativo) como as de serviços de telecomunicações, transporte coletivo e algumas receitas financeiras — essas exceções específicas ficam fora do escopo desta aula."
+        },
+        {
+          "id": "receitas-excecao-cumulativo",
+          "nome": "Empresas do Lucro Real com receitas no cumulativo",
+          "def": "Mesmo uma empresa no Lucro Real (normalmente não cumulativo) pode ter certas receitas sujeitas ao regime cumulativo por determinação legal expressa, listadas taxativamente nos arts. 8º da Lei nº 10.637/2002 e 10 da Lei nº 10.833/2003 — a regra geral é que o regime acompanha a forma de tributação do IRPJ, mas a lei pode segregar receitas específicas independentemente disso."
+        }
+      ],
+      "rl": [
+        { "de": "sujeitos-regime-cumulativo", "para": "regime-cumulativo-conceito", "tipo": "está sujeito a" },
+        { "de": "receitas-excecao-cumulativo", "para": "regime-cumulativo-conceito", "tipo": "é uma exceção dentro de" }
+      ],
+      "fm": [
+        {
+          "id": "formula-pis-cofins-cumulativo",
+          "expr": "PIS a recolher = Base de cálculo × 0,65%; Cofins a recolher = Base de cálculo × 3%",
+          "legenda": "Apuração do regime cumulativo, sem dedução de créditos; Base de cálculo = receita total menos as exclusões legais (ICMS, IPI destacado, vendas canceladas etc.)."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "sujeitos-regime-cumulativo",
+          "texto": "Uma empresa comercial tributada pelo Lucro Presumido, com receita bruta de R$ 500.000,00 no mês (já líquida das exclusões legais), apura PIS de R$ 3.250,00 (0,65%) e Cofins de R$ 15.000,00 (3%), totalizando R$ 18.250,00 (3,65%), sem direito a nenhum crédito sobre suas compras ou despesas do período."
+        }
+      ],
+      "pg": [
+        "O enquadramento no regime cumulativo decorre, via de regra, da forma de tributação do IRPJ (Lucro Presumido/Arbitrado), e não de uma escolha isolada da empresa sobre PIS/Cofins.",
+        "\"Cumulativo\" não significa alíquota mais alta — ao contrário, 3,65% é menor que os 9,25% do não cumulativo; a desvantagem é a ausência de créditos, que pode ou não compensar dependendo da margem e da estrutura de custos da empresa.",
+        "Mesmo empresas do Lucro Real podem ter receitas específicas sujeitas ao regime cumulativo por força de lista legal expressa — não existe uma regra única e absoluta de \"Lucro Real = sempre não cumulativo\"."
+      ],
+      "rs": "O regime cumulativo (Lei nº 9.718/1998) aplica alíquotas de 0,65% (PIS) e 3% (Cofins) sobre a receita total, sem direito a créditos — é obrigatório para empresas do Lucro Presumido e do Lucro Arbitrado, e também se aplica a certas receitas específicas listadas em lei, mesmo para empresas do Lucro Real. A carga menor é compensada pela ausência de créditos sobre custos e despesas."
+    }
+  },
+  {
+    "contentId": "CT-058",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar as alíquotas e a lógica do regime não cumulativo, o conceito de insumo para fins de crédito e as situações que exigem rateio ou estorno de créditos.",
+      "cc": [
+        {
+          "id": "regime-nao-cumulativo-conceito",
+          "nome": "Regime não cumulativo",
+          "def": "Regime de apuração de PIS/Cofins disciplinado pelas Leis nº 10.637/2002 (PIS) e 10.833/2003 (Cofins), com alíquotas de 1,65% (PIS) e 7,6% (Cofins), somando 9,25%, em que a empresa pode descontar créditos calculados pelas mesmas alíquotas sobre determinados custos, despesas e encargos listados em lei — é o regime padrão das empresas do Lucro Real, com exceção das receitas específicas sujeitas ao cumulativo (ver aula anterior)."
+        },
+        {
+          "id": "creditos-permitidos",
+          "nome": "Créditos permitidos",
+          "def": "Geram crédito, entre outros: bens adquiridos para revenda; bens e serviços utilizados como insumo na produção de bens ou na prestação de serviços; energia elétrica e térmica consumida nos estabelecimentos; aluguéis de prédios, máquinas e equipamentos usados nas atividades da empresa; depreciação e amortização de máquinas, equipamentos e outros bens do ativo imobilizado; e devoluções de vendas tributadas no próprio regime."
+        },
+        {
+          "id": "conceito-insumo-pis-cofins",
+          "nome": "Conceito de insumo",
+          "def": "Após o julgamento do REsp nº 1.221.170/PR pelo STJ (recurso repetitivo), consolidado na Instrução Normativa RFB nº 2.121/2022, insumo é todo bem ou serviço essencial ou relevante para o processo produtivo ou de prestação de serviços da empresa, cuja subtração implique perda de qualidade, quantidade ou falta do produto ou serviço final — critério mais amplo do que a antiga exigência de contato físico direto com o produto, e definido caso a caso conforme a atividade de cada empresa."
+        },
+        {
+          "id": "rateio-estorno-creditos",
+          "nome": "Rateio e estorno de créditos",
+          "def": "Quando a empresa tem receitas sujeitas a regimes ou tratamentos diferentes (por exemplo, parte não cumulativa e parte cumulativa, ou parte com alíquota zero), os créditos vinculados a custos comuns devem ser rateados proporcionalmente (rateio proporcional pela receita ou rateio direto, por apropriação específica); bens ou serviços que geraram crédito mas foram usados em atividade não geradora de receita tributada, furtados, deteriorados ou destruídos exigem o estorno do crédito já apropriado."
+        }
+      ],
+      "rl": [
+        { "de": "creditos-permitidos", "para": "regime-nao-cumulativo-conceito", "tipo": "reduz o valor devido em" },
+        { "de": "conceito-insumo-pis-cofins", "para": "creditos-permitidos", "tipo": "delimita o alcance de" },
+        { "de": "rateio-estorno-creditos", "para": "creditos-permitidos", "tipo": "ajusta" }
+      ],
+      "fm": [
+        {
+          "id": "formula-pis-cofins-nao-cumulativo",
+          "expr": "PIS/Cofins a recolher = (Receita tributada × 9,25%) − (Créditos apurados × 9,25%)",
+          "legenda": "Débito calculado sobre a receita (1,65% PIS + 7,6% Cofins) menos o crédito calculado pelas mesmas alíquotas sobre as aquisições que geram direito a crédito."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "conceito-insumo-pis-cofins",
+          "texto": "Uma indústria alimentícia pode tomar crédito sobre os uniformes e equipamentos de proteção exigidos por norma regulamentadora para os empregados da linha de produção, pois sua ausência impediria legalmente a continuidade do processo produtivo — critério de essencialidade reconhecido pelo STJ, mesmo sem contato físico do uniforme com o produto final."
+        },
+        {
+          "conceitoId": "rateio-estorno-creditos",
+          "texto": "Uma empresa com 70% das receitas no regime não cumulativo e 30% em receitas de exportação (imunes) tem um custo comum de aluguel do galpão; o crédito sobre esse aluguel deve ser rateado, aproveitando apenas a parcela proporcional à receita que gera direito a crédito, nunca o valor integral."
+        }
+      ],
+      "pg": [
+        "Nem toda aquisição de um bem usado na empresa gera crédito — só os itens listados em lei (insumo, bem para revenda, energia, aluguel, depreciação etc.); despesas administrativas genéricas, como a maior parte dos serviços de marketing, normalmente não geram crédito.",
+        "O conceito de insumo pós-REsp 1.221.170/PR é mais amplo que \"contato físico com o produto\", mas ainda exige essencialidade ou relevância para a atividade específica da empresa — não é qualquer despesa necessária ao funcionamento genérico do negócio.",
+        "Quando a empresa tem receitas com regimes/tratamentos diferentes, usar o crédito integral sobre custo comum sem ratear é erro frequente que gera crédito indevido e risco de autuação."
+      ],
+      "rs": "No regime não cumulativo (Leis nº 10.637/2002 e 10.833/2003), PIS e Cofins somam 9,25% sobre a receita, com direito a créditos sobre bens para revenda, insumos, energia, aluguéis, depreciação e outros itens listados em lei. O conceito de insumo, pós-REsp 1.221.170/PR (STJ) e IN RFB 2.121/2022, é definido pela essencialidade ou relevância ao processo produtivo. Custos comuns a receitas de regimes diferentes exigem rateio, e créditos vinculados a bens furtados, deteriorados ou desviados de atividade tributada exigem estorno."
+    }
+  },
+  {
+    "contentId": "CT-059",
+    "lesson": {
+      "v": 1,
+      "obj": "Diferenciar os tratamentos de monofasia, substituição tributária, alíquota zero, isenção e suspensão de PIS/Cofins, e por que a correta classificação do produto é essencial para a apuração.",
+      "cc": [
+        {
+          "id": "regime-monofasico",
+          "nome": "Regime monofásico",
+          "def": "Regime em que a lei concentra a cobrança de PIS/Cofins em uma única etapa da cadeia produtiva (normalmente o fabricante/importador), com alíquotas específicas e geralmente mais altas nessa etapa, desonerando as etapas seguintes (distribuidor e varejista) com alíquota zero sobre a revenda daquele mesmo produto; aplicado a cadeias específicas definidas em lei, como combustíveis, produtos farmacêuticos, de perfumaria e higiene pessoal, autopeças e bebidas frias, entre outras listadas na legislação setorial."
+        },
+        {
+          "id": "substituicao-tributaria-pis-cofins",
+          "nome": "Substituição tributária",
+          "def": "Mecanismo, de aplicação mais restrita que no ICMS, em que a lei atribui a um elo da cadeia (normalmente o fabricante) a responsabilidade por recolher o PIS/Cofins devido também pelas etapas posteriores de revenda de determinado produto — hoje aplicado a poucos casos específicos previstos em lei, como cigarros, sendo bem menos abrangente do que o regime monofásico."
+        },
+        {
+          "id": "aliquota-zero-isencao-suspensao",
+          "nome": "Alíquota zero, isenção e suspensão",
+          "def": "Alíquota zero: a lei mantém a incidência, mas reduz a alíquota a zero para determinada receita ou produto (ex.: revenda de produtos monofásicos pelo distribuidor/varejista). Isenção: dispensa legal do pagamento sobre receitas ou operações específicas, por política fiscal (ex.: certas receitas de entidades sem fins lucrativos). Suspensão: a exigência do tributo é postergada para uma etapa futura da cadeia, condicionada ao cumprimento de requisitos (ex.: vendas de insumos agropecuários para empresas que depois exportam ou revendem com alíquota suspensa até a etapa final)."
+        },
+        {
+          "id": "classificacao-produto-pis-cofins",
+          "nome": "Classificação do produto",
+          "def": "A correta classificação fiscal do produto (código NCM) é determinante para saber se ele está sujeito ao regime geral, ao monofásico ou à alíquota zero/suspensão — um erro de classificação pode levar a recolher a menos (risco de autuação e multa) ou a mais (crédito indevidamente não aproveitado), sendo um dos pontos de maior risco operacional na apuração de PIS/Cofins para empresas que atuam nessas cadeias específicas."
+        }
+      ],
+      "rl": [
+        { "de": "classificacao-produto-pis-cofins", "para": "regime-monofasico", "tipo": "determina a sujeição a" },
+        { "de": "aliquota-zero-isencao-suspensao", "para": "regime-monofasico", "tipo": "aplica-se às etapas seguintes de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "regime-monofasico",
+          "texto": "Uma distribuidora de combustíveis compra gasolina da refinaria, que já recolheu PIS/Cofins concentrado na etapa de produção/importação com alíquota específica; na revenda pela distribuidora e depois pelo posto, a alíquota de PIS/Cofins sobre essa receita de revenda é zero, pois a tributação já se esgotou na etapa monofásica."
+        },
+        {
+          "conceitoId": "classificacao-produto-pis-cofins",
+          "texto": "Uma indústria de cosméticos classifica incorretamente um produto de higiene pessoal fora da lista de incidência monofásica (Lei nº 10.147/2000) e recolhe pela regra geral; se a classificação correta era monofásica, a empresa pode ter recolhido a menor na etapa de produção e o distribuidor pode ter deixado de usar a alíquota zero devida, gerando risco de autuação na cadeia."
+        }
+      ],
+      "pg": [
+        "Monofásico não é sinônimo de isento: a tributação é concentrada em uma etapa com alíquota geralmente MAIOR do que a padrão, e as etapas seguintes é que ficam com alíquota zero sobre aquela receita específica.",
+        "Substituição tributária em PIS/Cofins é hoje bem mais restrita do que no ICMS — não confundir a abrangência dos dois institutos.",
+        "A classificação fiscal do produto (NCM) é o ponto de partida obrigatório antes de apurar PIS/Cofins em cadeias com tratamento especial — assumir o regime geral sem checar a lista de produtos monofásicos é erro recorrente em empresas que vendem produtos dessas cadeias."
+      ],
+      "rs": "PIS/Cofins têm tratamentos especiais para cadeias específicas: regime monofásico (concentra a cobrança, com alíquota maior, numa etapa, deixando as seguintes com alíquota zero sobre aquele produto), substituição tributária (mais restrita, poucos casos como cigarros), alíquota zero, isenção e suspensão, cada um com lógica e requisitos próprios. A classificação fiscal correta do produto (NCM) é o que determina qual tratamento se aplica, e um erro de classificação é risco relevante de autuação ou de crédito mal aproveitado."
+    }
+  },
+  {
+    "contentId": "CT-060",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a incidência de PIS/Cofins na importação, o direito a crédito correspondente e a imunidade das receitas de exportação.",
+      "cc": [
+        {
+          "id": "pis-cofins-importacao",
+          "nome": "PIS/Cofins-Importação",
+          "def": "Contribuições instituídas pela Lei nº 10.865/2004, incidentes sobre a entrada de bens estrangeiros no território nacional e sobre o pagamento, crédito, entrega, emprego ou remessa de valores a residentes ou domiciliados no exterior em contraprestação a serviço prestado; têm fato gerador e base de cálculo próprios (valor aduaneiro para bens; valor pago/creditado/remetido para serviços), distintos da PIS/Cofins sobre receita interna."
+        },
+        {
+          "id": "creditos-importacao",
+          "nome": "Créditos de PIS/Cofins-Importação",
+          "def": "Pessoas jurídicas sujeitas ao regime não cumulativo podem, em regra, apropriar como crédito o PIS/Cofins-Importação pago sobre bens e serviços que se qualifiquem como insumo, bem para revenda ou outro item que geraria crédito se a aquisição fosse interna — mantendo a lógica de não cumulatividade também para operações de importação."
+        },
+        {
+          "id": "imunidade-exportacao-pis-cofins",
+          "nome": "Imunidade das receitas de exportação",
+          "def": "As receitas decorrentes de exportação de mercadorias e serviços para o exterior são imunes a PIS/Cofins (art. 149, §2º, I, da Constituição Federal), com regulamentação nos arts. 5º da Lei nº 10.637/2002 e 6º da Lei nº 10.833/2003; a imunidade abrange tanto a venda direta ao exterior quanto, em certas condições, a venda a empresa comercial exportadora com o fim específico de exportação."
+        },
+        {
+          "id": "manutencao-creditos-exportacao",
+          "nome": "Manutenção de créditos na exportação",
+          "def": "Mesmo com a receita de exportação imune, a empresa exportadora no regime não cumulativo mantém o direito aos créditos vinculados a essa receita (sobre insumos, bens para revenda etc.), podendo compensá-los com débitos de outras receitas tributadas ou pedir ressarcimento/compensação com outros tributos federais — regra que evita que a exportação fique \"travada\" com créditos acumulados sem uso."
+        }
+      ],
+      "rl": [
+        { "de": "creditos-importacao", "para": "pis-cofins-importacao", "tipo": "decorre de" },
+        { "de": "manutencao-creditos-exportacao", "para": "imunidade-exportacao-pis-cofins", "tipo": "complementa" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "pis-cofins-importacao",
+          "texto": "Uma empresa importa matéria-prima com valor aduaneiro de R$ 200.000,00; sobre esse valor incide PIS/Cofins-Importação às alíquotas específicas da Lei nº 10.865/2004, recolhido no desembaraço aduaneiro, independentemente do PIS/Cofins que incidirá depois sobre a receita de venda do produto final no mercado interno."
+        },
+        {
+          "conceitoId": "manutencao-creditos-exportacao",
+          "texto": "Uma indústria exportadora no regime não cumulativo, com a maior parte da receita imune por exportação, acumula créditos de PIS/Cofins sobre os insumos usados na produção dos bens exportados; como não tem débito suficiente de outras receitas para compensar, pode pedir o ressarcimento em dinheiro ou a compensação desses créditos com outros tributos administrados pela Receita Federal."
+        }
+      ],
+      "pg": [
+        "PIS/Cofins-Importação é tributo distinto do PIS/Cofins sobre receita interna, com fato gerador, base de cálculo e lei próprios (Lei nº 10.865/2004) — não é a mesma apuração \"estendida\" à importação.",
+        "A imunidade de exportação é da RECEITA de exportação, não da empresa como um todo: as demais receitas da mesma empresa no mercado interno continuam normalmente tributadas.",
+        "Mesmo com receita imune, o direito ao crédito sobre os insumos vinculados à exportação é mantido — tratar a exportação como se \"não gerasse crédito nenhum\" é engano que leva a perda de créditos legítimos."
+      ],
+      "rs": "PIS/Cofins-Importação (Lei nº 10.865/2004) incide sobre a entrada de bens estrangeiros e sobre pagamentos a residentes no exterior por serviços, com regras próprias e crédito correspondente para quem está no regime não cumulativo. As receitas de exportação são imunes a PIS/Cofins (art. 149, §2º, I, da Constituição), mas a empresa exportadora mantém o direito aos créditos vinculados a essa receita, podendo compensá-los ou pedir ressarcimento."
+    }
+  },
+  {
+    "contentId": "CT-061",
+    "lesson": {
+      "v": 1,
+      "obj": "Descrever a finalidade da EFD-Contribuições, sua estrutura em blocos e os principais cuidados na apuração e na retificação da escrituração.",
+      "cc": [
+        {
+          "id": "efd-contribuicoes-conceito",
+          "nome": "EFD-Contribuições",
+          "def": "Escrituração Fiscal Digital das Contribuições, obrigação acessória do SPED que consolida mensalmente, de forma digital, a apuração de PIS, Cofins e, para algumas empresas, da Contribuição Previdenciária sobre a Receita Bruta (CPRB); substitui controles e declarações que antes eram feitos em papel ou em sistemas isolados, unificando a informação prestada ao Fisco federal."
+        },
+        {
+          "id": "blocos-efd-contribuicoes",
+          "nome": "Estrutura em blocos",
+          "def": "A EFD-Contribuições é organizada em blocos identificados por letras, cada um com uma função: bloco 0 (abertura e cadastros, como participantes e produtos), bloco A/C/D (documentos fiscais de serviços, mercadorias e outras operações, conforme o tipo de receita), bloco F (receitas não relacionadas a documentos fiscais específicos), bloco M (consolidação da apuração de PIS e Cofins no período, com créditos, débitos e valores apurados) e bloco 9 (controles e totalizadores de encerramento)."
+        },
+        {
+          "id": "apuracao-efd-contribuicoes",
+          "nome": "Apuração dentro da EFD",
+          "def": "A apuração mensal de PIS/Cofins é construída a partir dos documentos e receitas lançados nos blocos de origem (A, C, D, F), que alimentam o bloco M com os créditos apurados (por tipo de crédito) e os débitos (por código de receita e CST — Código de Situação Tributária, que identifica o tratamento de cada operação: tributada integralmente, com alíquota zero, isenta, monofásica etc.); o resultado apurado no bloco M é o valor efetivamente devido no período."
+        },
+        {
+          "id": "retificacao-validacao-efd",
+          "nome": "Validações e retificação",
+          "def": "Antes da transmissão, a EFD-Contribuições passa por validações do próprio Programa Validador e Assinador (PVA), que verificam consistência entre blocos (por exemplo, totais do bloco M compatíveis com os lançamentos de origem); erros identificados após a transmissão (receita classificada com CST errado, crédito indevido, documento não lançado) exigem a transmissão de uma escrituração retificadora, que substitui integralmente a anterior para o mesmo período."
+        }
+      ],
+      "rl": [
+        { "de": "blocos-efd-contribuicoes", "para": "efd-contribuicoes-conceito", "tipo": "organiza" },
+        { "de": "apuracao-efd-contribuicoes", "para": "blocos-efd-contribuicoes", "tipo": "consolida-se em" },
+        { "de": "retificacao-validacao-efd", "para": "apuracao-efd-contribuicoes", "tipo": "corrige" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "apuracao-efd-contribuicoes",
+          "texto": "Uma empresa lança no bloco A as notas fiscais de serviço e no bloco C as de mercadorias do mês; ao classificar cada documento com o CST correto (tributado, alíquota zero, monofásico), a EFD consolida automaticamente no bloco M o total de débitos e créditos, chegando ao valor de PIS/Cofins a recolher."
+        },
+        {
+          "conceitoId": "retificacao-validacao-efd",
+          "texto": "Após transmitir a EFD-Contribuições de um mês, a empresa percebe que uma nota fiscal de venda foi classificada com CST de alíquota zero quando deveria ser tributação integral; a correção exige gerar e transmitir uma EFD retificadora daquele período, substituindo a escrituração original por completo, não apenas o documento com erro."
+        }
+      ],
+      "pg": [
+        "A EFD-Contribuições não é só uma declaração de valores totais: ela exige o detalhamento documento a documento, com o CST correto de cada operação — o valor do bloco M é resultado desse detalhamento, não um número lançado diretamente.",
+        "Uma EFD retificadora substitui INTEGRALMENTE a escrituração anterior do período, não é um \"adendo\" com apenas a correção pontual.",
+        "O CST (Código de Situação Tributária) é o que diferencia, dentro da própria EFD, uma receita tributada integralmente de uma com alíquota zero, isenta, monofásica ou com suspensão — erro de CST é uma das causas mais comuns de inconsistência na escrituração."
+      ],
+      "rs": "A EFD-Contribuições é a escrituração digital do SPED que consolida mensalmente a apuração de PIS/Cofins (e, para algumas empresas, da CPRB), organizada em blocos (0, A/C/D/F, M, 9), em que os documentos de origem alimentam, via CST de cada operação, a apuração final no bloco M. Validações do PVA checam a consistência antes da transmissão, e qualquer erro identificado depois exige uma EFD retificadora, que substitui integralmente a escrituração do período."
+    }
+  },
+  {
+    "contentId": "CT-062",
+    "lesson": {
+      "v": 1,
+      "obj": "Integrar, em um caso completo, a classificação de documentos, a apuração de débitos e créditos e a contabilização de PIS/Cofins no regime não cumulativo, conciliando com a escrituração.",
+      "cc": [
+        {
+          "id": "fluxo-completo-pis-cofins",
+          "nome": "Fluxo completo de apuração",
+          "def": "Sequência típica de apuração de PIS/Cofins no regime não cumulativo: (1) classificar cada receita e cada aquisição do período pelo CST correto (tributada, alíquota zero, monofásica, isenta etc.); (2) calcular o débito sobre as receitas tributadas às alíquotas de 1,65%/7,6%; (3) calcular o crédito sobre as aquisições que se qualificam (insumo, revenda, energia, aluguel, depreciação), aplicando rateio quando o custo for comum a receitas de tratamentos diferentes; (4) apurar o valor líquido devido (débito menos crédito); (5) escriturar tudo na EFD-Contribuições, conferindo a consistência entre os blocos de origem e o bloco M."
+        },
+        {
+          "id": "contabilizacao-pis-cofins",
+          "nome": "Contabilização",
+          "def": "Na venda, registra-se a despesa com PIS/Cofins a débito de conta de dedução da receita bruta (ou de despesa tributária, conforme a prática da empresa) e a crédito de \"PIS a recolher\"/\"Cofins a recolher\" (passivo circulante); na aquisição com direito a crédito, o valor do crédito é registrado a débito de \"PIS a recuperar\"/\"Cofins a recuperar\" (ativo) e a crédito, normalmente, da própria conta de custo/despesa da aquisição, reduzindo o custo do item adquirido pelo valor do crédito apropriado."
+        },
+        {
+          "id": "conciliacao-pis-cofins",
+          "nome": "Conciliação entre contabilidade e EFD",
+          "def": "A conciliação confirma que o saldo contábil das contas \"PIS/Cofins a recolher\" (líquido de eventuais créditos) corresponde ao valor apurado no bloco M da EFD-Contribuições para o mesmo período; divergências costumam vir de documentos lançados na contabilidade mas não na EFD (ou vice-versa), CST incorreto que altera o cálculo do débito/crédito, ou rateio de crédito calculado de forma diferente entre a área contábil e a área fiscal."
+        }
+      ],
+      "rl": [
+        { "de": "fluxo-completo-pis-cofins", "para": "contabilizacao-pis-cofins", "tipo": "resulta em" },
+        { "de": "contabilizacao-pis-cofins", "para": "conciliacao-pis-cofins", "tipo": "é verificada por" }
+      ],
+      "fm": [
+        {
+          "id": "formula-apuracao-caso-completo",
+          "expr": "Valor a recolher = (Receita tributada × alíquota) − (Base de crédito × alíquota)",
+          "legenda": "Aplicado separadamente para PIS (1,65%) e Cofins (7,6%) no regime não cumulativo; no regime cumulativo, não há parcela de crédito a subtrair."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "fluxo-completo-pis-cofins",
+          "texto": "Uma empresa do Lucro Real apura, no mês, receita tributada de R$ 800.000,00 (débito de R$ 74.000,00, a 9,25%) e aquisições que geram crédito de R$ 300.000,00 (crédito de R$ 27.750,00, a 9,25%); o valor líquido a recolher é R$ 46.250,00, que deve corresponder ao saldo apurado no bloco M da EFD-Contribuições do período."
+        },
+        {
+          "conceitoId": "conciliacao-pis-cofins",
+          "texto": "Ao conciliar o saldo contábil de \"PIS/Cofins a recolher\" com o bloco M da EFD, a empresa percebe uma diferença de R$ 1.200,00; investigando, identifica uma nota fiscal de compra de insumo lançada na contabilidade com crédito de PIS/Cofins, mas classificada na EFD com CST de operação sem direito a crédito — a correção exige ajustar a classificação do documento na escrituração fiscal."
+        }
+      ],
+      "pg": [
+        "O valor a recolher nunca deve ser lançado \"direto\" sem passar pelo fluxo completo de classificação por CST, cálculo de débito e crédito e rateio quando aplicável — pular etapas é a causa mais comum de divergência entre contabilidade e EFD.",
+        "O crédito de PIS/Cofins sobre uma aquisição reduz o CUSTO contábil do item adquirido (ele entra líquido do crédito recuperável), não é um \"desconto\" separado lançado em conta de resultado.",
+        "Divergência entre o saldo contábil e o bloco M quase sempre tem origem em um documento classificado com CST diferente do que a contabilidade considerou, ou em rateio de crédito calculado de forma distinta entre as áreas — a conciliação deve ir até a origem documento a documento, não só comparar totais."
+      ],
+      "rs": "O caso completo de PIS/Cofins integra: classificar cada documento pelo CST correto, calcular débito sobre receitas tributadas e crédito sobre aquisições qualificadas (com rateio quando necessário), apurar o valor líquido devido, contabilizar (débito/crédito em contas de recolher e de recuperar, com o crédito reduzindo o custo do item adquirido) e conciliar esse saldo contábil com o bloco M da EFD-Contribuições, investigando qualquer divergência até o documento de origem."
+    }
+  }
+]
