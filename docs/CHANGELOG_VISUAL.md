@@ -14,6 +14,42 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #114 — APA-18: aulas base de Contabilidade Tributária (sub-lote 5n)
+
+- Ponto de restauração: branch `restore/pre-apa-18-contabilidade-tributaria-14`
+  (main antes do merge).
+- O que muda no site: nada visível ainda — este PR só adiciona os dados; as
+  10 aulas só aparecem depois de o Abner rodar o comando de carga para esse
+  arquivo (não precisa de "Publicar Atlas": o script grava direto em D1/R2).
+  O carregamento em produção de toda a Contabilidade Tributária será feito
+  num único comando ao final de todos os 15 sub-lotes, a pedido do Abner.
+- O que muda fora do site: décimo quarto sub-lote de Contabilidade
+  Tributária em `data/apache/aulas/contabilidade-tributaria-14.json` (10 dos
+  124 conteúdos: CT-108 a CT-117, unidade "Governança e domínio", na ordem
+  do catálogo, `model='claude-manual'`), usando o mesmo mecanismo de carga
+  dos PRs #95-#113 (`scripts/apache-carregar-aulas.mjs`). Conteúdo é
+  predominantemente processo/governança (calendário fiscal integrado com
+  matriz de responsáveis e dependências — CT-108; cadastro mestre e motor
+  tributário com NCM/CFOP/CST e versionamento de regras — CT-109; auditoria
+  tributária com testes substantivos, amostragem, reconciliação e
+  materialidade — CT-110; passivo e processo administrativo fiscal — conta
+  corrente fiscal, intimação/auto de infração, defesa administrativa e
+  garantias/certidões — CT-111; planejamento tributário lícito — elisão x
+  evasão/simulação, substância sobre a forma e documentação de cenários —
+  CT-112; módulos setoriais e regimes especiais — drawback, RET na
+  incorporação imobiliária, terceiro setor/agronegócio e setor financeiro —
+  CT-113; tributação internacional — CT-114, pesquisado e confirmado contra
+  fontes jurídicas de 2026: Lei 14.596/2023 trouxe o princípio arm's length
+  da OCDE para preços de transferência (substituindo os antigos métodos
+  fixos), Lei 12.973/2014 tributa lucro de controlada no exterior no
+  momento da apuração e de coligada só quando disponibilizado; tax
+  technology — parametrização de ERP, XML fiscal, automação com SQL/BI e
+  trilha de auditoria — CT-115; caso integrador multirregime Simples x
+  Presumido x Real — CT-116; e a estrutura da avaliação de domínio da
+  disciplina, com defesa oral e auditoria de consistência — CT-117).
+  `docs/APACHE-18-plano.md` atualizado (sub-lote 5n mesclado; Tributária em
+  117/124, falta só o 5o).
+
 ## PR #113 — APA-18: aulas base de Contabilidade Tributária (sub-lote 5m)
 
 - Ponto de restauração: branch `restore/pre-apa-18-contabilidade-tributaria-13`

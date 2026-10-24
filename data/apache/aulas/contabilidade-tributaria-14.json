@@ -1,0 +1,542 @@
+[
+  {
+    "contentId": "CT-108",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar como montar e manter um calendário fiscal integrado: obrigações por regime/jurisdição, responsáveis, dependências entre tarefas, evidências de cumprimento e plano de contingência.",
+      "cc": [
+        {
+          "id": "mapa-obrigacoes",
+          "nome": "Mapa de obrigações por regime e jurisdição",
+          "def": "Lista estruturada de todas as obrigações principais e acessórias que a empresa deve cumprir, cruzando o regime tributário (Simples, Presumido, Real), o tributo (federal, estadual, municipal) e o prazo legal de cada uma, servindo de base única para montar o calendário fiscal."
+        },
+        {
+          "id": "matriz-responsaveis",
+          "nome": "Matriz de responsáveis",
+          "def": "Atribuição explícita de quem prepara, quem revisa e quem efetivamente transmite/recolhe cada obrigação (pessoa ou terceirizada), evitando que uma obrigação fique sem dono ou dependa de conhecimento tácito de uma única pessoa."
+        },
+        {
+          "id": "dependencias-entre-tarefas",
+          "nome": "Dependências entre tarefas",
+          "def": "Relação de precedência entre obrigações que compartilham insumo (ex.: a apuração do ICMS depende do fechamento do estoque; a DCTF depende das apurações de PIS/Cofins/IRPJ/CSLL já encerradas), que precisa estar mapeada para o calendário não atrasar em cascata."
+        },
+        {
+          "id": "evidencia-contingencia",
+          "nome": "Evidência de cumprimento e plano de contingência",
+          "def": "Registro documental de que cada obrigação foi entregue (protocolo, recibo de transmissão, comprovante de pagamento) arquivado de forma rastreável, somado a um plano prévio para falhas (sistema fora do ar, ausência do responsável, erro detectado após o prazo) que defina a ação e o prazo de regularização."
+        }
+      ],
+      "rl": [
+        {
+          "de": "dependencias-entre-tarefas",
+          "para": "mapa-obrigacoes",
+          "tipo": "organiza a ordem de execução das obrigações listadas no"
+        },
+        {
+          "de": "evidencia-contingencia",
+          "para": "matriz-responsaveis",
+          "tipo": "comprova que o responsável definido na"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "dependencias-entre-tarefas",
+          "texto": "Se o fechamento do estoque atrasa, a apuração do ICMS atrasa, e a EFD ICMS/IPI também atrasa: o calendário fiscal precisa mostrar essa cadeia de dependência, não só a data final de cada obrigação isolada."
+        }
+      ],
+      "pg": [
+        "Um calendário fiscal não é só uma lista de datas-limite: sem a matriz de responsáveis e as dependências entre tarefas, a data sozinha não evita o atraso em cascata.",
+        "Evidência de cumprimento não é apenas 'entreguei': é o comprovante rastreável (protocolo, recibo) guardado de forma que possa ser apresentado numa fiscalização ou auditoria futura.",
+        "Plano de contingência não é para o caso raro apenas: deve cobrir também a ausência do responsável titular, cenário comum e recorrente que travaria o calendário sem um backup definido."
+      ],
+      "rs": "Um calendário fiscal integrado nasce de um mapa de obrigações por regime e jurisdição, com uma matriz de responsáveis que define quem prepara, revisa e transmite cada uma. As dependências entre tarefas (como apuração de estoque antes do ICMS) precisam estar mapeadas para evitar atraso em cascata, e cada obrigação cumprida deve gerar evidência rastreável, com um plano de contingência definido previamente para falhas de sistema ou de pessoas."
+    }
+  },
+  {
+    "contentId": "CT-109",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o papel do cadastro e do motor tributário: parametrização de produtos, serviços, clientes e fornecedores com NCM, CFOP e CST, e a necessidade de versionamento das regras.",
+      "cc": [
+        {
+          "id": "cadastro-mestre-tributario",
+          "nome": "Cadastro mestre tributário",
+          "def": "Base única de produtos, serviços, clientes e fornecedores com os atributos fiscais necessários para o motor tributário decidir a tributação de cada operação: NCM/NBS, origem, CFOP, CST/CSOSN, regime do destinatário e benefícios aplicáveis."
+        },
+        {
+          "id": "ncm-cfop-cst",
+          "nome": "NCM, CFOP e CST",
+          "def": "NCM classifica a mercadoria para fins de IPI/ICMS/comércio exterior; CFOP identifica a natureza da operação (venda, transferência, devolução, dentro ou fora do estado); CST (ou CSOSN no Simples) indica a situação tributária do item (tributado, isento, com substituição tributária etc.) — os três juntos determinam a regra fiscal aplicada pelo motor."
+        },
+        {
+          "id": "motor-tributario",
+          "nome": "Motor tributário",
+          "def": "Camada de regras (dentro do ERP ou em sistema externo integrado) que cruza o cadastro mestre com a operação concreta (quem vende, quem compra, de onde para onde, que produto) e calcula automaticamente o tributo devido, sem depender de cálculo manual por nota."
+        },
+        {
+          "id": "versionamento-regras",
+          "nome": "Versionamento de regras fiscais",
+          "def": "Controle de qual regra (alíquota, benefício, CST) estava vigente em cada data, permitindo reprocessar ou auditar uma operação antiga com a regra que valia naquele momento, mesmo depois de a legislação ou o cadastro terem mudado."
+        }
+      ],
+      "rl": [
+        {
+          "de": "motor-tributario",
+          "para": "cadastro-mestre-tributario",
+          "tipo": "consulta os atributos fiscais do"
+        },
+        {
+          "de": "versionamento-regras",
+          "para": "ncm-cfop-cst",
+          "tipo": "preserva o histórico de qual combinação de"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "motor-tributario",
+          "texto": "Ao faturar uma venda interestadual de um produto com substituição tributária, o motor tributário cruza o NCM do item, o CFOP da operação e o CST cadastrado, e já calcula o ICMS-ST devido, sem o faturista precisar decidir a alíquota manualmente."
+        }
+      ],
+      "pg": [
+        "NCM errado não é só problema de classificação: ele altera a alíquota de ICMS/IPI e pode mudar completamente a tributação calculada pelo motor, mesmo com CFOP e CST corretos.",
+        "CSOSN só é usado por quem está no Simples Nacional; fora do Simples, o campo correto é o CST — confundir os dois quebra a apuração do motor tributário.",
+        "Atualizar uma alíquota no cadastro sem versionamento reescreve o passado: uma nota fiscal antiga reprocessada passaria a usar a regra nova, e não a que valia na data da operação original."
+      ],
+      "rs": "O cadastro mestre tributário reúne os atributos fiscais de produtos, serviços, clientes e fornecedores (NCM/NBS, CFOP, CST/CSOSN, regime do destinatário, benefícios). O motor tributário cruza esses atributos com cada operação para calcular o tributo automaticamente, e o versionamento de regras garante que uma operação antiga possa ser auditada ou reprocessada com a regra que estava vigente na data em que ocorreu, não com a regra atual."
+    }
+  },
+  {
+    "contentId": "CT-110",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a revisão e auditoria tributária: testes substantivos, amostragem, reconciliações, documentação de suporte e o conceito de materialidade.",
+      "cc": [
+        {
+          "id": "testes-substantivos",
+          "nome": "Testes substantivos",
+          "def": "Procedimentos que verificam diretamente se o valor apurado e recolhido de um tributo está correto (recálculo da apuração, conferência de base de cálculo e alíquota aplicada), em contraste com testes de controle, que verificam se o processo que gera esse valor funciona como deveria."
+        },
+        {
+          "id": "amostragem-auditoria",
+          "nome": "Amostragem em auditoria tributária",
+          "def": "Seleção de uma parte representativa das operações ou períodos (por critério estatístico ou por julgamento, priorizando itens de maior valor ou maior risco) para testar em detalhe, em vez de revisar 100% das transações, equilibrando custo e cobertura do risco."
+        },
+        {
+          "id": "reconciliacao-fiscal-contabil",
+          "nome": "Reconciliação fiscal-contábil",
+          "def": "Conferência de que os valores apurados nas obrigações acessórias (EFD, DCTF, ECF) batem com os valores registrados na contabilidade (contas de impostos a pagar/recuperar), identificando diferenças que podem indicar erro de apuração, de lançamento contábil ou de parametrização do motor tributário."
+        },
+        {
+          "id": "materialidade-fiscal",
+          "nome": "Materialidade na revisão fiscal",
+          "def": "Limiar (em valor absoluto ou percentual sobre a base, a receita ou o tributo apurado) usado para decidir quais diferenças encontradas merecem investigação e correção prioritária, concentrando o esforço de revisão nos itens que de fato podem afetar o resultado ou gerar risco relevante de autuação."
+        }
+      ],
+      "rl": [
+        {
+          "de": "amostragem-auditoria",
+          "para": "testes-substantivos",
+          "tipo": "define o universo de operações submetido aos"
+        },
+        {
+          "de": "reconciliacao-fiscal-contabil",
+          "para": "materialidade-fiscal",
+          "tipo": "gera diferenças que são priorizadas conforme a"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "reconciliacao-fiscal-contabil",
+          "texto": "O saldo de ICMS a recolher apurado na EFD ICMS/IPI de um mês não bate com o saldo da conta contábil de ICMS a pagar: a reconciliação aponta a diferença, que pode vir de um lançamento contábil manual feito fora do motor tributário ou de um erro na apuração fiscal."
+        }
+      ],
+      "pg": [
+        "Teste substantivo não é a mesma coisa que teste de controle: um confere se o valor está certo, o outro confere se o processo que produz o valor está desenhado e funcionando corretamente.",
+        "Amostragem não significa escolher aleatoriamente sem critério: em auditoria tributária, é comum priorizar os itens de maior valor ou maior risco, complementados por uma amostra aleatória do restante.",
+        "Materialidade não é um número fixo e universal: o limiar usado numa reconciliação de ICMS pode ser diferente do usado numa reconciliação de IRPJ, dependendo da relevância relativa de cada tributo para a empresa."
+      ],
+      "rs": "A revisão e auditoria tributária combina testes substantivos (que recalculam e confirmam o valor apurado) com amostragem (para viabilizar a revisão sem checar 100% das operações) e reconciliação entre o que foi declarado nas obrigações acessórias e o que está registrado na contabilidade. A materialidade decide quais diferenças encontradas merecem investigação e correção prioritária, direcionando o esforço de revisão para os itens de maior impacto ou risco."
+    }
+  },
+  {
+    "contentId": "CT-111",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o passivo tributário e o processo administrativo fiscal: conta-corrente fiscal, intimações, autos de infração, defesa administrativa e garantias/certidões.",
+      "cc": [
+        {
+          "id": "conta-corrente-fiscal",
+          "nome": "Conta-corrente fiscal",
+          "def": "Extrato mantido pelo órgão fazendário com todos os débitos declarados, pagamentos, parcelamentos e compensações de um contribuinte para um tributo, usado tanto pelo fisco quanto pela empresa para identificar pendências, antes mesmo de uma fiscalização iniciar."
+        },
+        {
+          "id": "intimacao-auto-infracao",
+          "nome": "Intimação e auto de infração",
+          "def": "A intimação é a comunicação formal que exige informação, documento ou providência do contribuinte dentro de um prazo; o auto de infração é o ato que formaliza uma cobrança de tributo com multa, lançado quando o fisco entende haver irregularidade, abrindo o prazo para impugnação."
+        },
+        {
+          "id": "defesa-administrativa",
+          "nome": "Defesa administrativa (impugnação e recursos)",
+          "def": "Peça apresentada pelo contribuinte contestando o auto de infração dentro do processo administrativo fiscal, julgada em instâncias próprias (como as Delegacias de Julgamento e o CARF, no âmbito federal, ou órgãos equivalentes estaduais/municipais), antes de qualquer discussão judicial."
+        },
+        {
+          "id": "garantias-certidoes",
+          "nome": "Garantias e certidões de regularidade fiscal",
+          "def": "Instrumentos (depósito judicial, fiança bancária, seguro-garantia) que suspendem a exigibilidade de um débito discutido, e certidões (negativa ou positiva com efeito de negativa) que atestam a situação fiscal do contribuinte, frequentemente exigidas em licitações, financiamentos e operações societárias."
+        }
+      ],
+      "rl": [
+        {
+          "de": "intimacao-auto-infracao",
+          "para": "defesa-administrativa",
+          "tipo": "abre o prazo para apresentar a"
+        },
+        {
+          "de": "garantias-certidoes",
+          "para": "conta-corrente-fiscal",
+          "tipo": "regulariza a situação registrada na"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "garantias-certidoes",
+          "texto": "Uma empresa discute judicialmente um auto de infração e oferece seguro-garantia para suspender a exigibilidade do débito; com a exigibilidade suspensa, ela consegue obter certidão positiva com efeito de negativa, necessária para participar de uma licitação."
+        }
+      ],
+      "pg": [
+        "Receber uma intimação não é a mesma coisa que receber um auto de infração: a intimação pede informação ou providência, o auto já formaliza uma cobrança com multa.",
+        "Apresentar defesa administrativa não suspende automaticamente a exigibilidade do débito para fins de certidão — é a garantia (depósito, fiança, seguro-garantia) ou a própria discussão em curso dentro do prazo, conforme a legislação do processo administrativo, que produz esse efeito.",
+        "Certidão positiva com efeito de negativa não significa que não há débito: significa que o débito existente está com a exigibilidade suspensa ou garantido, por isso produz o mesmo efeito prático de uma certidão negativa."
+      ],
+      "rs": "O passivo tributário é acompanhado pela conta-corrente fiscal, que registra débitos, pagamentos e parcelamentos. Uma intimação exige informação ou providência; um auto de infração formaliza cobrança com multa e abre prazo para defesa administrativa, julgada em instâncias próprias antes de qualquer discussão judicial. Garantias como depósito, fiança e seguro-garantia suspendem a exigibilidade de débitos discutidos, permitindo obter certidões de regularidade fiscal necessárias para licitações, financiamentos e operações societárias."
+    }
+  },
+  {
+    "contentId": "CT-112",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar planejamento tributário lícito: a distinção entre elisão, evasão e simulação, os critérios de substância e propósito negocial, e a documentação de cenários.",
+      "cc": [
+        {
+          "id": "elisao-fiscal",
+          "nome": "Elisão fiscal",
+          "def": "Economia de tributo obtida por meios lícitos, antes da ocorrência do fato gerador, escolhendo entre alternativas legalmente previstas (forma societária, regime tributário, estrutura de uma operação) que resultam em menor carga tributária, sem ocultar ou distorcer a realidade do negócio."
+        },
+        {
+          "id": "evasao-simulacao",
+          "nome": "Evasão fiscal e simulação",
+          "def": "Evasão é a sonegação do tributo já devido, por ocultação de fato gerador ocorrido (ex.: venda sem nota fiscal); simulação é dar aparência jurídica diferente da realidade do negócio (ex.: registrar uma venda como doação, ou interpor uma empresa de fachada) para reduzir ou eliminar artificialmente o tributo devido — ambas ilícitas e sujeitas a autuação com multa qualificada."
+        },
+        {
+          "id": "substancia-sobre-forma",
+          "nome": "Substância sobre a forma e propósito negocial",
+          "def": "Critério usado pelo fisco e pelos tribunais administrativos para desconsiderar uma estrutura formalmente lícita quando ela não tem propósito negocial além da economia de tributo (racionalidade econica, operacional ou societária independente do benefício fiscal) e a substância econômica da operação não corresponde à forma jurídica adotada."
+        },
+        {
+          "id": "documentacao-cenarios",
+          "nome": "Documentação de cenários de planejamento",
+          "def": "Registro formal, anterior à operação, das alternativas avaliadas, da racionalidade de negócio que justifica a estrutura escolhida (além do efeito fiscal) e da base legal aplicada — evidência essencial para sustentar a elisão em caso de questionamento posterior pelo fisco."
+        }
+      ],
+      "rl": [
+        {
+          "de": "substancia-sobre-forma",
+          "para": "elisao-fiscal",
+          "tipo": "é o teste que separa a elisão legítima da simulação dentro de uma estrutura que aparenta ser"
+        },
+        {
+          "de": "documentacao-cenarios",
+          "para": "substancia-sobre-forma",
+          "tipo": "é a evidência que sustenta a existência de propósito negocial exigida pelo critério de"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "substancia-sobre-forma",
+          "texto": "Uma empresa cria uma holding apenas para reduzir tributo sobre uma operação pontual, sem nenhuma outra função societária, operacional ou sucessória: mesmo sendo formalmente lícita, o fisco pode desconsiderar essa estrutura por faltar propósito negocial além da economia fiscal."
+        }
+      ],
+      "pg": [
+        "Planejamento tributário lícito não é sinônimo de qualquer redução de tributo: a linha entre elisão e simulação está na realidade da operação, não na economia obtida.",
+        "Elisão ocorre antes do fato gerador; depois que o tributo já é devido, qualquer ocultação ou distorção para reduzi-lo é evasão ou simulação, não mais elisão.",
+        "Ter um contrato formalmente correto não protege uma estrutura sem propósito negocial: documentação de cenários e racionalidade de negócio precisam existir antes da operação, não ser criadas depois para justificar uma autuação."
+      ],
+      "rs": "Elisão fiscal é a economia lícita de tributo, obtida antes do fato gerador por meio de alternativas legalmente previstas. Evasão (sonegação de tributo já devido) e simulação (aparência jurídica diferente da realidade do negócio) são ilícitas. O critério de substância sobre a forma e propósito negocial é usado para desconsiderar estruturas formalmente lícitas sem razão de negócio além da economia fiscal, por isso a documentação prévia dos cenários avaliados e da racionalidade de negócio é essencial para sustentar a elisão em caso de questionamento."
+    }
+  },
+  {
+    "contentId": "CT-113",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar módulos setoriais e regimes especiais: comércio exterior, indústria, serviços, construção civil, imobiliário/RET, agronegócio, terceiro setor e setor financeiro.",
+      "cc": [
+        {
+          "id": "regimes-comercio-exterior",
+          "nome": "Regimes de comércio exterior",
+          "def": "Mecanismos como drawback (suspensão/isenção de tributos em insumos usados em produto exportado) e regimes aduaneiros especiais (admissão temporária, entreposto) que alteram a tributação normal de importação/exportação para incentivar competitividade internacional."
+        },
+        {
+          "id": "ret-incorporacao-imobiliaria",
+          "nome": "RET na incorporação imobiliária",
+          "def": "Regime Especial de Tributação que unifica IRPJ, CSLL, PIS e Cofins em um percentual único sobre a receita recebida de cada incorporação submetida ao patrimônio de afetação, segregando o patrimônio da obra do restante do patrimônio da incorporadora."
+        },
+        {
+          "id": "regimes-terceiro-setor-agronegocio",
+          "nome": "Regimes do terceiro setor e do agronegócio",
+          "def": "Entidades sem fins lucrativos (associações, fundações) podem ter imunidade ou isenção de tributos sobre suas finalidades essenciais, condicionada a requisitos legais específicos; no agronegócio, o produtor rural pessoa física/jurídica tem regras próprias de apuração e, em cadeias específicas, regimes de suspensão ou diferimento de tributo."
+        },
+        {
+          "id": "regime-setor-financeiro",
+          "nome": "Regime do setor financeiro",
+          "def": "Instituições financeiras têm base de cálculo e alíquotas próprias de PIS/Cofins (regime cumulativo com deduções específicas) e de CSLL (alíquota diferenciada), além de IOF sobre operações de crédito, câmbio e seguro, refletindo a natureza distinta de suas receitas financeiras."
+        }
+      ],
+      "rl": [
+        {
+          "de": "ret-incorporacao-imobiliaria",
+          "para": "regime-setor-financeiro",
+          "tipo": "é um exemplo, assim como o setor financeiro, de regime específico que substitui a apuração regular de"
+        },
+        {
+          "de": "regimes-terceiro-setor-agronegocio",
+          "para": "regimes-comercio-exterior",
+          "tipo": "compartilha com os"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "ret-incorporacao-imobiliaria",
+          "texto": "Uma incorporadora submete um empreendimento ao patrimônio de afetação e opta pelo RET: em vez de apurar IRPJ, CSLL, PIS e Cofins separadamente sobre o resultado da obra, recolhe um percentual único sobre a receita recebida daquele empreendimento específico."
+        }
+      ],
+      "pg": [
+        "Drawback não isenta a exportação em si — ele suspende ou isenta tributos sobre os insumos importados usados para fabricar o produto que será exportado.",
+        "Imunidade do terceiro setor não é automática pela natureza 'sem fins lucrativos': depende do cumprimento de requisitos legais específicos (como não distribuir resultado e aplicar recursos na finalidade) para a entidade se qualificar.",
+        "O regime do setor financeiro não isenta as instituições de PIS/Cofins — muda o regime (cumulativo com deduções próprias) e a base de cálculo em relação à regra geral das demais empresas."
+      ],
+      "rs": "Cada setor tem módulos e regimes próprios: comércio exterior usa drawback e regimes aduaneiros especiais; a incorporação imobiliária pode optar pelo RET, unificando quatro tributos em um percentual sobre a receita recebida; o terceiro setor pode ter imunidade ou isenção condicionada a requisitos legais; o agronegócio tem regras próprias de apuração e regimes de suspensão/diferimento em cadeias específicas; e o setor financeiro apura PIS/Cofins e CSLL com regras e alíquotas diferenciadas, refletindo a natureza de suas receitas."
+    }
+  },
+  {
+    "contentId": "CT-114",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar os fundamentos da tributação internacional: critérios de residência e fonte, papel dos tratados, preços de transferência, tributação de controladas/coligadas no exterior e serviços transfronteiriços.",
+      "cc": [
+        {
+          "id": "residencia-fonte",
+          "nome": "Critérios de residência e fonte",
+          "def": "O Brasil tributa seus residentes pela renda mundial (critério de residência) e também tributa, na fonte, rendimentos pagos a não residentes que se originam aqui (critério de fonte); a combinação dos dois critérios por diferentes países é a principal causa de bitributação internacional."
+        },
+        {
+          "id": "tratados-bitributacao",
+          "nome": "Tratados para evitar a bitributação",
+          "def": "Acordos bilaterais que distribuem a competência de tributar entre os dois países signatários e, quando a bitributação ainda ocorre, preveem mecanismo de crédito ou isenção no país de residência para o tributo já pago no exterior, prevalecendo sobre a legislação interna no que ela contrariar."
+        },
+        {
+          "id": "precos-transferencia-arms-length",
+          "nome": "Preços de transferência e princípio arm's length",
+          "def": "A Lei 14.596/2023 alinhou o regime brasileiro de preços de transferência ao padrão arm's length da OCDE: transações entre partes relacionadas (empresa brasileira e sua controladora, controlada ou coligada no exterior) precisam ser precificadas como se fossem feitas entre partes independentes, sob pena de ajuste da base de IRPJ/CSLL."
+        },
+        {
+          "id": "lucros-exterior-controladas",
+          "nome": "Tributação de lucros de controladas e coligadas no exterior",
+          "def": "A Lei 12.973/2014 determina que o lucro apurado por controlada no exterior seja tributado no Brasil por IRPJ/CSLL no momento em que apurado (regra de transparência/disponibilização), com regras próprias de consolidação e compensação de perdas entre controladas, e critério diferente para coligadas (tributação apenas quando o lucro é efetivamente disponibilizado)."
+        }
+      ],
+      "rl": [
+        {
+          "de": "tratados-bitributacao",
+          "para": "residencia-fonte",
+          "tipo": "mitiga a bitributação gerada pela combinação dos critérios de"
+        },
+        {
+          "de": "precos-transferencia-arms-length",
+          "para": "lucros-exterior-controladas",
+          "tipo": "evita que o preço artificial entre partes relacionadas distorça o lucro apurado nas regras de"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "precos-transferencia-arms-length",
+          "texto": "Uma empresa brasileira vende insumos à sua controladora no exterior por preço abaixo do praticado com clientes independentes: pelo princípio arm's length, o fisco pode ajustar a base de IRPJ/CSLL para o preço que seria praticado entre partes não relacionadas, aumentando o lucro tributável no Brasil."
+        }
+      ],
+      "pg": [
+        "Residência e fonte não são critérios excludentes: o Brasil usa os dois ao mesmo tempo (renda mundial do residente e tributação na fonte do não residente), o que por si só já gera o risco de bitributação que os tratados tentam mitigar.",
+        "Preço de transferência não se aplica só a multinacionais grandes: qualquer transação entre partes relacionadas através de fronteira, inclusive com controlada/coligada no exterior, está sujeita ao princípio arm's length da Lei 14.596/2023.",
+        "Controlada e coligada no exterior não seguem a mesma regra de tributação: a Lei 12.973/2014 tributa o lucro da controlada no momento da apuração, enquanto o lucro da coligada só é tributado quando efetivamente disponibilizado à empresa brasileira."
+      ],
+      "rs": "A tributação internacional combina o critério de residência (renda mundial) com o de fonte (retenção sobre pagamentos a não residentes), gerando risco de bitributação que os tratados bilaterais mitigam por meio de crédito ou isenção. A Lei 14.596/2023 trouxe o princípio arm's length para preços de transferência entre partes relacionadas, e a Lei 12.973/2014 tributa no Brasil o lucro de controladas no exterior no momento da apuração e o de coligadas apenas quando disponibilizado, com regras próprias de consolidação."
+    }
+  },
+  {
+    "contentId": "CT-115",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar tax technology: parametrização do ERP, geração e validação de XML fiscal, integrações via API, automação de apurações, uso de SQL/BI e segurança/trilha de auditoria dos dados fiscais.",
+      "cc": [
+        {
+          "id": "parametrizacao-erp-fiscal",
+          "nome": "Parametrização fiscal do ERP",
+          "def": "Configuração, dentro do ERP, das regras fiscais (alíquotas, CST/CSOSN, CFOP, benefícios) associadas ao cadastro mestre, de forma que o sistema gere documentos fiscais e apurações corretas sem intervenção manual repetida a cada operação — base técnica do motor tributário."
+        },
+        {
+          "id": "xml-validacao-fiscal",
+          "nome": "Geração e validação de XML fiscal",
+          "def": "Documentos fiscais eletrônicos (NF-e, NFC-e, NFS-e, EFD) são gerados em formato XML segundo schema definido pelo fisco; antes da transmissão, o XML passa por validações de schema e de regras de negócio (consistência entre campos, cálculo correto do tributo) para reduzir rejeição e risco de autuação por informação incorreta."
+        },
+        {
+          "id": "automacao-apuracoes-sqlbi",
+          "nome": "Automação de apurações com SQL/BI",
+          "def": "Extração e cruzamento de dados fiscais em massa (consultas SQL sobre o banco do ERP, painéis de BI) para automatizar reconciliações, identificar inconsistências e acelerar apurações que seriam inviáveis de revisar manualmente em grande volume de notas e lançamentos."
+        },
+        {
+          "id": "seguranca-trilha-auditoria",
+          "nome": "Segurança e trilha de auditoria dos dados fiscais",
+          "def": "Controle de acesso (quem pode alterar cadastro fiscal, quem pode reprocessar uma apuração) e registro imutável de quem alterou o quê e quando (log de auditoria), essencial porque um dado fiscal alterado sem rastro compromete a defesa da empresa numa fiscalização futura."
+        }
+      ],
+      "rl": [
+        {
+          "de": "xml-validacao-fiscal",
+          "para": "parametrizacao-erp-fiscal",
+          "tipo": "depende da correção prévia da"
+        },
+        {
+          "de": "seguranca-trilha-auditoria",
+          "para": "automacao-apuracoes-sqlbi",
+          "tipo": "precisa cobrir também as alterações feitas durante a"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "automacao-apuracoes-sqlbi",
+          "texto": "Em vez de revisar manualmente cada uma de milhares de notas fiscais do mês, a equipe usa uma consulta SQL que cruza NCM, CFOP e CST de todas as notas com o cadastro mestre e aponta automaticamente os itens cuja combinação é inconsistente com a regra esperada."
+        }
+      ],
+      "pg": [
+        "XML validado contra o schema do fisco não garante que o tributo calculado está correto — a validação de schema confere a estrutura do arquivo, não a regra de negócio aplicada por trás do valor.",
+        "Automação com SQL/BI não substitui a revisão por materialidade: ela acelera a identificação de inconsistências, mas a decisão de investigar e corrigir continua dependendo de critério humano.",
+        "Trilha de auditoria sem controle de acesso não é suficiente: registrar quem alterou o quê não impede a alteração indevida — o controle de quem pode alterar o cadastro fiscal precisa vir antes do log."
+      ],
+      "rs": "Tax technology combina a parametrização fiscal do ERP (base do motor tributário) com a geração e validação de XML fiscal antes da transmissão, reduzindo rejeição e risco de autuação. A automação de apurações com SQL/BI permite cruzar grandes volumes de dados fiscais para reconciliar e identificar inconsistências que seriam inviáveis de revisar manualmente, e tudo isso precisa de controle de acesso e trilha de auditoria imutável, para que qualquer alteração em dado fiscal seja rastreável em uma fiscalização futura."
+    }
+  },
+  {
+    "contentId": "CT-116",
+    "lesson": {
+      "v": 1,
+      "obj": "Integrar, em um caso simulado, uma empresa avaliando Simples, Presumido e Real: documentos, apurações, obrigações, contabilização e a decisão final de regime.",
+      "cc": [
+        {
+          "id": "caso-simulado-multirregime",
+          "nome": "Caso simulado multirregime",
+          "def": "Exercício integrador em que a mesma empresa (mesma receita, mesmas despesas, mesmo quadro de clientes/fornecedores) é simulada nos três regimes — Simples Nacional, Lucro Presumido e Lucro Real — para comparar documentos emitidos, apurações de tributos, obrigações acessórias e contabilização decorrentes de cada regime."
+        },
+        {
+          "id": "comparacao-carga-tributaria",
+          "nome": "Comparação de carga tributária entre regimes",
+          "def": "Cálculo do tributo total devido em cada regime para o mesmo cenário de receita, custo e despesa, considerando não só a alíquota nominal, mas também créditos disponíveis (ou sua ausência), folha de pagamento, margem de lucro efetiva e perfil de clientes (B2B ou B2C)."
+        },
+        {
+          "id": "impacto-obrigacoes-contabilizacao",
+          "nome": "Impacto nas obrigações acessórias e na contabilização",
+          "def": "Cada regime gera um conjunto diferente de obrigações (DAS no Simples; ECF, Lalur e apurações trimestrais/mensais no Presumido/Real) e lançamentos contábeis distintos (estimativa mensal e ajuste no Real, por exemplo), que precisam ser evidenciados no caso simulado além do valor final do tributo."
+        },
+        {
+          "id": "decisao-fundamentada-regime",
+          "nome": "Decisão fundamentada de regime",
+          "def": "Conclusão do caso simulado que recomenda um regime específico, justificada não apenas pelo menor tributo total, mas também pelo custo de compliance de cada regime, o impacto comercial do crédito ao cliente e a tendência de crescimento da empresa nos próximos exercícios."
+        }
+      ],
+      "rl": [
+        {
+          "de": "comparacao-carga-tributaria",
+          "para": "caso-simulado-multirregime",
+          "tipo": "é o principal resultado numérico extraído do"
+        },
+        {
+          "de": "decisao-fundamentada-regime",
+          "para": "impacto-obrigacoes-contabilizacao",
+          "tipo": "precisa considerar, além da carga tributária, o"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "decisao-fundamentada-regime",
+          "texto": "No caso simulado, o Lucro Real resulta no menor tributo total, mas exige escrituração contábil completa e apurações mensais mais complexas; para uma empresa pequena sem estrutura fiscal própria, a recomendação final pode preferir o Presumido, mesmo com tributo levemente maior, pelo menor custo de compliance."
+        }
+      ],
+      "pg": [
+        "O regime de menor tributo nominal não é automaticamente o mais recomendado: o custo de compliance e o impacto comercial do crédito ao cliente também entram na decisão fundamentada.",
+        "Comparar carga tributária só pela alíquota ignora fatores decisivos, como a existência de crédito amplo para o cliente (regime normal) versus a ausência dele (Simples sem opção pelo regime regular).",
+        "Cada regime no caso simulado gera obrigações e lançamentos contábeis diferentes, não apenas um valor de tributo diferente — a comparação completa exige mostrar também essa diferença de processo."
+      ],
+      "rs": "O caso simulado multirregime compara a mesma empresa no Simples Nacional, no Lucro Presumido e no Lucro Real, apurando tributos, documentos, obrigações acessórias e contabilização de cada regime. A comparação de carga tributária considera alíquota, créditos, folha e perfil de clientes, mas a decisão fundamentada de regime também pesa o custo de compliance e o impacto comercial, não apenas o menor tributo nominal."
+    }
+  },
+  {
+    "contentId": "CT-117",
+    "lesson": {
+      "v": 1,
+      "obj": "Descrever a estrutura de uma avaliação de domínio em Contabilidade Tributária: prova teórica, casos práticos, escrituração e apurações, SPED, reforma tributária, defesa oral e auditoria de consistência.",
+      "cc": [
+        {
+          "id": "estrutura-avaliacao-dominio",
+          "nome": "Estrutura da avaliação de domínio",
+          "def": "Avaliação final da disciplina combinando prova teórica (conceitos e regras de cada regime/tributo), casos práticos (resolução de situações que exigem aplicar várias regras em conjunto), exercício de escrituração/apuração (lançamentos e cálculo de tributo) e questões sobre obrigações do SPED e sobre a reforma tributária."
+        },
+        {
+          "id": "defesa-oral-justificativa",
+          "nome": "Defesa oral da solução",
+          "def": "Etapa em que o avaliado explica, em suas próprias palavras, a lógica por trás da solução dada a um caso prático ou apuração, permitindo verificar se o resultado numérico correto veio de entendimento real da regra ou de memorização sem compreensão do porquê."
+        },
+        {
+          "id": "auditoria-consistencia",
+          "nome": "Auditoria de consistência das respostas",
+          "def": "Verificação cruzada de que as respostas dadas em diferentes partes da avaliação (teoria, caso prático, apuração) são coerentes entre si — por exemplo, que a classificação tributária usada na apuração bate com o conceito explicado na parte teórica sobre o mesmo tributo."
+        },
+        {
+          "id": "criterio-aprovacao-dominio",
+          "nome": "Critério de aprovação do domínio",
+          "def": "Parâmetro mínimo de acerto e de coerência (teoria + prática + defesa oral) exigido para considerar que o avaliado domina a disciplina de Contabilidade Tributária como um todo, e não apenas uma parte isolada dela, coerente com a lógica cascata já usada nas demais avaliações do Apolo."
+        }
+      ],
+      "rl": [
+        {
+          "de": "defesa-oral-justificativa",
+          "para": "auditoria-consistencia",
+          "tipo": "fornece evidência adicional usada na"
+        },
+        {
+          "de": "criterio-aprovacao-dominio",
+          "para": "estrutura-avaliacao-dominio",
+          "tipo": "é aplicado sobre o conjunto de partes definidas na"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "defesa-oral-justificativa",
+          "texto": "O avaliado chega ao valor correto de ICMS-ST numa apuração, mas na defesa oral não consegue explicar por que aplicou a margem de valor agregado daquele jeito: isso indica que o resultado pode ter vindo de memorização de um caso parecido, não de domínio da regra."
+        }
+      ],
+      "pg": [
+        "Acertar o valor numérico de uma apuração não é suficiente para comprovar domínio: a defesa oral existe justamente para verificar se o raciocínio por trás do número está correto.",
+        "A avaliação de domínio não testa tributos isoladamente: a auditoria de consistência verifica se a resposta teórica sobre um tributo é coerente com a forma como ele foi aplicado no caso prático e na apuração.",
+        "O critério de aprovação não se baseia só na média das partes: coerência entre teoria, prática e defesa oral pesa tanto quanto o acerto bruto de cada parte isolada."
+      ],
+      "rs": "A avaliação de domínio em Contabilidade Tributária combina prova teórica, casos práticos, escrituração/apuração e questões sobre SPED e reforma tributária, complementada por defesa oral da solução e auditoria de consistência entre as diferentes partes da avaliação. O critério de aprovação exige acerto e coerência no conjunto, não apenas em uma parte isolada, verificando se o avaliado realmente domina a disciplina como um todo."
+    }
+  }
+]
