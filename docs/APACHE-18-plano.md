@@ -111,7 +111,7 @@ replica exatamente o que `saveLesson` faz.
    | 5d       | Simples Nacional — **MESCLADO** (`contabilidade-tributaria-04.json`) | CT-030–039 | 10   |
    | 5e       | Lucro Presumido — **MESCLADO** (`contabilidade-tributaria-05.json`) | CT-040–045 | 6    |
    | 5f       | Lucro Real — **MESCLADO** (`contabilidade-tributaria-06.json`) | CT-046–055 | 10   |
-   | 5g       | PIS e Cofins                               | CT-056–062 | 7    |
+   | 5g       | PIS e Cofins — **MESCLADO** (`contabilidade-tributaria-07.json`) | CT-056–062 | 7    |
    | 5h       | ICMS                                       | CT-063–072 | 10   |
    | 5i       | IPI                                        | CT-073–077 | 5    |
    | 5j       | ISS                                        | CT-078–082 | 5    |
@@ -140,7 +140,7 @@ replica exatamente o que `saveLesson` faz.
 - [x] Lote 2/5 — Análise das Demonstrações Financeiras (6/6 conteúdos) — PR #96
 - [x] Lote 3/5 — Contabilidade Avançada (7/7 conteúdos)
 - [x] Lote 4/5 — Contabilidade Geral (41/41, em sub-lotes; sub-lote 4c nesta PR — disciplina completa)
-- [ ] Lote 5/5 — Contabilidade Tributária (55/124, em 15 sub-lotes propostos acima, pesquisa de legislação; sub-lotes 5a Fundamentos, 5b Contabilização, 5c Cadastros e documentos, 5d Simples Nacional, 5e Lucro Presumido e 5f Lucro Real mesclados)
+- [ ] Lote 5/5 — Contabilidade Tributária (62/124, em 15 sub-lotes propostos acima, pesquisa de legislação; sub-lotes 5a Fundamentos, 5b Contabilização, 5c Cadastros e documentos, 5d Simples Nacional, 5e Lucro Presumido, 5f Lucro Real e 5g PIS e Cofins mesclados)
 - [ ] Todos os 183 conteúdos cobertos (regra final do card)
 
 ## Como aplicar (Abner, depois do merge)
