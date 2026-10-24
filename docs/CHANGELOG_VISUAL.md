@@ -14,7 +14,49 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
-## PR #107 (pendente) — APA-18: aulas base de Contabilidade Tributária (sub-lote 5g)
+## PR #108 (pendente) — APA-18: aulas base de Contabilidade Tributária (sub-lote 5h)
+
+- Ponto de restauração: branch `restore/pre-apa-18-contabilidade-tributaria-08`
+  (commit `eab072e`, main antes do merge).
+- O que muda no site: nada visível ainda — este PR só adiciona os dados; as
+  10 aulas só aparecem depois de o Abner rodar o comando de carga para esse
+  arquivo (não precisa de "Publicar Atlas": o script grava direto em D1/R2).
+  O carregamento em produção de toda a Contabilidade Tributária será feito
+  num único comando ao final de todos os 15 sub-lotes, a pedido do Abner.
+- O que muda fora do site: oitavo sub-lote de Contabilidade Tributária em
+  `data/apache/aulas/contabilidade-tributaria-08.json` (10 dos 124
+  conteúdos: CT-063 a CT-072, unidade "ICMS", na ordem do catálogo,
+  `model='claude-manual'`), usando o mesmo mecanismo de carga dos PRs
+  #95-#107 (`scripts/apache-carregar-aulas.mjs`). Conteúdo: fundamentos e
+  fontes normativas (art. 155, II e §2º, CF; LC 87/1996 — Lei Kandir;
+  convênios CONFAZ; não cumulatividade e seletividade facultativa); fato
+  gerador, local da operação, contribuinte (inclusive importador pessoa
+  física, RE 439.796/STF) e base de cálculo "por dentro"; alíquotas
+  internas (estaduais) e interestaduais (7%/12% pela Resolução do Senado
+  nº 22/1989; 4% para importados pela Resolução nº 13/2012); não
+  cumulatividade, vedação ao crédito de uso e consumo (prorrogada até
+  2033 pela LC 171/2019) e estorno de crédito; DIFAL e FCP (EC 87/2015,
+  Convênio ICMS 236/2021 e LC 190/2022, após a invalidação do Convênio
+  93/2015 por falta de lei complementar); substituição tributária, CEST,
+  MVA e o direito a ressarcimento/complemento fixado pelo STF no RE
+  593.849; benefícios fiscais (isenção, redução de base, crédito
+  presumido, diferimento, suspensão) e suas obrigações acessórias; CIAP e
+  crédito do ativo imobilizado em 48 parcelas (LC 87/1996, art. 20, §5º);
+  importação, imunidade de exportação (EC 42/2003), não incidência em
+  transferências entre estabelecimentos do mesmo titular (ADC 49/STF,
+  Convênio ICMS 178/2023) e operações triangulares/industrialização por
+  encomenda; e a EFD ICMS/IPI (blocos 0/C/D/E/G/H/K/9, apuração no
+  registro E110). Legislação e cronograma da reforma tributária
+  confirmados vigentes em 2026 (pesquisa web: fase de teste do IBS/CBS em
+  2026 não reduz o ICMS; extinção do ICMS só em 2033, após transição
+  gradual entre 2029 e 2032). `docs/APACHE-18-plano.md` atualizado
+  (sub-lote 5h mesclado; Tributária em 72/124).
+- Se algo der errado: reverter para
+  `restore/pre-apa-18-contabilidade-tributaria-08` volta ao estado
+  anterior; nenhuma aula ainda foi carregada em produção, então reverter
+  sem ter rodado o script de carga não perde nada.
+
+## PR #107 — APA-18: aulas base de Contabilidade Tributária (sub-lote 5g)
 
 - Ponto de restauração: branch `restore/pre-apa-18-contabilidade-tributaria-07`
   (commit `82fb570`, main antes do merge).

@@ -1,0 +1,468 @@
+[
+  {
+    "contentId": "CT-063",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a natureza estadual do ICMS, suas fontes normativas e os princípios constitucionais que estruturam o imposto.",
+      "cc": [
+        {
+          "id": "icms-conceito",
+          "nome": "ICMS",
+          "def": "Imposto de competência estadual (e do Distrito Federal) sobre operações relativas à circulação de mercadorias e sobre prestações de serviços de transporte interestadual e intermunicipal e de comunicação, previsto no art. 155, II, da Constituição Federal; é o tributo de maior arrecadação estadual e incide também sobre importação, energia elétrica, combustíveis e telecomunicações."
+        },
+        {
+          "id": "fontes-normativas-icms",
+          "nome": "Fontes normativas",
+          "def": "A Constituição fixa os contornos gerais e exige lei complementar para normas gerais (art. 155, §2º, XII); a Lei Complementar nº 87/1996 (Lei Kandir) é essa lei complementar nacional, tratando de fato gerador, base de cálculo, contribuinte e não cumulatividade; cada estado edita sua própria lei ordinária e regulamento (RICMS) para disciplinar alíquotas internas, obrigações acessórias e benefícios; convênios do CONFAZ (Conselho Nacional de Política Fazendária) uniformizam benefícios fiscais e procedimentos entre estados (exigidos pelo art. 155, §2º, XII, \"g\", CF, regulamentado pela LC 24/1975 e, desde 2024, também pela LC 160/2017 para convalidação de benefícios)."
+        },
+        {
+          "id": "nao-cumulatividade-seletividade",
+          "nome": "Não cumulatividade e seletividade",
+          "def": "O ICMS é não cumulativo por determinação constitucional (art. 155, §2º, I): compensa-se o imposto devido em cada operação com o cobrado nas anteriores. A seletividade em função da essencialidade (art. 155, §2º, III) é facultativa (\"poderá ser\"), ao contrário do IPI; na prática, estados costumam aplicar alíquotas internas mais altas a bens supérfluos (perfumaria, cigarros, bebidas) e mais baixas ou reduzidas a itens essenciais (alimentos da cesta básica, energia residencial de baixo consumo)."
+        },
+        {
+          "id": "sujeito-ativo-competencia",
+          "nome": "Sujeito ativo e competência estadual",
+          "def": "O sujeito ativo é o estado (ou o Distrito Federal) onde ocorre o fato gerador, conforme as regras de local da operação da LC 87/1996; a guerra fiscal entre estados (concessão unilateral de benefícios sem convênio CONFAZ) é historicamente controversa e já foi declarada inconstitucional pelo STF em diversos casos, motivando a convalidação pela LC 160/2017 e, mais recentemente, a extinção gradual do ICMS pela reforma tributária (Emenda Constitucional nº 132/2023 e Lei Complementar nº 214/2025), que o substitui pelo Imposto sobre Bens e Serviços (IBS) a partir de 2033, após um período de teste e transição que começou em 2026 sem reduzir a cobrança do ICMS."
+        }
+      ],
+      "rl": [
+        { "de": "fontes-normativas-icms", "para": "icms-conceito", "tipo": "regulamenta" },
+        { "de": "nao-cumulatividade-seletividade", "para": "icms-conceito", "tipo": "é princípio de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "fontes-normativas-icms",
+          "texto": "Um estado quer conceder isenção de ICMS para atrair uma montadora. Sem convênio do CONFAZ aprovado por unanimidade (ou, após a LC 160/2017, sem a convalidação exigida), esse benefício unilateral é inconstitucional e pode ser contestado por outros estados no STF, mesmo que já esteja em vigor na legislação estadual local."
+        }
+      ],
+      "pg": [
+        "A seletividade do ICMS é facultativa (\"poderá ser\"), diferente da seletividade obrigatória do IPI — questões de prova trocam esse detalhe.",
+        "ICMS é estadual; ISS é municipal; IPI e PIS/Cofins são federais — confundir a competência é erro comum em questões de classificação tributária.",
+        "A reforma tributária (EC 132/2023, LC 214/2025) não revoga o ICMS de imediato: 2026 é ano de teste do IBS/CBS sem reduzir ICMS, e a extinção efetiva é só em 2033, após transição gradual de 2029 a 2032."
+      ],
+      "rs": "O ICMS é um imposto estadual sobre circulação de mercadorias e certos serviços, com normas gerais fixadas pela LC 87/1996 (Lei Kandir) e detalhamento por lei e regulamento de cada estado, sob uniformização de benefícios via convênios CONFAZ. É constitucionalmente não cumulativo e pode ser seletivo pela essencialidade. A reforma tributária substituirá o ICMS pelo IBS, mas apenas a partir de 2033, com fase de teste em 2026 e transição gradual entre 2029 e 2032."
+    }
+  },
+  {
+    "contentId": "CT-064",
+    "lesson": {
+      "v": 1,
+      "obj": "Detalhar o fato gerador do ICMS, as regras de local da operação, a composição da base de cálculo e quem é contribuinte do imposto.",
+      "cc": [
+        {
+          "id": "fato-gerador-icms",
+          "nome": "Fato gerador",
+          "def": "Ocorre na saída de mercadoria de estabelecimento de contribuinte, no fornecimento de alimentação e bebidas em bares/restaurantes, na prestação de serviço de transporte interestadual/intermunicipal, na prestação onerosa de serviço de comunicação, no desembaraço aduaneiro de mercadoria importada e na entrada, no território do estado destinatário, de energia elétrica, petróleo e derivados quando não destinados à comercialização ou industrialização (LC 87/1996, art. 2º e 12)."
+        },
+        {
+          "id": "local-operacao",
+          "nome": "Local da operação",
+          "def": "Regra geral, é o do estabelecimento onde se encontra a mercadoria no momento da saída (LC 87/1996, art. 11); para importação, é o do estabelecimento destinatário da mercadoria (não o do desembaraço, salvo situações específicas); para serviços de transporte e comunicação, é onde se inicia a prestação; a definição correta do local decide qual estado é o sujeito ativo e evita bitributação ou guerra fiscal."
+        },
+        {
+          "id": "contribuinte-icms",
+          "nome": "Contribuinte",
+          "def": "É qualquer pessoa, física ou jurídica, que realize operações de circulação de mercadoria ou prestações de serviço descritas na lei, com habitualidade ou em volume que caracterize intuito comercial (LC 87/1996, art. 4º); inclui quem importa mercadoria mesmo sem habitualidade (pessoa física importadora de bem para uso próprio é contribuinte do ICMS-importação, conforme entendimento consolidado pelo STF, RE 439.796)."
+        },
+        {
+          "id": "base-calculo-por-dentro",
+          "nome": "Base de cálculo e cálculo \"por dentro\"",
+          "def": "A base de cálculo é, em regra, o valor da operação, incluindo frete, seguro e outras despesas cobradas do adquirente, e excluindo descontos incondicionais; o próprio ICMS integra sua base de cálculo (\"cálculo por dentro\", art. 13, §1º, I, da LC 87/1996), de modo que, para achar o preço final a partir de um valor líquido desejado, aplica-se o gross-up: Base = Valor líquido ÷ (1 − alíquota)."
+        }
+      ],
+      "rl": [
+        { "de": "local-operacao", "para": "fato-gerador-icms", "tipo": "define o sujeito ativo de" },
+        { "de": "base-calculo-por-dentro", "para": "contribuinte-icms", "tipo": "determina o valor devido por" }
+      ],
+      "fm": [
+        {
+          "id": "gross-up-icms",
+          "expr": "Base = Valor líquido ÷ (1 − alíquota)",
+          "legenda": "Cálculo \"por dentro\": encontra o valor da operação que, após deduzir o ICMS embutido, resulta no valor líquido desejado (alíquota em decimal)."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "base-calculo-por-dentro",
+          "texto": "Uma empresa quer que o cliente pague R$ 1.000,00 líquidos e a alíquota interna é 18%. Base = 1.000 ÷ (1 − 0,18) = 1.000 ÷ 0,82 = R$ 1.219,51. O ICMS destacado na nota é R$ 219,51 (18% de R$ 1.219,51), e não 18% de R$ 1.000,00."
+        }
+      ],
+      "pg": [
+        "O ICMS integra a própria base de cálculo (\"por dentro\"); aplicar a alíquota direto sobre o valor líquido desejado, sem o gross-up, subestima o imposto devido.",
+        "Pessoa física que importa bem para uso próprio, sem habitualidade, ainda é contribuinte do ICMS-importação — entendimento do STF, contraintuitivo para quem lembra só da regra geral de habitualidade.",
+        "O local da operação para importação é o do estabelecimento destinatário da mercadoria, não necessariamente o do porto/aeroporto de desembaraço."
+      ],
+      "rs": "O fato gerador do ICMS abrange saída de mercadoria, serviços de transporte e comunicação e importação, entre outras hipóteses da LC 87/1996. O local da operação (geralmente o do estabelecimento na saída, ou do destinatário na importação) define o estado sujeito ativo. Contribuinte é quem pratica essas operações com habitualidade ou intuito comercial, incluindo o importador mesmo pessoa física. A base de cálculo é o valor da operação com o próprio ICMS embutido, exigindo o cálculo \"por dentro\" (gross-up) para apurar o imposto corretamente."
+    }
+  },
+  {
+    "contentId": "CT-065",
+    "lesson": {
+      "v": 1,
+      "obj": "Diferenciar alíquotas internas e interestaduais do ICMS e explicar quando se aplica cada uma conforme origem, destino e natureza do adquirente.",
+      "cc": [
+        {
+          "id": "aliquotas-internas",
+          "nome": "Alíquotas internas",
+          "def": "Fixadas livremente por cada estado em sua legislação, respeitado o piso de 17% a 18% adotado pela maioria (após a reforma tributária, a Resolução do Senado e a LC 214/2025 passaram a prever um piso mínimo de referência para evitar guerra fiscal durante a transição); variam por produto conforme seletividade (ex.: alíquotas maiores para bebidas, cigarros e perfumaria; menores ou com redução de base para itens da cesta básica), sempre aplicadas quando remetente e destinatário estão no mesmo estado."
+        },
+        {
+          "id": "aliquotas-interestaduais",
+          "nome": "Alíquotas interestaduais",
+          "def": "Fixadas por Resolução do Senado Federal, não pelos estados (art. 155, §2º, IV, CF); pela Resolução nº 22/1989, são 7% nas operações originadas no Sul e Sudeste (exceto Espírito Santo) destinadas ao Norte, Nordeste, Centro-Oeste e Espírito Santo, e 12% nas demais operações interestaduais; pela Resolução nº 13/2012, aplica-se 4% para mercadorias importadas (ou com conteúdo de importação superior a 40%) revendidas sem industrialização substancial no território nacional, salvo exceções da lista CAMEX e de bens sem similar nacional."
+        },
+        {
+          "id": "destino-consumidor-final",
+          "nome": "Operações interestaduais a consumidor final",
+          "def": "Desde a Emenda Constitucional nº 87/2015, vendas interestaduais a consumidor final (contribuinte ou não do ICMS) recolhem a alíquota interestadual para o estado de origem e o DIFAL (diferencial de alíquota) para o estado de destino, partilhado entre origem e destino de forma decrescente até 2019 e, a partir de 2020, integralmente para o destino; a disciplina atual está no Convênio ICMS nº 236/2021 (que substituiu o Convênio 93/2015, declarado inconstitucional por ausência de lei complementar) e na Lei Complementar nº 190/2022, que supriu essa exigência."
+        }
+      ],
+      "rl": [
+        { "de": "aliquotas-interestaduais", "para": "destino-consumidor-final", "tipo": "combina-se com DIFAL em" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "aliquotas-interestaduais",
+          "texto": "Uma indústria em São Paulo vende para um contribuinte em Pernambuco: aplica-se a alíquota interestadual de 7% (Sul/Sudeste, exceto ES, para Nordeste). Se a mesma indústria vendesse para um contribuinte no Paraná, a alíquota seria 12% (demais operações interestaduais, Sul/Sudeste entre si)."
+        }
+      ],
+      "pg": [
+        "Alíquota interestadual é fixada por Resolução do Senado, não pela lei estadual — delegar essa competência ao estado é erro clássico de prova.",
+        "7% é para Sul/Sudeste (exceto ES) → Norte/Nordeste/Centro-Oeste/ES; 12% é para as demais combinações interestaduais — fácil trocar os percentuais.",
+        "A alíquota de 4% para produtos importados (Resolução 13/2012) não se aplica quando há industrialização substancial no Brasil ou quando o conteúdo de importação é igual ou inferior a 40%."
+      ],
+      "rs": "Alíquotas internas são definidas por cada estado para operações dentro do próprio território; alíquotas interestaduais são fixadas pelo Senado (7%, 12% ou 4% para importados, conforme a Resolução 22/1989 e 13/2012) e aplicadas conforme origem e destino. Em vendas interestaduais a consumidor final, soma-se o DIFAL ao estado de destino, hoje disciplinado pelo Convênio ICMS 236/2021 e pela LC 190/2022."
+    }
+  },
+  {
+    "contentId": "CT-066",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o funcionamento do princípio da não cumulatividade do ICMS, as regras de crédito e as principais vedações e situações de estorno.",
+      "cc": [
+        {
+          "id": "credito-debito-icms",
+          "nome": "Mecânica crédito/débito",
+          "def": "O contribuinte credita-se do ICMS destacado nas notas de entrada (compras de mercadorias para revenda, insumos de produção, energia elétrica e comunicação usados na atividade, conforme regras específicas) e debita-se do ICMS destacado nas notas de saída; periodicamente (em regra, mensal) apura a diferença: se débitos superam créditos, recolhe o saldo; se créditos superam débitos, acumula saldo credor para o período seguinte."
+        },
+        {
+          "id": "vedacao-uso-consumo",
+          "nome": "Vedação ao crédito de uso e consumo",
+          "def": "O crédito sobre mercadorias destinadas a uso ou consumo do próprio estabelecimento (que não integram o produto final nem são consumidas no processo produtivo) está vedado; a LC 87/1996 previa a liberação progressiva desse crédito, mas sucessivas leis complementares (a mais recente, a LC 171/2019) prorrogaram a vedação, hoje mantida até 2032, com a apropriação integral prevista apenas a partir de 2033 — coincidindo com o cronograma de extinção do ICMS pela reforma tributária."
+        },
+        {
+          "id": "estorno-credito",
+          "nome": "Estorno de crédito",
+          "def": "O crédito deve ser estornado quando a mercadoria ou o insumo for objeto de saída isenta ou não tributada (salvo determinação legal em sentido contrário), perecer, deteriorar-se, for furtado, roubado ou utilizado em fim diverso da atividade do estabelecimento (LC 87/1996, art. 21); o estorno reconstitui a neutralidade do imposto, evitando que o contribuinte mantenha crédito vinculado a uma operação que não gerou o débito correspondente."
+        },
+        {
+          "id": "credito-fisico-financeiro",
+          "nome": "Crédito físico e crédito financeiro",
+          "def": "O critério do \"crédito físico\" restringe o aproveitamento a bens que se incorporam fisicamente ao produto ou são consumidos no processo produtivo; o critério do \"crédito financeiro\" (mais amplo, adotado em parte pela legislação atual para energia, comunicação e alguns insumos) permite o crédito de qualquer bem ou serviço vinculado à atividade econômica do contribuinte, independentemente de incorporação física; a legislação brasileira mescla os dois critérios conforme o tipo de bem."
+        }
+      ],
+      "rl": [
+        { "de": "vedacao-uso-consumo", "para": "credito-debito-icms", "tipo": "restringe" },
+        { "de": "estorno-credito", "para": "credito-debito-icms", "tipo": "corrige" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "estorno-credito",
+          "texto": "Uma mercadoria comprada com crédito de ICMS de R$ 500 é furtada do estoque antes de ser vendida. Como não haverá saída tributada correspondente, o contribuinte deve estornar os R$ 500 de crédito já apropriados."
+        }
+      ],
+      "pg": [
+        "A vedação ao crédito de uso e consumo foi sucessivamente prorrogada por leis complementares; a data mais recente antes da reforma tributária é 2033, não 2020 (prazo original já superado há anos).",
+        "Crédito indevido e crédito a estornar são situações diferentes: o primeiro nunca deveria ter sido apropriado; o segundo foi corretamente apropriado, mas um evento posterior (perda, furto, saída isenta) exige sua reversão.",
+        "Energia elétrica e comunicação só geram crédito em hipóteses específicas da LC 87/1996 (ex.: quando o consumo for objeto de operação subsequente ou consumido em processo de industrialização) — crédito irrestrito sobre esses itens é erro comum."
+      ],
+      "rs": "A não cumulatividade do ICMS funciona por compensação entre créditos de entrada e débitos de saída. O crédito sobre bens de uso e consumo está vedado até 2033 (sucessivas prorrogações da LC 87/1996, a mais recente pela LC 171/2019). O crédito deve ser estornado quando a operação de saída correspondente não ocorrer como tributada (isenção, perda, furto, desvio de finalidade). A legislação mescla critérios de crédito físico e financeiro conforme o tipo de bem ou serviço."
+    }
+  },
+  {
+    "contentId": "CT-067",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o DIFAL e o FCP, identificando quando se aplicam, como se calcula a partilha e qual a finalidade do fundo.",
+      "cc": [
+        {
+          "id": "difal-conceito",
+          "nome": "DIFAL (diferencial de alíquota)",
+          "def": "Valor correspondente à diferença entre a alíquota interna do estado de destino e a alíquota interestadual aplicada na operação, devido ao estado de destino em vendas interestaduais a consumidor final (contribuinte ou não do ICMS), conforme a Emenda Constitucional nº 87/2015; antes da EC 87/2015, o DIFAL só existia para vendas entre contribuintes (uso/consumo e ativo imobilizado do destinatário); a emenda estendeu a cobrança também às vendas ao consumidor final não contribuinte, equalizando a tributação entre venda local e venda por e-commerce de outro estado."
+        },
+        {
+          "id": "difal-nao-contribuinte",
+          "nome": "DIFAL a não contribuinte",
+          "def": "Quando o destinatário não é contribuinte do ICMS (consumidor final típico de e-commerce), o remetente recolhe a alíquota interestadual ao seu próprio estado e o DIFAL ao estado de destino, sendo responsável pelo recolhimento integral; a disciplina vigente está no Convênio ICMS nº 236/2021 e na Lei Complementar nº 190/2022, que corrigiu o vício de ausência de lei complementar que levou o STF a suspender a cobrança nos moldes do Convênio 93/2015 (ADI 5469 e RE 1.287.019)."
+        },
+        {
+          "id": "fcp-conceito",
+          "nome": "FCP (Fundo de Combate à Pobreza)",
+          "def": "Adicional de até 2 pontos percentuais sobre a alíquota do ICMS, previsto no art. 82 do Ato das Disposições Constitucionais Transitórias, instituído por lei estadual específica e aplicado, em geral, a produtos considerados supérfluos (bebidas, cigarros, perfumes, armas); incide tanto em operações internas quanto, quando cabível, no cálculo do DIFAL, com destinação vinculada a programas de combate à pobreza do estado destinatário da receita."
+        },
+        {
+          "id": "base-calculo-difal",
+          "nome": "Base de cálculo do DIFAL",
+          "def": "O DIFAL é calculado sobre a mesma base da operação, aplicando a diferença entre a alíquota interna do destino e a alíquota interestadual; nas vendas a consumidor final não contribuinte, soma-se ainda o FCP do estado de destino, se instituído; o cálculo deve observar a base \"por dentro\" (o ICMS, inclusive o FCP, compõe sua própria base), tema de divergência entre fiscos estaduais quanto à metodologia exata de \"base dupla\" em alguns casos."
+        }
+      ],
+      "rl": [
+        { "de": "difal-nao-contribuinte", "para": "difal-conceito", "tipo": "é uma modalidade de" },
+        { "de": "fcp-conceito", "para": "base-calculo-difal", "tipo": "pode somar-se a" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "difal-nao-contribuinte",
+          "texto": "Uma loja virtual em São Paulo (alíquota interestadual 7% para o Nordeste) vende para um consumidor final na Bahia, cuja alíquota interna é 20% e cujo FCP é 2%. A loja recolhe 7% para São Paulo e o DIFAL de 13% (20% − 7%) mais o FCP de 2% para a Bahia, totalizando 15% adicionais destinados ao estado de destino."
+        }
+      ],
+      "pg": [
+        "O DIFAL a não contribuinte só passou a ser exigido com segurança jurídica após a LC 190/2022; antes, mesmo com a EC 87/2015, a cobrança baseada só no Convênio 93/2015 foi suspensa pelo STF por falta de lei complementar.",
+        "O FCP não é um tributo novo, mas um adicional de alíquota do próprio ICMS, com destinação vinculada — tratá-lo como imposto distinto é erro de classificação.",
+        "Nem todo estado institui FCP, e a alíquota do adicional varia (até 2 pontos percentuais); não assumir que o FCP sempre existe ou é sempre 2%."
+      ],
+      "rs": "O DIFAL cobre a diferença entre a alíquota interna do estado de destino e a interestadual aplicada, devido em vendas interestaduais a consumidor final desde a EC 87/2015 e disciplinado atualmente pelo Convênio ICMS 236/2021 e pela LC 190/2022. O FCP é um adicional de até 2 pontos percentuais, de instituição estadual facultativa, destinado a programas de combate à pobreza, que pode somar-se ao DIFAL na base de cálculo."
+    }
+  },
+  {
+    "contentId": "CT-068",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o regime de substituição tributária do ICMS, os conceitos de MVA e CEST, e como se apuram ressarcimento e complemento.",
+      "cc": [
+        {
+          "id": "substituicao-tributaria-icms",
+          "nome": "Substituição tributária (ICMS-ST)",
+          "def": "Regime em que a responsabilidade pelo recolhimento do ICMS de toda a cadeia (ou de etapa futura) é atribuída a um único contribuinte, normalmente o fabricante ou importador (substituto), que recolhe antecipadamente o imposto devido pelas operações subsequentes até o consumidor final, praticadas pelo substituído (varejista/distribuidor); fundamento constitucional no art. 150, §7º, CF, e disciplina geral na LC 87/1996, arts. 6º a 10."
+        },
+        {
+          "id": "cest-conceito",
+          "nome": "CEST",
+          "def": "Código Especificador da Substituição Tributária, de 7 dígitos, instituído pelo Convênio ICMS nº 92/2015 (atualizado por convênios posteriores) para identificar, de forma uniforme entre os estados, as mercadorias sujeitas a ST, independentemente da classificação fiscal (NCM) do produto; deve constar na nota fiscal eletrônica sempre que a operação estiver sujeita ao regime."
+        },
+        {
+          "id": "mva-conceito",
+          "nome": "MVA (Margem de Valor Agregado)",
+          "def": "Percentual aplicado sobre o valor da operação própria do substituto para estimar o preço final ao consumidor, usado para calcular a base de cálculo presumida do ICMS-ST quando não há preço final tabelado (pauta fiscal) ou sugerido pelo fabricante; é definida por protocolo ou convênio entre os estados envolvidos e pode ser \"MVA original\" (operação interna) ou \"MVA ajustada\" (operação interestadual, recalculada para equalizar a carga tributária entre estados com alíquotas diferentes)."
+        },
+        {
+          "id": "ressarcimento-complemento-st",
+          "nome": "Ressarcimento e complemento",
+          "def": "Quando o preço efetivo de venda ao consumidor for inferior à base presumida, o substituído tem direito a ressarcimento do ICMS-ST pago a mais (ou, em muitos estados, pode se creditar diretamente, após a tese fixada pelo STF no RE 593.849, que reconheceu o direito à restituição da diferença entre a base presumida e o valor real); quando o preço efetivo for superior ao presumido, é devido o complemento do ICMS-ST relativo à diferença."
+        }
+      ],
+      "rl": [
+        { "de": "mva-conceito", "para": "substituicao-tributaria-icms", "tipo": "define a base presumida de" },
+        { "de": "ressarcimento-complemento-st", "para": "mva-conceito", "tipo": "corrige o desvio da estimativa de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "ressarcimento-complemento-st",
+          "texto": "Um distribuidor recebeu mercadoria com ICMS-ST calculado sobre uma base presumida de R$ 100 (MVA aplicada), mas revendeu por apenas R$ 80 efetivamente. Pelo entendimento do STF (RE 593.849), ele tem direito a reaver a diferença de ICMS-ST correspondente aos R$ 20 não realizados."
+        }
+      ],
+      "pg": [
+        "A substituição tributária é sobre o imposto de operações futuras, não presentes: o substituto recolhe o ICMS que, sem o regime, seria recolhido pelo próximo elo da cadeia na venda ao consumidor.",
+        "CEST identifica a mercadoria sujeita a ST; MVA calcula o valor presumido da base; não confundir os dois: um classifica, o outro quantifica.",
+        "Desde o RE 593.849 (STF, 2016), a presunção da base de cálculo do ICMS-ST não é mais absoluta — há direito a restituição quando o preço real de venda é menor que o presumido, invertendo a lógica mais antiga de que a substituição era definitiva."
+      ],
+      "rs": "A substituição tributária concentra a cobrança do ICMS de toda a cadeia em um único contribuinte (geralmente o fabricante/importador), identificada pelo CEST e com a base calculada usando a MVA quando não há preço final tabelado. Desde o RE 593.849, divergências entre a base presumida e o preço real de venda geram direito a ressarcimento (preço menor) ou dever de complemento (preço maior)."
+    }
+  },
+  {
+    "contentId": "CT-069",
+    "lesson": {
+      "v": 1,
+      "obj": "Diferenciar os principais tipos de benefício fiscal do ICMS e explicar suas consequências contábeis e de aproveitamento de crédito.",
+      "cc": [
+        {
+          "id": "isencao-icms",
+          "nome": "Isenção",
+          "def": "Dispensa legal do pagamento do ICMS devido em determinada operação, concedida por lei estadual específica, geralmente amparada em convênio CONFAZ; em regra, implica anulação do crédito relativo às operações anteriores (art. 155, §2º, II, \"b\", CF), salvo determinação em sentido contrário na própria legislação concessiva."
+        },
+        {
+          "id": "reducao-base-credito-presumido",
+          "nome": "Redução de base e crédito presumido",
+          "def": "A redução de base de cálculo diminui o percentual do valor da operação sobre o qual incide a alíquota (ex.: tributa-se só 60% do valor); o crédito presumido (ou outorgado) concede um crédito fictício, calculado por percentual sobre a operação, sem relação direta com entradas efetivas, reduzindo o imposto a recolher; ambos são benefícios fiscais que também exigem amparo em convênio CONFAZ para não configurar guerra fiscal."
+        },
+        {
+          "id": "diferimento-suspensao",
+          "nome": "Diferimento e suspensão",
+          "def": "O diferimento transfere o momento do recolhimento do ICMS para uma etapa posterior da cadeia (comum em operações entre produtor rural e indústria, ou em remessas para industrialização), sem dispensar o imposto, apenas postergando-o; a suspensão também posterga a exigência do imposto, mas condicionada ao retorno da mercadoria ao estabelecimento de origem dentro de prazo determinado (ex.: remessa para conserto ou demonstração), extinguindo-se a suspensão (e tornando o imposto devido) caso o retorno não ocorra no prazo."
+        },
+        {
+          "id": "obrigacoes-acessorias-beneficio",
+          "nome": "Obrigações acessórias ligadas ao benefício",
+          "def": "Benefícios fiscais costumam exigir o destaque correto na nota fiscal (indicação do dispositivo legal, CFOP e CST específicos), escrituração em registros próprios da EFD ICMS/IPI e, em muitos casos, o estorno proporcional de créditos vinculados à operação beneficiada; o descumprimento dessas obrigações pode acarretar a perda do benefício e a cobrança do imposto integral com multa."
+        }
+      ],
+      "rl": [
+        { "de": "isencao-icms", "para": "obrigacoes-acessorias-beneficio", "tipo": "exige estorno proporcional em" },
+        { "de": "diferimento-suspensao", "para": "obrigacoes-acessorias-beneficio", "tipo": "depende do cumprimento de prazo em" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "diferimento-suspensao",
+          "texto": "Uma indústria remete uma máquina para conserto em outro estabelecimento, com suspensão do ICMS. Se a máquina não retornar dentro do prazo regulamentar (em geral 180 dias, renovável uma vez), a suspensão se extingue e o ICMS, com os acréscimos legais, passa a ser devido retroativamente."
+        }
+      ],
+      "pg": [
+        "Isenção, em regra, anula o crédito das operações anteriores (salvo disposição em contrário); confundir isenção com \"crédito mantido\" sem checar a lei concessiva é erro recorrente.",
+        "Diferimento não é isenção: o imposto continua devido, apenas em momento futuro, geralmente pelo adquirente/destinatário final da cadeia diferida.",
+        "Suspensão exige retorno da mercadoria dentro do prazo; vencido o prazo sem retorno, o imposto torna-se exigível, inclusive com multa e juros, desde o fato gerador original."
+      ],
+      "rs": "Os principais benefícios de ICMS são isenção (dispensa o pagamento, mas em regra anula o crédito anterior), redução de base e crédito presumido (diminuem a carga sem dispensar integralmente o imposto) e diferimento/suspensão (postergam a exigência do imposto, sem dispensá-lo). Todos, para serem válidos, normalmente exigem amparo em convênio CONFAZ e geram obrigações acessórias específicas, cujo descumprimento pode levar à perda do benefício."
+    }
+  },
+  {
+    "contentId": "CT-070",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o CIAP, as regras de crédito sobre ativo imobilizado e as restrições ao crédito de bens de uso e consumo.",
+      "cc": [
+        {
+          "id": "ciap-conceito",
+          "nome": "CIAP",
+          "def": "Controle de Crédito de ICMS do Ativo Permanente, livro/registro fiscal obrigatório (Ajuste SINIEF nº 08/1997) para controlar a apropriação parcelada do crédito de ICMS sobre bens do ativo imobilizado destinados à atividade do contribuinte; permite acompanhar, mês a mês, quanto já foi creditado, quanto falta creditar e os eventuais estornos proporcionais quando o bem deixa de ser usado em operações tributadas."
+        },
+        {
+          "id": "credito-48-parcelas",
+          "nome": "Apropriação em 48 parcelas (1/48)",
+          "def": "O crédito de ICMS sobre bens do ativo imobilizado é apropriado à razão de 1/48 por mês, e não de uma só vez (LC 87/1996, art. 20, §5º); a cada período de apuração, aplica-se ainda um fator de proporcionalidade entre o valor das saídas tributadas e o total das saídas do estabelecimento naquele mês, de modo que, se o contribuinte tiver parte de suas saídas isentas ou não tributadas, o crédito mensal do bem é proporcionalmente reduzido."
+        },
+        {
+          "id": "transferencia-estorno-ciap",
+          "nome": "Transferência e estorno do saldo do CIAP",
+          "def": "Se o bem do ativo imobilizado for alienado antes de completadas as 48 parcelas, ou deixar de ser usado em atividade tributada, interrompe-se a apropriação do saldo remanescente; a venda do bem antes do fim do prazo também não gera novo crédito pelo adquirente sobre o valor residual não apropriado, salvo regras específicas de transferência em operações societárias (fusão, cisão, incorporação)."
+        },
+        {
+          "id": "uso-consumo-vs-imobilizado",
+          "nome": "Uso e consumo versus ativo imobilizado",
+          "def": "A distinção prática entre um bem de uso/consumo (crédito vedado até 2033) e um bem do ativo imobilizado (crédito em 1/48, com proporcionalidade) depende do critério contábil de registro: bens com vida útil superior a um ano, destinados a uso na atividade e não à venda, controlados em conta de ativo imobilizado, seguem a regra do CIAP; materiais de consumo rápido (cuja vida útil é inferior a um ano ou que se destinam a aplicação corrente) seguem a vedação de uso e consumo."
+        }
+      ],
+      "rl": [
+        { "de": "credito-48-parcelas", "para": "ciap-conceito", "tipo": "é controlado por" },
+        { "de": "uso-consumo-vs-imobilizado", "para": "credito-48-parcelas", "tipo": "classifica o bem elegível a" }
+      ],
+      "fm": [
+        {
+          "id": "parcela-mensal-ciap",
+          "expr": "Crédito mensal = (ICMS da nota ÷ 48) × (saídas tributadas ÷ saídas totais do mês)",
+          "legenda": "Apuração mensal do crédito de ICMS sobre bem do ativo imobilizado, ajustado pela proporção de saídas tributadas no período."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "credito-48-parcelas",
+          "texto": "Uma máquina foi adquirida com ICMS destacado de R$ 48.000. A parcela mensal cheia seria R$ 1.000 (48.000 ÷ 48). Se, em um determinado mês, 80% das saídas do estabelecimento foram tributadas e 20% isentas, o crédito apropriado naquele mês é R$ 800 (R$ 1.000 × 80%), e não os R$ 1.000 integrais."
+        }
+      ],
+      "pg": [
+        "O crédito do ativo imobilizado não é integral no mês da compra: é parcelado em 48 meses e ainda proporcional às saídas tributadas de cada mês — tratá-lo como crédito de mercadoria para revenda (integral e imediato) é erro comum.",
+        "Alienar o bem antes de completar as 48 parcelas interrompe a apropriação do saldo remanescente; o crédito não \"acelera\" nem se transfere automaticamente ao comprador do bem usado.",
+        "A classificação contábil do bem (imobilizado versus uso e consumo) é o que determina o regime de crédito aplicável — bens de vida útil curta não se tornam elegíveis ao CIAP só por estarem registrados incorretamente como imobilizado."
+      ],
+      "rs": "O CIAP controla a apropriação do crédito de ICMS sobre bens do ativo imobilizado, feita em 48 parcelas mensais e ajustada pela proporção de saídas tributadas de cada período. Alienação antecipada ou mudança de uso do bem interrompe o crédito remanescente. A distinção entre bem de uso e consumo (crédito vedado até 2033) e bem do ativo imobilizado (crédito parcelado via CIAP) segue o critério contábil de classificação do bem."
+    }
+  },
+  {
+    "contentId": "CT-071",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o tratamento do ICMS em operações de importação, exportação, remessas e transferências entre estabelecimentos do mesmo contribuinte.",
+      "cc": [
+        {
+          "id": "icms-importacao",
+          "nome": "ICMS na importação",
+          "def": "Incide no desembaraço aduaneiro de mercadoria ou bem importado do exterior, mesmo quando realizado por pessoa física ou por quem não seja contribuinte habitual (entendimento consolidado pelo STF, RE 439.796 e RE 1.221.330, com Súmula Vinculante 48 do próprio STF); o sujeito ativo é o estado do estabelecimento (ou domicílio) do importador, e não necessariamente o estado onde ocorre o desembaraço físico."
+        },
+        {
+          "id": "icms-exportacao-imunidade",
+          "nome": "Imunidade na exportação",
+          "def": "Operações e prestações destinadas ao exterior são imunes ao ICMS (art. 155, §2º, X, \"a\", CF, redação dada pela EC 42/2003), incluindo produtos primários e semielaborados, que antes dessa emenda eram tributados; o exportador mantém o direito aos créditos relativos às entradas que geraram a mercadoria exportada, podendo transferir o saldo credor acumulado a outros estabelecimentos ou a terceiros, conforme a legislação estadual (compensação com débitos próprios ou de terceiros, mediante documentação adequada)."
+        },
+        {
+          "id": "transferencia-mesmo-titular",
+          "nome": "Transferências entre estabelecimentos do mesmo titular",
+          "def": "O STF, no julgamento da ADC 49 (2021, com modulação de efeitos a partir de 2024), decidiu que não incide ICMS na transferência de mercadorias entre estabelecimentos do mesmo contribuinte, ainda que localizados em estados diferentes, por não haver circulação jurídica (mudança de titularidade); o crédito relativo às entradas é mantido e deve ser transferido ao estabelecimento de destino, conforme disciplina posterior do CONFAZ (Convênio ICMS nº 178/2023) para preservar a não cumulatividade sem a antiga tributação na transferência."
+        },
+        {
+          "id": "operacoes-triangulares",
+          "nome": "Operações triangulares e industrialização por encomenda",
+          "def": "Em operações triangulares, a mercadoria é faturada por um contribuinte (vendedor) a outro (comprador), mas remetida fisicamente a um terceiro (por conta e ordem ou por ordem do comprador), exigindo CFOPs e notas fiscais específicas para registrar corretamente o trânsito físico separado do faturamento; na industrialização por encomenda, a remessa de insumos ao industrializador e o retorno do produto industrializado têm tratamento de suspensão do ICMS sobre o valor dos insumos, incidindo o imposto apenas sobre o valor agregado pela industrialização, quando devido."
+        }
+      ],
+      "rl": [
+        { "de": "icms-exportacao-imunidade", "para": "icms-importacao", "tipo": "contrasta com" },
+        { "de": "transferencia-mesmo-titular", "para": "icms-exportacao-imunidade", "tipo": "também preserva crédito sem débito, como em" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "transferencia-mesmo-titular",
+          "texto": "Uma empresa transfere mercadorias de sua filial em Minas Gerais para sua filial em São Paulo. Após a ADC 49, não há incidência de ICMS nessa transferência, mas o crédito de ICMS relativo à aquisição original dessas mercadorias deve ser transferido do estabelecimento de Minas Gerais para o de São Paulo, conforme a disciplina do Convênio ICMS 178/2023."
+        }
+      ],
+      "pg": [
+        "A imunidade de exportação não elimina o direito ao crédito das entradas: o exportador pode acumular saldo credor e transferi-lo, não perde o crédito só porque a saída é imune.",
+        "Desde a ADC 49, não incide ICMS em transferência entre estabelecimentos do mesmo titular, mas isso não significa ausência de obrigação: o crédito das entradas deve ser transferido ao destino para preservar a não cumulatividade.",
+        "ICMS-importação é devido mesmo por pessoa física ou não contribuinte habitual quando importa bem do exterior — a exigência de habitualidade da regra geral de contribuinte não se aplica a essa hipótese específica."
+      ],
+      "rs": "O ICMS incide na importação mesmo por não contribuinte habitual, mas é imune nas exportações, preservando o direito ao crédito das entradas. Desde a ADC 49 (STF), não incide ICMS em transferências entre estabelecimentos do mesmo titular, mas o crédito das entradas deve acompanhar a mercadoria ao destino. Operações triangulares e industrialização por encomenda exigem documentação fiscal específica para refletir corretamente faturamento, trânsito físico e valor agregado."
+    }
+  },
+  {
+    "contentId": "CT-072",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a estrutura da EFD ICMS/IPI, os principais blocos de escrituração e como se fecha a apuração estadual do imposto.",
+      "cc": [
+        {
+          "id": "efd-icms-ipi-conceito",
+          "nome": "EFD ICMS/IPI",
+          "def": "Escrituração Fiscal Digital de ICMS e IPI, integrante do SPED, arquivo digital mensal que substitui os livros fiscais em papel (Registro de Entradas, Saídas, Apuração do ICMS e do IPI, Inventário, entre outros), enviado ao ambiente nacional do SPED e disponibilizado às Secretarias de Fazenda estaduais e à Receita Federal; obrigatória para a generalidade dos contribuintes do ICMS e/ou IPI, com dispensas específicas para optantes do Simples Nacional (que, em regra, não entregam a EFD ICMS/IPI, salvo exceções estaduais)."
+        },
+        {
+          "id": "blocos-efd",
+          "nome": "Principais blocos da EFD ICMS/IPI",
+          "def": "O arquivo é dividido em blocos identificados por letra: Bloco 0 (abertura, identificação do contribuinte e cadastros), Bloco C (documentos fiscais de mercadorias, como NF-e), Bloco D (documentos fiscais de serviços de transporte e comunicação), Bloco E (apuração do ICMS e do IPI), Bloco G (CIAP, controle de crédito do ativo permanente), Bloco H (inventário físico), Bloco K (controle da produção e do estoque, obrigatório para determinados contribuintes industriais) e Bloco 9 (controles e totalizações, fechamento do arquivo)."
+        },
+        {
+          "id": "apuracao-icms-bloco-e",
+          "nome": "Apuração no Bloco E",
+          "def": "O registro E110 (apuração do ICMS – operações próprias) consolida, para cada período, o total de débitos, o total de créditos, os ajustes (outros débitos, outros créditos, estornos) e o saldo devedor a recolher ou o saldo credor a transportar para o período seguinte; há registros específicos para apuração do ICMS-ST (E200) quando o contribuinte atua como substituto tributário em outros estados."
+        },
+        {
+          "id": "giad-obrigacoes-complementares",
+          "nome": "Obrigações declaratórias complementares",
+          "def": "Além da EFD ICMS/IPI, muitos estados ainda exigem declarações próprias (como a GIA, Guia de Informação e Apuração do ICMS, em processo de extinção/substituição pela própria EFD em diversas unidades federadas) ou declarações específicas para regimes especiais e ICMS-ST interestadual (como a GIA-ST), cuja exigência varia conforme a legislação de cada estado e deve ser verificada no RICMS local, já que não há uniformidade nacional completa nessas obrigações acessórias residuais."
+        }
+      ],
+      "rl": [
+        { "de": "blocos-efd", "para": "efd-icms-ipi-conceito", "tipo": "estrutura" },
+        { "de": "apuracao-icms-bloco-e", "para": "blocos-efd", "tipo": "é parte de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "apuracao-icms-bloco-e",
+          "texto": "Ao final do mês, uma empresa apura, no registro E110 da EFD ICMS/IPI, débitos de R$ 50.000 e créditos de R$ 42.000. O saldo devedor de R$ 8.000 é o valor a recolher; se os créditos fossem R$ 55.000, o saldo credor de R$ 5.000 seria transportado para compensação no período seguinte."
+        }
+      ],
+      "pg": [
+        "Optantes do Simples Nacional, em regra, não entregam a EFD ICMS/IPI — presumir obrigatoriedade universal para todos os contribuintes de ICMS é erro comum.",
+        "O Bloco G (CIAP) está na EFD ICMS/IPI justamente para refletir a apropriação parcelada do crédito do ativo imobilizado tratada no sub-tema anterior — os dois conteúdos se conectam diretamente.",
+        "GIA e GIA-ST são obrigações estaduais complementares, não substituídas de forma uniforme pela EFD em todo o país; a exigência específica depende da legislação de cada estado."
+      ],
+      "rs": "A EFD ICMS/IPI é o livro fiscal digital do SPED que consolida entradas, saídas, inventário e apuração de ICMS e IPI em blocos padronizados (0, C, D, E, G, H, K, 9). O fechamento estadual do ICMS ocorre no Bloco E, onde se apuram débitos, créditos, ajustes e o saldo devedor ou credor do período. Obrigações declaratórias estaduais complementares, como GIA e GIA-ST, ainda coexistem com a EFD em diversas unidades federadas."
+    }
+  }
+]
