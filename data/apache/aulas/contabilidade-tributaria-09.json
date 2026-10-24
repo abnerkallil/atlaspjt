@@ -1,0 +1,238 @@
+[
+  {
+    "contentId": "CT-073",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o fato gerador do IPI, o conceito de industrialização e quem é contribuinte ou equiparado a industrial.",
+      "cc": [
+        {
+          "id": "fato-gerador-ipi",
+          "nome": "Fato gerador do IPI",
+          "def": "Ocorre na saída do produto industrializado do estabelecimento industrial (ou equiparado) ou no desembaraço aduaneiro de produto de procedência estrangeira (art. 46 do CTN; art. 153, IV, da Constituição Federal); é imposto federal, seletivo em função da essencialidade e não cumulativo, incidindo sobre produtos industrializados nacionais e importados."
+        },
+        {
+          "id": "conceito-industrializacao",
+          "nome": "Conceito de industrialização",
+          "def": "O art. 4º do RIPI (Decreto nº 7.212/2010) define cinco modalidades: transformação (nova espécie a partir de matéria-prima), beneficiamento (modifica, aperfeiçoa ou altera o funcionamento do produto), montagem (reunião de peças formando novo produto ou unidade autônoma), acondicionamento/reacondicionamento (altera a apresentação do produto, salvo embalagem para transporte) e renovação/recondicionamento (restaura produto usado ou inutilizado para utilização). O conceito é mais amplo que \"fabricar do zero\" e não exige automação ou escala industrial."
+        },
+        {
+          "id": "contribuinte-equiparados",
+          "nome": "Contribuinte e estabelecimentos equiparados",
+          "def": "Contribuinte é o industrial e quem a lei a ele equipara (art. 51 do CTN). O importador é equiparado a industrial por força do art. 9º do RIPI e do art. 4º da Lei nº 4.502/1964, devendo recolher o IPI tanto no desembaraço aduaneiro quanto, novamente, na saída subsequente de seu estabelecimento; o IPI pago na importação gera crédito que é compensado com o débito da saída, mas não dispensa a nova incidência. Em hipóteses específicas da legislação, atacadistas e outros estabelecimentos também podem ser equiparados a industrial."
+        },
+        {
+          "id": "exclusoes-industrializacao",
+          "nome": "Exclusões do conceito de industrialização",
+          "def": "O art. 5º do RIPI exclui expressamente do conceito, entre outras hipóteses: o preparo de produtos alimentares para consumo no próprio estabelecimento (padarias, restaurantes, lanchonetes), a confecção de vestuário ou artesanato por encomenda direta do consumidor sem fins comerciais, o conserto, restauração e recondicionamento de produtos usados destinados ao uso do próprio consertador e a montagem de óculos sob prescrição. Essas exclusões evitam que atividades tipicamente comerciais ou de prestação de serviço sejam tributadas como se fossem industrialização."
+        }
+      ],
+      "rl": [
+        { "de": "conceito-industrializacao", "para": "fato-gerador-ipi", "tipo": "define o fato gerador de" },
+        { "de": "exclusoes-industrializacao", "para": "conceito-industrializacao", "tipo": "delimita negativamente" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "contribuinte-equiparados",
+          "texto": "Uma empresa importa eletrônicos da China. No desembaraço aduaneiro, recolhe IPI sobre o valor aduaneiro. Ao revender esses mesmos eletrônicos no mercado interno, como equiparada a industrial, debita novamente o IPI na saída, compensando com o crédito do IPI pago na importação — há duas incidências, não uma isenção da segunda pela primeira."
+        }
+      ],
+      "pg": [
+        "Industrialização para fins de IPI tem conceito próprio e mais amplo do que \"fabricar do zero\": simples acondicionamento que altera a apresentação do produto para venda pode configurar industrialização.",
+        "O importador é equiparado a industrial e paga IPI duas vezes (desembaraço e saída subsequente); tratar a segunda incidência como indevida é erro comum.",
+        "Preparo de alimentos para consumo no próprio estabelecimento (padaria, restaurante) está expressamente excluído do conceito de industrialização pelo RIPI."
+      ],
+      "rs": "O IPI incide na saída de produto industrializado do estabelecimento industrial ou equiparado, ou no desembaraço aduaneiro de produto importado. Industrialização, pelo RIPI, abrange transformação, beneficiamento, montagem, acondicionamento/reacondicionamento e renovação/recondicionamento, com exclusões expressas para atividades tipicamente comerciais ou de serviço (padarias, consertos para uso próprio). Contribuinte é o industrial e quem a lei equipara, notadamente o importador, que recolhe IPI tanto na importação quanto na revenda subsequente."
+    }
+  },
+  {
+    "contentId": "CT-074",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a função da TIPI e da NCM na classificação fiscal dos produtos e os efeitos práticos de um enquadramento incorreto.",
+      "cc": [
+        {
+          "id": "tipi-conceito",
+          "nome": "TIPI",
+          "def": "Tabela de Incidência do Imposto sobre Produtos Industrializados, aprovada por decreto federal (atualmente o Decreto nº 11.158/2022), que associa cada código de classificação fiscal a uma alíquota do IPI; é o instrumento que operacionaliza, produto a produto, a seletividade exigida pela Constituição."
+        },
+        {
+          "id": "ncm-conceito",
+          "nome": "NCM",
+          "def": "Nomenclatura Comum do Mercosul, código de 8 dígitos baseado no Sistema Harmonizado (SH) internacional de classificação de mercadorias, usado para identificar o produto e localizá-lo na TIPI; a mesma NCM também baliza o Imposto de Importação, o PIS/Cofins-importação e, em geral, a classificação usada para o CEST do ICMS-ST, de modo que um erro de classificação pode afetar simultaneamente vários tributos."
+        },
+        {
+          "id": "seletividade-obrigatoria",
+          "nome": "Seletividade obrigatória",
+          "def": "A seletividade em função da essencialidade do produto é obrigatória para o IPI (art. 153, §3º, I, da Constituição Federal), ao contrário da seletividade facultativa do ICMS; por isso a TIPI fixa alíquota zero ou baixa para produtos essenciais (alimentos básicos, medicamentos) e alíquotas elevadas para produtos considerados supérfluos ou nocivos, como cigarros, bebidas e perfumaria."
+        },
+        {
+          "id": "reflexos-classificacao-errada",
+          "nome": "Reflexos de uma classificação incorreta",
+          "def": "Classificar o produto em NCM equivocada pode gerar recolhimento de IPI a menor ou a maior, perda ou uso indevido de benefícios fiscais vinculados ao código, divergência na nota fiscal eletrônica (que exige a NCM correta) e autuação fiscal com multa; como a NCM é referência comum a outros tributos, o erro raramente fica restrito ao IPI."
+        }
+      ],
+      "rl": [
+        { "de": "ncm-conceito", "para": "tipi-conceito", "tipo": "é a chave de consulta de" },
+        { "de": "seletividade-obrigatoria", "para": "tipi-conceito", "tipo": "determina as alíquotas de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "reflexos-classificacao-errada",
+          "texto": "Uma indústria classifica um produto em NCM genérica com alíquota de 10%, quando a classificação correta corresponderia a alíquota zero por essencialidade. Além de recolher IPI indevidamente, a empresa pode repassar o custo ao preço de venda e distorcer sua competitividade, sujeita ainda a autuação se a fiscalização identificar a classificação equivocada."
+        }
+      ],
+      "pg": [
+        "A seletividade do IPI é obrigatória (CF, art. 153, §3º, I), diferente da seletividade facultativa do ICMS — inverter essa regra é erro clássico de prova.",
+        "Alíquota zero na TIPI não é isenção: o produto continua no campo de incidência do IPI, apenas com alíquota nula, o que tem efeitos distintos sobre manutenção de crédito.",
+        "O mesmo código NCM usado para o IPI também baliza o Imposto de Importação e o PIS/Cofins-importação; um erro de classificação normalmente afeta mais de um tributo ao mesmo tempo."
+      ],
+      "rs": "A TIPI associa cada código NCM (classificação fiscal baseada no Sistema Harmonizado) a uma alíquota de IPI, operacionalizando a seletividade obrigatória exigida pela Constituição (alíquotas baixas ou zero para produtos essenciais, altas para supérfluos). Como a NCM também é referência para outros tributos, um enquadramento incorreto tem efeitos que vão além do IPI, incluindo recolhimento errado, perda de benefícios e risco de autuação."
+    }
+  },
+  {
+    "contentId": "CT-075",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a base de cálculo do IPI na saída e na importação, a mecânica da não cumulatividade e as regras de período de apuração.",
+      "cc": [
+        {
+          "id": "base-calculo-saida",
+          "nome": "Base de cálculo na saída",
+          "def": "Na operação interna, a base de cálculo é o valor total da operação de saída do estabelecimento industrial ou equiparado, incluindo despesas acessórias cobradas do adquirente (frete, quando por conta do remetente, seguros e outras despesas), sem prejuízo de regras específicas de valor mínimo para operações entre partes vinculadas."
+        },
+        {
+          "id": "base-calculo-importacao",
+          "nome": "Base de cálculo na importação",
+          "def": "No desembaraço aduaneiro, a base de cálculo é o valor aduaneiro do produto somado ao Imposto de Importação e aos demais encargos cambiais efetivamente pagos pelo importador (art. 47 do CTN); essa base, mais ampla do que o simples preço da mercadoria, costuma surpreender quem calcula o IPI de importação apenas sobre o valor da fatura comercial."
+        },
+        {
+          "id": "nao-cumulatividade-ipi",
+          "nome": "Não cumulatividade e período de apuração",
+          "def": "O contribuinte credita-se do IPI destacado nas entradas e debita-se do IPI destacado nas saídas, apurando periodicamente a diferença (CF, art. 153, §3º, II); desde a Lei nº 8.850/1994, a apuração é mensal para a generalidade dos produtos, mantendo-se apuração decendial apenas para cigarros (NCM 2402.20.00), cuja arrecadação exige controle mais frequente."
+        },
+        {
+          "id": "credito-insumos-ipi",
+          "nome": "Crédito sobre insumos (crédito físico)",
+          "def": "O crédito de IPI é restrito, em regra, a matérias-primas, produtos intermediários e material de embalagem que se integram ao produto final ou se consomem no processo de industrialização (crédito \"físico\", mais estrito que o crédito financeiro admitido em parte para o ICMS); bens de uso e consumo do estabelecimento (ferramentas, material de limpeza) não geram crédito. Entradas de insumos destinadas a produtos fora do campo de incidência (NT) não geram crédito, regra distinta do tratamento dado a produtos isentos ou com alíquota zero, que seguem disciplina própria de manutenção de crédito em hipóteses específicas."
+        }
+      ],
+      "rl": [
+        { "de": "base-calculo-importacao", "para": "base-calculo-saida", "tipo": "é a variante na importação de" },
+        { "de": "credito-insumos-ipi", "para": "nao-cumulatividade-ipi", "tipo": "operacionaliza" }
+      ],
+      "fm": [
+        {
+          "id": "apuracao-mensal-ipi",
+          "expr": "Saldo do período = Débitos (IPI nas saídas) − Créditos (IPI nas entradas de insumos)",
+          "legenda": "Apuração periódica do IPI: saldo positivo é recolhido; saldo negativo (credor) é transportado para o período seguinte."
+        }
+      ],
+      "ex": [
+        {
+          "conceitoId": "nao-cumulatividade-ipi",
+          "texto": "No mês, uma indústria debita R$ 30.000 de IPI nas saídas e credita R$ 22.000 de IPI nas entradas de matéria-prima e material de embalagem. O saldo devedor de R$ 8.000 é recolhido até o prazo legal; se os créditos fossem R$ 35.000, o saldo credor de R$ 5.000 seria transportado para compensação no período seguinte."
+        }
+      ],
+      "pg": [
+        "O período de apuração do IPI é mensal para a generalidade dos produtos; cigarros seguem apuração decendial — tratar todo IPI como decendial é erro.",
+        "O crédito de IPI é \"físico\": o insumo deve se integrar ao produto ou se consumir no processo produtivo; bens de uso e consumo não geram crédito, diferente da discussão mais ampla sobre crédito financeiro do ICMS.",
+        "A base de cálculo na importação inclui o valor aduaneiro mais o Imposto de Importação e encargos cambiais, não apenas o preço da mercadoria na fatura comercial."
+      ],
+      "rs": "A base de cálculo do IPI é o valor da operação de saída (interna) ou o valor aduaneiro somado ao Imposto de Importação e encargos cambiais (importação). O imposto é não cumulativo, com apuração mensal para a generalidade dos produtos (decendial apenas para cigarros), compensando créditos de entrada com débitos de saída. O crédito é restrito a insumos que se integram ao produto ou se consomem na industrialização (crédito físico), não alcançando bens de uso e consumo nem entradas destinadas a produtos fora do campo de incidência."
+    }
+  },
+  {
+    "contentId": "CT-076",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar os principais regimes de desoneração do IPI (imunidade, isenção, suspensão) e a situação atual do imposto frente à reforma tributária.",
+      "cc": [
+        {
+          "id": "imunidade-exportacao-ipi",
+          "nome": "Imunidade na exportação",
+          "def": "Produtos industrializados destinados ao exterior são imunes ao IPI (art. 153, §3º, III, da Constituição Federal); a imunidade dispensa definitivamente o imposto na exportação e preserva o direito à manutenção dos créditos relativos às entradas que geraram o produto exportado, de forma análoga ao tratamento dado à exportação no ICMS."
+        },
+        {
+          "id": "suspensao-industrializacao-encomenda",
+          "nome": "Suspensão na industrialização por encomenda",
+          "def": "Na remessa de insumos para industrialização por encomenda, com retorno do produto ao estabelecimento encomendante, o IPI sobre a remessa fica suspenso, incidindo apenas sobre o valor agregado pela industrialização no momento do retorno; a suspensão está condicionada ao retorno do produto dentro do prazo regulamentar, sob pena de o imposto suspenso tornar-se exigível."
+        },
+        {
+          "id": "isencao-zfm",
+          "nome": "Isenção da Zona Franca de Manaus",
+          "def": "O Decreto-Lei nº 288/1967 isenta do IPI as saídas de produtos industrializados na Zona Franca de Manaus destinados ao restante do território nacional, como incentivo regional de desenvolvimento; a reforma tributária (Emenda Constitucional nº 132/2023 e Lei Complementar nº 214/2025) manteve expressamente esse tratamento diferenciado, reservando ao IPI, mesmo após a reforma, o papel de preservar a competitividade da ZFM."
+        },
+        {
+          "id": "drawback",
+          "nome": "Drawback",
+          "def": "Regime aduaneiro especial que desonera (por suspensão, isenção ou restituição) tributos — incluindo o IPI — incidentes sobre insumos importados ou, em algumas modalidades, adquiridos no mercado interno, quando destinados à industrialização de produto a ser exportado; busca evitar que a carga tributária interna encareça o produto nacional no mercado internacional."
+        }
+      ],
+      "rl": [
+        { "de": "isencao-zfm", "para": "imunidade-exportacao-ipi", "tipo": "é benefício regional distinto de" },
+        { "de": "drawback", "para": "suspensao-industrializacao-encomenda", "tipo": "também desonera, de forma condicionada, como em" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "suspensao-industrializacao-encomenda",
+          "texto": "Uma indústria remete tecido para outra empresa confeccionar peças de vestuário por encomenda, com retorno previsto ao encomendante. O IPI sobre essa remessa fica suspenso; no retorno, incide apenas sobre o valor agregado pela confecção, e não sobre o valor total do produto final."
+        }
+      ],
+      "pg": [
+        "Imunidade de exportação dispensa definitivamente o IPI e tem base constitucional própria; a isenção da ZFM é benefício regional distinto, fundado no Decreto-Lei 288/1967, com lógica e controle de destinação diferentes.",
+        "A reforma tributária não extingue o IPI por completo: a Emenda Constitucional nº 132/2023 e a Lei Complementar nº 214/2025 preveem a redução das alíquotas da generalidade dos produtos a partir de 2027, mas mantêm o IPI sobre produtos cuja industrialização é incentivada na ZFM com alíquota atual acima de 6,5%, para preservar a competitividade da Zona Franca; a lista definitiva desses produtos ainda não havia sido publicada até a elaboração desta aula — verificar a regulamentação vigente antes de aplicar esse detalhe em um caso concreto.",
+        "Suspensão na industrialização por encomenda depende do retorno do produto dentro do prazo regulamentar; vencido o prazo sem retorno, o imposto suspenso passa a ser exigível, com os acréscimos legais cabíveis."
+      ],
+      "rs": "O IPI é imune na exportação (dispensa definitiva, com manutenção de crédito) e admite suspensão na industrialização por encomenda, condicionada ao retorno do produto no prazo. A isenção da Zona Franca de Manaus (Decreto-Lei 288/1967) é benefício regional distinto, expressamente preservado pela reforma tributária, que reduz as alíquotas de IPI da generalidade dos produtos a partir de 2027 mas mantém o imposto sobre itens incentivados na ZFM com alíquota atual superior a 6,5% — lista ainda pendente de regulamentação definitiva. O drawback desonera tributos, incluindo o IPI, sobre insumos destinados a produto exportado."
+    }
+  },
+  {
+    "contentId": "CT-077",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar como a apuração do IPI é escriturada na EFD ICMS/IPI e quais registros do Bloco E lhe são próprios.",
+      "cc": [
+        {
+          "id": "efd-bloco-e-ipi",
+          "nome": "IPI na EFD ICMS/IPI",
+          "def": "A apuração do IPI não tem arquivo digital próprio: é escriturada no mesmo arquivo da EFD ICMS/IPI (SPED) usado para o ICMS, dentro do Bloco E, por meio de registros específicos distintos dos usados para o imposto estadual; a obrigatoriedade e a periodicidade de entrega seguem, em linhas gerais, as mesmas regras de dispensa para optantes do Simples Nacional já aplicáveis ao ICMS."
+        },
+        {
+          "id": "registro-e500",
+          "nome": "Registro E500",
+          "def": "Abre o período de apuração do IPI dentro do Bloco E, identificando o mês (ou decêndio, no caso de cigarros) a que se refere a apuração que será detalhada nos registros seguintes daquele bloco."
+        },
+        {
+          "id": "registro-e510-e520",
+          "nome": "Registros E510 e E520",
+          "def": "O registro E510 traz ajustes e informações complementares da apuração do IPI (como estornos de crédito ou outros débitos/créditos não decorrentes diretamente dos documentos fiscais); o registro E520 consolida a apuração do período, totalizando débitos, créditos e o saldo devedor a recolher ou credor a transportar — função análoga à do registro E110 usado na apuração do ICMS, mas referente a tributo e registro distintos dentro do mesmo bloco."
+        },
+        {
+          "id": "documentos-fiscais-controles",
+          "nome": "Controles e validações entre blocos",
+          "def": "O IPI destacado nos documentos fiscais de entrada e saída, escriturados no Bloco C (documentos fiscais de mercadorias), deve ser compatível com os totais apurados no Bloco E; divergências entre o que consta nos documentos e o que é totalizado na apuração são motivo comum de inconsistência na malha fiscal da Receita Federal, que cruza eletronicamente as informações da EFD com as notas fiscais eletrônicas emitidas e recebidas."
+        }
+      ],
+      "rl": [
+        { "de": "registro-e500", "para": "efd-bloco-e-ipi", "tipo": "abre o período de" },
+        { "de": "registro-e510-e520", "para": "efd-bloco-e-ipi", "tipo": "consolida a apuração de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "registro-e510-e520",
+          "texto": "Ao final do mês, o registro E520 de uma indústria totaliza débitos de IPI de R$ 30.000 e créditos de R$ 22.000, apurando saldo devedor de R$ 8.000 a recolher — de forma equivalente, para o IPI, ao que o registro E110 faz para o ICMS."
+        }
+      ],
+      "pg": [
+        "A apuração do IPI não tem arquivo digital próprio: compartilha a mesma EFD ICMS/IPI usada para o ICMS, mas com registros específicos (E500, E510, E520) dentro do mesmo Bloco E.",
+        "O registro E520 do IPI é funcionalmente equivalente ao E110 do ICMS, mas não deve ser confundido com ele: são registros e tributos distintos dentro do mesmo bloco da mesma escrituração.",
+        "Divergência entre o IPI destacado nos documentos fiscais do Bloco C e os totais apurados no Bloco E é motivo comum de autuação por cruzamento eletrônico de informações (malha fiscal)."
+      ],
+      "rs": "O IPI é apurado dentro da mesma EFD ICMS/IPI usada para o ICMS, com registros próprios no Bloco E: o E500 abre o período de apuração, o E510 traz ajustes complementares e o E520 consolida débitos, créditos e o saldo devedor ou credor, de forma análoga ao E110 do ICMS. A consistência entre o IPI destacado nos documentos fiscais do Bloco C e os totais do Bloco E é verificada eletronicamente pela Receita Federal, e divergências são causa comum de autuação."
+    }
+  }
+]
