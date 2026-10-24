@@ -14,6 +14,43 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #112 — APA-18: aulas base de Contabilidade Tributária (sub-lote 5l)
+
+- Ponto de restauração: branch `restore/pre-apa-18-contabilidade-tributaria-12`
+  (main antes do merge).
+- O que muda no site: nada visível ainda — este PR só adiciona os dados; as
+  8 aulas só aparecem depois de o Abner rodar o comando de carga para esse
+  arquivo (não precisa de "Publicar Atlas": o script grava direto em D1/R2).
+  O carregamento em produção de toda a Contabilidade Tributária será feito
+  num único comando ao final de todos os 15 sub-lotes, a pedido do Abner.
+- O que muda fora do site: décimo segundo sub-lote de Contabilidade
+  Tributária em `data/apache/aulas/contabilidade-tributaria-12.json` (8 dos
+  124 conteúdos: CT-091 a CT-098, unidade "Obrigações e SPED", na ordem do
+  catálogo, `model='claude-manual'`), usando o mesmo mecanismo de carga dos
+  PRs #95-#111 (`scripts/apache-carregar-aulas.mjs`). Conteúdo: obrigatoriedade,
+  livros digitais substituídos, plano referencial e ciclo de
+  validação/assinatura/substituição da ECD (IN RFB 2.003/2021) (CT-091);
+  obrigatoriedade da ECF, recuperação automática dos saldos da ECD e os
+  blocos M (e-Lalur/e-Lacs) e N/P de apuração do IRPJ/CSLL (CT-092);
+  obrigatoriedade, periodicidade (10º dia útil do 2º mês subsequente) e
+  blocos de documentos/apuração (A, C, D, F, M) da EFD-Contribuições (IN
+  RFB 1.252/2012) (CT-093); obrigatoriedade por Convênio ICMS 143/2006,
+  blocos C/E de documentos e apuração, Bloco H de inventário e Bloco G
+  (CIAP, crédito de ICMS do ativo imobilizado em 48 parcelas mensais) da
+  EFD ICMS/IPI (CT-094); sequência obrigatória de fechamento integrado
+  eSocial → EFD-Reinf → DCTFWeb, geração automática (sem digitação livre)
+  da declaração consolidadora e o procedimento de retificação fora de
+  ordem (CT-095); as quatro modalidades do PER/DCOMP Web — restituição,
+  compensação, ressarcimento e reembolso (IN RFB 2.055/2021), confirmado
+  por pesquisa web — e seu acompanhamento pelo e-CAC (CT-096); ausência de
+  padrão nacional nas obrigações acessórias estaduais (GIA e equivalentes)
+  e municipais (declarações de serviços, cadastro mobiliário) e o uso da
+  GNRE em operações interestaduais (CT-097); e as fontes do cruzamento de
+  dados (NF-e/NFS-e, Sped, declarações, e-Financeira) que formam a malha
+  fiscal, a intimação eletrônica pelo DTE e a conciliação contábil-fiscal
+  preventiva (CT-098). `docs/APACHE-18-plano.md` atualizado (sub-lote 5l
+  mesclado; Tributária em 98/124).
+
 ## PR #111 — APA-18: aulas base de Contabilidade Tributária (sub-lote 5k)
 
 - Ponto de restauração: branch `restore/pre-apache-18-5k-folha` (main antes
