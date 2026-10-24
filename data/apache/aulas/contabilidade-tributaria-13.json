@@ -1,0 +1,488 @@
+[
+  {
+    "contentId": "CT-099",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar os fundamentos da reforma tributária do consumo: a EC 132/2023, a LC 214/2025, o modelo de IVA dual (CBS/IBS) e o cronograma normativo geral da transição.",
+      "cc": [
+        {
+          "id": "ec-132-2023",
+          "nome": "EC 132/2023",
+          "def": "Emenda Constitucional que instituiu a reforma tributária sobre o consumo, criando a CBS (federal) e o IBS (estadual e municipal, em substituição ao ICMS e ao ISS), além do Imposto Seletivo, e fixando um período de transição que vai até 2033."
+        },
+        {
+          "id": "lc-214-2025",
+          "nome": "LC 214/2025",
+          "def": "Lei Complementar que regulamenta a CBS, o IBS e o Imposto Seletivo previstos na EC 132/2023, detalhando fato gerador, base de cálculo, não cumulatividade, regimes diferenciados, split payment e cashback; é complementada por atos do Comitê Gestor do IBS e da Receita Federal editados progressivamente."
+        },
+        {
+          "id": "iva-dual",
+          "nome": "Modelo de IVA dual",
+          "def": "Estrutura em que a CBS (tributo federal) e o IBS (tributo subnacional, com alíquota estadual e municipal somadas) incidem sobre a mesma base ampla de bens, serviços e direitos, com legislação e alíquota de referência próprias para cada ente, mas regras de fato gerador, apuração e creditamento unificadas pela LC 214/2025."
+        },
+        {
+          "id": "cronograma-normativo",
+          "nome": "Cronograma normativo da transição",
+          "def": "Período de 2026 a 2033 em que CBS e IBS são implementados gradualmente enquanto PIS, Cofins, ICMS e ISS convivem com os novos tributos até serem extintos, com a regulamentação complementar (atos do Comitê Gestor do IBS e da Receita Federal) sendo editada ao longo da transição, inclusive depois da LC 214/2025."
+        }
+      ],
+      "rl": [
+        {
+          "de": "iva-dual",
+          "para": "lc-214-2025",
+          "tipo": "tem suas regras operacionais detalhadas por"
+        },
+        {
+          "de": "cronograma-normativo",
+          "para": "ec-132-2023",
+          "tipo": "decorre do período de transição previsto na"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "iva-dual",
+          "texto": "No sistema anterior, ICMS (estadual), ISS (municipal) e PIS/Cofins (federal) tinham legislações, bases de cálculo e regras de crédito totalmente distintas entre si. No IVA dual, CBS e IBS compartilham o mesmo fato gerador e as mesmas regras de apuração e crédito da LC 214/2025 — cada ente só define sua própria alíquota, não a mecânica do tributo."
+        }
+      ],
+      "pg": [
+        "A reforma não criou um único tributo nacional: CBS (federal) e IBS (estadual/municipal) continuam sendo tributos distintos, cada um com sua alíquota própria — o que foi unificado é a legislação de base (fato gerador, créditos, regimes) da LC 214/2025.",
+        "A EC 132/2023 fixou a estrutura constitucional e o prazo de transição; os detalhes operacionais (como calcular, quem se credita, quais exceções) vêm da LC 214/2025 e de atos regulamentares posteriores, ainda em edição.",
+        "O cronograma normativo não termina com a publicação da LC 214/2025: novas normas complementares do Comitê Gestor do IBS e da Receita Federal continuam sendo editadas ao longo da transição."
+      ],
+      "rs": "A EC 132/2023 instituiu a reforma tributária do consumo, criando CBS, IBS e Imposto Seletivo e fixando transição até 2033. A LC 214/2025 regulamenta esses tributos, definindo um modelo de IVA dual em que CBS (federal) e IBS (estadual/municipal) compartilham fato gerador, base de cálculo e regras de crédito, mantendo apenas a alíquota como competência própria de cada ente. O cronograma normativo da transição continua sendo complementado por atos do Comitê Gestor do IBS e da Receita Federal."
+    }
+  },
+  {
+    "contentId": "CT-100",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a CBS: incidência federal, contribuintes, base de cálculo, créditos e regimes diferenciados.",
+      "cc": [
+        {
+          "id": "cbs-incidencia",
+          "nome": "Incidência da CBS",
+          "def": "A CBS é o tributo federal que substitui o PIS e a Cofins, incidindo sobre operações com bens e serviços no modelo de IVA, com fato gerador amplo e não cumulatividade plena ao longo de toda a cadeia produtiva e comercial."
+        },
+        {
+          "id": "cbs-contribuinte",
+          "nome": "Contribuinte e destaque na operação",
+          "def": "O contribuinte é, em regra, o fornecedor do bem ou serviço; a CBS é destacada no documento fiscal da operação, e o adquirente que também é contribuinte pode se creditar do valor destacado, desde que a aquisição seja tributada e vinculada à sua atividade."
+        },
+        {
+          "id": "cbs-base-credito",
+          "nome": "Base de cálculo e crédito financeiro",
+          "def": "A base de cálculo é o valor da operação; o crédito é do tipo financeiro amplo — abrange praticamente todas as aquisições tributadas de bens e serviços usadas pela empresa, diferente do crédito físico mais restrito do regime não cumulativo de PIS/Cofins que a CBS substitui."
+        },
+        {
+          "id": "cbs-regimes",
+          "nome": "Regimes diferenciados e específicos",
+          "def": "Setores como saúde, educação, alimentos da cesta básica e transporte coletivo têm alíquota reduzida ou zero de CBS, conforme anexos da LC 214/2025; serviços financeiros, bens imóveis e combustíveis têm regime específico, com base de cálculo e forma de apuração próprias."
+        }
+      ],
+      "rl": [
+        {
+          "de": "cbs-regimes",
+          "para": "cbs-base-credito",
+          "tipo": "é exceção setorial à regra geral de"
+        },
+        {
+          "de": "cbs-contribuinte",
+          "para": "cbs-incidencia",
+          "tipo": "é o sujeito passivo definido pela"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "cbs-base-credito",
+          "texto": "Uma indústria compra matéria-prima, mas também serviços de limpeza e consultoria tributados por CBS: no crédito financeiro amplo, ela pode se creditar da CBS de todas essas aquisições, não só da matéria-prima que entra fisicamente no produto final."
+        }
+      ],
+      "pg": [
+        "A CBS não substitui o IPI nem o ICMS — ela substitui especificamente o PIS e a Cofins; os demais tributos têm seu próprio cronograma de extinção/redução.",
+        "O crédito financeiro amplo da CBS não é automático para qualquer despesa: a aquisição precisa ser tributada pela CBS e estar vinculada à atividade econômica do contribuinte.",
+        "Alíquota reduzida não é a regra geral: a maioria das operações segue a alíquota padrão da CBS; os regimes diferenciados são exceções listadas taxativamente em anexo da LC 214/2025."
+      ],
+      "rs": "A CBS é o tributo federal que substitui PIS e Cofins, com fato gerador amplo e não cumulatividade plena. O fornecedor é o contribuinte e destaca o tributo no documento fiscal; o adquirente contribuinte se credita pelo modelo de crédito financeiro amplo, mais abrangente que o crédito físico anterior. Setores como saúde, educação e alimentos têm regimes diferenciados (alíquota reduzida ou zero), e outros, como serviços financeiros e combustíveis, têm regime específico de apuração."
+    }
+  },
+  {
+    "contentId": "CT-101",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o IBS: competência compartilhada, cobrança no destino, papel do Comitê Gestor, base de cálculo, créditos e distribuição da receita.",
+      "cc": [
+        {
+          "id": "ibs-competencia",
+          "nome": "Competência compartilhada",
+          "def": "O IBS é um tributo subnacional que substitui o ICMS (estados) e o ISS (municípios), com legislação única e nacional dada pela LC 214/2025, mas com a alíquota resultando da soma da alíquota estadual e da alíquota municipal fixadas por cada ente."
+        },
+        {
+          "id": "ibs-destino",
+          "nome": "Cobrança no destino",
+          "def": "O IBS é cobrado no local de destino (consumo) do bem ou serviço, e não na origem (produção), como ocorre predominantemente com o ICMS atual; essa mudança altera a distribuição da receita tributária entre os entes federativos."
+        },
+        {
+          "id": "ibs-comite-gestor",
+          "nome": "Comitê Gestor do IBS",
+          "def": "Entidade pública sob regime especial, responsável por administrar a arrecadação, a distribuição e a fiscalização do IBS de forma unificada, concentrando funções hoje pulverizadas entre os 27 estados e milhares de municípios que administram ICMS e ISS separadamente."
+        },
+        {
+          "id": "ibs-credito-distribuicao",
+          "nome": "Crédito e distribuição da receita",
+          "def": "O IBS segue o modelo de não cumulatividade com crédito financeiro amplo, semelhante à CBS; a distribuição da receita entre estados e municípios segue o critério de destino, com fundo de compensação previsto para mitigar perdas de arrecadação de entes mais dependentes do modelo de origem durante a transição."
+        }
+      ],
+      "rl": [
+        {
+          "de": "ibs-destino",
+          "para": "ibs-credito-distribuicao",
+          "tipo": "determina o critério territorial usado por"
+        },
+        {
+          "de": "ibs-comite-gestor",
+          "para": "ibs-competencia",
+          "tipo": "administra de forma unificada a"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "ibs-destino",
+          "texto": "Uma indústria no estado A vende para um consumidor final no estado B. Pelo IBS, a receita do tributo pertence predominantemente ao estado e ao município de destino (B), diferente do ICMS atual, em que boa parte da receita ficava na origem (A)."
+        }
+      ],
+      "pg": [
+        "O IBS não é apenas a fusão de ICMS e ISS: além de unificar a legislação, muda o critério de cobrança de origem para destino, o que redistribui receita entre entes federativos.",
+        "O Comitê Gestor do IBS não é um órgão federal: é uma entidade própria, sob regime especial, criada para administrar o tributo que é de competência compartilhada entre estados e municípios.",
+        "A alíquota do IBS não é única e nacional: resulta da soma de uma alíquota estadual e uma alíquota municipal, que cada ente pode fixar dentro dos limites e regras da LC 214/2025."
+      ],
+      "rs": "O IBS substitui ICMS e ISS com legislação única nacional (LC 214/2025), mas alíquota formada pela soma da parcela estadual e municipal. É cobrado no destino do consumo, mudando a distribuição de receita entre entes em relação ao modelo de origem do ICMS atual. O Comitê Gestor do IBS administra a arrecadação, distribuição e fiscalização de forma unificada, e o tributo segue não cumulatividade com crédito financeiro amplo, com fundo de compensação para mitigar perdas durante a transição."
+    }
+  },
+  {
+    "contentId": "CT-102",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o Imposto Seletivo: incidência, produtos e serviços alcançados, base de cálculo, finalidade extrafiscal e vigência.",
+      "cc": [
+        {
+          "id": "is-incidencia",
+          "nome": "Incidência do Imposto Seletivo",
+          "def": "Tributo federal que incide sobre a produção, extração, comercialização ou importação de bens e serviços prejudiciais à saúde ou ao meio ambiente (como cigarros, bebidas alcoólicas, veículos e bens minerais); as alíquotas específicas por produto dependem de lei própria e de regulamentação ainda em definição."
+        },
+        {
+          "id": "is-monofasico",
+          "nome": "Tributação monofásica, sem crédito",
+          "def": "Diferente de CBS e IBS, o Imposto Seletivo não é cobrado em todas as etapas da cadeia nem gera crédito para o adquirente: incide uma única vez, em regra na saída do produtor ou na importação, compondo custo definitivo para quem adquire o bem ou serviço."
+        },
+        {
+          "id": "is-vigencia",
+          "nome": "Vigência e regulamentação pendente",
+          "def": "A cobrança do Imposto Seletivo está prevista para começar junto com a vigência plena da CBS e a extinção do PIS e da Cofins (a partir de 2027); a lista detalhada de produtos e as alíquotas específicas de cada item ainda dependem de lei ordinária/complementar própria a ser editada."
+        },
+        {
+          "id": "is-finalidade-extrafiscal",
+          "nome": "Finalidade extrafiscal",
+          "def": "O objetivo principal do Imposto Seletivo não é arrecadatório, mas desestimular o consumo de bens e serviços considerados nocivos à saúde ou ao meio ambiente; não incide sobre exportações, preservando a competitividade do produto nacional no exterior."
+        }
+      ],
+      "rl": [
+        {
+          "de": "is-monofasico",
+          "para": "is-incidencia",
+          "tipo": "é a forma de cobrança da"
+        },
+        {
+          "de": "is-finalidade-extrafiscal",
+          "para": "is-vigencia",
+          "tipo": "justifica a definição de alíquotas específicas prevista para a"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "is-monofasico",
+          "texto": "Uma distribuidora de bebidas alcoólicas compra o produto do fabricante (que já pagou o Imposto Seletivo na saída da fábrica) e revende ao varejo: a distribuidora não recolhe o Imposto Seletivo de novo nem se credita dele, porque ele já se esgotou em uma única incidência anterior."
+        }
+      ],
+      "pg": [
+        "O Imposto Seletivo não é mais uma camada de IVA em cascata: ele é monofásico e não gera crédito, diferente da lógica de não cumulatividade de CBS e IBS.",
+        "Ainda não existe uma lista fechada de alíquotas por produto em vigor: a EC 132/2023 e a LC 214/2025 definem a moldura geral, mas a alíquota específica de cada item depende de lei própria, ainda em tramitação/regulamentação.",
+        "O Imposto Seletivo não incide sobre exportações — sua função é desestimular consumo nocivo no mercado interno, não compor a arrecadação corrente nem taxar o produto nacional vendido ao exterior."
+      ],
+      "rs": "O Imposto Seletivo é um tributo federal, de incidência monofásica e sem direito a crédito, sobre bens e serviços prejudiciais à saúde ou ao meio ambiente. Sua cobrança está prevista para começar junto com a vigência plena da CBS, mas a lista de produtos e as alíquotas específicas ainda dependem de regulamentação própria. Sua finalidade é extrafiscal — desestimular consumo nocivo — e não incide sobre exportações."
+    }
+  },
+  {
+    "contentId": "CT-103",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a não cumulatividade de CBS/IBS: crédito financeiro, estornos, ressarcimento de saldo credor e o princípio do destino.",
+      "cc": [
+        {
+          "id": "credito-financeiro",
+          "nome": "Crédito financeiro amplo",
+          "def": "Modelo adotado por CBS e IBS em que qualquer aquisição tributada de bem, serviço ou direito gera direito a crédito, independentemente de vinculação física direta ao processo produtivo — diferente do crédito físico, mais restrito, do regime não cumulativo de PIS/Cofins/ICMS que esses tributos substituem."
+        },
+        {
+          "id": "estorno-credito",
+          "nome": "Estorno de crédito",
+          "def": "O crédito tomado deve ser estornado quando a aquisição é usada em operação não tributada, imune ou isenta, ou quando o bem é objeto de perda, furto, deterioração ou uso/consumo pessoal, preservando a neutralidade da não cumulatividade."
+        },
+        {
+          "id": "ressarcimento-saldo-credor",
+          "nome": "Ressarcimento de saldo credor",
+          "def": "Contribuintes que acumulam crédito maior que o débito (como exportadores, que não têm débito de saída pela imunidade/não incidência na exportação) podem pedir ressarcimento ou compensação do saldo credor, conforme prazos e procedimentos da LC 214/2025 e de atos do Comitê Gestor do IBS."
+        },
+        {
+          "id": "principio-destino-neutralidade",
+          "nome": "Princípio do destino e neutralidade",
+          "def": "A cobrança no local de consumo (destino) busca neutralidade tributária: a carga final não depende de onde o bem foi produzido, eliminando o incentivo à guerra fiscal entre estados que hoje concedem benefícios de ICMS para atrair a origem da produção."
+        }
+      ],
+      "rl": [
+        {
+          "de": "estorno-credito",
+          "para": "credito-financeiro",
+          "tipo": "é a correção aplicada ao"
+        },
+        {
+          "de": "principio-destino-neutralidade",
+          "para": "ressarcimento-saldo-credor",
+          "tipo": "sustenta a necessidade de"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "ressarcimento-saldo-credor",
+          "texto": "Uma exportadora compra insumos tributados por IBS/CBS, mas suas vendas ao exterior não geram débito desses tributos. Ao longo do tempo, ela acumula saldo credor, que pode pedir para ressarcir ou compensar com outros tributos, em vez de ficar represado indefinidamente."
+        }
+      ],
+      "pg": [
+        "Crédito financeiro amplo não significa crédito ilimitado: aquisições usadas em operações não tributadas ou para uso pessoal exigem estorno do crédito já tomado.",
+        "O princípio do destino não elimina a necessidade de ressarcimento de saldo credor — exportadores continuam acumulando crédito, só que agora com regras unificadas de ressarcimento pela LC 214/2025.",
+        "Neutralidade não significa alíquota única: cada ente pode ter sua própria alíquota de IBS; o que o princípio do destino neutraliza é o incentivo a disputar a localização da produção por benefício fiscal."
+      ],
+      "rs": "CBS e IBS adotam crédito financeiro amplo, mais abrangente que o crédito físico anterior, mas sujeito a estorno quando a aquisição é usada em operação não tributada ou para fins não produtivos. Saldo credor acumulado, comum em exportadores, pode ser ressarcido ou compensado conforme a LC 214/2025. O princípio do destino busca neutralidade tributária, reduzindo o incentivo à guerra fiscal por localização da produção."
+    }
+  },
+  {
+    "contentId": "CT-104",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar os regimes diferenciados, específicos e favorecidos de CBS/IBS previstos na LC 214/2025, incluindo o tratamento da Zona Franca de Manaus.",
+      "cc": [
+        {
+          "id": "regimes-reduzidos",
+          "nome": "Regimes de alíquota reduzida",
+          "def": "Setores como educação, saúde, transporte coletivo de passageiros, produtos agropecuários e insumos agropecuários têm alíquota de CBS/IBS reduzida em relação à alíquota padrão, conforme percentuais e condições fixados em anexo próprio da LC 214/2025."
+        },
+        {
+          "id": "regime-aliquota-zero",
+          "nome": "Alíquota zero e isenções",
+          "def": "Itens listados taxativamente, como os produtos da cesta básica nacional de alimentos e dispositivos médicos e de acessibilidade para pessoas com deficiência, têm alíquota zero de CBS/IBS, sem necessidade de cálculo de percentual reduzido."
+        },
+        {
+          "id": "regimes-especificos-setoriais",
+          "nome": "Regimes específicos setoriais",
+          "def": "Combustíveis, serviços financeiros, planos de saúde, operações com bens imóveis e concursos de prognósticos (como loterias e apostas) têm regime próprio de apuração, com base de cálculo e forma de tributação diferentes da regra geral de CBS/IBS."
+        },
+        {
+          "id": "zfm-manaus",
+          "nome": "Zona Franca de Manaus",
+          "def": "Mantém tratamento diferenciado na reforma, com crédito presumido e outros mecanismos de incentivo compatíveis com o novo sistema, para preservar a competitividade do polo industrial incentivado durante e após a transição, inclusive em relação à manutenção de alíquota de IPI para produtos concorrentes não incentivados."
+        }
+      ],
+      "rl": [
+        {
+          "de": "regimes-especificos-setoriais",
+          "para": "regimes-reduzidos",
+          "tipo": "é mais amplo em alterações de base de cálculo do que"
+        },
+        {
+          "de": "zfm-manaus",
+          "para": "regime-aliquota-zero",
+          "tipo": "usa mecanismo distinto (crédito presumido) do aplicado em"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "regimes-reduzidos",
+          "texto": "Uma faculdade particular aplica alíquota reduzida de CBS/IBS sobre as mensalidades (regime de educação), enquanto uma rede de bebidas alcoólicas aplica a alíquota padrão sobre suas vendas, mesmo compartilhando a mesma legislação-base da LC 214/2025."
+        }
+      ],
+      "pg": [
+        "Alíquota reduzida e alíquota zero não são a mesma coisa: a reduzida ainda gera algum débito (em percentual menor), enquanto a zero elimina o débito do item listado.",
+        "Regime específico não significa necessariamente alíquota menor: combustíveis e serviços financeiros têm forma própria de cálculo, que pode resultar em carga equivalente ou diferente da regra geral, a depender do caso.",
+        "O tratamento da Zona Franca de Manaus não é só uma questão de ICMS/IPI do sistema antigo: a reforma prevê mecanismo próprio (crédito presumido) para preservar a competitividade do polo mesmo depois da plena vigência de CBS/IBS."
+      ],
+      "rs": "A LC 214/2025 prevê regimes de alíquota reduzida (educação, saúde, transporte coletivo, agropecuária), alíquota zero/isenção (cesta básica, dispositivos de acessibilidade), regimes específicos setoriais (combustíveis, serviços financeiros, imóveis, concursos de prognósticos) e tratamento diferenciado para a Zona Franca de Manaus, com crédito presumido para preservar sua competitividade na transição."
+    }
+  },
+  {
+    "contentId": "CT-105",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a situação do Simples Nacional na transição da reforma: recolhimento no DAS, opção pelo regime regular de IBS/CBS, créditos e decisão econômica envolvida.",
+      "cc": [
+        {
+          "id": "simples-regra-geral",
+          "nome": "Regra geral: CBS/IBS dentro do DAS",
+          "def": "Em regra, o optante do Simples Nacional continua recolhendo CBS e IBS de forma unificada dentro do DAS, sem apurar crédito e débito separadamente, e sem repassar crédito amplo de IBS/CBS a seus clientes."
+        },
+        {
+          "id": "simples-opcao-regime-regular",
+          "nome": "Opção pelo regime regular de IBS/CBS",
+          "def": "O optante do Simples pode escolher apurar CBS e IBS fora do DAS, pelo regime regular (como uma empresa do regime normal), passando a ter direito a crédito amplo sobre suas aquisições e permitindo que seus clientes se creditem integralmente do tributo destacado em suas vendas."
+        },
+        {
+          "id": "simples-janela-adesao",
+          "nome": "Janela de adesão e irretratabilidade",
+          "def": "A opção (ou a renovação/cancelamento) pelo regime regular segue janelas e prazos específicos definidos em resolução do Comitê Gestor do Simples Nacional, com efeitos a partir do ano-calendário seguinte e, dentro do período de vigência escolhido, caráter irretratável."
+        },
+        {
+          "id": "simples-decisao-economica",
+          "nome": "Decisão econômica da opção",
+          "def": "A escolha entre permanecer no DAS ou migrar para o regime regular de IBS/CBS depende de comparar a carga tributária total resultante com a perda de competitividade comercial por não gerar crédito amplo a clientes que, no regime normal, se creditam do tributo — é mais vantajosa para empresas com base de clientes majoritariamente B2B que apuram CBS/IBS."
+        }
+      ],
+      "rl": [
+        {
+          "de": "simples-opcao-regime-regular",
+          "para": "simples-decisao-economica",
+          "tipo": "exige avaliar previamente a"
+        },
+        {
+          "de": "simples-janela-adesao",
+          "para": "simples-opcao-regime-regular",
+          "tipo": "disciplina o prazo e a forma de exercer a"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "simples-decisao-economica",
+          "texto": "Uma empresa do Simples que vende majoritariamente para indústrias que apuram IBS/CBS pelo regime normal pode perder clientes se mantiver o DAS sem crédito amplo; optar pelo regime regular, nesse caso, pode preservar sua competitividade mesmo exigindo apuração mais complexa."
+        }
+      ],
+      "pg": [
+        "Optar pelo regime regular de IBS/CBS não retira a empresa do Simples Nacional quanto aos demais tributos — só muda a forma de apurar CBS e IBS, que passam a ser calculados fora do DAS.",
+        "A decisão não é só sobre alíquota: envolve também se os clientes da empresa precisam ou não se creditar do tributo, o que pode pesar mais que a comparação direta de carga tributária.",
+        "A adesão (e seu cancelamento) tem janelas e prazos próprios fixados pelo Comitê Gestor do Simples Nacional, e costuma ter efeito a partir do ano-calendário seguinte, não de forma imediata."
+      ],
+      "rs": "Em regra, o optante do Simples Nacional recolhe CBS e IBS dentro do DAS, sem crédito amplo. É possível, porém, optar pelo regime regular de apuração fora do DAS, passando a ter crédito e permitindo que clientes se creditem integralmente — opção sujeita a janelas de adesão definidas pelo Comitê Gestor do Simples Nacional, com caráter irretratável no período escolhido. A decisão depende de comparar a carga tributária total com o impacto na competitividade comercial, especialmente com clientes B2B que se creditam do tributo."
+    }
+  },
+  {
+    "contentId": "CT-106",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar os novos campos nos documentos fiscais, o mecanismo de split payment e o cashback previstos na reforma tributária.",
+      "cc": [
+        {
+          "id": "documentos-fiscais-novos-campos",
+          "nome": "Novos campos nos documentos fiscais",
+          "def": "NF-e, NFC-e, NFS-e e demais documentos fiscais eletrônicos passam a ter campos próprios para destacar CBS, IBS e Imposto Seletivo, com nova classificação tributária (código de situação tributária e código de classificação tributária) específica da reforma, substituindo gradualmente os códigos do sistema anterior."
+        },
+        {
+          "id": "split-payment",
+          "nome": "Split payment",
+          "def": "Mecanismo em que o valor de CBS/IBS destacado na operação é segregado automaticamente no momento do pagamento e recolhido diretamente aos cofres públicos pela instituição financeira ou arranjo de pagamento, reduzindo o risco de inadimplência tributária; na fase de implantação, está previsto para operações entre pessoas jurídicas, com adesão voluntária."
+        },
+        {
+          "id": "cashback-mecanismo",
+          "nome": "Cashback",
+          "def": "Devolução de parte do valor de CBS/IBS pago por famílias de baixa renda inscritas no CadÚnico em itens como gás de cozinha (botijão), energia elétrica, água e esgoto, entre outras operações previstas em regulamento, funcionando como instrumento de justiça fiscal dentro do modelo de tributação sobre o consumo."
+        },
+        {
+          "id": "integracao-financeira-controles",
+          "nome": "Integração entre sistemas e controles",
+          "def": "A operacionalização de split payment e cashback exige integração entre os sistemas de emissão de documentos fiscais, os meios de pagamento e o cadastro dos beneficiários, com regras complementares ainda disciplinadas por atos conjuntos do Comitê Gestor do IBS e da Receita Federal."
+        }
+      ],
+      "rl": [
+        {
+          "de": "split-payment",
+          "para": "documentos-fiscais-novos-campos",
+          "tipo": "depende do destaque correto do tributo nos"
+        },
+        {
+          "de": "cashback-mecanismo",
+          "para": "integracao-financeira-controles",
+          "tipo": "depende da"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "split-payment",
+          "texto": "Em uma venda B2B com adesão ao split payment, ao receber o pagamento, a instituição financeira já separa automaticamente o valor de CBS/IBS destacado na nota e recolhe diretamente ao fisco, repassando ao fornecedor apenas o valor líquido da operação."
+        }
+      ],
+      "pg": [
+        "O split payment não recolhe o preço total da operação ao fisco — apenas a parcela do tributo destacada no documento fiscal; o restante segue normalmente para o fornecedor.",
+        "O cashback não é uma isenção geral: é uma devolução posterior, dirigida a famílias de baixa renda cadastradas no CadÚnico, sobre itens específicos definidos em regulamento.",
+        "Os novos campos de documentos fiscais não substituem instantaneamente todo o sistema anterior: convivem com os códigos do regime antigo durante a fase de transição, exigindo atenção redobrada na parametrização do ERP."
+      ],
+      "rs": "A reforma cria novos campos nos documentos fiscais eletrônicos para destacar CBS, IBS e Imposto Seletivo, com classificação tributária própria. O split payment segrega automaticamente o tributo no pagamento e o recolhe diretamente ao fisco, inicialmente de forma voluntária em operações B2B. O cashback devolve parte do tributo pago por famílias de baixa renda do CadÚnico em itens como gás de cozinha, energia e água/esgoto. Ambos os mecanismos dependem de integração entre sistemas fiscais, meios de pagamento e cadastros, com regras complementares ainda em edição pelo Comitê Gestor do IBS e pela Receita Federal."
+    }
+  },
+  {
+    "contentId": "CT-107",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o cronograma da transição de 2026 a 2033: fase de teste, extinção gradual dos tributos antigos, calibragem de alíquotas e impacto em contratos de longa duração.",
+      "cc": [
+        {
+          "id": "fase-teste-2026",
+          "nome": "Fase de teste em 2026",
+          "def": "Em 2026, a CBS é cobrada a uma alíquota de teste de 0,9% e o IBS a 0,1%, sem aumento de carga tributária: o valor pago nessa fase pode ser compensado com o PIS/Cofins devido (no caso da CBS) ou com o ICMS/ISS devido (no caso do IBS), servindo para testar sistemas, emissão de documentos e recolhimento."
+        },
+        {
+          "id": "extincao-pis-cofins-2027",
+          "nome": "Extinção de PIS/Cofins e início do Imposto Seletivo em 2027",
+          "def": "A partir de 2027, PIS e Cofins são extintos e a CBS passa a vigorar em alíquota plena; nesse mesmo ano, o IPI é reduzido a zero para a maioria dos produtos (exceto itens industrializados na Zona Franca de Manaus que concorrem com produtos não incentivados, que mantêm IPI) e começa a cobrança do Imposto Seletivo."
+        },
+        {
+          "id": "reducao-gradual-icms-iss",
+          "nome": "Redução gradual de ICMS/ISS",
+          "def": "No período entre 2029 e 2032, ICMS e ISS têm redução gradual e crescente de alíquota enquanto o IBS cresce na mesma proporção, com o Comitê Gestor do IBS atualizando periodicamente as alíquotas de referência para calibrar a carga tributária agregada e evitar aumento ou perda de arrecadação durante a convivência dos sistemas."
+        },
+        {
+          "id": "extincao-plena-2033",
+          "nome": "Extinção plena e regime definitivo em 2033",
+          "def": "Em 2033, ICMS e ISS são definitivamente extintos e o IBS passa a operar em regime pleno, concluindo a transição; contratos de longa duração firmados antes da reforma têm regras específicas de ajuste de preço para preservar o equilíbrio econômico-financeiro original diante da mudança de tributos."
+        }
+      ],
+      "rl": [
+        {
+          "de": "fase-teste-2026",
+          "para": "extincao-pis-cofins-2027",
+          "tipo": "antecede e testa o sistema que entra em alíquota plena na"
+        },
+        {
+          "de": "reducao-gradual-icms-iss",
+          "para": "extincao-plena-2033",
+          "tipo": "é a etapa intermediária que conduz à"
+        }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "fase-teste-2026",
+          "texto": "Uma empresa recolhe normalmente PIS, Cofins, ICMS e ISS em 2026, mas também destaca e paga CBS (0,9%) e IBS (0,1%) em suas operações; o valor pago nesses dois novos tributos é abatido dos tributos antigos, de modo que a carga total não aumenta nessa fase."
+        }
+      ],
+      "pg": [
+        "A fase de teste de 2026 não representa aumento de carga tributária: o valor pago em CBS/IBS é compensado com os tributos antigos devidos no mesmo período.",
+        "O IPI não é extinto em 2027 para todos os produtos: ele é zerado para a maioria, mas mantido para itens industrializados na Zona Franca de Manaus que concorrem com produtos não incentivados.",
+        "A redução de ICMS/ISS entre 2029 e 2032 não é uma extinção abrupta: é gradual, com calibragem periódica da alíquota de referência do IBS para manter a carga tributária agregada estável durante a convivência dos sistemas."
+      ],
+      "rs": "A transição vai de 2026 a 2033: em 2026, CBS (0,9%) e IBS (0,1%) são testados em fase compensável com os tributos antigos, sem aumento de carga. Em 2027, PIS e Cofins são extintos, a CBS passa à alíquota plena, o IPI é zerado (exceto itens incentivados da Zona Franca de Manaus) e começa o Imposto Seletivo. Entre 2029 e 2032, ICMS e ISS têm redução gradual enquanto o IBS cresce, com calibragem periódica das alíquotas de referência. Em 2033, ICMS e ISS são extintos e o IBS passa a operar em regime pleno, com regras próprias de ajuste para contratos de longa duração firmados antes da reforma."
+    }
+  }
+]

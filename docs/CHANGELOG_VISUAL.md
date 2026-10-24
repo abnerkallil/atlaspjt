@@ -14,6 +14,41 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #113 — APA-18: aulas base de Contabilidade Tributária (sub-lote 5m)
+
+- Ponto de restauração: branch `restore/pre-apa-18-contabilidade-tributaria-13`
+  (main antes do merge).
+- O que muda no site: nada visível ainda — este PR só adiciona os dados; as
+  9 aulas só aparecem depois de o Abner rodar o comando de carga para esse
+  arquivo (não precisa de "Publicar Atlas": o script grava direto em D1/R2).
+  O carregamento em produção de toda a Contabilidade Tributária será feito
+  num único comando ao final de todos os 15 sub-lotes, a pedido do Abner.
+- O que muda fora do site: décimo terceiro sub-lote de Contabilidade
+  Tributária em `data/apache/aulas/contabilidade-tributaria-13.json` (9 dos
+  124 conteúdos: CT-099 a CT-107, unidade "Reforma tributária", na ordem do
+  catálogo, `model='claude-manual'`), usando o mesmo mecanismo de carga dos
+  PRs #95-#112 (`scripts/apache-carregar-aulas.mjs`). Conteúdo pesquisado e
+  confirmado contra texto vigente (EC 132/2023, LC 214/2025 e fontes
+  jurídicas de 2026): fundamentos da reforma — EC 132/2023, LC 214/2025 e o
+  modelo de IVA dual entre CBS e IBS (CT-099); incidência, contribuinte,
+  base de cálculo com crédito financeiro amplo e regimes diferenciados da
+  CBS (CT-100); competência compartilhada, cobrança no destino, Comitê
+  Gestor e distribuição de receita do IBS (CT-101); incidência monofásica
+  sem crédito, finalidade extrafiscal e vigência (ainda com alíquotas por
+  produto pendentes de regulamentação) do Imposto Seletivo (CT-102);
+  crédito financeiro, estorno, ressarcimento de saldo credor e o princípio
+  do destino na não cumulatividade (CT-103); regimes reduzidos, alíquota
+  zero, regimes específicos setoriais e o tratamento da Zona Franca de
+  Manaus (CT-104); a opção do Simples Nacional pelo regime regular de
+  IBS/CBS, janela de adesão e a decisão econômica envolvida (CT-105); os
+  novos campos nos documentos fiscais, o split payment (inicialmente B2B e
+  voluntário) e o cashback a famílias do CadÚnico (CT-106); e o cronograma
+  completo da transição 2026–2033 — fase de teste (CBS 0,9%/IBS 0,1% em
+  2026, compensável), extinção de PIS/Cofins e zeramento do IPI (exceto
+  Zona Franca de Manaus) em 2027, redução gradual de ICMS/ISS entre 2029 e
+  2032 e extinção plena em 2033 (CT-107). `docs/APACHE-18-plano.md`
+  atualizado (sub-lote 5m mesclado; Tributária em 107/124).
+
 ## PR #112 — APA-18: aulas base de Contabilidade Tributária (sub-lote 5l)
 
 - Ponto de restauração: branch `restore/pre-apa-18-contabilidade-tributaria-12`
