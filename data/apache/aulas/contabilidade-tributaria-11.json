@@ -1,0 +1,370 @@
+[
+  {
+    "contentId": "CT-083",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar as contribuições previdenciárias incidentes sobre a folha de pagamento, suas bases e os encargos de segurados, patronal, RAT/GILRAT e terceiros.",
+      "cc": [
+        {
+          "id": "contribuicao-segurado-empregado",
+          "nome": "Contribuição do segurado empregado",
+          "def": "Descontada do salário do empregado e recolhida pela empresa, calculada pela tabela progressiva mensal do INSS (faixas e alíquotas de 7,5% a 14%, reajustadas anualmente), aplicada sobre o salário de contribuição até o teto do Regime Geral de Previdência Social (RGPS); diferente do IRRF, a alíquota é progressiva por faixa (cada faixa tributada pela sua própria alíquota, com dedução de parcela por faixa), não havendo alíquota única sobre o total."
+        },
+        {
+          "id": "contribuicao-patronal-basica",
+          "nome": "Contribuição patronal básica",
+          "def": "Devida pela empresa à sua conta, de 20% sobre o total das remunerações pagas, devidas ou creditadas a empregados e contribuintes individuais que lhe prestam serviço (art. 22, I e III, da Lei nº 8.212/1991); não se confunde com o desconto do segurado, sendo encargo exclusivo do empregador, salvo para as empresas que estejam no regime substitutivo da CPRB para as atividades abrangidas."
+        },
+        {
+          "id": "rat-gilrat",
+          "nome": "RAT/GILRAT",
+          "def": "Contribuição adicional de 1% a 3% sobre a folha, conforme o grau de risco de acidente do trabalho da atividade preponderante da empresa (leve, médio ou grave), prevista no art. 22, II, da Lei nº 8.212/1991; o percentual-base é ajustado pelo Fator Acidentário de Previdência (FAP), índice individual por empresa que pode reduzir a alíquota em até 50% ou aumentá-la em até 100%, conforme o histórico de acidentalidade, mortalidade e letalidade da empresa frente ao seu subgrupo de atividade."
+        },
+        {
+          "id": "contribuicoes-terceiros-sistema-s",
+          "nome": "Contribuições a terceiros (Sistema S)",
+          "def": "Encargos adicionais sobre a folha destinados a entidades de formação profissional e serviço social (SESI/SESC, SENAI/SENAC, INCRA, salário-educação, entre outras), cuja soma varia por atividade econômica conforme o código do FPAS (Fundo de Previdência e Assistência Social) da empresa, tipicamente entre 2,5% e 5,8%; são recolhidas em conjunto com as demais contribuições previdenciárias, mas têm destinação distinta do RGPS."
+        }
+      ],
+      "rl": [
+        { "de": "rat-gilrat", "para": "contribuicao-patronal-basica", "tipo": "é encargo patronal adicional a" },
+        { "de": "contribuicoes-terceiros-sistema-s", "para": "contribuicao-patronal-basica", "tipo": "é recolhida junto com, mas tem destinação distinta de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "rat-gilrat",
+          "texto": "Uma empresa do setor de construção civil (atividade de risco grave) tem alíquota-base de RAT de 3%, mas seu FAP individual é 0,8500 por ter histórico de acidentalidade abaixo da média do subgrupo. A alíquota efetiva de RAT/GILRAT aplicada sobre a folha é 3% × 0,8500 = 2,55%, não os 3% cheios da tabela de risco."
+        }
+      ],
+      "pg": [
+        "A contribuição do segurado empregado é progressiva por faixa (como o IRRF), nunca uma alíquota única sobre o total do salário de contribuição; aplicar a maior alíquota sobre toda a base é erro comum.",
+        "O FAP multiplica a alíquota-base do RAT (1%, 2% ou 3%) e pode tanto reduzir quanto aumentar o encargo efetivo; tratar o RAT como fixo pela atividade, sem considerar o FAP individual da empresa, é incompleto.",
+        "As contribuições a terceiros (Sistema S) não se confundem com a contribuição patronal básica de 20%: têm alíquota própria por FPAS e destinação a entidades de formação profissional e assistência social, não ao RGPS."
+      ],
+      "rs": "A folha de pagamento gera quatro encargos previdenciários distintos: a contribuição do segurado empregado (progressiva por faixa, 7,5% a 14%, descontada do salário), a contribuição patronal básica de 20% sobre a remuneração total (art. 22, I e III, da Lei 8.212/1991), o RAT/GILRAT de 1% a 3% conforme o risco da atividade, ajustado pelo FAP individual da empresa, e as contribuições a terceiros (Sistema S), cuja soma varia por código FPAS e tem destinação a entidades de formação profissional e assistência social."
+    }
+  },
+  {
+    "contentId": "CT-084",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a estrutura de eventos do eSocial relevantes para a folha de pagamento e o processo de fechamento mensal da competência.",
+      "cc": [
+        {
+          "id": "eventos-periodicos-esocial",
+          "nome": "Eventos periódicos",
+          "def": "Eventos do eSocial enviados mensalmente com informações da folha, como o S-1200 (remuneração de trabalhador vinculado ao RGPS), o S-1210 (pagamentos efetivamente realizados, base para IRRF e para a data de recolhimento do FGTS) e o S-1250 (aquisição de produção rural, quando aplicável); esses eventos alimentam as bases de cálculo das contribuições previdenciárias e do IRRF da competência."
+        },
+        {
+          "id": "eventos-nao-periodicos-esocial",
+          "nome": "Eventos não periódicos",
+          "def": "Eventos enviados conforme ocorrem fatos que alteram o vínculo do trabalhador, independentemente de calendário mensal fixo, como o S-2200 (admissão), o S-2206 (alteração contratual) e o S-2299 (desligamento); embora não sigam a periodicidade mensal, impactam diretamente a base da folha e das contribuições do mês em que o fato ocorre."
+        },
+        {
+          "id": "totalizadores-esocial",
+          "nome": "Eventos totalizadores",
+          "def": "Eventos que a Receita Federal gera a partir dos eventos periódicos e não periódicos enviados pelo contribuinte, consolidando por trabalhador e por empresa as bases de contribuições previdenciárias (S-5001/S-5011), de IRRF (S-5002/S-5012) e de FGTS (S-5003/S-5013); esses totalizadores são a origem dos valores que compõem a DCTFWeb da competência, de modo que erros nos eventos periódicos ou não periódicos se propagam automaticamente para os totalizadores e para a declaração."
+        },
+        {
+          "id": "fechamento-folha-s1299",
+          "nome": "Fechamento da folha (S-1299)",
+          "def": "Evento que encerra a competência no eSocial, informando que todos os eventos periódicos da folha daquele mês já foram transmitidos e não haverá mais inclusões; somente após o fechamento os totalizadores são consolidados de forma definitiva para gerar a DCTFWeb; competências já fechadas podem ser retificadas mediante retransmissão dos eventos originais seguida de novo fechamento, o que pode gerar DCTFWeb retificadora e, se houver aumento de débito, DARF complementar com acréscimos legais."
+        }
+      ],
+      "rl": [
+        { "de": "eventos-periodicos-esocial", "para": "totalizadores-esocial", "tipo": "alimenta a base de" },
+        { "de": "fechamento-folha-s1299", "para": "totalizadores-esocial", "tipo": "consolida definitivamente" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "fechamento-folha-s1299",
+          "texto": "Uma empresa percebe, após enviar o S-1299 de fechamento da folha de março, que esqueceu de incluir uma rubrica de hora extra de um empregado. Para corrigir, ela deve retransmitir o S-1200 daquele empregado com a rubrica correta e enviar novamente o S-1299, o que pode gerar DCTFWeb retificadora e, havendo aumento de débito, recolhimento complementar com juros e multa de mora."
+        }
+      ],
+      "pg": [
+        "Eventos não periódicos (como admissão e desligamento) não têm calendário mensal fixo, mas ainda assim impactam a base de contribuições da competência em que ocorrem — tratá-los como irrelevantes para o fechamento do mês é erro.",
+        "Os totalizadores (S-5001/S-5002/S-5003) são gerados pela Receita Federal a partir dos eventos enviados pela empresa, não preenchidos diretamente por ela; inconsistência nos totalizadores quase sempre indica erro nos eventos periódicos ou não periódicos de origem.",
+        "O fechamento da folha (S-1299) não é o fim do processo quando há erro: a correção exige retransmitir o evento original e fechar novamente, podendo gerar declaração retificadora e recolhimento complementar."
+      ],
+      "rs": "O eSocial organiza a folha em eventos periódicos (S-1200, S-1210, entre outros), que seguem o calendário mensal, e eventos não periódicos (como S-2200 admissão e S-2299 desligamento), enviados conforme o fato ocorre; ambos alimentam os eventos totalizadores (S-5001, S-5002, S-5003) gerados pela Receita Federal, que consolidam as bases de contribuições previdenciárias, IRRF e FGTS. O fechamento da competência (S-1299) consolida definitivamente essas bases para a DCTFWeb, e qualquer erro posterior exige retransmissão do evento original seguida de novo fechamento."
+    }
+  },
+  {
+    "contentId": "CT-085",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar o regime da CPRB, o cronograma de transição da Lei nº 14.973/2024 e as condições para a empresa permanecer na contribuição sobre a receita.",
+      "cc": [
+        {
+          "id": "cprb-substitutiva-receita",
+          "nome": "CPRB como contribuição substitutiva",
+          "def": "A Contribuição Previdenciária sobre a Receita Bruta (CPRB), instituída pela Lei nº 12.546/2011 (arts. 7º e 8º), substitui, para setores e atividades expressamente listados (como tecnologia da informação, call center, construção civil e transporte coletivo), a contribuição patronal básica de 20% sobre a folha por um percentual sobre a receita bruta, geralmente mais vantajoso para atividades intensivas em mão de obra."
+        },
+        {
+          "id": "transicao-lei-14973",
+          "nome": "Regime de transição (Lei nº 14.973/2024)",
+          "def": "A Lei nº 14.973/2024 instituiu um cronograma de reoneração gradual: em 2025 e 2026 as empresas dos setores listados recolhem simultaneamente um percentual reduzido sobre a receita bruta e um percentual sobre a folha (10% em 2026, segundo a tabela por setor da própria lei), em 2027 a alíquota sobre a receita cai mais e a alíquota sobre a folha sobe para 15%, e a partir de 2028 o regime substitutivo é extinto, retornando-se à contribuição patronal plena de 20% sobre a folha para esses setores — convém sempre confirmar o percentual do ano e do setor específico na tabela vigente, por serem ajustados anualmente até a extinção."
+        },
+        {
+          "id": "termo-compromisso-manutencao-empregos",
+          "nome": "Termo de compromisso e manutenção de empregos",
+          "def": "Para usufruir do regime de transição, a empresa deve firmar termo de compromisso assumindo manter, em cada ano do período, média de empregados igual ou superior a 75% da média do ano anterior; o descumprimento dessa condição pode implicar a perda do benefício gradual e o retorno antecipado à tributação plena sobre a folha para a empresa infratora."
+        },
+        {
+          "id": "convivencia-folha-e-receita",
+          "nome": "Convivência entre CPRB e contribuição sobre a folha",
+          "def": "Durante a transição, a empresa não escolhe entre um regime ou outro: ela apura e recolhe, no mesmo período, tanto o percentual sobre a receita bruta quanto o percentual sobre a folha, ambos definidos pela tabela da Lei nº 14.973/2024 para o seu setor e o ano-calendário; o RAT/GILRAT e as contribuições a terceiros continuam devidos à parte, sobre a folha, independentemente do regime de CPRB da empresa."
+        }
+      ],
+      "rl": [
+        { "de": "transicao-lei-14973", "para": "cprb-substitutiva-receita", "tipo": "extingue gradualmente" },
+        { "de": "termo-compromisso-manutencao-empregos", "para": "transicao-lei-14973", "tipo": "é condição de acesso a" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "convivencia-folha-e-receita",
+          "texto": "Uma empresa de call center, em 2026, recolhe simultaneamente 1,8% sobre sua receita bruta e 10% sobre sua folha de salários, conforme a tabela de transição da Lei nº 14.973/2024 para esse setor naquele ano — não é mais a CPRB pura de anos anteriores, nem já é a contribuição patronal plena de 20%, mas uma combinação transitória das duas bases."
+        }
+      ],
+      "pg": [
+        "Durante a transição (2025 a 2027), a empresa não opta entre receita OU folha: ela recolhe sobre as DUAS bases simultaneamente, em percentuais decrescente (receita) e crescente (folha) definidos por lei para cada ano e setor.",
+        "A partir de 2028 o regime substitutivo deixa de existir para os setores da Lei 12.546/2011; assumir que a CPRB continuará indefinidamente nos mesmos termos é erro, já que a lei de transição determina sua extinção.",
+        "O RAT/GILRAT e as contribuições a terceiros não são substituídos pela CPRB nem pelo regime de transição: continuam calculados sobre a folha de salários independentemente do regime de contribuição patronal da empresa."
+      ],
+      "rs": "A CPRB (Lei 12.546/2011) substitui, para setores listados, a contribuição patronal de 20% sobre a folha por um percentual sobre a receita bruta. A Lei 14.973/2024 instituiu a reoneração gradual: de 2025 a 2027 a empresa recolhe simultaneamente um percentual sobre a receita (decrescente) e um percentual sobre a folha (crescente, 10% em 2026 e 15% em 2027, conforme o setor), extinguindo-se o regime substitutivo em 2028, quando a contribuição patronal plena de 20% sobre a folha retorna para esses setores. A permanência no regime de transição exige termo de compromisso de manutenção de, no mínimo, 75% da média de empregados do ano anterior."
+    }
+  },
+  {
+    "contentId": "CT-086",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a retenção previdenciária de 11% sobre notas fiscais de cessão de mão de obra e empreitada, suas bases, deduções e compensação pelo prestador.",
+      "cc": [
+        {
+          "id": "retencao-11-cessao-maoobra",
+          "nome": "Retenção de 11% na cessão de mão de obra e empreitada",
+          "def": "O art. 31 da Lei nº 8.212/1991 obriga a empresa contratante de serviços mediante cessão de mão de obra ou empreitada (como limpeza, vigilância, construção civil e conservação) a reter 11% do valor bruto da nota fiscal ou fatura de prestação de serviços e a recolher esse valor em nome da empresa contratada, destacado como retenção previdenciária no documento fiscal; a lista de serviços sujeitos à retenção está detalhada na Instrução Normativa RFB que regulamenta o art. 31, exigindo sempre confirmar se a atividade contratada se enquadra como cessão de mão de obra para esse fim."
+        },
+        {
+          "id": "retencao-3,5-desoneracao",
+          "nome": "Retenção reduzida de 3,5% (empresas na CPRB)",
+          "def": "Quando a empresa contratada estiver no regime da CPRB para a atividade sujeita à retenção (dentro da transição da Lei 14.973/2024 ou, residualmente, no regime anterior), a alíquota de retenção sobre a nota fiscal é reduzida para 3,5%, em vez dos 11% da regra geral, evitando reter sobre a folha de uma empresa que já contribui predominantemente sobre a receita naquele período."
+        },
+        {
+          "id": "deducoes-base-retencao",
+          "nome": "Deduções da base de retenção",
+          "def": "Podem ser excluídos da base de cálculo da retenção os valores de materiais e equipamentos fornecidos pelo prestador, desde que discriminados em contrato e na própria nota fiscal, bem como o custo de combustível e lubrificantes em serviços de transporte, nas condições previstas na regulamentação do art. 31 da Lei 8.212/1991; sem discriminação expressa, a retenção incide sobre o valor bruto total da nota, incluindo materiais."
+        },
+        {
+          "id": "compensacao-retencao-prestador",
+          "nome": "Compensação pelo prestador retido",
+          "def": "O valor retido é informado pelo prestador em seus eventos do eSocial/EFD-Reinf e compensado contra as contribuições previdenciárias que ele próprio deve recolher na competência; se o saldo retido não for integralmente compensado em determinado período, o prestador pode pedir restituição ou compensação com outros tributos federais administrados pela Receita Federal, conforme o regime de compensação vigente."
+        }
+      ],
+      "rl": [
+        { "de": "retencao-3,5-desoneracao", "para": "retencao-11-cessao-maoobra", "tipo": "é alíquota reduzida de" },
+        { "de": "deducoes-base-retencao", "para": "retencao-11-cessao-maoobra", "tipo": "reduz a base de cálculo de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "deducoes-base-retencao",
+          "texto": "Uma empresa de construção civil contrata serviço de empreitada por R$ 100.000, dos quais R$ 30.000 referem-se a materiais discriminados em contrato e na nota fiscal. A base da retenção de 11% é apenas R$ 70.000 (mão de obra), resultando em retenção de R$ 7.700, em vez dos R$ 11.000 que incidiriam sobre o valor bruto total."
+        }
+      ],
+      "pg": [
+        "A retenção de 11% só se aplica a serviços classificados como cessão de mão de obra ou empreitada pela regulamentação do art. 31 da Lei 8.212/1991; nem todo serviço contratado de pessoa jurídica está sujeito a essa retenção específica.",
+        "A dedução de materiais da base de retenção exige discriminação expressa em contrato e nota fiscal; sem essa discriminação, a retenção incide sobre o valor bruto total, mesmo que materiais tenham sido efetivamente fornecidos.",
+        "O valor retido não é perda definitiva para o prestador: ele compensa o montante contra as próprias contribuições previdenciárias devidas, podendo pedir restituição do saldo não compensado."
+      ],
+      "rs": "O art. 31 da Lei 8.212/1991 obriga a contratante de serviços de cessão de mão de obra e empreitada a reter 11% do valor bruto da nota fiscal (ou 3,5% quando a contratada estiver na CPRB), recolhendo o valor em nome da contratada. Materiais e equipamentos discriminados em contrato e nota fiscal podem ser excluídos da base de retenção. O valor retido é compensado pelo prestador contra suas próprias contribuições previdenciárias, com possibilidade de restituição do saldo não compensado."
+    }
+  },
+  {
+    "contentId": "CT-087",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a retenção de IRRF sobre pagamentos a pessoas físicas e jurídicas e a redução do imposto instituída pela Lei nº 15.270/2025 para 2026.",
+      "cc": [
+        {
+          "id": "irrf-trabalho-com-vinculo",
+          "nome": "IRRF sobre rendimentos do trabalho com vínculo",
+          "def": "Incide mensalmente sobre a folha de salários pela tabela progressiva, com alíquotas de 7,5% a 27,5% por faixa e parcela a deduzir, permitindo dedução de dependentes e de contribuição previdenciária oficial da base de cálculo; a retenção é de responsabilidade da fonte pagadora (empregador) e deve ser recolhida via DARF e informada no eSocial e na DCTFWeb."
+        },
+        {
+          "id": "irrf-trabalho-sem-vinculo-servicos-pf",
+          "nome": "IRRF sobre trabalho sem vínculo e serviços de pessoa física",
+          "def": "Pagamentos a autônomos e prestadores pessoa física, quando feitos por fonte pagadora pessoa jurídica, sofrem retenção de IRRF pela mesma tabela progressiva mensal, com responsabilidade de retenção da fonte pagadora; quando o pagamento é feito por outra pessoa física (sem retenção na fonte), o próprio beneficiário recolhe o imposto mensalmente pelo carnê-leão, aplicando a mesma tabela progressiva sobre o rendimento recebido."
+        },
+        {
+          "id": "irrf-aluguel-aplicacoes",
+          "nome": "IRRF sobre aluguéis e aplicações financeiras",
+          "def": "Aluguéis pagos a pessoa física por fonte pagadora pessoa jurídica sofrem retenção pela tabela progressiva mensal, com deduções específicas previstas em lei (como despesas de cobrança e condomínio, quando ônus do locador); rendimentos de aplicações financeiras seguem tabela regressiva própria conforme o prazo da aplicação, com alíquotas que diminuem de 22,5% a 15% conforme o tempo de permanência, distinta da tabela progressiva do trabalho."
+        },
+        {
+          "id": "reducao-irrf-lei-15270",
+          "nome": "Redução do IRRF mensal pela Lei nº 15.270/2025",
+          "def": "A partir de 2026, após calcular o IRRF normal pela tabela progressiva, aplica-se uma redução adicional, limitada ao valor do imposto devido (não gera saldo negativo), que zera o imposto para quem recebe rendimento tributável até R$ 5.000 por mês e diminui progressivamente até deixar de haver redução a partir de R$ 7.350; a fonte pagadora deve aplicar essa redução diretamente na retenção mensal, não apenas no ajuste anual da declaração, o que altera o valor líquido do IRRF retido na folha desde a competência em que a lei produz efeitos."
+        }
+      ],
+      "rl": [
+        { "de": "reducao-irrf-lei-15270", "para": "irrf-trabalho-com-vinculo", "tipo": "reduz, após o cálculo normal, o imposto apurado por" },
+        { "de": "irrf-trabalho-sem-vinculo-servicos-pf", "para": "irrf-trabalho-com-vinculo", "tipo": "aplica a mesma tabela progressiva de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "reducao-irrf-lei-15270",
+          "texto": "Um empregado com rendimento tributável de R$ 4.500 em 2026 teria, pela tabela progressiva normal, IRRF a pagar; aplicando a redução da Lei 15.270/2025 (limitada ao valor do imposto devido), o IRRF retido na folha desse mês é zerado, pois o rendimento está dentro da faixa de isenção efetiva até R$ 5.000, sem precisar esperar a declaração de ajuste anual para recuperar o valor."
+        }
+      ],
+      "pg": [
+        "A retenção de IRRF sobre serviços de pessoa física depende de quem paga: fonte pagadora pessoa jurídica retém na fonte; pagamento por outra pessoa física exige recolhimento mensal pelo próprio beneficiário via carnê-leão — confundir as duas hipóteses é erro comum.",
+        "Aplicações financeiras seguem tabela regressiva por prazo (quanto mais tempo, menor a alíquota), oposta à lógica da tabela progressiva do trabalho (quanto maior o rendimento, maior a alíquota); são sistemas diferentes que não devem ser misturados.",
+        "A redução da Lei 15.270/2025 se aplica na retenção mensal pela fonte pagadora, não apenas no ajuste anual; tratá-la como benefício que só aparece na declaração de ajuste é um erro para a competência de 2026 em diante."
+      ],
+      "rs": "O IRRF sobre pagamentos segue a tabela progressiva mensal para rendimentos do trabalho com ou sem vínculo (retido pela fonte pagadora pessoa jurídica, ou recolhido via carnê-leão quando não há retenção) e para aluguéis pagos a pessoa física, enquanto aplicações financeiras seguem tabela regressiva por prazo. A partir de 2026, a Lei 15.270/2025 acrescenta uma redução aplicada diretamente na retenção mensal, limitada ao imposto devido, que zera o IRRF até R$ 5.000 de rendimento tributável e diminui progressivamente até R$ 7.350."
+    }
+  },
+  {
+    "contentId": "CT-088",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar a retenção unificada de PIS, Cofins e CSLL sobre serviços entre pessoas jurídicas de direito privado, seus serviços sujeitos e dispensas.",
+      "cc": [
+        {
+          "id": "retencao-465-pis-cofins-csll",
+          "nome": "Retenção de 4,65% (PIS, Cofins e CSLL)",
+          "def": "Pessoas jurídicas de direito privado que pagam a outras pessoas jurídicas de direito privado pela prestação de determinados serviços devem reter, em um único percentual combinado de 4,65% (1% de CSLL, 3% de Cofins e 0,65% de PIS/Pasep), sobre o valor bruto da nota fiscal, nos termos da regulamentação federal vigente para essa retenção; o valor retido é destacado no documento fiscal e recolhido em DARF único pelo tomador."
+        },
+        {
+          "id": "servicos-sujeitos-retencao-465",
+          "nome": "Serviços sujeitos à retenção de 4,65%",
+          "def": "A retenção alcança, entre outros, serviços de limpeza, conservação e manutenção, segurança e vigilância, locação de mão de obra, factoring, assessoria creditícia e serviços profissionais sujeitos à retenção de IRRF relacionados a profissões regulamentadas (como advocacia, engenharia, contabilidade e medicina), quando prestados por pessoa jurídica; serviços fora dessa lista específica, mesmo entre pessoas jurídicas, não se sujeitam a essa retenção combinada."
+        },
+        {
+          "id": "dispensa-valor-minimo",
+          "nome": "Dispensa de retenção por valor mínimo",
+          "def": "A retenção é dispensada quando o valor a ser retido for igual ou inferior a R$ 10,00, considerando a soma de todos os pagamentos feitos no mês ao mesmo beneficiário pelo mesmo estabelecimento pagador, ainda que decorrentes de mais de um documento fiscal; valores abaixo desse limite não geram obrigação de destaque e recolhimento da retenção naquele mês."
+        },
+        {
+          "id": "responsabilidade-solidaria-pis-cofins-csll",
+          "nome": "Responsabilidade solidária pelo recolhimento",
+          "def": "O beneficiário do pagamento (prestador do serviço) responde solidariamente pelo recolhimento do valor retido quando o tomador, apesar de ter efetuado o destaque da retenção no documento fiscal, deixar de recolher o DARF correspondente; o valor retido e comprovado é, de toda forma, compensável pelo prestador contra o PIS, a Cofins e a CSLL por ele apurados na competência."
+        }
+      ],
+      "rl": [
+        { "de": "servicos-sujeitos-retencao-465", "para": "retencao-465-pis-cofins-csll", "tipo": "delimita o campo de aplicação de" },
+        { "de": "dispensa-valor-minimo", "para": "retencao-465-pis-cofins-csll", "tipo": "é exceção de valor a" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "dispensa-valor-minimo",
+          "texto": "Uma empresa paga R$ 150 no mês a uma prestadora de serviços de limpeza. A retenção de 4,65% resultaria em R$ 6,98, valor inferior a R$ 10,00; a retenção é dispensada nesse mês, mas, se houver novos pagamentos à mesma prestadora no mesmo mês que elevem a soma retida acima de R$ 10,00, a retenção passa a ser devida sobre o total."
+        }
+      ],
+      "pg": [
+        "A retenção de 4,65% é um percentual único combinando PIS, Cofins e CSLL, recolhido em um único DARF — não são três retenções separadas com três códigos e três cálculos distintos.",
+        "A dispensa pelo limite de R$ 10,00 considera a soma de todos os pagamentos ao mesmo beneficiário no mês, não cada nota fiscal isoladamente; fracionar pagamentos para ficar abaixo do limite nota a nota não afasta a obrigação se a soma mensal superar o teto.",
+        "Nem todo pagamento de pessoa jurídica a pessoa jurídica por serviço está sujeito a essa retenção: ela se limita à lista específica de serviços (limpeza, vigilância, locação de mão de obra, profissionais regulamentados, entre outros) prevista na regulamentação federal."
+      ],
+      "rs": "Pagamentos entre pessoas jurídicas de direito privado por serviços específicos (limpeza, vigilância, locação de mão de obra, serviços profissionais regulamentados, entre outros) sofrem retenção combinada de 4,65% (CSLL, Cofins e PIS), recolhida em DARF único pelo tomador. A retenção é dispensada quando o valor mensal somado ao mesmo beneficiário for igual ou inferior a R$ 10,00. O prestador responde solidariamente se o tomador destacar mas não recolher o valor, e pode compensar o montante retido contra os próprios tributos apurados na competência."
+    }
+  },
+  {
+    "contentId": "CT-089",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar as obrigações cadastrais e documentais do prestador de serviço em outro município para fins de retenção de ISS pelo tomador.",
+      "cc": [
+        {
+          "id": "cadastro-prestador-outro-municipio",
+          "nome": "Cadastro de prestador de outro município (CPOM)",
+          "def": "Diversos municípios exigem que a empresa prestadora estabelecida fora de seu território, mas que executa serviços sujeitos a tributação local por regra de exceção do art. 3º da LC 116/2003, mantenha cadastro próprio (frequentemente chamado de CPOM) para poder emitir nota fiscal sem sofrer a retenção do tomador; a ausência desse cadastro, quando exigido pela legislação municipal, costuma obrigar o tomador local a reter o ISS na fonte, mesmo quando a retenção não seria obrigatória para um prestador devidamente cadastrado."
+        },
+        {
+          "id": "documentos-comprobatorios-retencao-iss",
+          "nome": "Documentos comprobatórios da retenção",
+          "def": "O tomador que retém o ISS deve emitir comprovante de retenção ao prestador, indicando o município competente, a base de cálculo, a alíquota aplicada e o valor retido; esse comprovante é o documento que o prestador usa para evitar cobrança em duplicidade pelo município de seu próprio estabelecimento, demonstrando que o imposto já foi recolhido na origem pelo tomador."
+        },
+        {
+          "id": "divergencia-cadastro-local-competencia",
+          "nome": "Divergência entre cadastro e local de competência",
+          "def": "Mesmo com cadastro municipal regular, a obrigatoriedade de retenção depende das regras de local de incidência do art. 3º da LC 116/2003 para o serviço específico prestado — ter CPOM não dispensa a análise de qual município é efetivamente competente para a cobrança, nem converte automaticamente todo serviço em não retido; é a combinação entre cadastro, subitem do serviço e local de execução que determina se há ou não retenção pelo tomador."
+        },
+        {
+          "id": "risco-retencao-indevida",
+          "nome": "Risco de retenção indevida por falta de cadastro",
+          "def": "Quando o prestador não mantém o cadastro exigido pelo município do tomador, mesmo que o serviço não esteja entre as exceções de local de execução do art. 3º da LC 116/2003 (ou seja, o ISS seria devido no município do próprio prestador), a legislação municipal do tomador pode, na prática, impor a retenção por falta de comprovação cadastral, gerando risco de bitributação que só se resolve com a regularização do cadastro ou discussão administrativa/judicial específica."
+        }
+      ],
+      "rl": [
+        { "de": "cadastro-prestador-outro-municipio", "para": "risco-retencao-indevida", "tipo": "evita, quando regularizado," },
+        { "de": "divergencia-cadastro-local-competencia", "para": "documentos-comprobatorios-retencao-iss", "tipo": "determina a necessidade de" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "risco-retencao-indevida",
+          "texto": "Uma empresa de consultoria presta serviço, por regra geral, tributado no município de seu próprio estabelecimento, mas não possui CPOM no município do tomador. Por falta desse cadastro, o tomador retém o ISS como se fosse devido localmente, gerando o risco de a prestadora também ser cobrada pelo seu município de origem sobre o mesmo serviço, até que o cadastro seja regularizado."
+        }
+      ],
+      "pg": [
+        "Possuir cadastro no município do tomador (CPOM) não torna automaticamente o serviço tributado lá; a competência continua definida pelas regras de local de incidência do art. 3º da LC 116/2003 para o subitem específico.",
+        "A falta de cadastro exigido pode gerar retenção indevida mesmo quando o ISS seria devido no município do prestador, criando risco de bitributação que não se resolve sozinho — exige regularização cadastral ou discussão específica.",
+        "O comprovante de retenção emitido pelo tomador é o documento que protege o prestador de cobrança em duplicidade; sem guardá-lo, o prestador fica exposto a cobrança do seu próprio município mesmo tendo sofrido retenção na origem."
+      ],
+      "rs": "Municípios podem exigir cadastro próprio (como o CPOM) de prestadores estabelecidos fora de seu território para fins de ISS; a falta desse cadastro, quando exigido, pode levar o tomador a reter o imposto mesmo quando a competência seria do município do prestador, gerando risco de bitributação. A retenção correta depende da combinação entre cadastro, subitem do serviço e as regras de local de incidência do art. 3º da LC 116/2003 — ter cadastro não substitui essa análise. O comprovante de retenção emitido pelo tomador é essencial para o prestador evitar cobrança duplicada."
+    }
+  },
+  {
+    "contentId": "CT-090",
+    "lesson": {
+      "v": 1,
+      "obj": "Explicar os eventos de retenção da EFD-Reinf, sua integração com o eSocial e a unificação de confissão de débitos federais pelo MIT na DCTFWeb.",
+      "cc": [
+        {
+          "id": "eventos-retencao-efd-reinf",
+          "nome": "Eventos de retenção da EFD-Reinf",
+          "def": "A EFD-Reinf captura, em eventos próprios (série R-2000 para retenções previdenciárias sobre serviços tomados e prestados, e série R-4000 para retenções de IRRF, CSLL, PIS e Cofins sobre pagamentos a pessoas físicas e jurídicas), as informações que não são tratadas pelo eSocial, complementando a escrituração digital de retenções e contribuições; a obrigatoriedade desses eventos de retenção está em vigor desde setembro de 2023, por força da Instrução Normativa RFB nº 2.133/2023, para fatos geradores a partir daquele mês."
+        },
+        {
+          "id": "fechamento-reinf",
+          "nome": "Fechamento da EFD-Reinf",
+          "def": "Assim como o eSocial exige o evento de fechamento da folha, a EFD-Reinf exige eventos de fechamento próprios (como o R-2099 para a série de retenções sobre serviços e o R-4099 para a série de retenções de IRRF/CSLL/PIS/Cofins) para consolidar a competência; sem o fechamento, as informações permanecem abertas e não compõem definitivamente a base da DCTFWeb daquele período."
+        },
+        {
+          "id": "integracao-esocial-reinf-dctfweb",
+          "nome": "Integração eSocial, EFD-Reinf e DCTFWeb",
+          "def": "A DCTFWeb não é preenchida manualmente: ela é gerada a partir dos dados consolidados nos eventos totalizadores do eSocial (contribuições previdenciárias e IRRF sobre a folha) e nos eventos fechados da EFD-Reinf (demais retenções e contribuições), funcionando como declaração consolidadora dessas duas escriturações para fins de confissão de débito e emissão de guia unificada (DARF)."
+        },
+        {
+          "id": "mit-substituicao-dctf",
+          "nome": "MIT e substituição da DCTF",
+          "def": "A Instrução Normativa RFB nº 2.237/2024 instituiu o Módulo de Inclusão de Tributos (MIT) dentro da própria DCTFWeb, unificando nela a confissão de débitos que antes era feita na DCTF (Declaração de Débitos e Créditos Tributários Federais em PGD separado); para fatos geradores ocorridos a partir de janeiro de 2025, os tributos federais antes declarados na DCTF passam a ser confessados mensalmente via MIT/DCTFWeb, extinguindo-se a DCTF PGD para esses períodos, enquanto fatos geradores até dezembro de 2024 continuam sob as regras da DCTF anterior."
+        }
+      ],
+      "rl": [
+        { "de": "eventos-retencao-efd-reinf", "para": "fechamento-reinf", "tipo": "é consolidado pelo" },
+        { "de": "integracao-esocial-reinf-dctfweb", "para": "mit-substituicao-dctf", "tipo": "é a base de dados sobre a qual atua" }
+      ],
+      "fm": [],
+      "ex": [
+        {
+          "conceitoId": "mit-substituicao-dctf",
+          "texto": "Uma empresa que, até 2024, confessava determinado tributo federal na DCTF PGD separada, a partir dos fatos geradores de janeiro de 2025 passa a confessar esse mesmo tributo mensalmente pelo MIT, dentro da própria DCTFWeb, na mesma declaração que já consolidava as contribuições previdenciárias vindas do eSocial."
+        }
+      ],
+      "pg": [
+        "Os eventos de retenção da EFD-Reinf (séries R-2000 e R-4000) são obrigatórios desde setembro de 2023; tratá-los como opcionais ou recentes em 2026 é desatualizado.",
+        "A DCTFWeb não é preenchida manualmente linha a linha: ela é consolidada a partir dos totalizadores do eSocial e dos eventos fechados da EFD-Reinf — erro de fechamento em qualquer uma das duas escriturações se propaga para a declaração.",
+        "O MIT não cria um tributo novo nem substitui o eSocial ou a EFD-Reinf: ele unifica, dentro da DCTFWeb, a confissão de débitos que antes era feita na DCTF separada, valendo para fatos geradores a partir de janeiro de 2025."
+      ],
+      "rs": "A EFD-Reinf captura, desde setembro de 2023, os eventos de retenção previdenciária sobre serviços (série R-2000) e de IRRF/CSLL/PIS/Cofins (série R-4000), consolidados por eventos de fechamento próprios. Junto com os totalizadores do eSocial, essas informações alimentam a DCTFWeb, declaração consolidadora que gera a guia unificada de recolhimento. Desde janeiro de 2025, o Módulo de Inclusão de Tributos (MIT), instituído pela IN RFB 2.237/2024, unificou dentro da própria DCTFWeb a confissão de débitos federais que antes era feita na DCTF em PGD separado, extinguindo essa declaração para os períodos a partir dessa competência."
+    }
+  }
+]
