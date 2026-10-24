@@ -12,6 +12,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { getPlatformProxy } from 'wrangler';
 import type { AiLike } from '../lib/apache/lesson-writer.js';
+import { isVisionLicenseAcceptedError, VISION_LICENSE_ACCEPTED_CODE } from '../lib/apache/vision-license.js';
 
 const CONFIG_PATH = '.wrangler/apache-accept-vision-license-config.json';
 const MODEL_ID = '@cf/meta/llama-3.2-11b-vision-instruct';
@@ -40,6 +41,17 @@ async function main(): Promise<void> {
     const result = await proxy.env.AI.run(MODEL_ID, { prompt: 'agree' });
     console.log(`Licença de "${MODEL_ID}" aceita (ou já estava). Resposta:`);
     console.log(JSON.stringify(result));
+  } catch (error) {
+    // A Cloudflare sinaliza o aceite de um modelo gated lançando uma
+    // "rejeição" cujo código é 5016 e cuja mensagem já é a confirmação do
+    // aceite ("Thank you for agreeing to the usage terms...") -- não é uma
+    // falha real (confirmado rodando o comando de verdade). Ver
+    // lib/apache/vision-license.ts.
+    if (isVisionLicenseAcceptedError(error)) {
+      console.log(`Licença de "${MODEL_ID}" aceita (Cloudflare confirmou pelo código ${VISION_LICENSE_ACCEPTED_CODE}, que é sucesso, não erro).`);
+    } else {
+      throw error;
+    }
   } finally {
     try {
       await proxy.dispose();

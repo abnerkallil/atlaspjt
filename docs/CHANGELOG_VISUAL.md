@@ -14,6 +14,58 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #115 — APA-18: aulas base de Contabilidade Tributária (sub-lote 5o, final) + carga única + fix do aceite de licença
+
+- Ponto de restauração: branch `restore/pre-apa-18-contabilidade-tributaria-15`
+  (main antes do merge).
+- O que muda no site: nada visível ainda — este PR só adiciona os dados; as
+  7 aulas (e todo o resto de Contabilidade Tributária, já mesclado nos PRs
+  #101-#114) só aparecem depois de o Abner rodar o comando de carga em
+  produção.
+- O que muda fora do site:
+  - Décimo quinto e último sub-lote de Contabilidade Tributária em
+    `data/apache/aulas/contabilidade-tributaria-15.json` (os 7 conteúdos
+    finais: CT-118 a CT-124, unidade "Reforma tributária — Documentos
+    fiscais", na ordem do catálogo, `model='claude-manual'`), usando o mesmo
+    mecanismo de carga dos PRs #95-#114 (`scripts/apache-carregar-aulas.mjs`).
+    **Com este sub-lote, Contabilidade Tributária fica completa (124/124) e
+    o card APA-18 fica concluído (182/182 conteúdos do roadmap atual).**
+    Conteúdo grounded na Nota Técnica 2025.002 (grupo `gIBSCBS` no XML da
+    NF-e/NFC-e, CST de 3 dígitos e `cClassTrib` de 6 dígitos, base de cálculo
+    única por item, ZFM/ALC com alíquota zero de CBS e crédito presumido de
+    IBS, Imposto Seletivo com bloco próprio — CT-118/CT-119), no leiaute da
+    NFS-e nacional (DPS, Emissor Nacional, ADN, cronograma de destaque de
+    IBS/CBS por grupo de contribuinte em 2026, tratamento do Simples Nacional
+    e do "Simples Híbrido" — CT-120), em eventos fiscais pós-emissão (nota de
+    débito/crédito, Carta de Correção, ajuste de competência, estorno de
+    crédito — CT-121), na apuração assistida pelo fisco (conta-corrente por
+    operação, demonstrativo de apuração, eventos de crédito presumido —
+    CT-122), em parametrização de ERP/controles internos durante a transição
+    (homologação x produção, EFD ICMS/IPI em coexistência, cruzamentos
+    eletrônicos — CT-123) e num caso integrado final por perfil de empresa
+    (CT-124). Pesquisa web feita nesta thread para confirmar o estado atual
+    (2026) do leiaute e do cronograma antes de escrever as aulas (ver regra
+    "nunca assumir valor clássico sem checar a versão vigente" do card).
+  - `scripts/apache-carregar-aulas.mjs` ganhou a flag `--all` (script
+    `apache:carregar-todas-aulas`): carrega **todos** os lotes de
+    `data/apache/aulas/` num único comando, em ordem alfabética, validando
+    todos os lotes contra `lib/apache/schema.ts#validateLesson` antes de
+    gravar qualquer coisa, e parando no primeiro erro sem tocar os lotes
+    seguintes (idempotente — os lotes já gravados antes do erro não
+    duplicam numa nova execução). Atende ao pedido do Abner de receber um
+    único comando ao final, em vez de um por sub-lote. Teste novo em
+    `tests/apache-carregar-aulas.test.ts` cobre a listagem e a validação
+    usadas pelo `--all` (sem tocar wrangler/D1/R2 de verdade).
+  - Fix em `scripts/apache-accept-vision-license.ts` (APA-16): a Cloudflare
+    sinaliza o aceite da licença do modelo de visão gated lançando uma
+    "rejeição" cujo código é 5016 e cuja mensagem já é a confirmação do
+    aceite ("Thank you for agreeing to the usage terms..."), não um erro —
+    confirmado pelo Abner rodando o comando real. O script tratava isso como
+    falha e saía com exit 1 mesmo tendo aceitado a licença com sucesso. A
+    detecção foi extraída para `lib/apache/vision-license.ts`
+    (`isVisionLicenseAcceptedError`), testada em
+    `tests/apache-vision-license.test.ts`.
+
 ## PR #114 — APA-18: aulas base de Contabilidade Tributária (sub-lote 5n)
 
 - Ponto de restauração: branch `restore/pre-apa-18-contabilidade-tributaria-14`

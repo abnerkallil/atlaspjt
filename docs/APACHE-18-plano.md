@@ -119,7 +119,7 @@ replica exatamente o que `saveLesson` faz.
    | 5l       | Obrigações e SPED — **MESCLADO** (`contabilidade-tributaria-12.json`) | CT-091–098 | 8    |
    | 5m       | Reforma tributária — **MESCLADO** (`contabilidade-tributaria-13.json`) | CT-099–107 | 9    |
    | 5n       | Governança e domínio — **MESCLADO** (`contabilidade-tributaria-14.json`) | CT-108–117 | 10   |
-   | 5o       | Reforma tributária — Documentos fiscais    | CT-118–124 | 7    |
+   | 5o       | Reforma tributária — Documentos fiscais — **MESCLADO** (`contabilidade-tributaria-15.json`) | CT-118–124 | 7    |
 
    Total: 15 sub-lotes, 5–12 conteúdos cada (viável para revisão por
    amostragem rigorosa). Ordem sugerida: começar por Fundamentos (5a,
@@ -140,23 +140,23 @@ replica exatamente o que `saveLesson` faz.
 - [x] Lote 2/5 — Análise das Demonstrações Financeiras (6/6 conteúdos) — PR #96
 - [x] Lote 3/5 — Contabilidade Avançada (7/7 conteúdos)
 - [x] Lote 4/5 — Contabilidade Geral (41/41, em sub-lotes; sub-lote 4c nesta PR — disciplina completa)
-- [ ] Lote 5/5 — Contabilidade Tributária (117/124, em 15 sub-lotes propostos acima, pesquisa de legislação; sub-lotes 5a Fundamentos, 5b Contabilização, 5c Cadastros e documentos, 5d Simples Nacional, 5e Lucro Presumido, 5f Lucro Real, 5g PIS e Cofins, 5h ICMS, 5i IPI, 5j ISS, 5k Folha e retenções, 5l Obrigações e SPED, 5m Reforma tributária e 5n Governança e domínio mesclados; falta só 5o)
-- [ ] Todos os 183 conteúdos cobertos (regra final do card)
+- [x] Lote 5/5 — Contabilidade Tributária (124/124, em 15 sub-lotes; 5a Fundamentos, 5b Contabilização, 5c Cadastros e documentos, 5d Simples Nacional, 5e Lucro Presumido, 5f Lucro Real, 5g PIS e Cofins, 5h ICMS, 5i IPI, 5j ISS, 5k Folha e retenções, 5l Obrigações e SPED, 5m Reforma tributária, 5n Governança e domínio e 5o Reforma tributária — Documentos fiscais — **disciplina completa**)
+- [x] Todos os conteúdos do roadmap cobertos (182 no catálogo atual, soma das 5 disciplinas — regra final do card; **APA-18 concluído**)
+- [x] Comando único de carga de todos os lotes (`--all`/`apache:carregar-todas-aulas`, regra do Abner de não mandar um comando por sub-lote)
 
 ## Como aplicar (Abner, depois do merge)
 
-```
-pnpm run apache:carregar-aulas -- --file data/apache/aulas/contabilidade-de-custos.json --target production
-pnpm run apache:carregar-aulas -- --file data/apache/aulas/analise-demonstracoes-financeiras.json --target production
-pnpm run apache:carregar-aulas -- --file data/apache/aulas/contabilidade-avancada.json --target production
-pnpm run apache:carregar-aulas -- --file data/apache/aulas/contabilidade-geral-1.json --target production
-pnpm run apache:carregar-aulas -- --file data/apache/aulas/contabilidade-geral-2.json --target production
-pnpm run apache:carregar-aulas -- --file data/apache/aulas/contabilidade-geral-3.json --target production
-```
+As 5 disciplinas (182 conteúdos, 21 arquivos em `data/apache/aulas/`) estão
+completas. Em vez de um comando por lote, `scripts/apache-carregar-aulas.mjs`
+ganhou a flag `--all` (script `apache:carregar-todas-aulas`): carrega todo
+`data/apache/aulas/` em ordem alfabética, num comando só, parando no primeiro
+erro (nenhum lote depois do que falhar é tocado; os anteriores já ficam
+gravados). É idempotente — se precisar rodar de novo depois de corrigir algo,
+os lotes já carregados só ganham uma nova versão com o mesmo conteúdo.
 
-Contabilidade Tributária (sub-lotes 5a–5k, `contabilidade-tributaria-01.json` a
-`contabilidade-tributaria-11.json`) ainda **não** entra nesta lista: a regra do
-Abner é mandar um único comando só quando os 15 sub-lotes estiverem completos.
+```
+pnpm run apache:carregar-todas-aulas -- --target production
+```
 
 Não precisa de "Publicar Atlas" — o script grava direto em produção (D1 +
 R2) usando o `wrangler` já logado; não há build nem migration nova nesta PR.
