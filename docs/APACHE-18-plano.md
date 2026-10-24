@@ -118,7 +118,7 @@ replica exatamente o que `saveLesson` faz.
    | 5k       | Folha e retenções — **MESCLADO** (`contabilidade-tributaria-11.json`) | CT-083–090 | 8    |
    | 5l       | Obrigações e SPED — **MESCLADO** (`contabilidade-tributaria-12.json`) | CT-091–098 | 8    |
    | 5m       | Reforma tributária — **MESCLADO** (`contabilidade-tributaria-13.json`) | CT-099–107 | 9    |
-   | 5n       | Governança e domínio                       | CT-108–117 | 10   |
+   | 5n       | Governança e domínio — **MESCLADO** (`contabilidade-tributaria-14.json`) | CT-108–117 | 10   |
    | 5o       | Reforma tributária — Documentos fiscais    | CT-118–124 | 7    |
 
    Total: 15 sub-lotes, 5–12 conteúdos cada (viável para revisão por
@@ -140,7 +140,7 @@ replica exatamente o que `saveLesson` faz.
 - [x] Lote 2/5 — Análise das Demonstrações Financeiras (6/6 conteúdos) — PR #96
 - [x] Lote 3/5 — Contabilidade Avançada (7/7 conteúdos)
 - [x] Lote 4/5 — Contabilidade Geral (41/41, em sub-lotes; sub-lote 4c nesta PR — disciplina completa)
-- [ ] Lote 5/5 — Contabilidade Tributária (107/124, em 15 sub-lotes propostos acima, pesquisa de legislação; sub-lotes 5a Fundamentos, 5b Contabilização, 5c Cadastros e documentos, 5d Simples Nacional, 5e Lucro Presumido, 5f Lucro Real, 5g PIS e Cofins, 5h ICMS, 5i IPI, 5j ISS, 5k Folha e retenções, 5l Obrigações e SPED e 5m Reforma tributária mesclados)
+- [ ] Lote 5/5 — Contabilidade Tributária (117/124, em 15 sub-lotes propostos acima, pesquisa de legislação; sub-lotes 5a Fundamentos, 5b Contabilização, 5c Cadastros e documentos, 5d Simples Nacional, 5e Lucro Presumido, 5f Lucro Real, 5g PIS e Cofins, 5h ICMS, 5i IPI, 5j ISS, 5k Folha e retenções, 5l Obrigações e SPED, 5m Reforma tributária e 5n Governança e domínio mesclados; falta só 5o)
 - [ ] Todos os 183 conteúdos cobertos (regra final do card)
 
 ## Como aplicar (Abner, depois do merge)
