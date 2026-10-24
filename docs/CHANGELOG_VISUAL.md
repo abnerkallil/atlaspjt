@@ -14,6 +14,44 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #111 — APA-18: aulas base de Contabilidade Tributária (sub-lote 5k)
+
+- Ponto de restauração: branch `restore/pre-apache-18-5k-folha` (main antes
+  do merge).
+- O que muda no site: nada visível ainda — este PR só adiciona os dados; as
+  8 aulas só aparecem depois de o Abner rodar o comando de carga para esse
+  arquivo (não precisa de "Publicar Atlas": o script grava direto em D1/R2).
+  O carregamento em produção de toda a Contabilidade Tributária será feito
+  num único comando ao final de todos os 15 sub-lotes, a pedido do Abner.
+- O que muda fora do site: décimo primeiro sub-lote de Contabilidade
+  Tributária em `data/apache/aulas/contabilidade-tributaria-11.json` (8 dos
+  124 conteúdos: CT-083 a CT-090, unidade "Folha e retenções", na ordem do
+  catálogo, `model='claude-manual'`), usando o mesmo mecanismo de carga dos
+  PRs #95-#110 (`scripts/apache-carregar-aulas.mjs`). Conteúdo: contribuições
+  previdenciárias da folha — segurado, patronal (art. 22, I e III, Lei
+  8.212/1991), RAT/GILRAT ajustado pelo FAP e contribuições a terceiros
+  (Sistema S) (CT-083); eventos periódicos, não periódicos, totalizadores e
+  fechamento (S-1299) do eSocial (CT-084); CPRB e o cronograma de
+  reoneração gradual da Lei 14.973/2024 (convivência entre receita e folha
+  de 2025 a 2027, extinção do regime substitutivo em 2028, termo de
+  compromisso de manutenção de empregos), confirmado por pesquisa web
+  (CT-085); retenção previdenciária de 11% (ou 3,5% na CPRB) sobre cessão
+  de mão de obra e empreitada (art. 31, Lei 8.212/1991), deduções de
+  materiais e compensação pelo prestador (CT-086); IRRF sobre pagamentos a
+  pessoa física e jurídica, incluindo a redução do imposto da Lei
+  15.270/2025 aplicada na retenção mensal a partir de 2026 (isenção
+  efetiva até R$ 5.000, redução decrescente até R$ 7.350), confirmado por
+  pesquisa web (CT-087); retenção combinada de 4,65% de PIS/Cofins/CSLL
+  entre pessoas jurídicas, serviços sujeitos e dispensa pelo limite de
+  R$ 10,00 (CT-088); cadastro de prestador de outro município (CPOM) e
+  risco de retenção indevida de ISS por falta de cadastro (CT-089); e
+  eventos de retenção da EFD-Reinf (séries R-2000/R-4000, obrigatórios
+  desde a IN RFB 2.133/2023), sua integração com o eSocial na DCTFWeb, e a
+  unificação da confissão de débitos federais pelo MIT (IN RFB 2.237/2024,
+  fatos geradores a partir de janeiro/2025) substituindo a DCTF em PGD
+  separado, confirmado por pesquisa web (CT-090). `docs/APACHE-18-plano.md`
+  atualizado (sub-lote 5k mesclado; Tributária em 90/124).
+
 ## PR #110 — APA-18: aulas base de Contabilidade Tributária (sub-lote 5j)
 
 - Ponto de restauração: branch `restore/pre-apache-18-5j-iss` (main antes do
