@@ -27,7 +27,7 @@
 // levantamento).
 //
 // Uso:
-//   pnpm run apolo:classificar-ct -- --check
+//   pnpm run apolo:classificar-ct -- --check --target <local|production>
 //   pnpm run apolo:classificar-ct -- --target local
 //   pnpm run apolo:classificar-ct -- --target production
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -147,7 +147,7 @@ await runCli(async () => {
   });
 
   const { wranglerJson, d1Rows, wrangler } = createRunner(process.env);
-  const target = values.check ? 'local' : requireTarget(values.target);
+  const target = requireTarget(values.target);
   const { d1, config, where } = resolveTarget(target, wranglerJson);
 
   const themeFilter = `theme IN (${SCOPED_THEMES.map(literal).join(', ')})`;
