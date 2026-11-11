@@ -14,6 +14,29 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #TBD — Lote 11 de questões do roadmap de Contabilidade (CG-016–CG-020, CG-026, Mecânica contábil e Clientes/contas a receber)
+
+- Ponto de restauração: branch `restore/pre-lote-cg-016-026` (main antes do
+  merge).
+- O que muda no site: nada visível ainda. É só um arquivo de dados
+  (`data/questoes/lote-cg-016-026.csv`, 87 questões autorais — Lançamentos
+  contábeis (CG-016), Livros Diário e Razão (CG-017), Escrituração contábil
+  (CG-018), Balancete de verificação (CG-019), Erros e correções de
+  escrituração (CG-020) e Clientes e contas a receber (CG-026)). 15
+  questões novas para CG-016, CG-017, CG-018 e CG-020 (nenhum tinha questão
+  aprovada ou rascunho próprio antes). CG-019 recebe 14 novas (ordem 2–15):
+  há 1 questão da prova ATRFB 2012 Área Geral curada na PR #123
+  (`data/apolo/provas-rf-2026-11/atrfb-2012-area-geral-contabilidade.json`)
+  ainda como rascunho pendente de aprovação em `/rascunhos`, contada como já
+  cobrindo a ordem 1. CG-026 recebe 13 novas (ordem 3–15): há 2 questões da
+  mesma prova já curadas para esse conteúdo, contadas como ordem 1–2.
+  Fundamentado na aula já existente no acervo
+  (`data/apache/aulas/contabilidade-geral-2.json`), sem citar banca/órgão/ano
+  (origem "autoral"). As questões só aparecem para o aluno depois que o
+  Abner rodar o comando de carga em produção (ainda não enviado; vai ser
+  acumulado com os demais lotes, conforme
+  `docs/APOLO-questoes-roadmap-plano.md`).
+
 ## PR #132 — Lote 10 de questões do roadmap de Contabilidade (CG-007, CG-009–CG-012, CG-014, Contas e teorias do débito/crédito)
 
 - Ponto de restauração: branch `restore/pre-cg-007-014-20261111201759` (main
