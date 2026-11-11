@@ -97,7 +97,7 @@ threads encadeadas e manda **um único comando** de carga ao Abner no final
 | Lote | Conteúdos | Status |
 |---|---|---|
 | 1 | CT-001, CT-002 (10 questões cada, autoral) | **Feito nesta thread** — `data/questoes/lote-ct-001-002.csv` |
-| 2 | CT-011–CT-019 (Fundamentos/Contabilização) | Pendente |
+| 2 | CT-011–CT-019 (Fundamentos/Contabilização) | **Feito** — `data/questoes/lote-ct-011-019.csv` (135 questões, 15 por conteúdo) |
 | 3 | CT-020–CT-029 (Cadastros e documentos fiscais) | Pendente |
 | 4 | CT-073–CT-077 (IPI específico) | Pendente |
 | 5 | CT-098, CT-108–CT-117 (Malha fiscal fora do mapeado + Governança/domínio) | Pendente |
