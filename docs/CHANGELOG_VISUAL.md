@@ -14,6 +14,34 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #TBD — Lote 12 de questões do roadmap de Contabilidade (CG-029, CG-030, CG-032, CG-033, CG-035, CG-040, CG-041)
+
+- Ponto de restauração: branch `restore/pre-lote-cg-029-041` (main antes do
+  merge).
+- O que muda no site: nada visível ainda. É só um arquivo de dados
+  (`data/questoes/lote-cg-029-041.csv`, 101 questões autorais — Tributos nas
+  compras e vendas (CG-029), Folha de pagamento (CG-030), Empréstimos,
+  financiamentos e juros (CG-032), Provisões e contingências — introdução
+  (CG-033), Rotina de fechamento contábil (CG-035), Ciclo contábil completo
+  (CG-040) e Princípios contábeis fundamentais (CG-041)). CG-033, CG-035,
+  CG-040 e CG-041 recebem 15 questões novas cada (nenhum tinha questão
+  aprovada ou rascunho próprio antes). CG-029 recebe 13 novas (ordem 3–15):
+  há 2 questões de provas da Receita Federal já curadas (PRs #123/#125,
+  `atrfb-2012-area-geral-contabilidade.json` e
+  `atrfb-2012-informatica-contabilidade.json`) ainda como rascunho pendente
+  de aprovação em `/rascunhos`, contadas como ordem 1–2. CG-030 recebe 14
+  novas (ordem 2–15): há 1 questão da mesma leva de provas
+  (`afrfb-2014-contabilidade.json`) ainda pendente, contada como ordem 1.
+  CG-032 recebe 14 novas (ordem 2–15): há 1 questão
+  (`afrfb-2023-manha-contabilidade.json`) ainda pendente, contada como ordem
+  1. Fundamentado na aula já existente no acervo
+  (`data/apache/aulas/contabilidade-geral-1.json` e
+  `contabilidade-geral-3.json`) e no CPC 25 (provisões), sem citar
+  banca/órgão/ano (origem "autoral"). As questões só aparecem para o aluno
+  depois que o Abner rodar o comando de carga em produção (ainda não
+  enviado; vai ser acumulado com os demais lotes, conforme
+  `docs/APOLO-questoes-roadmap-plano.md`).
+
 ## PR #133 — Lote 11 de questões do roadmap de Contabilidade (CG-016–CG-020, CG-026, Mecânica contábil e Clientes/contas a receber)
 
 - Ponto de restauração: branch `restore/pre-lote-cg-016-026` (main antes do
