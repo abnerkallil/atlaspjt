@@ -14,6 +14,27 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #TBD — Lote 13 de questões do roadmap de Contabilidade (CT-078–CT-087, ISS e Folha/retenções)
+
+- Ponto de restauração: branch `restore/pre-lote-ct-078-087` (main antes do
+  merge).
+- O que muda no site: nada visível ainda. É só um arquivo de dados
+  (`data/questoes/lote-ct-078-087.csv`, 150 questões autorais — 15 por
+  conteúdo, sem nenhum deles ter questão aprovada antes). ISS: LC 116 e
+  lista de serviços (CT-078), local da incidência e exportação de serviços
+  (CT-079), base/alíquotas/deduções (CT-080), retenção e responsabilidade
+  (CT-081), NFS-e e fechamento municipal (CT-082). Folha e retenções:
+  contribuições previdenciárias da folha (CT-083), eSocial e fechamento da
+  folha (CT-084), CPRB e regimes previdenciários sobre receita (CT-085),
+  retenção previdenciária em serviços (CT-086), IRRF sobre pagamentos
+  (CT-087). Fundamentado na Constituição (art. 156, III), LC 116/2003, Lei
+  8.212/1991, Lei 12.546/2011, Lei 7.713/1988, Lei 7.450/1985 e
+  jurisprudência consolidada do STF/STJ (SV 31, Súmula 163/STJ, Temas
+  296 e 816), sem citar banca/órgão/ano (origem "autoral"). As questões só
+  aparecem para o aluno depois que o Abner rodar o comando de carga em
+  produção (ainda não enviado; vai ser acumulado com os demais lotes,
+  conforme `docs/APOLO-questoes-roadmap-plano.md`).
+
 ## PR #133 — Lote 11 de questões do roadmap de Contabilidade (CG-016–CG-020, CG-026, Mecânica contábil e Clientes/contas a receber)
 
 - Ponto de restauração: branch `restore/pre-lote-cg-016-026` (main antes do
