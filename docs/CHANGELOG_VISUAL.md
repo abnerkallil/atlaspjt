@@ -14,6 +14,25 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #TBD — Lote 9 de questões do roadmap de Contabilidade (CT-118–CT-124, Reforma tributária — Documentos fiscais)
+
+- Ponto de restauração: branch `restore/pre-ct-118-124` (main antes do
+  merge).
+- O que muda no site: nada visível ainda. É só um arquivo de dados
+  (`data/questoes/lote-ct-118-124.csv`, 105 questões autorais — CST,
+  cClassTrib e tributação no documento fiscal (CT-118), NF-e e NFC-e na
+  Reforma Tributária (CT-119), NFS-e e DPS na Reforma Tributária (CT-120),
+  correções, ajustes e eventos fiscais na Reforma (CT-121), créditos e
+  apuração assistida (CT-122), cadastros, ERP, EFD e controles na Reforma
+  Tributária (CT-123) e o caso integrado de implantação da Reforma nos
+  documentos fiscais (CT-124). 15 questões novas por conteúdo (nenhum dos
+  sete tinha questão aprovada em produção antes deste lote). Fundamentado
+  na aula já existente no acervo (`data/apache/aulas/contabilidade-tributaria-15.json`,
+  por sua vez baseada na LC 214/2025), sem citar banca/órgão/ano (origem
+  "autoral"). As questões só aparecem para o aluno depois que o Abner rodar
+  o comando de carga em produção (ainda não enviado; vai ser acumulado com
+  os demais lotes, conforme `docs/APOLO-questoes-roadmap-plano.md`).
+
 ## PR #130 — Lote 8 de questões do roadmap de Contabilidade (CT-098, CT-108–CT-117, Malha fiscal e Governança/domínio)
 
 - Ponto de restauração: branch `restore/pre-ct-108-117` (main antes do
