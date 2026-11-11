@@ -14,7 +14,7 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
-## PR #TBD — Lote 10 de questões do roadmap de Contabilidade (CG-007, CG-009–CG-012, CG-014, Contas e teorias do débito/crédito)
+## PR #132 — Lote 10 de questões do roadmap de Contabilidade (CG-007, CG-009–CG-012, CG-014, Contas e teorias do débito/crédito)
 
 - Ponto de restauração: branch `restore/pre-cg-007-014-20261111201759` (main
   antes do merge).
