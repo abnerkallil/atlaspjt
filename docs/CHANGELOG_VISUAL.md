@@ -14,7 +14,7 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
-## PR #121 — Lote 2 de questões do roadmap de Contabilidade (CT-011–CT-019)
+## PR #122 — Lote 2 de questões do roadmap de Contabilidade (CT-011–CT-019)
 
 - Ponto de restauração: branch `restore/pre-apolo-lote-ct-011-019` (main
   antes do merge).
