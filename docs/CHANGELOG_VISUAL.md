@@ -14,6 +14,25 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR TBD — Lote 7 de questões do roadmap de Contabilidade (CT-099–CT-107, Reforma Tributária)
+
+- Ponto de restauração: branch `restore/pre-ct-099-107` (main antes do
+  merge).
+- O que muda no site: nada visível ainda. É só um arquivo de dados
+  (`data/questoes/lote-ct-099-107.csv`, 135 questões autorais — CT-099 a
+  CT-107, bloco Reforma tributária: fundamentos da reforma do consumo
+  (CT-099), CBS (CT-100), IBS (CT-101), Imposto Seletivo (CT-102), não
+  cumulatividade/créditos/destino (CT-103), regimes diferenciados,
+  específicos e favorecidos (CT-104), Simples Nacional na transição
+  (CT-105), documentos/split payment/cashback (CT-106) e transição
+  2026–2033 (CT-107). 15 questões novas por conteúdo (nenhum dos nove
+  tinha questão aprovada em produção antes deste lote). Fundamentado na
+  EC 132/2023 e na LC 214/2025, sem citar banca/órgão/ano (origem
+  "autoral"). As questões só aparecem para o aluno depois que o Abner
+  rodar o comando de carga em produção (ainda não enviado; vai ser
+  acumulado com os demais lotes, conforme
+  `docs/APOLO-questoes-roadmap-plano.md`).
+
 ## PR TBD — Lote 6 de questões do roadmap de Contabilidade (CT-073–CT-077, IPI)
 
 - Ponto de restauração: branch `restore/pre-ct-073-077` (main antes do
