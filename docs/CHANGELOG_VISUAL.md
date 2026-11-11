@@ -14,7 +14,7 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
-## PR #TBD — Lote 11 de questões do roadmap de Contabilidade (CG-016–CG-020, CG-026, Mecânica contábil e Clientes/contas a receber)
+## PR #133 — Lote 11 de questões do roadmap de Contabilidade (CG-016–CG-020, CG-026, Mecânica contábil e Clientes/contas a receber)
 
 - Ponto de restauração: branch `restore/pre-lote-cg-016-026` (main antes do
   merge).
