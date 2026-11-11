@@ -102,7 +102,7 @@ threads encadeadas e manda **um único comando** de carga ao Abner no final
 | 3b | CT-030–CT-039 (Simples Nacional) | **Feito** — `data/questoes/lote-ct-030-039.csv` (150 questões, 15 por conteúdo) |
 | 3c | CT-040–CT-049 (Lucro Presumido CT-040–045, Lucro Real CT-046–049) | **Feito** — `data/questoes/lote-ct-040-049.csv` (148 questões: CT-040 e CT-046 já tinham 1 questão aprovada em produção, com id `CT-040-Q01`/`CT-046-Q01`, então o lote preserva essa questão e completa 14 novas em cada um desses dois conteúdos, ordem 2 a 15; os demais 8 conteúdos recebem 15 novas, ordem 1 a 15) |
 | 4 | CT-073–CT-077 (IPI específico) | **Feito** — `data/questoes/lote-ct-073-077.csv` (75 questões, 15 por conteúdo) |
-| 5 | CT-098, CT-108–CT-117 (Malha fiscal fora do mapeado + Governança/domínio) | Pendente |
+| 5 | CT-098, CT-108–CT-117 (Malha fiscal fora do mapeado + Governança/domínio) | **Feito** — `data/questoes/lote-ct-108-117.csv` (165 questões, 15 por conteúdo; nenhum dos onze tinha questão aprovada antes) |
 | 6 | CT-099–CT-107 (Reforma Tributária, fundamentos) | **Feito** — `data/questoes/lote-ct-099-107.csv` (135 questões, 15 por conteúdo) |
 | 7 | CT-118–CT-124 — conferir rascunho/questão existente antes de escrever | Pendente |
 | 8 | CG-007, CG-009–CG-012, CG-014 | Pendente |
