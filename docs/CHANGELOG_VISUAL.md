@@ -14,6 +14,28 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR (a abrir) — Lote 4 de questões do roadmap de Contabilidade (CT-030–CT-039)
+
+- Ponto de restauração: branch `restore/pre-ct-030-039` (main antes do
+  merge).
+- O que muda no site: nada visível ainda. É só um arquivo de dados
+  (`data/questoes/lote-ct-030-039.csv`, 150 questões autorais — 15 por
+  conteúdo, CT-030 a CT-039, bloco de Simples Nacional: estrutura/opção,
+  MEI/SIMEI, receita bruta/RBT12, anexos/faixas, Fator R, segregação no
+  PGDAS-D, PGDAS-D/DAS/retificações, DEFIS, restituição/compensação/
+  parcelamento e um caso completo integrador), fundamentadas na LC
+  123/2006 e na Resolução CGSN 140/2018, seguindo o padrão dos lotes
+  anteriores (`docs/APOLO-questoes-roadmap-plano.md`, lote 3b). As
+  questões só aparecem para o aluno depois que o Abner rodar `pnpm run
+  questoes:importar -- --target production --file
+  data/questoes/lote-ct-030-039.csv` (comando ainda não enviado; vai
+  junto com os próximos lotes do mesmo plano).
+- O que muda fora do site: `docs/APOLO-questoes-roadmap-plano.md` marca o
+  lote 3b como feito.
+- Se algo der errado: reverter para `restore/pre-ct-030-039` volta ao
+  estado anterior; como nada foi carregado em produção ainda, não há
+  nenhuma questão para desfazer no D1.
+
 ## PR #123 — Lote 3 de questões do roadmap de Contabilidade (CT-020–CT-029)
 
 - Ponto de restauração: branch `restore/pre-apolo-lote-ct-020-029` (main

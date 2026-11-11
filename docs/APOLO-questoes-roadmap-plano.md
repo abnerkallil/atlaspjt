@@ -99,6 +99,7 @@ threads encadeadas e manda **um único comando** de carga ao Abner no final
 | 1 | CT-001, CT-002 (10 questões cada, autoral) | **Feito nesta thread** — `data/questoes/lote-ct-001-002.csv` |
 | 2 | CT-011–CT-019 (Fundamentos/Contabilização) | **Feito** — `data/questoes/lote-ct-011-019.csv` (135 questões, 15 por conteúdo) |
 | 3 | CT-020–CT-029 (Cadastros e documentos fiscais) | **Feito** — `data/questoes/lote-ct-020-029.csv` (150 questões, 15 por conteúdo) |
+| 3b | CT-030–CT-039 (Simples Nacional) | **Feito** — `data/questoes/lote-ct-030-039.csv` (150 questões, 15 por conteúdo) |
 | 4 | CT-073–CT-077 (IPI específico) | Pendente |
 | 5 | CT-098, CT-108–CT-117 (Malha fiscal fora do mapeado + Governança/domínio) | Pendente |
 | 6 | CT-099–CT-107 (Reforma Tributária, fundamentos) | Pendente |
@@ -106,7 +107,7 @@ threads encadeadas e manda **um único comando** de carga ao Abner no final
 | 8 | CG-007, CG-009–CG-012, CG-014 | Pendente |
 | 9 | CG-016–CG-020, CG-026 | Pendente |
 | 10 | CG-029, CG-030, CG-032, CG-033, CG-035, CG-040, CG-041 (conferir) | Pendente |
-| — | Reconferir CT cobertos pela PR #116 (CT-003–CT-010, CT-030–CT-072, CT-078–CT-098, CT-112) após ela mergear; só escrever questão nova nos que ainda estiverem abaixo de 15 | Pendente, depende da PR #116 |
+| — | Reconferir CT cobertos pela PR #116 (CT-003–CT-010, CT-040–CT-072, CT-078–CT-098, CT-112) após ela mergear; só escrever questão nova nos que ainda estiverem abaixo de 15 (CT-030–CT-039 já tratado no lote 3b, independente dessa reconferência) | Pendente, depende da PR #116 |
 | — | Aprovar em `/rascunhos` (ou script equivalente) os CG/CC/AD/CA que já têm rascunho vinculado por `content_id` | Fora desta thread (fila de curadoria existente) |
 
 Cada lote pendente: uma thread nova (herdando este plano por `message_id` ou
