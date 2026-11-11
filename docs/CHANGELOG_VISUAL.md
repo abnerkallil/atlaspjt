@@ -14,7 +14,7 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
-## PR TBD — Lote 7 de questões do roadmap de Contabilidade (CT-099–CT-107, Reforma Tributária)
+## PR #129 — Lote 7 de questões do roadmap de Contabilidade (CT-099–CT-107, Reforma Tributária)
 
 - Ponto de restauração: branch `restore/pre-ct-099-107` (main antes do
   merge).
