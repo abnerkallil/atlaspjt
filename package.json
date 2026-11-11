@@ -21,6 +21,7 @@
     "apolo:sugestao-bloom": "node scripts/apolo-sugestao-bloom.mjs",
     "apolo:aplicar-curadoria": "node scripts/apolo-aplicar-curadoria.mjs",
     "apolo:aprovar-roadmap": "node scripts/apolo-aprovar-rascunhos-roadmap.mjs",
+    "apolo:classificar-ct": "node scripts/apolo-classificar-rotulos-ct.mjs",
     "db:generate": "drizzle-kit generate",
     "db:catalog": "tsc -p tsconfig.notes-spike.json && node .notes-spike-dist/tools/write-catalog-seed.js",
     "apache:bakeoff": "tsc -p tsconfig.notes-spike.json && node .notes-spike-dist/scripts/apache-bakeoff.js",
