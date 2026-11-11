@@ -18,6 +18,10 @@ export type Draft = {
   id: string;
   sourceId: string | null;
   contentId: string | null;
+  // Rótulo de conteúdo alternativo, para temas sem roadmap ainda (ver
+  // lib/apolo/content-taxonomy.ts). Um rascunho usa contentId OU
+  // contentLabelId, nunca os dois — aprovar continua exigindo contentId.
+  contentLabelId: string | null;
   subtopicId: string | null;
   theme: string | null;
   kind: QuestionKind;
@@ -49,6 +53,7 @@ type DraftRow = {
   id: string;
   source_id: string | null;
   content_id: string | null;
+  content_label_id: string | null;
   subtopic_id: string | null;
   theme: string | null;
   kind: string;
@@ -99,6 +104,7 @@ function toDraft(row: DraftRow): Draft {
     id: row.id,
     sourceId: row.source_id,
     contentId: row.content_id,
+    contentLabelId: row.content_label_id,
     subtopicId: row.subtopic_id,
     theme: row.theme,
     kind: row.kind as QuestionKind,
@@ -128,7 +134,7 @@ function toDraft(row: DraftRow): Draft {
 }
 
 const COLUMNS =
-  'id, source_id, content_id, subtopic_id, theme, kind, prompt, context, options_json, correct_option, model_answer, ' +
+  'id, source_id, content_id, content_label_id, subtopic_id, theme, kind, prompt, context, options_json, correct_option, model_answer, ' +
   'expected_value, tolerance, verification_json, bloom_level, knowledge_type, origin, exam_board, exam_org, exam_year, ' +
   'explanation, option_explanations_json, text_hash, lint_warnings_json, status, approved_question_id, created_at, reviewed_at';
 
@@ -207,6 +213,7 @@ export async function insertDrafts(db: D1Like, items: NewDraftInput[], now: stri
 
 export type DraftEdit = {
   contentId?: string | null;
+  contentLabelId?: string | null;
   subtopicId?: string | null;
   theme?: string | null;
   kind?: string;
@@ -244,7 +251,16 @@ export async function updateDraft(db: D1Like, id: string, edit: DraftEdit): Prom
     values.push(value);
     index += 1;
   };
-  if ('contentId' in edit) assign('content_id', edit.contentId ?? null);
+  // contentId e contentLabelId são mutuamente exclusivos (ver DraftEdit):
+  // escolher um limpa o outro, em vez de deixar o chamador cuidar disso.
+  if ('contentId' in edit) {
+    assign('content_id', edit.contentId ?? null);
+    if (edit.contentId) assign('content_label_id', null);
+  }
+  if ('contentLabelId' in edit) {
+    assign('content_label_id', edit.contentLabelId ?? null);
+    if (edit.contentLabelId) assign('content_id', null);
+  }
   if ('subtopicId' in edit) assign('subtopic_id', edit.subtopicId ?? null);
   if ('theme' in edit) assign('theme', edit.theme ?? null);
   if (edit.kind) assign('kind', edit.kind);
