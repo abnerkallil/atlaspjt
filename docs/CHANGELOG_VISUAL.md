@@ -14,6 +14,21 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #TBD — Lote 12 de questões do roadmap de Contabilidade (CT-088–CT-097, retenções e SPED)
+
+- Ponto de restauração: branch `restore/pre-lote-ct-088-097` (main antes do
+  merge).
+- O que muda no site: nada visível ainda. É só um arquivo de dados
+  (`data/questoes/lote-ct-088-097.csv`, 150 questões autorais — 15 por
+  conteúdo, sem nenhum deles ter questão aprovada antes). Retenções:
+  PIS/Cofins/CSLL (CT-088), ISS (CT-089). Folha e retenções: EFD-Reinf,
+  DCTFWeb e MIT (CT-090). Obrigações e SPED: ECD (CT-091), ECF (CT-092),
+  EFD-Contribuições (CT-093), EFD ICMS/IPI (CT-094), eSocial/EFD-Reinf/
+  DCTFWeb (CT-095), PER/DCOMP Web (CT-096), obrigações estaduais e
+  municipais (CT-097). Fundamentado na Lei 10.833/2003 (retenção
+  unificada), LC 116/2003 e LC 157/2016 (ISS), e na estrutura do SPED
+  (ECD, ECF, EFD-Contribuições, EFD ICMS/IPI).
+
 ## PR #135 — Lote 13 de questões do roadmap de Contabilidade (CT-078–CT-087, ISS e Folha/retenções)
 
 - Ponto de restauração: branch `restore/pre-lote-ct-078-087` (main antes do
