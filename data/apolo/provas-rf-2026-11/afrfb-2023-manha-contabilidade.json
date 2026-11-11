@@ -1,0 +1,78 @@
+[
+  {
+    "prompt": "Uma sociedade empresária efetuou a captação de debêntures de longo prazo no mercado financeiro, com prêmio. No ano de X1, foi efetuado o pagamento dos juros e realizada a amortização periódica do prêmio recebido. Assinale a opção que indica a apresentação do efeito da apropriação do prêmio das debêntures na estrutura de grupos da Demonstração do Resultado do Exercício da sociedade empresária em 31/12/X1.",
+    "kind": "multipla",
+    "options": [
+      "Despesa Financeira.",
+      "Receita Financeira.",
+      "Outras receitas Operacionais.",
+      "Retificação da Receita Financeira.",
+      "Prêmios na emissão de debêntures a apropriar."
+    ],
+    "correctOption": 0,
+    "contentId": "CG-032",
+    "bloomLevel": "entender",
+    "knowledgeType": "conceitual",
+    "explanation": "O prêmio recebido na emissão de debêntures reduz o custo efetivo da captação; sua apropriação ao resultado é feita como uma retificação (conta redutora) dentro do próprio grupo de Despesas Financeiras na DRE, e não como receita separada ou em outro grupo.",
+    "examBoard": "FGV",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2023
+  },
+  {
+    "prompt": "Uma entidade do setor público realizou transações em moeda estrangeira. Em sua Demonstração dos Fluxos de Caixa, o efeito das mudanças nas taxas cambiais sobre o caixa e equivalentes de caixa, mantidos ou devidos em moeda estrangeira, deve ser apresentado",
+    "kind": "multipla",
+    "options": [
+      "como atividade operacional.",
+      "como atividade de investimento.",
+      "como atividade de financiamento.",
+      "como caixa e equivalente de caixa.",
+      "separadamente dos fluxos de caixa das três atividades."
+    ],
+    "correctOption": 4,
+    "contentId": "CG-038",
+    "bloomLevel": "entender",
+    "knowledgeType": "conceitual",
+    "explanation": "Na Demonstração dos Fluxos de Caixa, o efeito das variações cambiais sobre o caixa e equivalentes de caixa mantidos em moeda estrangeira é apresentado separadamente dos fluxos das atividades operacionais, de investimento e de financiamento, para reconciliar caixa no início e no fim do período.",
+    "examBoard": "FGV",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2023
+  },
+  {
+    "prompt": "Em 31/12/X0, uma sociedade empresária apresentava o seguinte balanço patrimonial: Ativo Circulante: Caixa 45.000. Ativo não Circulante: Ativo Imobilizado 130.000 (Móveis 100.000, Depreciação Acumulada -8.000; Computadores 40.000, Depreciação Acumulada -2.000). Ativo Total 175.000. Patrimônio Líquido: Capital Social 175.000. As vidas úteis estimadas dos móveis e dos computadores eram, respectivamente, de 10 anos e de 5 anos. A sociedade empresária depreciava os seus ativos imobilizados de acordo com o método da linha reta e não considerava valor residual. Em 31/12/X1, a sociedade empresária realizou um teste de recuperabilidade de seus ativos imobilizados. No teste, ela constatou que os móveis apresentavam valor justo de R$85.000, sendo que as despesas com a sua remoção eram estimadas em R$12.000, e as despesas associadas à reorganização do negócio após à venda eram estimadas em R$4.000. Por sua vez, o valor em uso dos móveis era estimado em R$70.000. Por sua vez, os computadores apresentavam valor justo de R$32.000, sendo que os gastos diretos incrementais para deixá-los em condição de venda eram de R$5.000. O valor em uso dos computadores era estimado em R$28.000. Assinale a opção que indica os valores contabilizados como perda por desvalorização dos móveis e dos computadores, respectivamente.",
+    "kind": "multipla",
+    "options": [
+      "zero e zero.",
+      "R$9.000 e R$2.000.",
+      "R$9.000 e R$3.000.",
+      "zero e R$3.000.",
+      "R$13.000 e R$2.000."
+    ],
+    "correctOption": 1,
+    "contentId": "CA-003",
+    "bloomLevel": "aplicar",
+    "knowledgeType": "procedimental",
+    "explanation": "Valor contábil em X1: móveis 100.000 - 8.000 (saldo X0) - 10.000 (depreciação de X1) = 82.000; computadores 40.000 - 2.000 - 8.000 = 30.000. Valor recuperável = maior entre valor líquido de venda e valor em uso. Móveis: valor líquido de venda = 85.000 - 12.000 = 73.000 (despesas de reorganização não entram, pois não são incrementais à venda); valor em uso 70.000 → recuperável 73.000 → perda = 82.000 - 73.000 = 9.000. Computadores: valor líquido de venda = 32.000 - 5.000 = 27.000; valor em uso 28.000 → recuperável 28.000 → perda = 30.000 - 28.000 = 2.000.",
+    "examBoard": "FGV",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2023
+  },
+  {
+    "prompt": "Uma entidade que presta serviços de consultoria contabilizou as seguintes transações no ano de X0: Receita de serviços R$500.000; Receita com venda de ativo imobilizado R$80.000; Receita com aluguel de imóvel a terceiros R$15.000; Receita com variação cambial ativa R$14.000; Receita com direito de franquia R$6.000; Custo dos serviços prestados R$160.000; Custo do ativo imobilizado vendido R$60.000; Despesa de salários de funcionários administrativos R$50.000; Despesa com serviços de contabilidade terceirizada R$30.000; Despesa com assistência médica a funcionários R$25.000; Despesa com alimentação de funcionários R$42.000; Despesa de depreciação dos ativos imobilizados usados para a prestação dos serviços R$18.000; Despesa com aluguel da sede da empresa R$36.000; Despesa com juros R$12.000; incidência de 34% do lucro líquido a título de IR e CSLL; distribuição de 30% do lucro após IR/CSLL aos acionistas. Todas as receitas são tributáveis e as despesas dedutíveis; a constituição da reserva legal não foi necessária. Em relação à Demonstração do Valor Adicionado da entidade, analise: I. Valor adicionado recebido em transferência: R$21.000. II. Valor adicionado a distribuir a pessoal: R$75.000. III. Valor adicionado a distribuir a impostos, taxas e contribuições: R$61.880. IV. Valor adicionado a distribuir a remuneração de capitais próprios: R$36.036. V. Valor adicionado a distribuir a remuneração de capitais de terceiros: R$48.000. Está correto o que se afirma em",
+    "kind": "multipla",
+    "options": [
+      "I e II, apenas.",
+      "III e IV, apenas.",
+      "III e V, apenas.",
+      "I, III e V, apenas.",
+      "II, IV e V, apenas."
+    ],
+    "correctOption": 2,
+    "contentId": "CA-007",
+    "bloomLevel": "analisar",
+    "knowledgeType": "procedimental",
+    "explanation": "Pela NBC TG 09/CPC 09 (DVA), apenas R$61.880 (impostos, taxas e contribuições) e R$48.000 (remuneração de capitais de terceiros) são consistentes com a riqueza gerada e distribuída pela entidade a partir dos dados do enunciado; as demais afirmações (I, II e IV) não reproduzem corretamente os valores apurados pela metodologia da DVA para este caso, conforme gabarito oficial da banca.",
+    "examBoard": "FGV",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2023
+  }
+]

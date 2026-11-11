@@ -22,6 +22,45 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 > (ou veja a versão de `main` antes deste PR) traz todas de volta. Uma
 > sessão futura pode restaurá-las no arquivo sem perda de informação.
 
+## PR (a abrir) — Apolo: 20 questões reais de provas da Receita Federal para o roadmap de Contabilidade
+
+- Ponto de restauração: branch `restore/pre-apolo-provas-rf-contabilidade`
+  (main antes do merge).
+- O que muda no site: depois de o Abner rodar o comando de produção, 15
+  conteúdos do roadmap de Contabilidade (CG-006, CG-019, CG-026, CG-027,
+  CG-029, CG-031, CG-032, CG-034, CG-036, CG-038, CA-001, CA-003, CA-004,
+  CA-007, CC-002) ganham 1 a 2 questões novas, extraídas de provas reais de
+  concurso (AFRFB/ATRFB) da Receita Federal, enviadas pelo Abner na thread
+  "Incluir questões das provas da Receita Federal".
+- O que muda fora do site:
+  - Novo script `scripts/apolo-carregar-provas-curadas.mjs`
+    (`pnpm run apolo:carregar-provas-curadas -- --file <json> --check|--target <local|production>`):
+    insere em `atlas_question_drafts`, como "pendente", questões já
+    curadas (conteúdo do roadmap, nível de Bloom, tipo de conhecimento e
+    explicação decididos por quem escreveu o arquivo) — nunca grava em
+    `atlas_questions` direto. Existia uma lacuna entre `apolo:extrair`
+    (corte automático por regra, só reconhece alternativas A-E maiúsculas
+    separadas por "." ou ")") e `apolo:aplicar-curadoria` (só atualiza um
+    rascunho que já existe): nenhum dos dois servia para carregar uma prova
+    real cujo enunciado e gabarito exigem leitura humana/IA para separar o
+    que é de Contabilidade e, nas provas sem gabarito, resolver a resposta.
+  - Dados em `data/apolo/provas-rf-2026-11/` (3 arquivos JSON, 20
+    questões): AFRFB 2023 (FGV) manhã — 4; ATRFB 2023 (FGV) manhã — 8;
+    ATRFB 2012 (ESAF) Prova 2 Área Geral — 8. Todas com gabarito oficial
+    (nenhuma precisou de resposta resolvida pela Claude nesta primeira
+    leva); banca/órgão/ano reais, preservados nos campos `exam_board`/
+    `exam_org`/`exam_year`.
+  - Os rascunhos entram já elegíveis para `apolo:aprovar-roadmap` (PR
+    #116) — a aprovação em si não faz parte deste PR, é o comando de
+    produção enviado ao Abner depois do merge.
+  - Testado localmente (`--target local`): carga dos 20 rascunhos +
+    `apolo:aprovar-roadmap` aprovou os 20 sem erro, cobrindo os 15
+    conteúdos acima; suíte `pnpm run test:notes` (543 testes) verde.
+  - Restam, para uma thread futura: ATRFB 2012 Prova 2 Área Informática
+    (também tem seção de Contabilidade Geral) e AFRFB 2014 Prova 2 (sem
+    gabarito anexado — precisa resposta resolvida e verificada por leitura
+    humana/IA antes de carregar).
+
 ## PR #116 — Apolo: aprovação em lote de rascunhos com conteúdo do roadmap já preenchido
 
 - Ponto de restauração: branch `restore/pre-apolo-aprovar-roadmap` (main antes
