@@ -14,7 +14,7 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
-## PR #TBD — Lote 12 de questões do roadmap de Contabilidade (CT-088–CT-097, retenções e SPED)
+## PR #137 — Lote 12 de questões do roadmap de Contabilidade (CT-088–CT-097, retenções e SPED)
 
 - Ponto de restauração: branch `restore/pre-lote-ct-088-097` (main antes do
   merge).
