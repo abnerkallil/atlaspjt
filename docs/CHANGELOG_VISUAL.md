@@ -14,6 +14,25 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #TBD — Lote 10 de questões do roadmap de Contabilidade (CG-007, CG-009–CG-012, CG-014, Contas e teorias do débito/crédito)
+
+- Ponto de restauração: branch `restore/pre-cg-007-014-20261111201759` (main
+  antes do merge).
+- O que muda no site: nada visível ainda. É só um arquivo de dados
+  (`data/questoes/lote-cg-007-014.csv`, 90 questões autorais — conceito,
+  função e estrutura das contas (CG-007), contas de resultado (CG-009),
+  Teoria Personalista (CG-010), Teoria Materialista (CG-011), Teoria
+  Patrimonialista (CG-012) e natureza devedora e credora (CG-014). 15
+  questões novas por conteúdo (nenhum dos seis tinha questão aprovada ou
+  rascunho próprio em produção antes deste lote; confirmado também que as
+  provas da Receita Federal curadas nas PRs #123 e #125 não tocam esses
+  `content_id`). Fundamentado nas aulas já existentes no acervo
+  (`data/apache/aulas/contabilidade-geral-1.json` e
+  `contabilidade-geral-2.json`), sem citar banca/órgão/ano (origem
+  "autoral"). As questões só aparecem para o aluno depois que o Abner rodar
+  o comando de carga em produção (ainda não enviado; vai ser acumulado com
+  os demais lotes, conforme `docs/APOLO-questoes-roadmap-plano.md`).
+
 ## PR #131 — Lote 9 de questões do roadmap de Contabilidade (CT-118–CT-124, Reforma tributária — Documentos fiscais)
 
 - Ponto de restauração: branch `restore/pre-ct-118-124` (main antes do
