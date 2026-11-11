@@ -22,6 +22,29 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 > (ou veja a versão de `main` antes deste PR) traz todas de volta. Uma
 > sessão futura pode restaurá-las no arquivo sem perda de informação.
 
+## PR #117 — Apolo: classificação dos rascunhos "soltos" de Contabilidade Tributária por rótulo
+
+- Ponto de restauração: branch `restore/pre-apolo-classificar-rotulos-ct`
+  (main antes do merge).
+- O que muda no site: nada por si só — este script só preenche `content_id`
+  em rascunhos que ainda estavam só com `content_label_id` (taxonomia
+  pré-roadmap). O efeito visível (questões ativas nos conteúdos CT-003,
+  CT-004, CT-005, CT-006, CT-008, CT-009, CT-010, CT-068 e CT-112) só aparece
+  depois de rodar `apolo:aprovar-roadmap` (PR #116) em seguida.
+- O que muda fora do site:
+  - Novo script `scripts/apolo-classificar-rotulos-ct.mjs`
+    (`pnpm run apolo:classificar-ct -- --check|--target <local|production>`),
+    a partir do levantamento
+    `notes/levantamento-rascunhos-vs-roadmap-ct-2026-11-11.md`: reclassifica
+    rascunhos pendentes com `content_id` NULL (só `content_label_id`, nos
+    temas `direito-tributario`/`tributacao`/`departamento-fiscal`) para o
+    `content_id` do roadmap quando o rótulo bate claramente com UM conteúdo
+    específico (não uma faixa com vários nós, que exigiria ler cada
+    enunciado — essas faixas, ex. CT-091..098, ficam de fora de propósito).
+  - Sempre roda com `--check` antes de gravar, mostrando quantos rascunhos
+    cada grupo de rótulos capturou, para o Abner comparar com as contagens
+    do levantamento.
+
 ## PR #116 — Apolo: aprovação em lote de rascunhos com conteúdo do roadmap já preenchido
 
 - Ponto de restauração: branch `restore/pre-apolo-aprovar-roadmap` (main antes
