@@ -24,7 +24,7 @@
 // classificação anterior) — esses ficam de fora e são listados no resumo.
 //
 // Uso:
-//   pnpm run apolo:aprovar-roadmap -- --check
+//   pnpm run apolo:aprovar-roadmap -- --check --target <local|production>
 //   pnpm run apolo:aprovar-roadmap -- --target local
 //   pnpm run apolo:aprovar-roadmap -- --target production
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -84,7 +84,7 @@ await runCli(async () => {
   });
 
   const { wranglerJson, d1Rows, wrangler } = createRunner(process.env);
-  const target = values.check ? 'local' : requireTarget(values.target);
+  const target = requireTarget(values.target);
   const { d1, config, where } = resolveTarget(target, wranglerJson);
 
   const validContentIds = new Set(

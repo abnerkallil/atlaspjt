@@ -14,6 +14,60 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #122 — Lote 2 de questões do roadmap de Contabilidade (CT-011–CT-019)
+
+- Ponto de restauração: branch `restore/pre-apolo-lote-ct-011-019` (main
+  antes do merge).
+- O que muda no site: nada visível ainda. É só um arquivo de dados
+  (`data/questoes/lote-ct-011-019.csv`, 135 questões autorais — 15 por
+  conteúdo, CT-011 a CT-019), fundamentadas nas aulas-base de
+  `data/apache/aulas/contabilidade-tributaria-01.json` e `-02.json` e na
+  legislação vigente (CTN arts. 105-138, CPC 25 e CPC 32), seguindo o padrão
+  do lote 1 (`docs/APOLO-questoes-roadmap-plano.md`). As questões só
+  aparecem para o aluno depois que o Abner rodar
+  `pnpm run questoes:importar -- --target production --file
+  data/questoes/lote-ct-011-019.csv` (comando ainda não enviado; vai junto
+  com os próximos lotes do mesmo plano).
+- O que muda fora do site: `docs/APOLO-questoes-roadmap-plano.md` marca o
+  lote 2 como feito.
+- Se algo der errado: reverter para `restore/pre-apolo-lote-ct-011-019` volta
+  ao estado anterior; como nada foi carregado em produção ainda, não há
+  nenhuma questão para desfazer no D1.
+
+## PR #120 — Correção: `--check` ignorava `--target production`
+
+- Ponto de restauração: branch `restore/pre-fix-check-ignores-target` (main
+  antes do merge).
+- O que muda no site: nada agora — é a correção de um bug nos dois scripts
+  dos PRs #116/#117 antes de o Abner rodar qualquer um deles em produção.
+- O que muda fora do site:
+  - Bug: `scripts/apolo-classificar-rotulos-ct.mjs` e
+    `scripts/apolo-aprovar-rascunhos-roadmap.mjs` tinham
+    `const target = values.check ? 'local' : requireTarget(values.target);`
+    — ou seja, assim que `--check` era passado, o `--target production`
+    informado era **ignorado** e o script sempre lia o D1 local (vazio/de
+    desenvolvimento), nunca o de produção. Por isso a prévia que o Abner
+    rodou com `--check --target production` mostrou 0 em tudo, mesmo com
+    centenas de rascunhos reais em produção.
+  - Correção: `const target = requireTarget(values.target);` nos dois
+    scripts — `--check` agora só pula a gravação (como sempre fez), mas lê
+    o ambiente que `--target` pedir, inclusive `production`.
+
+## PR #118 — Plano de questões para o roadmap de Contabilidade + lote 1 (CT-001/CT-002)
+
+- Ponto de restauração: branch `restore/pre-apolo-plano-questoes-roadmap`
+  (commit `962eb58`, main antes do merge).
+- O que muda no site: nada visível ainda. É só documentação
+  (`docs/APOLO-questoes-roadmap-plano.md`) e um arquivo de dados
+  (`data/questoes/lote-ct-001-002.csv`, 20 questões autorais para CT-001 e
+  CT-002). As questões só aparecem para o aluno depois que o Abner rodar
+  `pnpm run questoes:importar -- --target production --file
+  data/questoes/lote-ct-001-002.csv` (comando ainda não enviado; vai junto
+  com os próximos lotes do mesmo plano).
+- Se algo der errado: reverter para `restore/pre-apolo-plano-questoes-roadmap`
+  volta ao estado anterior; como nada foi carregado em produção ainda, não
+  há nenhuma questão para desfazer no D1.
+
 > Nota técnica (2026-11-11): este arquivo ficou grande demais para esta
 > sessão reescrever com segurança de uma vez (ferramenta de push por
 > conteúdo completo, sem patch). Para não arriscar corromper o histórico,
@@ -60,6 +114,29 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
     (também tem seção de Contabilidade Geral) e AFRFB 2014 Prova 2 (sem
     gabarito anexado — precisa resposta resolvida e verificada por leitura
     humana/IA antes de carregar).
+
+## PR #117 — Apolo: classificação dos rascunhos "soltos" de Contabilidade Tributária por rótulo
+
+- Ponto de restauração: branch `restore/pre-apolo-classificar-rotulos-ct`
+  (main antes do merge).
+- O que muda no site: nada por si só — este script só preenche `content_id`
+  em rascunhos que ainda estavam só com `content_label_id` (taxonomia
+  pré-roadmap). O efeito visível (questões ativas nos conteúdos CT-003,
+  CT-004, CT-005, CT-006, CT-008, CT-009, CT-010, CT-068 e CT-112) só aparece
+  depois de rodar `apolo:aprovar-roadmap` (PR #116) em seguida.
+- O que muda fora do site:
+  - Novo script `scripts/apolo-classificar-rotulos-ct.mjs`
+    (`pnpm run apolo:classificar-ct -- --check|--target <local|production>`),
+    a partir do levantamento
+    `notes/levantamento-rascunhos-vs-roadmap-ct-2026-11-11.md`: reclassifica
+    rascunhos pendentes com `content_id` NULL (só `content_label_id`, nos
+    temas `direito-tributario`/`tributacao`/`departamento-fiscal`) para o
+    `content_id` do roadmap quando o rótulo bate claramente com UM conteúdo
+    específico (não uma faixa com vários nós, que exigiria ler cada
+    enunciado — essas faixas, ex. CT-091..098, ficam de fora de propósito).
+  - Sempre roda com `--check` antes de gravar, mostrando quantos rascunhos
+    cada grupo de rótulos capturou, para o Abner comparar com as contagens
+    do levantamento.
 
 ## PR #116 — Apolo: aprovação em lote de rascunhos com conteúdo do roadmap já preenchido
 
