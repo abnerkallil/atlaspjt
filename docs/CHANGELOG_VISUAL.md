@@ -14,6 +14,25 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #120 — Correção: `--check` ignorava `--target production`
+
+- Ponto de restauração: branch `restore/pre-fix-check-ignores-target` (main
+  antes do merge).
+- O que muda no site: nada agora — é a correção de um bug nos dois scripts
+  dos PRs #116/#117 antes de o Abner rodar qualquer um deles em produção.
+- O que muda fora do site:
+  - Bug: `scripts/apolo-classificar-rotulos-ct.mjs` e
+    `scripts/apolo-aprovar-rascunhos-roadmap.mjs` tinham
+    `const target = values.check ? 'local' : requireTarget(values.target);`
+    — ou seja, assim que `--check` era passado, o `--target production`
+    informado era **ignorado** e o script sempre lia o D1 local (vazio/de
+    desenvolvimento), nunca o de produção. Por isso a prévia que o Abner
+    rodou com `--check --target production` mostrou 0 em tudo, mesmo com
+    centenas de rascunhos reais em produção.
+  - Correção: `const target = requireTarget(values.target);` nos dois
+    scripts — `--check` agora só pula a gravação (como sempre fez), mas lê
+    o ambiente que `--target` pedir, inclusive `production`.
+
 ## PR #118 — Plano de questões para o roadmap de Contabilidade + lote 1 (CT-001/CT-002)
 
 - Ponto de restauração: branch `restore/pre-apolo-plano-questoes-roadmap`
