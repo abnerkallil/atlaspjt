@@ -14,6 +14,29 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR TBD — Lote 6 de questões do roadmap de Contabilidade (CT-073–CT-077, IPI)
+
+- Ponto de restauração: branch `restore/pre-ct-073-077` (main antes do
+  merge).
+- O que muda no site: nada visível ainda. É só um arquivo de dados
+  (`data/questoes/lote-ct-073-077.csv`, 75 questões autorais — CT-073 a
+  CT-077, bloco de IPI: incidência e conceito de industrialização
+  (CT-073), TIPI/NCM e enquadramento (CT-074), base de cálculo e
+  apuração (CT-075), suspensão/isenção/imunidade e regimes especiais
+  (CT-076), escrituração e EFD ICMS/IPI (CT-077). 15 questões novas por
+  conteúdo (nenhum dos cinco tinha questão aprovada em produção antes
+  deste lote). Fundamentado no CTN (arts. 46 e 51), na Lei nº 4.502/1964
+  e no RIPI (Decreto nº 7.212/2010, arts. 4º, 5º e 9º), além do art.
+  153, §3º, da Constituição Federal (não cumulatividade, seletividade e
+  imunidade na exportação). Desviei do pedido inicial (CT-050–CT-059):
+  essa faixa está listada no plano como dependente de reconferência em
+  produção após a PR #116 (candidatos de Lucro Real/PIS-Cofins já
+  relabelados), então escrevi o próximo lote realmente pendente e sem
+  esse risco de duplicar cobertura — CT-073–CT-077 (IPI), lote 4 do
+  plano. As questões só aparecem para o aluno depois que o Abner rodar o
+  comando de carga em produção (ainda não enviado; vai ser acumulado com
+  os demais lotes, conforme `docs/APOLO-questoes-roadmap-plano.md`).
+
 ## PR #127 — Lote 5 de questões do roadmap de Contabilidade (CT-040–CT-049)
 
 - Ponto de restauração: branch `restore/pre-ct-040-049` (main antes do
