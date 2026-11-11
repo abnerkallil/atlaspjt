@@ -14,6 +14,29 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #130 — Lote 8 de questões do roadmap de Contabilidade (CT-098, CT-108–CT-117, Malha fiscal e Governança/domínio)
+
+- Ponto de restauração: branch `restore/pre-ct-108-117` (main antes do
+  merge).
+- O que muda no site: nada visível ainda. É só um arquivo de dados
+  (`data/questoes/lote-ct-108-117.csv`, 165 questões autorais — CT-098
+  (cruzamentos e malhas fiscais) e o bloco Governança e domínio completo:
+  calendário e fechamento fiscal integrado (CT-108), cadastro e motor
+  tributário (CT-109), revisão e auditoria tributária (CT-110), passivo,
+  certidões e processo tributário (CT-111), planejamento tributário lícito
+  (CT-112), módulos setoriais e regimes especiais (CT-113), tributação
+  internacional (CT-114), tax technology e dados fiscais (CT-115), capstone
+  multirregime (CT-116) e avaliação de domínio em Contabilidade Tributária
+  (CT-117). 15 questões novas por conteúdo (nenhum dos onze tinha questão
+  aprovada em produção antes deste lote). Fundamentado direto na legislação
+  vigente (CTN, Lei 9.249/1995, Lei 9.718/1998, Lei 12.973/2014, Lei
+  13.988/2020, Lei 14.596/2023, LC 123/2006, LC 116/2003, EC 132/2023, LC
+  214/2025, entre outras), sem aula própria no acervo (`data/apache/aulas`)
+  e sem citar banca/órgão/ano (origem "autoral"). As questões só aparecem
+  para o aluno depois que o Abner rodar o comando de carga em produção
+  (ainda não enviado; vai ser acumulado com os demais lotes, conforme
+  `docs/APOLO-questoes-roadmap-plano.md`).
+
 ## PR #129 — Lote 7 de questões do roadmap de Contabilidade (CT-099–CT-107, Reforma Tributária)
 
 - Ponto de restauração: branch `restore/pre-ct-099-107` (main antes do
