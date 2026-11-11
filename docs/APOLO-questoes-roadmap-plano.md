@@ -105,7 +105,7 @@ threads encadeadas e manda **um único comando** de carga ao Abner no final
 | 5 | CT-098, CT-108–CT-117 (Malha fiscal fora do mapeado + Governança/domínio) | **Feito** — `data/questoes/lote-ct-108-117.csv` (165 questões, 15 por conteúdo; nenhum dos onze tinha questão aprovada antes) |
 | 6 | CT-099–CT-107 (Reforma Tributária, fundamentos) | **Feito** — `data/questoes/lote-ct-099-107.csv` (135 questões, 15 por conteúdo) |
 | 7 | CT-118–CT-124 (Reforma tributária — Documentos fiscais) | **Feito** — `data/questoes/lote-ct-118-124.csv` (105 questões, 15 por conteúdo; nenhum dos sete tinha questão aprovada em produção antes; fundamentado na aula `data/apache/aulas/contabilidade-tributaria-15.json`) |
-| 8 | CG-007, CG-009–CG-012, CG-014 | Pendente |
+| 8 | CG-007, CG-009–CG-012, CG-014 | **Feito** — `data/questoes/lote-cg-007-014.csv` (90 questões, 15 por conteúdo; nenhum dos seis tinha questão aprovada ou rascunho próprio antes; confirmado que as provas RF curadas nas PRs #123/#125 não tocam esses `content_id`; fundamentado nas aulas `data/apache/aulas/contabilidade-geral-1.json` e `contabilidade-geral-2.json`) |
 | 9 | CG-016–CG-020, CG-026 | Pendente |
 | 10 | CG-029, CG-030, CG-032, CG-033, CG-035, CG-040, CG-041 (conferir) | Pendente |
 | — | Reconferir CT cobertos pela PR #116 (CT-003–CT-010, CT-040–CT-072, CT-078–CT-098, CT-112) após ela mergear; só escrever questão nova nos que ainda estiverem abaixo de 15 (CT-030–CT-039 já tratado no lote 3b, independente dessa reconferência) | Pendente, depende da PR #116 |
