@@ -1,0 +1,21 @@
+[
+  {
+    "prompt": "Assinale a opção correta.",
+    "kind": "multipla",
+    "options": [
+      "São coligadas as empresas quando uma participa com 10% ou mais do capital social da outra sem exercer o controle acionário.",
+      "O investimento é considerado relevante quando atinge ou ultrapassa 20% do patrimônio líquido da investida (ou 15% se for considerado um grupo de empresas).",
+      "Capital Social é o capital subscrito e pago pelos acionistas quando adquirem ações, seja no início da sociedade ou quando ela promove aumento de capital durante seu funcionamento.",
+      "A operação de leasing é um arrendamento mercantil ou aluguel de bens móveis; a sociedade de leasing concede um bem à empresa e essa lhe paga um aluguel mensal; o bem não deverá ser contabilizado como ativo.",
+      "A expressão impostos a recolher é adequada ao nome da conta Impostos a Pagar porque, na verdade, quem paga o imposto é o consumidor; a empresa apenas entrega ou recolhe o imposto ao governo."
+    ],
+    "correctOption": 4,
+    "contentId": "CG-029",
+    "bloomLevel": "entender",
+    "knowledgeType": "conceitual",
+    "explanation": "O gabarito oficial (antes dos recursos) aponta a letra E. A expressão \"impostos a recolher\" é mais adequada do que \"impostos a pagar\" em diversas situações (como ICMS, IPI e tributos retidos de terceiros) porque a empresa atua como mera arrecadadora: quem efetivamente suporta o ônus econômico do tributo é o consumidor final, embutido no preço, e a empresa apenas repassa (recolhe) o valor ao governo. As demais alternativas contêm erros conceituais: o percentual de presunção de coligação por influência significativa é de 20% (não 10%); o investimento é considerado relevante a partir de 10% do PL da investidora (ou 15% em conjunto, não 20%); o Capital Social compreende o capital subscrito, ainda que não totalmente integralizado; e, no arrendamento mercantil financeiro, o bem arrendado deve ser reconhecido como ativo pelo arrendatário, em obediência à essência sobre a forma.",
+    "examBoard": "ESAF",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2012
+  }
+]

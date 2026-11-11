@@ -1,0 +1,268 @@
+[
+  {
+    "prompt": "O lucro obtido na Venda de Imobilizado e o Resultado de Equivalência Patrimonial representam, na Demonstração dos Fluxos de Caixa (DFC):",
+    "kind": "multipla",
+    "options": [
+      "Ingresso de caixa na atividade de investimento.",
+      "Aumento de atividades operacionais.",
+      "Ajustes do resultado na elaboração da DFC.",
+      "Ingressos por Receita Operacional.",
+      "Aumento de investimentos."
+    ],
+    "correctOption": 2,
+    "contentId": "CG-038",
+    "bloomLevel": "entender",
+    "knowledgeType": "conceitual",
+    "explanation": "No método indireto da DFC, o Lucro Líquido é o ponto de partida para apurar o caixa gerado nas atividades operacionais. Como o lucro na venda de imobilizado e o resultado de equivalência patrimonial não representam ingressos de caixa das operações (o primeiro tem seu efeito de caixa refletido no grupo de investimentos, e o segundo é um reconhecimento contábil sem efeito de caixa), ambos precisam ser estornados do lucro líquido como ajustes na elaboração da demonstração, e não tratados como ingresso efetivo de caixa operacional.",
+    "examBoard": "ESAF",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2014
+  },
+  {
+    "prompt": "Na elaboração da Demonstração do Valor Adicionado (DVA), as Receitas Financeiras de Juros recebidas por entidades comerciais e o valor da contribuição patronal para a Previdência Social são, respectivamente:",
+    "kind": "multipla",
+    "options": [
+      "Valor adicionado recebido em transferência e distribuição da riqueza obtida.",
+      "Distribuição da Riqueza Obtida e Valor adicionado recebido por substituição.",
+      "Receitas derivadas de produtos ou serviços e item do Valor Adicionado Bruto.",
+      "Valor Adicionado Bruto e Receitas derivadas de produtos ou serviços.",
+      "Receitas derivadas de produtos ou serviços e Valor adicionado recebido por substituição."
+    ],
+    "correctOption": 0,
+    "contentId": "CA-007",
+    "bloomLevel": "entender",
+    "knowledgeType": "conceitual",
+    "explanation": "Pela CPC 09, as receitas financeiras de juros não decorrem da atividade-fim da entidade, por isso compõem o Valor Adicionado Recebido em Transferência (e não o Valor Adicionado Bruto, formado pelas receitas de vendas de produtos/serviços). Já a contribuição patronal para a Previdência Social é um encargo compulsório sobre a folha, classificado no grupo \"Pessoal\" na distribuição da riqueza gerada, junto com salários e FGTS.",
+    "examBoard": "ESAF",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2014
+  },
+  {
+    "prompt": "Dos registros contábeis da Cia. Corporativa, relativos aos exercícios 2010/2012, foram extraídos os valores abaixo (R$ mil), por ano (2010, 2011, 2012): Ativo Circulante 10.000 / 18.000 / 24.000; Ativo Não Circulante 50.000 / 62.000 / 76.000; Disponibilidade 500 / 200 / 750; Estoques 2.500 / 3.000 / 4.000; Lucro Líquido 8.000 / 6.000 / 4.000; Passivo Circulante 16.000 / 20.000 / 30.000; Passivo Não Circulante 24.000 / 35.000 / 44.000; Patrimônio Líquido 20.000 / 25.000 / 26.000; Vendas Líquidas 102.000 / 95.000 / 98.000. Com relação à liquidez da empresa, pode-se afirmar que:",
+    "kind": "multipla",
+    "options": [
+      "O índice de liquidez seca em 2010 é 0,67.",
+      "O menor índice de liquidez imediata é o de 2011.",
+      "O valor do índice de liquidez corrente de 2012 é 0,63.",
+      "Em 2011 o índice de liquidez imediata da empresa é 0,47.",
+      "A empresa tem o seu maior índice de liquidez seca em 2010."
+    ],
+    "correctOption": 1,
+    "contentId": "AD-001",
+    "bloomLevel": "aplicar",
+    "knowledgeType": "procedimental",
+    "explanation": "Liquidez imediata = Disponibilidades / Passivo Circulante. 2010: 500/16.000 = 0,031; 2011: 200/20.000 = 0,01; 2012: 750/30.000 = 0,025. O menor índice de liquidez imediata do período é de fato o de 2011 (0,01). As demais opções não conferem: liquidez seca em 2010 = (10.000-2.500)/16.000 = 0,47 (não 0,67, e inferior à de 2011, que é 0,75); liquidez corrente em 2012 = 24.000/30.000 = 0,80 (não 0,63).",
+    "examBoard": "ESAF",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2014
+  },
+  {
+    "prompt": "Usando os mesmos dados da Cia. Corporativa referentes aos exercícios 2010/2012 (R$ mil, por ano 2010/2011/2012: Ativo Circulante 10.000/18.000/24.000; Ativo Não Circulante 50.000/62.000/76.000; Lucro Líquido 8.000/6.000/4.000; Vendas Líquidas 102.000/95.000/98.000), analisando a Rentabilidade dos ativos, pode-se afirmar que:",
+    "kind": "multipla",
+    "options": [
+      "O Giro dos ativos em 2012 é 1,70.",
+      "O retorno dos ativos é crescente ao longo do período.",
+      "A menor rentabilidade dos ativos verifica-se em 2011.",
+      "A rentabilidade do ativo em 2010 foi de 0,133.",
+      "O período com maior retorno do ativo foi o de 2012."
+    ],
+    "correctOption": 3,
+    "contentId": "AD-004",
+    "bloomLevel": "aplicar",
+    "knowledgeType": "procedimental",
+    "explanation": "Rentabilidade do Ativo (ROA) = Lucro Líquido / Ativo Total. 2010: Ativo Total = 10.000+50.000 = 60.000; ROA = 8.000/60.000 = 0,133. Nos demais anos o ROA é decrescente (2011: 6.000/80.000 = 0,075; 2012: 4.000/100.000 = 0,04), de modo que 2010 é o de maior retorno (não 2012), a tendência é decrescente (não crescente) e a menor rentabilidade ocorre em 2012 (não em 2011).",
+    "examBoard": "ESAF",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2014
+  },
+  {
+    "prompt": "Da folha de pagamento da Cia. Pagadora foram extraídos os dados abaixo: Salários Brutos R$400.000; Imposto de Renda Retido na Fonte Pessoa Física R$3.400; INSS Retido R$6.000; Salário Família R$1.500; FGTS R$32.000; Contribuição Patronal INSS R$40.000; Auxílio Maternidade R$2.500. Tomando como base apenas os dados fornecidos, pode-se afirmar que o total a ser apropriado como Despesas de Período é de:",
+    "kind": "multipla",
+    "options": [
+      "R$476.000,00.",
+      "R$472.000,00.",
+      "R$436.600,00.",
+      "R$400.000,00.",
+      "R$394.600,00."
+    ],
+    "correctOption": 1,
+    "contentId": "CG-030",
+    "bloomLevel": "aplicar",
+    "knowledgeType": "procedimental",
+    "explanation": "A despesa de pessoal do período é formada pelos Salários Brutos (R$400.000, já incluindo as retenções de IRRF e INSS do empregado, que são meros repasses e não despesa adicional da empresa) mais os encargos que representam custo da própria empresa: Contribuição Patronal ao INSS (R$40.000) e FGTS (R$32.000). Total = 400.000+40.000+32.000 = R$472.000,00. Salário Família e Auxílio Maternidade são benefícios pagos pela empresa por conta da Previdência Social e compensados com as contribuições devidas, não configurando despesa líquida da entidade.",
+    "examBoard": "ESAF",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2014
+  },
+  {
+    "prompt": "Com relação à Redução ao Valor Recuperável de Ativos, pode-se afirmar que:",
+    "kind": "multipla",
+    "options": [
+      "A esta técnica estão sujeitos à aplicação desse processo todos os ativos sem qualquer tipo de exceção.",
+      "É esse tipo de procedimento aplicável somente aos ativos intangíveis e aos ativos resultantes de Contratos de Construção.",
+      "Apenas aos ativos resultantes de Contratos de Construção e aqueles sujeitos à aplicação do valor justo como os ativos biológicos são passíveis da aplicação dessa redução.",
+      "Tem como objetivo assegurar que os ativos não estejam registrados contabilmente por valor maior do que o passível de ser recuperado por uso ou venda.",
+      "Não é aplicada aos imobilizados em razão dos mesmos já estarem sujeitos à depreciação, amortização ou exaustão que cobrem possíveis divergências no custo do ativo e o seu valor recuperável."
+    ],
+    "correctOption": 3,
+    "contentId": "CA-003",
+    "bloomLevel": "entender",
+    "knowledgeType": "conceitual",
+    "explanation": "Pelo CPC 01, o objetivo do teste de redução ao valor recuperável (impairment) é justamente assegurar que nenhum ativo esteja registrado contabilmente por valor superior ao seu valor recuperável (o maior entre o valor justo líquido de venda e o valor em uso). Há exceções expressas à aplicação da norma (como estoques, ativos de contratos de construção e ativos biológicos mensurados a valor justo), e o imobilizado está sujeito ao teste mesmo já sendo depreciado, pois a depreciação não garante por si só que o valor contábil seja recuperável.",
+    "examBoard": "ESAF",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2014
+  },
+  {
+    "prompt": "A Cia. Mamoré vende a prazo por R$15.000 um imobilizado cujo valor de registro é R$140.000 e a depreciação acumulada, calculada até a data da venda, era de R$126.000. Para efetuar o registro desse evento, a empresa deve:",
+    "kind": "multipla",
+    "options": [
+      "Registrar um débito de R$140.000 em conta do imobilizado.",
+      "Contabilizar um crédito de R$15.000 em Ganhos com Venda de Imobilizado.",
+      "Reconhecer um débito de R$14.000 em conta de resultado.",
+      "Lançar um crédito de R$126.000 na conta de Depreciação Acumulada.",
+      "Efetuar um débito de R$140.000 em perdas com imobilizado."
+    ],
+    "correctOption": 2,
+    "contentId": "CG-031",
+    "bloomLevel": "aplicar",
+    "knowledgeType": "procedimental",
+    "explanation": "O valor contábil líquido do bem baixado é de R$140.000 - R$126.000 = R$14.000. Na baixa, credita-se o Imobilizado pelo custo (140.000) e debita-se a Depreciação Acumulada (126.000, zerando-a), restando um débito líquido de R$14.000 em conta de resultado (custo/perda na baixa do ativo). Separadamente, registra-se a venda (débito em Clientes e crédito em conta de resultado pelo valor de R$15.000), gerando um ganho líquido de R$1.000 na operação. As demais opções invertem contas ou utilizam valores incorretos.",
+    "examBoard": "ESAF",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2014
+  },
+  {
+    "prompt": "A Cia. XYZ, em 01/03/2012, apresenta ao Banco Valioso o fluxo de duplicatas a seguir: Duplicata 1 (D1), prazo de 30 dias, valor R$1.500.000; Duplicata 2 (D2), prazo de 60 dias, valor R$1.500.000; Duplicata 3 (D3), prazo de 90 dias, valor R$1.000.000. Na ocasião, contrata uma operação de desconto a uma taxa mensal de 8% ao mês (juros simples), além de taxas administrativas de R$5.000 cobradas pela instituição financeira. De acordo com os dados fornecidos, pode-se afirmar que o registro inicial da operação gera:",
+    "kind": "multipla",
+    "options": [
+      "Um aumento total de R$3.400.000 nos passivos circulantes.",
+      "Uma diminuição total na situação líquida de R$600.000.",
+      "Um aumento de R$3.995.000 total nos ativos circulantes.",
+      "Uma diminuição total de passivo circulante de R$320.000.",
+      "Um aumento total de despesas financeiras de R$120.000."
+    ],
+    "correctOption": 0,
+    "contentId": "CA-005",
+    "bloomLevel": "aplicar",
+    "knowledgeType": "procedimental",
+    "explanation": "Os juros do desconto, calculados pelo prazo de cada título (D1: 1.500.000 x 8% x 1 mês = 120.000; D2: 1.500.000 x 8% x 2 meses = 240.000; D3: 1.000.000 x 8% x 3 meses = 240.000; total R$600.000), são diferidos e apropriados ao resultado pelo regime de competência, não sendo despesa imediata. No registro inicial, credita-se Duplicatas Descontadas pelo valor de face (R$4.000.000) e debita-se Encargos Financeiros a Transcorrer (R$600.000), conta retificadora do passivo, gerando um aumento líquido de R$3.400.000 no passivo circulante. Apenas a taxa administrativa (R$5.000), incorrida de imediato, afeta o resultado do período.",
+    "examBoard": "ESAF",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2014
+  },
+  {
+    "prompt": "Em 16/04/2012 o Banco Valioso comunica à Cia. XYZ que a duplicata (D1), descontada anteriormente, não foi quitada pelo cliente. No aviso de cobrança bancária, enviado para a empresa, o banco informa que lançou na conta corrente da empresa R$1.505.500, relativos ao valor do título em atraso e a juros adicionais e comissão de permanência no valor de R$5.500. Nesse caso, a empresa deve registrar em sua contabilidade:",
+    "kind": "multipla",
+    "options": [
+      "Duplicatas Descontadas 1.500.000 (débito) e Contas a Receber 5.500 (débito), a Bancos c/Movimento 1.505.500 (crédito).",
+      "Duplicatas Descontadas 1.505.500 (débito), a Bancos c/Movimento 1.505.500 (crédito).",
+      "Duplicatas a Receber 1.505.500 (débito), a Bancos c/Movimento 1.505.500 (crédito).",
+      "Duplicatas a Receber 1.500.000 (débito) e Despesas Bancárias 5.500 (débito), a Bancos c/Movimento 1.505.500 (crédito).",
+      "Contas a Receber 1.505.500 (débito), a Duplicatas Descontadas 1.505.500 (crédito)."
+    ],
+    "correctOption": 0,
+    "contentId": "CA-005",
+    "bloomLevel": "analisar",
+    "knowledgeType": "procedimental",
+    "explanation": "Como o cliente não quitou o título, a obrigação da empresa perante o banco se concretiza: baixa-se a Duplicata Descontada pelo valor de face do título (R$1.500.000), já que o risco do não recebimento retorna à empresa (a Duplicata a Receber original, nunca baixada no momento do desconto, permanece como direito contra o cliente). Os encargos adicionais cobrados pelo banco em razão do atraso (R$5.500) são lançados em Contas a Receber, pois a empresa buscará reavê-los do cliente inadimplente. A soma dos dois débitos (1.500.000+5.500) corresponde exatamente ao valor debitado pelo banco na conta corrente (R$1.505.500).",
+    "examBoard": "ESAF",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2014
+  },
+  {
+    "prompt": "De acordo com as normas contábeis atualizadas, os juros cobrados sobre a operação de desconto de duplicatas devem ser:",
+    "kind": "multipla",
+    "options": [
+      "Lançados como despesa financeira após o recebimento do último título descontado.",
+      "Contabilizados pelo montante total dos juros descontados como despesas no momento inicial da operação.",
+      "Registrados como despesas financeiras no momento da quitação de cada um dos títulos descontados.",
+      "Registrados como despesa financeira em três parcelas iguais através de rateio do total por 90 dias.",
+      "Transferidos para o resultado como despesa financeira de acordo com o regime de competência."
+    ],
+    "correctOption": 4,
+    "contentId": "CA-005",
+    "bloomLevel": "entender",
+    "knowledgeType": "conceitual",
+    "explanation": "Pelo regime de competência, os juros cobrados antecipadamente na operação de desconto representam encargos financeiros que pertencem aos períodos cobertos pelo prazo de cada título descontado, devendo ser apropriados ao resultado ao longo do tempo (pro rata), e não reconhecidos integralmente no início da operação nem apenas na quitação final de cada título.",
+    "examBoard": "ESAF",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2014
+  },
+  {
+    "prompt": "No início de 2013, o Patrimônio Líquido da Cia. Madeira era composto pelos seguintes saldos: Capital Social R$1.000.000; Capital a Integralizar R$(550.000); Reserva Legal R$87.500; Reservas de Lucros R$57.500; Lucros Retidos R$170.000. Ao final do período de 2013, a empresa apurou um Lucro antes do Imposto sobre a Renda e Contribuições no valor de R$400.000. De acordo com a política contábil da empresa, ao final do exercício, no caso da existência de lucros, os estatutos determinam os seguintes percentuais para os cálculos das Participações e Contribuições, apuração do Lucro Líquido e sua distribuição: Dividendos a Pagar 50%; Participações da Administração nos Lucros da Sociedade 20%; Participações de Debêntures 25%; Participação dos Empregados nos Lucros da Sociedade 25%; Provisão para IR e Contribuições 20%; Reserva de Lucros 20%; Reserva Legal 5%. O restante do Lucro Líquido deverá ser mantido em Lucros Retidos, conforme decisão da Assembleia Geral Ordinária (AGO), até o final do exercício de 2014. Com base nessas informações, o valor a ser registrado como Reserva Legal é de:",
+    "kind": "multipla",
+    "options": [
+      "R$2.000,00.",
+      "R$2.500,00.",
+      "R$3.500,00.",
+      "R$7.200,00.",
+      "R$7.500,00."
+    ],
+    "correctOption": 3,
+    "contentId": "CG-034",
+    "bloomLevel": "aplicar",
+    "knowledgeType": "procedimental",
+    "explanation": "Calculando em cascata as participações sobre o Lucro antes do IR (R$400.000) — Participação de Debenturistas (25%) e Participação dos Empregados (25%), dedutíveis para fins de apuração do lucro tributável, seguidas da Provisão para IR e Contribuições (20%) e da Participação da Administração (20%) — chega-se a um Lucro Líquido do Exercício de R$144.000,00 (resultado que se mantém independentemente da ordem interna adotada entre essas quatro deduções sucessivas, pois a multiplicação dos complementares percentuais é comutativa). A Reserva Legal corresponde, por determinação legal (art. 193 da Lei 6.404/76) e estatutária, a 5% do Lucro Líquido do Exercício: 5% x 144.000 = R$7.200,00.",
+    "examBoard": "ESAF",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2014
+  },
+  {
+    "prompt": "No tratamento contábil das contas de Reservas, são classificadas como Reservas de Lucros as:",
+    "kind": "multipla",
+    "options": [
+      "Reserva de Reavaliação de Ativos Próprios e a Reserva Legal.",
+      "Reserva para Contingências e a Reserva de Incentivos Fiscais.",
+      "Reserva de Lucros para Expansão e a Reserva de Ágio na emissão de Ações.",
+      "Reserva de Contingência e a Reserva de Reavaliação de Ativos de Coligadas.",
+      "Reserva Especial de Ágio na Incorporação e a Reserva Legal."
+    ],
+    "correctOption": 1,
+    "contentId": "CG-034",
+    "bloomLevel": "entender",
+    "knowledgeType": "conceitual",
+    "explanation": "São Reservas de Lucros, entre outras, a Reserva Legal, a Reserva Estatutária, a Reserva para Contingências, a Reserva de Incentivos Fiscais e a Reserva de Lucros a Realizar — todas originadas da retenção de lucros apurados pela própria companhia. Já a Reserva de Reavaliação e a Reserva de Ágio na emissão de ações ou na incorporação são Reservas de Capital ou de Reavaliação, formadas por aportes de terceiros ou reavaliação de ativos, e não por lucros da entidade, o que torna incorretas as demais alternativas, que misturam reservas de categorias diferentes.",
+    "examBoard": "ESAF",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2014
+  },
+  {
+    "prompt": "Em janeiro de 2011, a Cia. Amazônia subscreve 60% do capital ordinário da Cia. Mamoré, registrando essa Participação Societária, em seus ativos, pelo valor de R$720.000. Nesse mesmo período, a empresa controlada vende à vista para a Cia. Amazônia estoques no valor de R$200.000, obtendo nessa transação um lucro de R$50.000. Ao final desse exercício, o Patrimônio Líquido da controlada ajustado corresponde a R$1.230.000, e a investidora repassou para terceiros 70% destes estoques adquiridos da Cia. Mamoré pelo valor à vista de R$250.000. Ao final de dezembro, no encerramento do exercício social, a Cia. Amazônia deve efetuar o lançamento contábil de:",
+    "kind": "multipla",
+    "options": [
+      "Débito na conta Resultado de Investimentos a crédito na conta Participações Societárias – Cia Mamoré no valor de R$18.000.",
+      "Débito na conta Participações Societárias a crédito na conta Receitas de Investimentos no valor de R$15.000.",
+      "Débito na conta Resultado de Equivalência Patrimonial a crédito na conta Participações Societárias – Cia Mamoré no valor de R$12.500.",
+      "Débito na conta Resultado de Equivalência Patrimonial a crédito na conta Participações Societárias – Cia Mamoré no valor de R$5.000.",
+      "Débito na conta Participações Societárias a crédito na conta Resultado de Equivalência Patrimonial no valor de R$3.000."
+    ],
+    "correctOption": 4,
+    "contentId": "CA-001",
+    "bloomLevel": "analisar",
+    "knowledgeType": "procedimental",
+    "explanation": "A equivalência patrimonial bruta é apurada aplicando o percentual de participação (60%) sobre o Patrimônio Líquido ajustado da investida (R$1.230.000), resultando em R$738.000, ante o custo de aquisição de R$720.000 — um ganho bruto de R$18.000. Como 30% dos estoques vendidos pela controlada à investidora ainda não foram repassados a terceiros, o lucro intercompany correspondente a essa parcela (30% x R$50.000 = R$15.000) ainda não está realizado sob a ótica consolidada e deve ser eliminado do resultado de equivalência. Resultado de Equivalência Patrimonial final = R$18.000 - R$15.000 = R$3.000, lançado a débito em Participações Societárias (aumentando o investimento) e a crédito em Resultado de Equivalência Patrimonial (receita).",
+    "examBoard": "ESAF",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2014
+  },
+  {
+    "prompt": "Considere que a Cia. Mamoré destina, distribui e paga dividendos no valor de R$10.000 para os seus acionistas. Nesse caso, a Cia. Amazônia (detentora de 60% do capital da Cia. Mamoré, cuja participação é avaliada pelo Método de Equivalência Patrimonial) deve efetuar um lançamento de:",
+    "kind": "multipla",
+    "options": [
+      "Débito em conta de Resultado de Equivalência Patrimonial a crédito de conta do Patrimônio Líquido no valor de R$6.000.",
+      "Débito em Disponibilidades a crédito da conta Participações Societárias – Cia Mamoré no valor de R$6.000.",
+      "Débito de Participações Societárias – Cia Mamoré a crédito da conta Resultado de Equivalência Patrimonial no valor de R$6.000.",
+      "Débito de Disponibilidades a crédito da conta Resultado de Equivalência Patrimonial no valor de R$6.000.",
+      "Débito de Dividendos a Pagar a crédito da conta Receitas de Investimentos no valor de R$6.000."
+    ],
+    "correctOption": 1,
+    "contentId": "CA-001",
+    "bloomLevel": "aplicar",
+    "knowledgeType": "procedimental",
+    "explanation": "Pelo Método de Equivalência Patrimonial, o lucro da investida já foi reconhecido como receita no momento da apuração do resultado de equivalência, de modo que a distribuição de dividendos pela investida não é uma nova receita para o investidor, mas sim uma realização financeira (recebimento de caixa) que reduz o valor contábil do investimento. A Cia. Amazônia deve debitar Disponibilidades e creditar a conta de Participações Societárias pelo valor correspondente à sua participação nos dividendos: 60% x R$10.000 = R$6.000.",
+    "examBoard": "ESAF",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2014
+  }
+]
