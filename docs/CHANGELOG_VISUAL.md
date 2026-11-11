@@ -95,6 +95,50 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 > (ou veja a versão de `main` antes deste PR) traz todas de volta. Uma
 > sessão futura pode restaurá-las no arquivo sem perda de informação.
 
+## PR (a abrir) — Apolo: ATRFB 2012 Informática e AFRFB 2014, mais 15 questões reais da Receita Federal
+
+- Ponto de restauração: branch `restore/pre-apolo-provas-rf-atrfb2012-info-afrfb2014`
+  (main antes do merge).
+- O que muda no site: depois de o Abner rodar o comando de produção, mais
+  10 conteúdos do roadmap de Contabilidade (CG-029, CG-030, CG-031, CG-034,
+  CG-038, AD-001, AD-004, CA-001, CA-003, CA-005, CA-007) ganham 1 a 2
+  questões novas, extraídas das provas ATRFB 2012 (Prova 2, Área
+  Informática) e AFRFB 2014 (Prova 2) da Receita Federal, enviadas pelo
+  Abner na thread "Provas da Receita: ATRFB 2012 Informática e AFRFB 2014".
+- O que muda fora do site:
+  - `data/apolo/provas-rf-2026-11/atrfb-2012-informatica-contabilidade.json`
+    (1 questão): a seção de Contabilidade Geral da Área Informática
+    (questões 21-30) é idêntica à da Área Geral já carregada no PR
+    anterior (mesmo enunciado e mesmo gabarito oficial em ambas as áreas),
+    então a dedupe por `text_hash` descarta 9 das 10 questões
+    automaticamente; só a questão 27 (conceitual, sobre coligadas,
+    investimento relevante, leasing e nomenclatura de "impostos a
+    recolher") não estava no arquivo anterior.
+  - `data/apolo/provas-rf-2026-11/afrfb-2014-contabilidade.json` (14
+    questões): Prova 2 do AFRFB/2014, sem gabarito oficial anexado — todas
+    resolvidas e verificadas pela Claude (cálculos refeitos e conferidos
+    contra as 5 alternativas antes de marcar a correta), cobrindo DFC, DVA,
+    índices de liquidez e rentabilidade, folha de pagamento, impairment
+    (CPC 01), baixa de imobilizado, desconto de duplicatas (registro,
+    inadimplência e regime de competência dos juros), reserva legal e
+    classificação de reservas, e equivalência patrimonial (apuração e
+    dividendos). Das 20 questões de Contabilidade Geral e Avançada da
+    prova (21-45 no caderno), 6 ficaram de fora por não terem resposta
+    segura ou mapeamento claro para um conteúdo do roadmap atual: duas
+    envolvem índices sem conteúdo correspondente no roadmap (grau de
+    endividamento; classificação de imóvel para valorização/"propriedade
+    para investimento"), e três fazem parte de uma cascata de
+    participações nos lucros (Cia. Madeira) cuja ordem exata de cálculo
+    (debenturistas, empregados, administração) não é dedutível com
+    segurança sem o gabarito oficial — ficou só a Reserva Legal (5% do
+    lucro líquido, valor que não depende dessa ordem).
+  - Testado localmente (`--target local` via `--check`): os dois arquivos
+    passam na validação do `apolo:carregar-provas-curadas` (15 rascunhos
+    novos, nenhum `content_id` inválido); suíte `pnpm run test:notes` (543
+    testes) verde.
+  - Com isso fecham as duas pendências que o PR anterior deixou em aberto
+    (ATRFB 2012 Área Informática e AFRFB 2014).
+
 ## PR (a abrir) — Apolo: 20 questões reais de provas da Receita Federal para o roadmap de Contabilidade
 
 - Ponto de restauração: branch `restore/pre-apolo-provas-rf-contabilidade`
