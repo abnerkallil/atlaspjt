@@ -14,6 +14,21 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #118 — Plano de questões para o roadmap de Contabilidade + lote 1 (CT-001/CT-002)
+
+- Ponto de restauração: branch `restore/pre-apolo-plano-questoes-roadmap`
+  (commit `962eb58`, main antes do merge).
+- O que muda no site: nada visível ainda. É só documentação
+  (`docs/APOLO-questoes-roadmap-plano.md`) e um arquivo de dados
+  (`data/questoes/lote-ct-001-002.csv`, 20 questões autorais para CT-001 e
+  CT-002). As questões só aparecem para o aluno depois que o Abner rodar
+  `pnpm run questoes:importar -- --target production --file
+  data/questoes/lote-ct-001-002.csv` (comando ainda não enviado; vai junto
+  com os próximos lotes do mesmo plano).
+- Se algo der errado: reverter para `restore/pre-apolo-plano-questoes-roadmap`
+  volta ao estado anterior; como nada foi carregado em produção ainda, não
+  há nenhuma questão para desfazer no D1.
+
 > Nota técnica (2026-11-11): este arquivo ficou grande demais para esta
 > sessão reescrever com segurança de uma vez (ferramenta de push por
 > conteúdo completo, sem patch). Para não arriscar corromper o histórico,
