@@ -1,0 +1,142 @@
+[
+  {
+    "prompt": "A firma Equacionada S.A. apurou o seu patrimônio em 2011, computando os saldos iniciais e a movimentação do exercício. Disto resultaram os valores abaixo listados: Bens R$200.000,00; Direitos R$150.000,00; Obrigações R$215.000,00; Situação Líquida R$135.000,00; Aumentos de ativo R$100.000,00; Aumentos de passivo R$120.000,00; Reduções de ativo R$45.000,00; Reduções de passivo R$80.000,00; Obtenção de ganhos e rendas R$95.000,00; Realização de consumos R$70.000,00. Considerando que todo o movimento contábil dessa entidade está expresso na equação acima, pode-se dizer que o item que a completa será um aumento de",
+    "kind": "multipla",
+    "options": [
+      "Aplicação no valor de R$10.000,00.",
+      "Origem no valor de R$10.000,00.",
+      "Aplicação no valor de R$5.000,00.",
+      "Origem no valor de R$5.000,00.",
+      "Redução de origens no valor de R$5.000,00."
+    ],
+    "correctOption": 0,
+    "contentId": "CG-006",
+    "bloomLevel": "analisar",
+    "knowledgeType": "procedimental",
+    "explanation": "Pela equação patrimonial dinâmica, origens e aplicações devem se equilibrar: total de origens (aumentos de passivo 120.000 + reduções de ativo 45.000 + ganhos/rendas 95.000 = 260.000) e total de aplicações conhecidas (aumentos de ativo 100.000 + reduções de passivo 80.000 + consumos 70.000 = 250.000). A diferença de R$10.000,00 necessária para equilibrar o sistema é uma aplicação, conforme gabarito oficial.",
+    "examBoard": "ESAF",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2012
+  },
+  {
+    "prompt": "Considere uma operação de compra de materiais para revender, constante de 300 unidades ao preço unitário de R$600,00, com incidência de ICMS a 12% e de IPI a 8%. Se a operação for realizada a prazo, vai gerar uma dívida, com fornecedores, no valor de",
+    "kind": "multipla",
+    "options": [
+      "R$172.800,00.",
+      "R$180.000,00.",
+      "R$194.400,00.",
+      "R$201.600,00.",
+      "R$216.000,00."
+    ],
+    "correctOption": 2,
+    "contentId": "CG-029",
+    "bloomLevel": "aplicar",
+    "knowledgeType": "procedimental",
+    "explanation": "Valor da mercadoria: 300 x 600 = 180.000. O ICMS (12%) é tributo recuperável, embutido no preço mas não altera o valor da dívida com fornecedores (compõe o preço de compra para fins de registro, mas é recuperável). O IPI (8%), nas aquisições para revenda por contribuinte do imposto, é destacado na nota e também recuperável, incidindo sobre o valor da operação (180.000 x 8% = 14.400), resultando na dívida de 180.000 + 14.400 = 194.400 a pagar ao fornecedor, conforme gabarito oficial.",
+    "examBoard": "ESAF",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2012
+  },
+  {
+    "prompt": "A empresa Metalfino Ltda. não sofre tributação nas operações de compra e venda de mercadorias; só opera com transações extra-caixa; utiliza o método de controle permanente de estoques, com avaliação a preço médio ponderado. Em 15 de outubro a empresa realizou a venda de 120 unidades ao preço unitário de 12 reais. As compras do mês foram: 150 unidades a 8 reais cada uma em 05/10 e 60 unidades a 11 reais, em 18/10. Sabendo-se que em 30 de setembro desse ano já havia um estoque de mercadorias no valor de R$500,00 correspondentes a 100 unidades, pode-se afirmar que o custo das mercadorias vendidas em outubro foi de",
+    "kind": "multipla",
+    "options": ["R$600,00.", "R$660,00.", "R$780,00.", "R$816,00.", "R$960,00."],
+    "correctOption": 3,
+    "contentId": "CC-002",
+    "bloomLevel": "aplicar",
+    "knowledgeType": "procedimental",
+    "explanation": "Antes da venda de 15/10, o estoque disponível é: 100 unidades a R$5,00 (500,00/100) + 150 unidades a R$8,00 (compra de 05/10) = 250 unidades, custo total 500 + 1.200 = 1.700,00. Custo médio ponderado móvel = 1.700/250 = R$6,80/unidade. A compra de 18/10 (60 unidades a R$11,00) é posterior à venda de 15/10 e não entra nesse cálculo. CMV da venda de 120 unidades = 120 x R$6,80 = R$816,00.",
+    "examBoard": "ESAF",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2012
+  },
+  {
+    "prompt": "A empresa Confiante Ltda. apresenta a seguinte movimentação com créditos a receber e clientes: No balanço de 2010, em 31/12: tinha créditos a receber de R$2.800,00 e provisão para perdas prováveis de R$84,00. Durante o exercício de 2011, contabilizou o recebimento de créditos R$980,00; a baixa por não recebimento R$120,00; a incorporação de novos créditos a receber R$1.700,00; o desconto de duplicatas no banco R$500,00. Em 31/12/2011, para fins de balanço, deverá fazer uma nova provisão para perdas prováveis, no montante de",
+    "kind": "multipla",
+    "options": ["R$51,00.", "R$84,00.", "R$87,00.", "R$102,00.", "R$171,00."],
+    "correctOption": 2,
+    "contentId": "CG-026",
+    "bloomLevel": "aplicar",
+    "knowledgeType": "procedimental",
+    "explanation": "Saldo de créditos a receber em 31/12/2011 = 2.800 (saldo inicial) - 980 (recebimentos) - 120 (baixa por não recebimento) + 1.700 (novos créditos) = 3.400,00. O percentual de provisão da política da empresa é 84/2.800 = 3%. Os R$500,00 de duplicatas descontadas no banco têm o risco de crédito já transferido à instituição financeira, por isso são excluídos da base sujeita a nova estimativa de perda: 3.400 - 500 = 2.900,00. Nova provisão = 2.900 x 3% = R$87,00.",
+    "examBoard": "ESAF",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2012
+  },
+  {
+    "prompt": "A empresa Merendaria Maria Ltda. realizou, no banco em que é correntista, uma operação de desconto de títulos com incidência de juros. O lançamento necessário para contabilizar essa operação no Diário da empresa deverá ser",
+    "kind": "multipla",
+    "options": [
+      "Bancos c/Movimento a Diversos: a Duplicatas Descontadas xxx,xx; a Encargos da Operação x,xx.",
+      "Diversos a Duplicatas Descontadas: Bancos c/Movimento xxx,xx; Encargos da Operação x,xx.",
+      "Bancos c/Movimento a Diversos: a Duplicatas a Receber xxx,xx; a Encargos da Operação x,xx.",
+      "Diversos a Duplicatas a Receber: Bancos c/Movimento xxx,xx; Encargos da Operação x,xx.",
+      "Duplicatas Descontadas a Duplicatas a Receber xxx,xx; e Encargos da Operação a Bancos c/Movimento x,xx."
+    ],
+    "correctOption": 1,
+    "contentId": "CG-026",
+    "bloomLevel": "aplicar",
+    "knowledgeType": "procedimental",
+    "explanation": "No desconto de duplicatas com incidência de juros, o banco credita à empresa o valor líquido (valor de face menos os encargos antecipados) e a empresa reconhece o encargo financeiro como despesa (débito). O lançamento correto debita, em \"Diversos\", Bancos c/Movimento (valor líquido recebido) e Encargos da Operação (juros, despesa financeira), creditando Duplicatas Descontadas pelo valor de face do título — conta redutora de Duplicatas a Receber até a liquidação pelo sacado.",
+    "examBoard": "ESAF",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2012
+  },
+  {
+    "prompt": "A companhia Metalgrosso S.A. apresenta como extrato de seu Livro Razão, em 31.12.2011, uma relação de 35 contas e respectivos saldos (Ações de Coligadas 60; Ações em Tesouraria 10; Aluguéis Passivos 32; Amortização Acumulada 25; Bancos c/Movimento 100; Caixa 80; Capital a Realizar 45; Capital Social 335; Clientes 120; Comissões Ativas 46; Custo das Vendas 200; Depreciação 28; Depreciação Acumulada 45; Descontos Concedidos 18; Descontos Obtidos 17; Despesas de Organização 90; Duplicatas a Receber 85; Duplicatas a Pagar 115; Duplicatas Descontadas 35; Fornecedores 195; Máquinas e Equipamentos 130; Mercadorias 145; Móveis e Utensílios 40; Obrigações Trabalhistas 18; Prêmio de Seguros 40; Prejuízos Acumulados 12; Provisão para Devedores Duvidosos 30; Provisão para Imposto de Renda 22; Receitas de Vendas 350; Reservas de Capital 65; Reservas de Lucro 125; Salários e Ordenados 60; Seguros a Vencer 28; Títulos a Pagar 20; Veículos 180). Elaborando um balancete de verificação com os saldos acima, certamente encontraremos saldos credores no montante de",
+    "kind": "multipla",
+    "options": [
+      "R$1.065,00.",
+      "R$1.308,00.",
+      "R$1.338,00.",
+      "R$1.373,00.",
+      "R$1.443,00."
+    ],
+    "correctOption": 4,
+    "contentId": "CG-019",
+    "bloomLevel": "aplicar",
+    "knowledgeType": "procedimental",
+    "explanation": "Somando as contas de natureza credora (passivo, patrimônio líquido e resultado credoras: Amortização Acumulada, Capital Social, Depreciação Acumulada, Descontos Obtidos, Duplicatas a Pagar, Duplicatas Descontadas, Fornecedores, Obrigações Trabalhistas, Provisão para Devedores Duvidosos, Provisão para Imposto de Renda, Receitas de Vendas, Reservas de Capital, Reservas de Lucro, Títulos a Pagar) chega-se ao total de R$1.443,00 do balancete, conforme gabarito oficial.",
+    "examBoard": "ESAF",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2012
+  },
+  {
+    "prompt": "Uma empresa, cujo livro Razão contém as contas abaixo, apresentou os seguintes saldos para compor o balanço patrimonial em 31/12/2011: Ações de Coligadas 10.000,00; Aluguéis pagos Antecipadamente 1.200,00; Bancos c/Movimento 20.000,00; Bancos c/Poupança 6.000,00; Caixa 3.000,00; Capital a Integralizar 12.000,00; Capital Social 55.000,00; Clientes 9.000,00; Contas a Receber 11.000,00; Depreciação Acumulada 3.500,00; Despesa de Organização 2.500,00; Despesas Pré-Operacionais 2.000,00; Duplicatas a Pagar 25.000,00; Duplicatas a Receber 15.000,00; Duplicatas Descontadas 8.000,00; Empréstimos a Coligadas 6.500,00; Empréstimos Bancários 32.000,00; Endosso para Desconto 8.000,00; Móveis e Utensílios 21.000,00; Provisão para Créditos de Liquidação Duvidosa 1.000,00; Provisão para Férias 3.000,00; Provisão para Imposto de Renda 4.500,00; Reserva Legal 2.000,00; Seguros a Vencer 1.800,00; Títulos Endossados 8.000,00; Títulos a Receber 13.000,00. Ao elaborar o balanço patrimonial a empresa vai apresentar um Ativo Circulante no valor de",
+    "kind": "multipla",
+    "options": [
+      "R$58.000,00.",
+      "R$68.000,00.",
+      "R$69.800,00.",
+      "R$71.000,00.",
+      "R$79.000,00."
+    ],
+    "correctOption": 3,
+    "contentId": "CG-036",
+    "bloomLevel": "aplicar",
+    "knowledgeType": "procedimental",
+    "explanation": "Somando as contas de natureza circulante (Caixa, Bancos c/Movimento, Bancos c/Poupança, Clientes, Contas a Receber, Duplicatas a Receber líquida da provisão para créditos de liquidação duvidosa, Aluguéis pagos antecipadamente, Seguros a Vencer e Títulos a Receber, e excluindo itens de longo prazo como Empréstimos a Coligadas e Ações de Coligadas), chega-se ao Ativo Circulante de R$71.000,00, conforme gabarito oficial.",
+    "examBoard": "ESAF",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2012
+  },
+  {
+    "prompt": "A firma Mobiliada S.A. possui móveis e utensílios adquiridos em dezembro de 2010 por R$40.000,00. Incorporados ao grupo imobilizado em janeiro de 2011, esses bens são depreciados com valor residual de 5%, considerando-se uma vida útil de 10 anos como é costumeiro. No exercício de 2012, no balanço de 31 de dezembro, a empresa deverá apresentar esses móveis com valor contábil de",
+    "kind": "multipla",
+    "options": [
+      "R$40.000,00.",
+      "R$32.400,00.",
+      "R$32.000,00.",
+      "R$30.400,00.",
+      "R$30.000,00."
+    ],
+    "correctOption": 1,
+    "contentId": "CG-031",
+    "bloomLevel": "aplicar",
+    "knowledgeType": "procedimental",
+    "explanation": "Valor depreciável = custo (40.000) - valor residual (5% x 40.000 = 2.000) = 38.000. Depreciação anual = 38.000/10 = 3.800. Os bens foram incorporados ao imobilizado em janeiro de 2011, logo até 31/12/2012 há dois anos completos de depreciação (2011 e 2012): 3.800 x 2 = 7.600. Valor contábil = 40.000 - 7.600 = R$32.400,00.",
+    "examBoard": "ESAF",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2012
+  }
+]

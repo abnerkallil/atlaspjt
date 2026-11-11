@@ -1,0 +1,154 @@
+[
+  {
+    "prompt": "Em 31/12/X0, uma sociedade empresária adquiriu, à vista, um terreno para ser utilizado em seus negócios por R$100.000. A sociedade empresária avalia ao fim de cada período de reporte se há alguma indicação de que os seus ativos possam ter sofrido desvalorização. Os valores recuperáveis em 31/12/X1, 31/12/X2 e 31/12/X3 foram, respectivamente, de R$90.000, R$80.000 e R$120.000. Assinale a opção que indica a contabilização relacionada à recuperabilidade do terreno na Demonstração do Resultado do Exercício da sociedade empresária em 31/12/X3, de acordo com a NBC TG 01 (R4) – Redução ao Valor Recuperável de Ativos:",
+    "kind": "multipla",
+    "options": [
+      "Receita de R$20.000.",
+      "Receita de R$40.000.",
+      "Reversão de Despesa de R$20.000.",
+      "Reversão de Despesa de R$30.000.",
+      "Reversão de Despesa de R$40.000."
+    ],
+    "correctOption": 2,
+    "contentId": "CA-003",
+    "bloomLevel": "aplicar",
+    "knowledgeType": "procedimental",
+    "explanation": "Terrenos não são depreciados, então o valor contábil só muda por perda/reversão de recuperabilidade. Em X1: valor recuperável 90.000 < custo 100.000 → perda de 10.000, saldo 90.000. Em X2: recuperável 80.000 < 90.000 → nova perda de 10.000, saldo 80.000. Em X3: recuperável 120.000 > 80.000 → reversão, limitada ao custo original (100.000), de 100.000 - 80.000 = 20.000, reconhecida como reversão de despesa.",
+    "examBoard": "FGV",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2023
+  },
+  {
+    "prompt": "Em 02/01/X1, uma entidade adquiriu computadores, para utilizar em sua área administrativa, por R$50.000, para pagamento em 31/12/X1. Se os computadores tivessem sido adquiridos à vista, o custo seria de R$45.000. O prazo de pagamento excede os prazos normais de crédito da entidade e o valor da compra é considerado material. A vida útil estimada dos computadores era de 5 anos. A entidade depreciava os seus ativos imobilizados de acordo com o método da linha reta e não considerava valor residual. No ano de X1, a entidade contabilizou receita com a prestação de serviços de R$200.000. Os custos com os serviços prestados foram de R$80.000. Além do lucro bruto de R$120.000, assinale a opção que indica os valores das contas apresentadas na Demonstração do Resultado do Exercício da entidade em 31/12/X1, sem considerar a incidência de impostos.",
+    "kind": "multipla",
+    "options": [
+      "Despesa de depreciação: R$9.000, apenas.",
+      "Despesa de depreciação: R$10.000, apenas.",
+      "Despesa de depreciação: R$9.000 e Despesa financeira: R$5.000, apenas.",
+      "Despesa de depreciação: R$10.000 e Despesa financeira: R$5.000, apenas.",
+      "Despesa de depreciação: R$10.000 e Receita financeira: R$5.000, apenas."
+    ],
+    "correctOption": 2,
+    "contentId": "CA-004",
+    "bloomLevel": "aplicar",
+    "knowledgeType": "procedimental",
+    "explanation": "Por se tratar de compra a prazo material, com prazo acima do usual, o ativo deve ser registrado pelo valor presente (ajuste a valor presente, CPC 12): custo do computador = R$45.000 (preço a vista). Depreciação do ano = 45.000/5 = R$9.000. A diferença entre o valor nominal pago (50.000) e o valor presente (45.000) = R$5.000 é encargo financeiro, reconhecido como despesa financeira no período em que o pagamento ocorre (31/12/X1).",
+    "examBoard": "FGV",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2023
+  },
+  {
+    "prompt": "De acordo com as modificações trazidas pelas Leis 11.638/07 e 11.941/09 no patrimônio líquido, a conta Ajustes de Avaliação Patrimonial representa as contrapartidas de aumentos ou diminuições de valor atribuído a elementos do ativo e do passivo, em decorrência de sua avaliação a valor justo. Os valores registrados nesta conta deverão ser transferidos para o resultado do exercício",
+    "kind": "multipla",
+    "options": [
+      "à medida que os ativos e passivos forem sendo realizados, em obediência ao regime de competência.",
+      "no momento em que os ativos e os passivos forem totalmente baixados, em obediência ao regime de competência.",
+      "à medida que os ativos e passivos forem sendo realizados, em obediência à característica qualitativa da tempestividade.",
+      "no momento em que os ativos e os passivos forem totalmente baixados, em obediência à característica qualitativa da tempestividade.",
+      "à medida que os ativos e os passivos forem sendo lançados em \"Outros Resultados Abrangentes\", em obediência à característica qualitativa da tempestividade."
+    ],
+    "correctOption": 0,
+    "contentId": "CG-034",
+    "bloomLevel": "entender",
+    "knowledgeType": "conceitual",
+    "explanation": "Os saldos de Ajustes de Avaliação Patrimonial são transferidos ao resultado progressivamente, conforme os ativos/passivos a que se referem vão sendo realizados (vendidos, baixados, liquidados), por força do regime de competência — não apenas na baixa total, e não em razão da característica de tempestividade, que trata de outro aspecto da qualidade da informação.",
+    "examBoard": "FGV",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2023
+  },
+  {
+    "prompt": "Uma sociedade empresária apresentava os seguintes Balanços Patrimoniais em 31/12/X0 e em 31/12/X1: Balanço X0: Caixa 50.000, Estoques 20.000, Total Ativo 70.000; Capital Social 70.000. Balanço X1: Caixa 25.000, Clientes 90.000, PECLD -18.000, Total Ativo 97.000; Salários a pagar 15.000, IR a pagar 4.080, Capital Social 70.000, Reserva de Lucros 7.920. DRE X1: Receita de Vendas 90.000; CMV -20.000; Lucro Bruto 70.000; Despesa de Salários -15.000; Despesas com PECLD -18.000; Despesas de Aluguel -25.000; Lucro antes do IR e CSLL 12.000; IR e CSLL -4.080; Lucro Líquido 7.920. Sobre a elaboração da Demonstração dos Fluxos de Caixa pelo método indireto em 31/12/X1, analise: I. Os montantes das contas \"salários a pagar\" e \"imposto de renda a pagar\" foram adicionados ao lucro líquido para calcular o fluxo de caixa da atividade operacional. II. Os montantes das contas \"estoques\" e \"clientes\" foram, respectivamente, excluídos e adicionados ao lucro líquido para calcular o fluxo de caixa da atividade operacional. III. No ano, o fluxo de caixa consumido pela atividade operacional foi de R$25.000. IV. No ano, o fluxo de caixa gerado pela atividade de investimento foi superior ao obtido nas atividades de financiamento. Em relação à elaboração da Demonstração dos Fluxos de Caixa da entidade em 31/12/X1, estão corretas as afirmativas",
+    "kind": "multipla",
+    "options": [
+      "I e II, apenas.",
+      "I e III, apenas.",
+      "II e IV, apenas.",
+      "I, II e III, apenas.",
+      "I, III e IV, apenas."
+    ],
+    "correctOption": 1,
+    "contentId": "CG-038",
+    "bloomLevel": "analisar",
+    "knowledgeType": "procedimental",
+    "explanation": "Partindo do lucro líquido (7.920): salários a pagar (+15.000) e IR a pagar (+4.080) aumentaram, então são adicionados (I correta); estoques caíram de 20.000 para 0, o que é uma origem de caixa e deveria ser adicionado (não excluído), e clientes aumentaram, o que é uma aplicação de caixa e deveria ser subtraído (não adicionado) — II está com os efeitos invertidos, portanto incorreta. Somando 7.920 + 15.000 + 4.080 + 20.000 (queda do estoque) + 18.000 (PECLD, despesa não caixa) - 90.000 (aumento de clientes) = -25.000, ou seja, caixa consumido de R$25.000 pela atividade operacional (III correta). Não há evidência nos dados de atividades de investimento ou financiamento que sustentem a afirmativa IV. Logo, I e III, apenas.",
+    "examBoard": "FGV",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2023
+  },
+  {
+    "prompt": "De acordo com a NBC TG 27(R4) – Ativo Imobilizado, as demonstrações contábeis devem, obrigatoriamente, divulgar",
+    "kind": "multipla",
+    "options": [
+      "o valor contábil do ativo imobilizado que esteja temporariamente ocioso.",
+      "o valor dos gastos reconhecidos no valor contábil de um item do ativo imobilizado durante a sua construção.",
+      "o valor contábil de ativos imobilizados retirados de uso ativo e não classificados como mantidos para venda.",
+      "o valor contábil bruto de qualquer ativo imobilizado totalmente depreciado que ainda esteja em operação.",
+      "o valor justo do ativo imobilizado quando este for materialmente diferente do valor contábil apurado pelo método do custo."
+    ],
+    "correctOption": 1,
+    "contentId": "CG-031",
+    "bloomLevel": "lembrar",
+    "knowledgeType": "factual",
+    "explanation": "A NBC TG 27 (CPC 27) exige, entre as divulgações obrigatórias sobre imobilizado, o valor dos dispêndios reconhecidos no valor contábil de um item do imobilizado durante a sua construção (ativo em curso). As demais opções não constam da lista de divulgações obrigatórias da norma.",
+    "examBoard": "FGV",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2023
+  },
+  {
+    "prompt": "A Lei nº 11.941/09 trouxe alterações em relação à Lei nº 6.404/76, que estão alinhadas com o texto da NBC TG 18 (R3) – Investimento em Coligada, em Controlada e em Empreendimento Controlado em Conjunto. Com base na norma contábil, são coligadas as sociedades nas quais a investidora tem influência significativa. Considera-se que há efetivamente influência significativa quando",
+    "kind": "multipla",
+    "options": [
+      "a investidora considera relevante o investimento na coligada.",
+      "a investidora exerce controle por meio de uma subsidiária integral.",
+      "o valor contábil do investimento é igual a 10% do valor do patrimônio líquido da investidora.",
+      "a investidora é titular de, no mínimo, 15% das ações preferenciais do capital da investida.",
+      "a investidora detém ou exerce o poder de participar nas decisões das políticas financeira ou operacional da investida, sem controlá-la."
+    ],
+    "correctOption": 4,
+    "contentId": "CA-001",
+    "bloomLevel": "entender",
+    "knowledgeType": "conceitual",
+    "explanation": "A definição de influência significativa na NBC TG 18/CPC 18 é o poder de participar das decisões sobre as políticas financeiras ou operacionais da investida, sem que haja controle sobre essas políticas — e não um percentual fixo isolado de participação.",
+    "examBoard": "FGV",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2023
+  },
+  {
+    "prompt": "Na contabilização do estoque de uma entidade do setor industrial, os gastos com armazenamento foram incluídos no valor dos estoques, reconhecidos no ativo. Em relação a esses gastos, pode-se afirmar que",
+    "kind": "multipla",
+    "options": [
+      "foram pagos à vista.",
+      "seu montante é considerado material, frente ao custo das mercadorias.",
+      "foram incorridos para trazer os estoques à sua condição e localização atuais.",
+      "foram necessários ao processo produtivo entre uma e outra fase de produção.",
+      "deverão ser amortizados mensalmente, com base na vida útil estimada do estoque."
+    ],
+    "correctOption": 3,
+    "contentId": "CG-027",
+    "bloomLevel": "entender",
+    "knowledgeType": "conceitual",
+    "explanation": "Pelo CPC 16 (Estoques), gastos de armazenagem normalmente são despesa do período, salvo quando necessários ao processo produtivo entre uma fase e outra de produção — única hipótese em que podem compor o custo do estoque, o que justifica a inclusão no caso descrito.",
+    "examBoard": "FGV",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2023
+  },
+  {
+    "prompt": "O custo dos estoques de bens ou serviços produzidos e segregados para projetos específicos deve ser atribuído pelo uso",
+    "kind": "multipla",
+    "options": [
+      "do custo médio ponderado fixo.",
+      "do custo médio ponderado móvel.",
+      "do último que entra, primeiro que sai.",
+      "do primeiro que entra, primeiro que sai.",
+      "da identificação específica dos custos individuais."
+    ],
+    "correctOption": 4,
+    "contentId": "CC-002",
+    "bloomLevel": "lembrar",
+    "knowledgeType": "factual",
+    "explanation": "O CPC 16 determina que itens de estoque segregados para projetos específicos têm seu custo atribuído pelo método da identificação específica dos custos individuais, diferentemente dos itens fungíveis em geral, aos quais se aplicam PEPS ou custo médio ponderado.",
+    "examBoard": "FGV",
+    "examOrg": "Receita Federal do Brasil",
+    "examYear": 2023
+  }
+]
