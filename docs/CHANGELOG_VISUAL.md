@@ -14,6 +14,37 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #127 — Lote 5 de questões do roadmap de Contabilidade (CT-040–CT-049)
+
+- Ponto de restauração: branch `restore/pre-ct-040-049` (main antes do
+  merge).
+- O que muda no site: nada visível ainda. É só um arquivo de dados
+  (`data/questoes/lote-ct-040-049.csv`, 148 questões autorais — CT-040 a
+  CT-049, bloco de Lucro Presumido (elegibilidade/opção/apuração
+  trimestral, receita bruta e percentuais de presunção, demais receitas e
+  ganhos de capital, IRPJ e adicional, CSLL, PIS/Cofins cumulativos) e
+  início do Lucro Real (obrigatoriedade/opção/modalidades, ponte fiscal,
+  despesas dedutíveis/indedutíveis, e-Lalur/e-Lacs). CT-040 e CT-046 já
+  tinham 1 questão aprovada em produção (`CT-040-Q01`, `CT-046-Q01`); o
+  lote não reaproveita esses ids, e sim completa 14 questões novas em
+  cada um desses dois conteúdos (ordem 2 a 15), e 15 novas nos outros 8
+  conteúdos — total de 148 questões para completar as 15 por conteúdo
+  nos 10 conteúdos do lote. Fundamentado na aula-base de cada conteúdo
+  (`data/apache/aulas/contabilidade-tributaria-05.json` e `-06.json`) e
+  na legislação nela citada (Lei nº 9.718/1998, arts. 12 a 14; Lei nº
+  9.249/1995, arts. 15 e 20; Lei nº 4.506/1964, art. 47; IN RFB nº
+  1.422/2013), seguindo o padrão dos lotes anteriores
+  (`docs/APOLO-questoes-roadmap-plano.md`, lote 3c). As questões só
+  aparecem para o aluno depois que o Abner rodar `pnpm run
+  questoes:importar -- --target production --file
+  data/questoes/lote-ct-040-049.csv` (comando ainda não enviado; vai
+  junto com os próximos lotes do mesmo plano).
+- O que muda fora do site: `docs/APOLO-questoes-roadmap-plano.md` marca o
+  lote 3c como feito.
+- Se algo der errado: reverter para `restore/pre-ct-040-049` volta ao
+  estado anterior; como nada foi carregado em produção ainda, não há
+  nenhuma questão para desfazer no D1.
+
 ## PR #126 — Lote 4 de questões do roadmap de Contabilidade (CT-030–CT-039)
 
 - Ponto de restauração: branch `restore/pre-ct-030-039` (main antes do
