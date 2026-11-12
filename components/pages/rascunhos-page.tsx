@@ -41,6 +41,11 @@ const STATUS_LABEL: Record<DraftStatus, string> = {
 
 type ContentOption = { id: string; title: string; disciplineTitle: string };
 type Subtopic = { id: string; title: string };
+// Conteúdo de um tema sem roadmap ainda (APO-02 Eixo 2): rótulo de curadoria
+// em atlas_content_taxonomy, alternativa ao Conteúdo do roadmap acima —
+// nunca os dois ao mesmo tempo. Só rotula o rascunho; aprovar continua
+// exigindo um Conteúdo do roadmap.
+type ContentLabelOption = { id: string; title: string };
 
 function flattenContents(roadmap: RoadmapView | null): ContentOption[] {
   if (!roadmap) return [];
@@ -58,6 +63,7 @@ function flattenContents(roadmap: RoadmapView | null): ContentOption[] {
 function editFromDraft(draft: Draft): DraftEdit {
   return {
     contentId: draft.contentId ?? undefined,
+    contentLabelId: draft.contentLabelId ?? undefined,
     subtopicId: draft.subtopicId ?? undefined,
     theme: draft.theme ?? undefined,
     kind: draft.kind,
@@ -93,13 +99,17 @@ function DraftEditor({
 }) {
   const [edit, setEdit] = useState<DraftEdit>(() => editFromDraft(draft));
   const [subtopicsByContent, setSubtopicsByContent] = useState<{ contentId: string; list: Subtopic[] } | null>(null);
+  const [labelsByTheme, setLabelsByTheme] = useState<{ themeId: string; list: ContentLabelOption[] } | null>(null);
   const [newTheme, setNewTheme] = useState('');
   const [creatingTheme, setCreatingTheme] = useState(false);
+  const [newContentLabel, setNewContentLabel] = useState('');
+  const [creatingContentLabel, setCreatingContentLabel] = useState(false);
   const [saving, setSaving] = useState(false);
   const [actionError, setActionError] = useState('');
 
   const readOnly = status !== 'pendente';
   const subtopics = subtopicsByContent && subtopicsByContent.contentId === edit.contentId ? subtopicsByContent.list : [];
+  const contentLabels = labelsByTheme && labelsByTheme.themeId === edit.theme ? labelsByTheme.list : [];
 
   useEffect(() => {
     const contentId = edit.contentId;
@@ -118,12 +128,33 @@ function DraftEditor({
     };
   }, [edit.contentId]);
 
+  useEffect(() => {
+    const themeId = edit.theme;
+    if (!themeId) return;
+    let active = true;
+    fetch(`/api/apolo/conteudo-taxonomia?tema=${encodeURIComponent(themeId)}`)
+      .then(async (response) => (response.ok ? ((await response.json()) as { contents: ContentLabelOption[] }).contents : []))
+      .then((list) => {
+        if (active) setLabelsByTheme({ themeId, list });
+      })
+      .catch(() => {
+        if (active) setLabelsByTheme({ themeId, list: [] });
+      });
+    return () => {
+      active = false;
+    };
+  }, [edit.theme]);
+
   function setField<K extends keyof DraftEdit>(key: K, value: DraftEdit[K]) {
     setEdit((current) => ({ ...current, [key]: value }));
   }
 
   function selectContent(contentId: string) {
-    setEdit((current) => ({ ...current, contentId: contentId || undefined, subtopicId: undefined }));
+    setEdit((current) => ({ ...current, contentId: contentId || undefined, subtopicId: undefined, contentLabelId: contentId ? undefined : current.contentLabelId }));
+  }
+
+  function selectContentLabel(contentLabelId: string) {
+    setEdit((current) => ({ ...current, contentLabelId: contentLabelId || undefined, contentId: contentLabelId ? undefined : current.contentId, subtopicId: contentLabelId ? undefined : current.subtopicId }));
   }
 
   async function save(partial: DraftEdit) {
@@ -162,6 +193,31 @@ function DraftEditor({
       setActionError(error instanceof Error ? error.message : 'Não foi possível criar o tema.');
     } finally {
       setCreatingTheme(false);
+    }
+  }
+
+  async function createContentLabel() {
+    if (!newContentLabel.trim() || !edit.theme) return;
+    setCreatingContentLabel(true);
+    try {
+      const response = await fetch('/api/apolo/conteudo-taxonomia', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ themeId: edit.theme, title: newContentLabel.trim() }),
+      });
+      if (!response.ok) throw new Error(await errorOf(response));
+      const { content } = (await response.json()) as { content: ContentLabelOption & { themeId: string } };
+      setLabelsByTheme((current) =>
+        current && current.themeId === edit.theme && current.list.some((item) => item.id === content.id)
+          ? current
+          : { themeId: edit.theme!, list: [...(current && current.themeId === edit.theme ? current.list : []), content] },
+      );
+      selectContentLabel(content.id);
+      setNewContentLabel('');
+    } catch (error) {
+      setActionError(error instanceof Error ? error.message : 'Não foi possível criar o conteúdo.');
+    } finally {
+      setCreatingContentLabel(false);
     }
   }
 
@@ -297,6 +353,32 @@ function DraftEditor({
           <div className="rc-new-theme">
             <input value={newTheme} placeholder="+ novo tema" onChange={(event) => setNewTheme(event.target.value)} />
             <Button type="button" variant="outline" className="ss-outline" disabled={creatingTheme || !newTheme.trim()} onClick={() => void createTheme()}>
+              <Plus size={14} /> Criar
+            </Button>
+          </div>
+        )}
+
+        {edit.theme && !edit.contentId && (
+          <label className="cm-field">
+            <span>Conteúdo do tema (sem roadmap ainda)</span>
+            <select value={edit.contentLabelId ?? ''} disabled={readOnly} onChange={(event) => selectContentLabel(event.target.value)}>
+              <option value="">Escolha o conteúdo</option>
+              {contentLabels.map((label) => (
+                <option key={label.id} value={label.id}>{label.title}</option>
+              ))}
+            </select>
+          </label>
+        )}
+        {!readOnly && edit.theme && !edit.contentId && (
+          <div className="rc-new-theme">
+            <input value={newContentLabel} placeholder="+ novo conteúdo" onChange={(event) => setNewContentLabel(event.target.value)} />
+            <Button
+              type="button"
+              variant="outline"
+              className="ss-outline"
+              disabled={creatingContentLabel || !newContentLabel.trim()}
+              onClick={() => void createContentLabel()}
+            >
               <Plus size={14} /> Criar
             </Button>
           </div>

@@ -101,3 +101,36 @@ void test('APO-07: editar/aprovar/descartar um rascunho que não existe dá erro
   await assert.rejects(approveDraft(db, 'não-existe', now), DraftError);
   await assert.rejects(discardDraft(db, 'não-existe', now), DraftError);
 });
+
+// APO-02 Eixo 2: tema sem roadmap ainda (ex. direito-constitucional) rotula
+// o rascunho via contentLabelId (atlas_content_taxonomy), nunca via um
+// contentId que não existe. Os dois campos são mutuamente exclusivos.
+void test('APO-02: contentLabelId rotula um rascunho de tema sem roadmap, e limpa contentId ao trocar', async () => {
+  const { db } = setup();
+  await seedDraft(db);
+  const { createContentTaxonomyEntry } = await import('../lib/apolo/index.js');
+  const label = await createContentTaxonomyEntry(
+    db,
+    { themeId: 'direito-constitucional', title: 'Controle de constitucionalidade' },
+    now,
+  );
+
+  const labeled = await updateDraft(db, 'draft-1', { contentLabelId: label.id });
+  assert.equal(labeled.contentLabelId, label.id);
+  assert.equal(labeled.contentId, null);
+
+  const switched = await updateDraft(db, 'draft-1', { contentId: 'CG-001' });
+  assert.equal(switched.contentId, 'CG-001');
+  assert.equal(switched.contentLabelId, null, 'escolher um conteúdo do roadmap limpa o rótulo de taxonomia');
+});
+
+void test('APO-02: createContentTaxonomyEntry reusa a mesma linha para o mesmo tema+título', async () => {
+  const { db } = setup();
+  const { createContentTaxonomyEntry, listContentTaxonomy } = await import('../lib/apolo/index.js');
+  const first = await createContentTaxonomyEntry(db, { themeId: 'portugues', title: 'Crase' }, now);
+  const second = await createContentTaxonomyEntry(db, { themeId: 'portugues', title: 'Crase' }, now);
+  assert.equal(first.id, second.id);
+  const list = await listContentTaxonomy(db, 'portugues');
+  assert.equal(list.length, 1);
+  assert.equal(list[0].title, 'Crase');
+});

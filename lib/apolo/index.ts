@@ -7,6 +7,7 @@ export * from './types.js';
 export * from './generators.js';
 export * from './store.js';
 export * from './themes.js';
+export * from './content-taxonomy.js';
 export * from './question-bank.js';
 export * from './sources.js';
 export * from './drafts.js';
