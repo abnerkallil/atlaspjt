@@ -14,6 +14,29 @@ git checkout restore/<nome>
 ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
 (`Publicar Atlas.cmd`): nada daqui aparece no site antes disso.
 
+## PR #117 — Apolo: conteúdo da curadoria para temas sem roadmap
+
+- Ponto de restauração: commit `433d1979f272f5e04d53f2e446191a20b9925658`
+  (main antes do merge; `git checkout 433d1979f272f5e04d53f2e446191a20b9925658`
+  — o branch `restore/pre-apolo-conteudo-taxonomia-pr117` ficou criado por
+  engano apontando para depois do merge, ignorar).
+- O que muda no site: na tela `/rascunhos`, o campo "Conteúdo" passa a
+  também listar os conteúdos de temas sem roadmap (Direito \*, Departamento
+  Pessoal/Fiscal, Português, Inglês, Espanhol, Matemática, Matemática
+  Financeira, Estatística, Raciocínio Lógico, Dados, Tributação — 17 temas
+  que antes ficavam sem nenhuma opção de conteúdo para marcar no rascunho),
+  com um segundo seletor "Conteúdo do tema (sem roadmap ainda)" e "+ novo
+  conteúdo" igual ao de tema. Aprovar um rascunho (gravar em
+  `atlas_questions`) continua exigindo um `contentId` real do roadmap — esse
+  rótulo só organiza a curadoria desses temas, que ainda não têm roadmap
+  próprio.
+- O que muda fora do site: `lib/apolo/content-taxonomy.ts` (nova),
+  `app/api/apolo/conteudo-taxonomia/route.ts` (nova, `GET ?tema=` /
+  `POST {themeId, title}`), `lib/apolo/drafts.ts` (`contentLabelId` mutuamente
+  exclusivo com `contentId`), `components/pages/rascunhos-page.tsx`.
+- Testado: `pnpm run typecheck`, `pnpm run lint` e `pnpm run test:notes`
+  (545/545) antes do merge.
+
 ## PR #134 — Lote 12 de questões do roadmap de Contabilidade (CG-029, CG-030, CG-032, CG-033, CG-035, CG-040, CG-041)
 
 - Ponto de restauração: branch `restore/pre-lote-cg-029-041-v2` (main antes do
@@ -426,7 +449,7 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
     gabarito anexado — precisa resposta resolvida e verificada por leitura
     humana/IA antes de carregar).
 
-## PR #117 — Apolo: classificação dos rascunhos "soltos" de Contabilidade Tributária por rótulo
+## PR #117a — Apolo: classificação dos rascunhos "soltos" de Contabilidade Tributária por rótulo
 
 - Ponto de restauração: branch `restore/pre-apolo-classificar-rotulos-ct`
   (main antes do merge).
@@ -448,6 +471,11 @@ ou peça ao Claude para reverter o PR. Publicar continua sendo um passo seu
   - Sempre roda com `--check` antes de gravar, mostrando quantos rascunhos
     cada grupo de rótulos capturou, para o Abner comparar com as contagens
     do levantamento.
+  - Nota: esta entrada tinha o número "#117" no título, mas é de um PR
+    diferente do #117 mesclado em 2026-11-12 (conteúdo da curadoria para
+    temas sem roadmap, no topo deste arquivo) — renomeada para "#117a" aqui
+    só para não confundir as duas; o número real desta PR mais antiga não
+    foi reconferido.
 
 ## PR #116 — Apolo: aprovação em lote de rascunhos com conteúdo do roadmap já preenchido
 
